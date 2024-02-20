@@ -28,7 +28,7 @@ function Login() {
                   
                   <a className="text-primary fw-bold" href="./index.html">Forgot Password ?</a>
                 </div>
-                <a href='/dashboard' className="btn btn-custom w-100 py-8 fs-4 mb-4 rounded-2">Sign In</a>
+                {/* <a href='/dashboard' className="btn btn-custom w-100 py-8 fs-4 mb-4 rounded-2">Sign In</a> */}
                
               </form>
             </div>

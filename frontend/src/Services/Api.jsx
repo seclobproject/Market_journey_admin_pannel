@@ -1,6 +1,6 @@
-import { Show_Toast } from "../utils/toast";
 import axios from "axios";
 import { Base_url } from "./Base_url";
+import { Show_Toast } from "../utils/Toast";
 
 export const ApiCall = async (
   method,
@@ -24,9 +24,10 @@ export const ApiCall = async (
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log(res,"res,res")
     return {
       status: res?.status,
-      data: res.data?.data,
+      data: res.data,
       message: res.data?.message || "",
     };
   } catch (error) {

@@ -1,12 +1,17 @@
 import React, { useContext } from "react";
 import Sidebar from "../Layout/Sidebar/Sidebar";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import Header from "../Layout/Header";
 import { ContextData } from "../Services/Context";
 import { Helmet } from "react-helmet";
 
 function OutletConnection() {
-  const { hamburgClicked } = useContext(ContextData);
+  const { hamburgClicked,isLoggedIn } = useContext(ContextData);
+
+  if(!isLoggedIn){
+    return  <Navigate to="/" />
+
+  }
 
   return (
     <>

@@ -14,17 +14,17 @@ function Sidebar() {
       title: "Users",
       icon: "fas fa-users",
       sub: [
-        { title: "All Users", route: "member", icon: "fas fa-users" },
+        { title: "All Users", route: "member"},
         {
           title: "View Users",
           route: "settings-locations",
-          icon: "fas fa-user-check",
+          // icon: "fas fa-user-check",
         },
 
         {
           title: "Franchise Users",
           route: "settings-invoice",
-          icon: "fas fa-building",
+          // icon: "fas fa-building",
         },
       ],
     },
@@ -32,12 +32,12 @@ function Sidebar() {
       title: "Locations",
       icon: "fas fa-map-marker-alt",
       sub: [
-        { title: "State", route: "locations/state", icon: "fas fa-flag" },
-        { title: "District", route: "locations/district",icon:  "fas fa-city" },
+        { title: "State", route: "locations/state",  },
+        { title: "District", route: "locations/district",},
         {
-          title: "Constituency",
-          route: "settings-invoice",
-          icon: "fas fa-landmark",
+          title: "Zonal",
+          route: "locations/zonal",
+          // icon: "fas fa-landmark",
         },
       ],
     },
@@ -46,8 +46,8 @@ function Sidebar() {
       title: "Uploads",
       icon: "fas fa-cloud-upload-alt",
       sub: [
-        { title: "Videos", route: "settings-emirates", icon: "fas fa-video" },
-        { title: "Images", route: "settings-locations", icon: "far fa-image" },
+        { title: "Videos", route: "settings-emirates", },
+        { title: "Images", route: "settings-locations",  },
       ],
     },
 
@@ -60,7 +60,7 @@ function Sidebar() {
       title: "My Account",
       icon: "fas fa-user",
       sub: [
-        { title: "Change password", route: "forgotpassword", icon: "fas fa-lock" },
+        { title: "Change password", route: "forgotpassword",  },
       ],
     }
     

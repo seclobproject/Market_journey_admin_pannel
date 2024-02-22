@@ -1,87 +1,18 @@
-import React, { useContext, useEffect, useState } from "react";
-import { SlideMotion } from "../../../libs/FramerMotion";
-import ModalComponent from "../../../Components/ModalComponet";
-import DeleteConfirmation from "../../../Components/DeleteConfirmation";
-import { ContextData } from "../../../Services/Context";
-import { Form } from "react-bootstrap";
-import { ApiCall } from "../../../Services/Api";
-import { statePageUrl, statelistPageUrl,  } from "../../../utils/Constants";
-import { Show_Toast } from "../../../utils/Toast";
+import React, { useContext, useState } from 'react'
+import { SlideMotion } from '../../../libs/FramerMotion';
+import { ContextData } from '../../../Services/Context';
+import ModalComponent from '../../../Components/ModalComponet';
+import { Form } from 'react-bootstrap';
 
-function State() {
-  const [stateModal, setStateModal] = useState({ show: false, id: null });
-  const { Check_Validation } = useContext(ContextData);
-  const [validated, setValidated] = useState(false);
-  const [addState, setAddState] = useState({});
-  const [stateList,setStateList]=useState([])
-  console.log(stateList,"array")
-
-  //---------add State---------
-  const addStateFun = async () => {
-    console.log("here");
-    try {
-      if (addState._id) {
-        const updateResponse = await ApiCall(
-          "put",
-          `${statePageUrl}/${addState._id}`,
-          addState
-        );
-        if (updateResponse.status === 200) {
-          setStateModal(false);
-          setValidated(false);
-          getStateList()
-
-          Show_Toast("State updated successfully", true);
-        } else {
-          Show_Toast("State Update Failed", false);
-        }
-      } else {
-        const createResponse = await ApiCall("post", statePageUrl, addState);
-        if (createResponse.status === 200) {
-          setStateModal(false);
-          setValidated(false);
-          setAddState('')
-          getStateList()
-
-          Show_Toast("State added successfully", true);
-        } else {
-          Show_Toast(error, false);
-        }
-      }
-    } catch (error) {
-      Show_Toast(error, false);
-    }
-  };
-
-  //-----------list state--------
-  const getStateList = async () => {
-  
-    try {
-      const response = await ApiCall("get", statelistPageUrl);
-  
-      if (response.status === 200) {
-        setStateList(response?.data?.states);
-      } else {
-        console.error("Error fetching state list. Unexpected status:", response.status);
-      }
-  
-    } catch (error) {
-      console.error("Error fetching state list:", error);
-  
-    }
-  };
-  
-  
-
-  useEffect(()=>{
-    getStateList();
-  },[])
-
+function Zonal() {
+    const [zonalModal, setZonalModal] = useState({ show: false, id: null });
+    const { Check_Validation } = useContext(ContextData);
+    const [validated, setValidated] = useState(false);
   return (
     <>
-      <SlideMotion>
-      <div className="card position-relative overflow-hidden">
-  <h5 className="card-title fw-semibold mb-0 lh-sm px-4 mt-3">States</h5>
+    <SlideMotion>
+    <div className="card w-100 position-relative overflow-hidden">
+  <h5 className="card-title fw-semibold mb-0 lh-sm px-4 mt-3">Zonal</h5>
   <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
     <div className="d-flex align-items-center">
       <form className="position-relative">
@@ -101,9 +32,9 @@ function State() {
       <button
         className="btn btn-custom ms-3 float-end"
         onClick={() => {
-          setStateModal({ show: true, id: null });
+          setZonalModal({ show: true, id: null });
           setValidated(false);
-          setAddState('');
+          setAddState("");
         }}
       >
         Add
@@ -124,7 +55,7 @@ function State() {
             <th />
           </tr>
         </thead>
-        <tbody>
+        {/* <tbody>
           {stateList?.length ? (
             <>
               {stateList.map((states, index) => (
@@ -141,27 +72,27 @@ function State() {
               </td>
             </tr>
           )}
-        </tbody>
+        </tbody> */}
       </table>
     </div>
   </div>
   <div className="me-2">
     {/* -------------------------pagination--------------------- */}
     {/* <Pagination
-        pagination={pagination}
-        params={params}
-        setParams={setParams}
-      /> */}
+          pagination={pagination}
+          params={params}
+          setParams={setParams}
+        /> */}
     {/* -------------------------pagination--------------------- */}
   </div>
 </div>
 
         <ModalComponent
-          show={stateModal.show}
+          show={zonalModal.show}
           onHide={() => {
-            setStateModal({ show: false, id: null });
+            setZonalModal({ show: false, id: null });
           }}
-          title={<h5>Add State</h5>}
+          title={<h5>Add Zonal</h5>}
           centered
           width={"500px"}
         >
@@ -181,10 +112,10 @@ function State() {
                 className="form-control form-control-lg "
                 rows="4"
                 placeholder="Enter a state name"
-                value={addState?.stateName}
-                onChange={(e) =>
-                  setAddState({ ...addState, stateName: e.target.value })
-                }
+                // value={addState?.stateName}
+                // onChange={(e) =>
+                //   setAddState({ ...addState, stateName: e.target.value })
+                // }
               ></input>
               <Form.Control.Feedback type="invalid">
                 Please provide a state Name.
@@ -193,7 +124,7 @@ function State() {
 
             <div className="col-12 mt-4">
               <button type="submit" className="btn btn-custom float-end ms-1">
-                {addState?._id ? 'Update' : 'Save'}
+                {/* {addState?._id ? 'Update' : 'Save'} */}
               </button>
               
             </div>
@@ -202,8 +133,9 @@ function State() {
 
        
       </SlideMotion>
+
     </>
-  );
+  )
 }
 
-export default State;
+export default Zonal

@@ -8,6 +8,7 @@ import Package from "./pages/private/Package";
 import Forgotpassword from "./pages/public/Forgotpassword";
 import State from "./pages/private/Locations/State";
 import District from "./pages/private/Locations/District";
+import Zonal from "./pages/private/Locations/Zonal";
 
 
 function App() {
@@ -22,6 +23,8 @@ function App() {
           <Route path="/packages" element={<Package />}/>
           <Route path="/locations/state" element={<State />}/>
           <Route path="/locations/district" element={<District />}/>
+          <Route path="/locations/zonal" element={<Zonal />}/>
+
 
 
 

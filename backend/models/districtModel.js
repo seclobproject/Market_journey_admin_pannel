@@ -7,11 +7,17 @@ const districtSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    
-    zonals: {
+    stateName: {
+      type: String
+    },
+    packageAmount:{
+      type: Number,
+      required: true,
+    },
+    zonals: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Zonal",
-      },
+      }],
 
   },
   {

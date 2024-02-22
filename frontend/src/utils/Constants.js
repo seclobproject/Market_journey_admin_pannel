@@ -5,3 +5,4 @@ export const update_PasswordURL="/api/admin/forgot-password"
 
 
 export const statePageUrl="/api/admin/add-state"
+export const districtPageUrl="/api/admin/add-district"

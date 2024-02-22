@@ -102,26 +102,27 @@ export const addState=async(req,res,next)=>{
 
 //view States
 
-export const viewSates=async(req,res,next)=>{
+export const viewStates = async (req, res, next) => {
   try {
     const adminId = req.admin._id;
     const admin = await Admin.findById(adminId);
 
     if (admin) {
-      const stateData=await State.find();
-      if(!stateData){
-        return next(errorHandler(401, "No state exist"));
+      const stateData = await State.find({}, 'name'); // Projection to only get the 'name' field
+      if (!stateData || stateData.length === 0) {
+        return next(errorHandler(401, "No states exist"));
       }
+      const stateNames = stateData.map(state => state.name); // Extracting only the names
       res.status(200).json({
-        states:stateData.name,
+        states: stateNames,
         sts: "01",
-        msg: "District added Successfull",
+        msg: "States retrieved successfully",
       });
     } else {
       next(errorHandler(401, "Admin not found"));
     }
   } catch (error) {
-    next(error)
+    next(error);
   }
 }
 
@@ -175,30 +176,6 @@ export const addDistrict=async(req,res,next)=>{
   }
 }
 
-// //view States
-
-// export const viewSates=async(req,res,next)=>{
-//   try {
-//     const adminId = req.admin._id;
-//     const admin = await Admin.findById(adminId);
-
-//     if (admin) {
-//       const stateData=await State.find();
-//       if(!stateData){
-//         return next(errorHandler(401, "No state exist"));
-//       }
-//       res.status(200).json({
-//         states:stateData.name,
-//         sts: "01",
-//         msg: "District added Successfull",
-//       });
-//     } else {
-//       next(errorHandler(401, "Admin not found"));
-//     }
-//   } catch (error) {
-    
-//   }
-// }
 
 
 export const addZonal=async(req,res,next)=>{
@@ -291,3 +268,6 @@ export const addPanchayath=async(req,res,next)=>{
     next(error)
   }
 }
+
+
+

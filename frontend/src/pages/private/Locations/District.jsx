@@ -6,6 +6,7 @@ import ModalComponent from "../../../Components/ModalComponet";
 import DeleteConfirmation from "../../../Components/DeleteConfirmation";
 import { Form } from "react-bootstrap";
 import Select from "react-select";
+import { districtPageUrl } from "../../../utils/Constants";
 
 function District() {
   const navigate = useNavigate();
@@ -15,6 +16,42 @@ function District() {
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
   const [addDistrict, setAddDistrict] = useState({});
   const [districtModal, setDistrictModal] = useState({ show: false, id: null });
+
+
+  //addDistrict
+  const addDisrtictFun = async () => {
+    console.log("here");
+    try {
+      if (addDistrict._id) {
+        const updateResponse = await ApiCall(
+          "put",
+          `${districtPageUrl}/${addDistrict._id}`,
+          addDistrict
+        );
+        if (updateResponse.status === 200) {
+          setDistrictModal(false);
+          setValidated(false);
+          setAddDistrict('')
+          Show_Toast("District updated successfully", true);
+        } else {
+          Show_Toast("District update failed", false);
+        }
+      } else {
+        const createResponse = await ApiCall("post", districtPageUrl, addDistrict);
+        if (createResponse.status === 200) {
+          districtModal(false);
+          setValidated(false);
+          setAddDistrict('')
+
+          Show_Toast("District added successfully", true);
+        } else {
+          Show_Toast("District creation failed", false);
+        }
+      }
+    } catch (error) {
+      Show_Toast(error, false);
+    }
+  };
 
   useEffect(() => {}, []);
   return (
@@ -144,9 +181,15 @@ function District() {
           <Form
             Validate
             validated={validated}
-            onSubmit={(e) => Check_Validation(e, setValidated)}
+            onSubmit={(e) => Check_Validation(e,addDisrtictFun, setValidated)}
           >
             <div className="mb-4">
+            <label
+                            htmlFor="exampleInputEmail1"
+                            className="form-label"
+                          >
+                            State
+                          </label>
               <Select
                 required
                 placeholder="Select a state"
@@ -159,6 +202,12 @@ function District() {
               </Form.Control.Feedback>
             </div>
             <div className="mb-4">
+            <label
+                            htmlFor="exampleInputEmail1"
+                            className="form-label"
+                          >
+                            District Amount
+                          </label>
               <input
                 required
                 className="form-control form-control-lg "
@@ -173,19 +222,33 @@ function District() {
                 Please provide a state Name.
               </Form.Control.Feedback>
             </div>
+            <div className="mb-4">
+            <label
+                            htmlFor="exampleInputEmail1"
+                            className="form-label"
+                          >
+                            Package Amount
+                          </label>
+              <input
+                required
+                className="form-control form-control-lg "
+                rows="4"
+                placeholder="Enter a district name"
+                value={addDistrict?.packageAmount}
+                onChange={(e) =>
+                  setAddDistrict({ ...addDistrict, packageAmount: e.target.value })
+                }
+              ></input>
+              <Form.Control.Feedback type="invalid">
+                Please provide a package Amount.
+              </Form.Control.Feedback>
+            </div>
 
             <div className="col-12 mt-4">
               <button type="submit" className="btn btn-custom float-end ms-1">
-                {/* {addLocation?._id ? 'Update' : 'Save'}  */}Save
+                {addDistrict?._id ? 'Update' : 'Save'} 
               </button>
-              <button
-                className="btn btn-cancel float-end me-1"
-                onHide={() => {
-                  setDistrictModal({ show: false, id: null });
-                }}
-              >
-                {/* {addLocation?._id ? 'Update' : 'Save'}  */}Cancel
-              </button>
+              
             </div>
           </Form>
         </ModalComponent>

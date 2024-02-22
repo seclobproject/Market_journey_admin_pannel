@@ -28,19 +28,20 @@ function State() {
         if (updateResponse.status === 200) {
           setStateModal(false);
           setValidated(false);
-          Show_Toast("Camp Updated Successfully", true);
+          Show_Toast("State updated successfully", true);
         } else {
-          Show_Toast("Camp update failed", false);
+          Show_Toast("State Update Failed", false);
         }
       } else {
         const createResponse = await ApiCall("post", statePageUrl, addState);
         if (createResponse.status === 200) {
           setStateModal(false);
           setValidated(false);
+          setAddState('')
 
-          Show_Toast("Area Created Successfully", true);
+          Show_Toast("State added successfully", true);
         } else {
-          Show_Toast("Area creation failed", false);
+          Show_Toast("State added failed", false);
         }
       }
     } catch (error) {
@@ -78,6 +79,7 @@ function State() {
                 onClick={() => {
                   setStateModal({ show: true, id: null });
                   setValidated(false);
+                  setAddState('')
                 }}
               >
                 Add
@@ -177,7 +179,12 @@ function State() {
             onSubmit={(e) => Check_Validation(e, addStateFun, setValidated)}
           >
             <div className="mb-4">
-              <input
+            <label
+                            htmlFor="exampleInputEmail1"
+                            className="form-label"
+                          >
+                            State
+                          </label>              <input
                 required
                 className="form-control form-control-lg "
                 rows="4"
@@ -194,16 +201,9 @@ function State() {
 
             <div className="col-12 mt-4">
               <button type="submit" className="btn btn-custom float-end ms-1">
-                {/* {addLocation?._id ? 'Update' : 'Save'}  */}Save
+                {addState?._id ? 'Update' : 'Save'}
               </button>
-              <button
-                className="btn btn-cancel float-end me-1"
-                onHide={() => {
-                  setStateModal({ show: false, id: null });
-                }}
-              >
-                {/* {addLocation?._id ? 'Update' : 'Save'}  */}Cancel
-              </button>
+              
             </div>
           </Form>
         </ModalComponent>

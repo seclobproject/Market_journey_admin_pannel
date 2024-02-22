@@ -252,7 +252,7 @@ export const addPanchayath=async(req,res,next)=>{
 // view params locations-----------------------------------------------------------------------------------------------
 
 
-
+//vbnxfbn
 
 //view params Districts
 export const viewParamsDistricts = async (req, res, next) => {

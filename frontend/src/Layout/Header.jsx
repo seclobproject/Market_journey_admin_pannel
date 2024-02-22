@@ -1,9 +1,16 @@
 import React, { useContext } from "react";
 import { Button } from "react-bootstrap";
 import { ContextData } from "../Services/Context";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
+  const navigate =useNavigate();
   const{setHamburgClicked,hamburgClicked}=useContext(ContextData)
+
+  const handleLogout = () => {
+    localStorage.removeItem("User");
+    navigate("/");
+  };
 
   return (
 
@@ -55,7 +62,7 @@ function Header() {
                 </div>
 
                 <div className="d-grid py-4 px-7 pt-8">
-                  <Button  className="btn btn-cancel" >Log out</Button>
+                  <Button  onClick={handleLogout} className="btn btn-cancel" >Log out</Button>
                 </div>
               </div>
             </div>

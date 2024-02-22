@@ -15384,9 +15384,9 @@
 .fa-eye:before {
   content: "\f06e";
     font-weight: 900;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     padding: 5px;
-    border-radius: 5px;
+    /* border-radius: 5px; */
     cursor: pointer;
 }
 
@@ -37701,7 +37701,7 @@ html[dir="rtl"] .welcome-bg-img {
 }
 .sidebar-nav ul .sidebar-item .sidebar-link:hover {
   background-color: #f9eeea;
-  color: #d53643 ;
+  color: #B69121 ;
 }
 .sidebar-nav ul .sidebar-item .sidebar-link:hover.has-arrow::after {
   border-color: #5d87ff;
@@ -37755,7 +37755,7 @@ html[dir="rtl"] .welcome-bg-img {
 }
 .sidebar-nav ul .sidebar-item .first-level .sidebar-item .sidebar-link.active {
   background-color: transparent !important;
-  color: #bf1a28 !important;
+  color:  #B69121!important;
 }
 .sidebar-nav ul .sidebar-item .two-level .sidebar-item .sidebar-link {
   padding: 8px 10px 8px 45px;
@@ -46415,7 +46415,36 @@ ul {
 }
 
 
+.password-container {
+  position: relative;
+}
 
-
+.eye-icon {
+  position: fixed;
+  top: 56%;
+  right: 55px;
+  transform: translateY(-50%);
+  border:#d31f26;
+  cursor: pointer;
+  color: #555;
+}
+.eye-icon2{
+  position: fixed;
+  top: 86%;
+  right: 55px;
+  transform: translateY(-50%);
+  border:#d31f26;
+  cursor: pointer;
+  color: #555;
+}
+.eye-icon3{
+  position: fixed;
+  top: 62%;
+  right: 55px;
+  transform: translateY(-50%);
+  border:#d31f26;
+  cursor: pointer;
+  color: #555;
+}
 
 

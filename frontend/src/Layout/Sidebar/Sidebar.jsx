@@ -32,8 +32,8 @@ function Sidebar() {
       title: "Locations",
       icon: "fas fa-map-marker-alt",
       sub: [
-        { title: "State", route: "settings-emirates", icon: "fas fa-flag" },
-        { title: "District", route: "settings-locations", icon: "fas fa-city" },
+        { title: "State", route: "locations/state", icon: "fas fa-flag" },
+        { title: "District", route: "locations/district",icon:  "fas fa-city" },
         {
           title: "Constituency",
           route: "settings-invoice",
@@ -56,6 +56,14 @@ function Sidebar() {
     { title: "Wallets", icon: "fas fa-wallet", route: "" },
     { title: "Withdrawals", icon: "fas fa-money-bill", route: "" },
     { title: "Awards & Rewards", icon: "fas fa-trophy", route: "" },
+    {
+      title: "My Account",
+      icon: "fas fa-user",
+      sub: [
+        { title: "Change password", route: "forgotpassword", icon: "fas fa-lock" },
+      ],
+    }
+    
   ];
 
   return (

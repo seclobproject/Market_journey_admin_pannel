@@ -1,14 +1,15 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import { BrowserRouter } from 'react-router-dom'
-import { ContextDataProvider } from './Services/Context.jsx'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+import { BrowserRouter } from "react-router-dom";
+import { ContextDataProvider } from "./Services/Context.jsx";
+import { ToastContainer } from "react-toastify";
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-<BrowserRouter>
-<ContextDataProvider>
-<App />
-</ContextDataProvider>
-</BrowserRouter>
-
-)
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <BrowserRouter>
+    <ContextDataProvider>
+      <App />
+        <ToastContainer/>
+    </ContextDataProvider>
+  </BrowserRouter>
+);

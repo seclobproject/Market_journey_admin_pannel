@@ -6,7 +6,8 @@ import ModalComponent from "../../../Components/ModalComponet";
 import DeleteConfirmation from "../../../Components/DeleteConfirmation";
 import { Form } from "react-bootstrap";
 import Select from "react-select";
-import { districtPageUrl } from "../../../utils/Constants";
+import { districtPageUrl, statelistPageUrl } from "../../../utils/Constants";
+import { ApiCall } from "../../../Services/Api";
 
 function District() {
   const navigate = useNavigate();
@@ -16,7 +17,8 @@ function District() {
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
   const [addDistrict, setAddDistrict] = useState({});
   const [districtModal, setDistrictModal] = useState({ show: false, id: null });
-
+  const [stateList,setStateList]=useState([])
+  console.log(stateList,"list")
 
   //addDistrict
   const addDisrtictFun = async () => {
@@ -52,8 +54,28 @@ function District() {
       Show_Toast(error, false);
     }
   };
+  //-----------list state--------
+  const getStateList = async () => {
+  
+    try {
+      const response = await ApiCall("get", statelistPageUrl);
+  
+      if (response.status === 200) {
+        setStateList(response?.data?.states);
+      } else {
+        console.error("Error fetching state list. Unexpected status:", response.status);
+      }
+  
+    } catch (error) {
+      console.error("Error fetching state list:", error);
+  
+    }
+  };
+  
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    getStateList()
+  }, []);
   return (
     <>
       <SlideMotion>
@@ -190,13 +212,17 @@ function District() {
                           >
                             State
                           </label>
-              <Select
-                required
-                placeholder="Select a state"
-                // value={stateOptions.find((option) => option.value === addDistrict.stateName)}
-                // options={stateOptions}
-                // onChange={handleStateChange}
-              />
+                          <Select
+  required
+  placeholder="Select a state"
+  // options={stateList?.map((states) => ({
+  //   value: product?._id,
+  //   label: product?.productDescription,
+  // }))}
+  // value={stateList.find((option) => option.value === addDistrict.stateName)}
+  // onChange={handleStateChange}
+/>
+
               <Form.Control.Feedback type="invalid">
                 Please select a state.
               </Form.Control.Feedback>

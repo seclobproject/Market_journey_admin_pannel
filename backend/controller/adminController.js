@@ -252,7 +252,7 @@ export const addPanchayath=async(req,res,next)=>{
 // view params locations-----------------------------------------------------------------------------------------------
 
 
-//vbnxfbn
+
 
 //view params Districts
 export const viewParamsDistricts = async (req, res, next) => {
@@ -273,7 +273,7 @@ export const viewParamsDistricts = async (req, res, next) => {
           name: district.name
         })),
         sts: "01",
-        msg: "Districts retrieved successfully",
+        msg: "Districts retrieved success",
       });
     } else {
       next(errorHandler(401, "Admin not found"));

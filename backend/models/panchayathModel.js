@@ -16,11 +16,9 @@ const panchayathSchema = new mongoose.Schema(
     zonalName: {
       type: String
     },
-    mobileUser: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      }],
-
+    count:{
+      type:Number
+    }
   },
   {
     timestamps: true,

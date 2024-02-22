@@ -17,10 +17,10 @@ const zonalSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    panchayath: {
+    panchayaths: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Panchayath",
-      },
+      }],
 
   },
   {

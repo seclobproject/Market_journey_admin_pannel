@@ -5,6 +5,7 @@ import bcryptjs from "bcryptjs";
 import State from "../models/stateModel.js";
 import District from "../models/districtModel.js";
 import Zonal from "../models/zonalModel.js";
+import Panchayath from "../models/panchayathModel.js";
 
 
 
@@ -128,6 +129,63 @@ export const viewStates = async (req, res, next) => {
   }
 }
 
+// get all districts
+export const viewAllDistricts = async (req, res, next) => {
+  try {
+    const adminId = req.admin._id;
+    const admin = await Admin.findById(adminId);
+
+    if (admin) {
+      const districtData = await District.find({}, '_id name stateName packageAmount'); // Projection to get both '_id' and 'name' fields
+      if (!districtData || districtData.length === 0) {
+        return next(errorHandler(401, "No District exist"));
+      }
+      res.status(200).json({
+        districts: districtData.map(district => ({
+          id: district._id,
+          name: district.name,
+          stateName: district.stateName,
+          packageAmount: district.packageAmount,   
+        })),
+        sts: "01",
+        msg: "Districts retrieved successfully",
+      });
+    } else {
+      next(errorHandler(401, "Admin not found"));
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+//view Districts
+export const viewDistricts = async (req, res, next) => {
+  try {
+    const {id}=req.params;
+    const adminId = req.admin._id;
+    const admin = await Admin.findById(adminId);
+
+    if (admin) {
+      const stateData = await State.findById(id).populate("districts")
+      if (!stateData || stateData.length === 0) {
+        return next(errorHandler(401, "No states exist"));
+      }
+      const districts=stateData.districts;
+      res.status(200).json({
+        districts: districts.map(district => ({
+          id: district._id,
+          name: district.name
+        })),
+        sts: "01",
+        msg: "Districts retrieved successfully",
+      });
+    } else {
+      next(errorHandler(401, "Admin not found"));
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
 //add District Franchise
 
 export const addDistrict=async(req,res,next)=>{
@@ -178,7 +236,7 @@ export const addDistrict=async(req,res,next)=>{
   }
 }
 
-
+//add Zonal
 
 export const addZonal=async(req,res,next)=>{
   try {
@@ -192,7 +250,10 @@ export const addZonal=async(req,res,next)=>{
         return next(errorHandler(401, "This Zonal already exist"));
       }
       const districtData=await District.findOne({name:districtName});
-      if(districtData){
+      if(!districtData){
+        return next(errorHandler(401, "This District Not Found"));
+
+      }
         const newZonal = new Zonal({
           name:zonalName,
           packageAmount:packageAmount,
@@ -212,11 +273,6 @@ export const addZonal=async(req,res,next)=>{
         }else{
         next(errorHandler(401, "Zonal add Not success"));
         }
-
-      }
-      else{
-        return next(errorHandler(401, "This District Not Found"));
-      }
     } else {
       next(errorHandler(401, "Admin not found"));
     }
@@ -232,37 +288,38 @@ export const addPanchayath=async(req,res,next)=>{
     const admin = await Admin.findById(adminId);
 
     if (admin) {
-      const {stateName,districtName,zonalName,panchayathName,packageAmount}=req.body;
+      const {stateName,districtName,zonalName,panchayathName}=req.body;
       const panchayathData=await Panchayath.findOne({name:panchayathName});
       if(panchayathData){
         return next(errorHandler(401, "This Panchayath already exist"));
       }
-      const zonalData=await District.findOne({name:districtName});
-      if(districtData){
-        const newZonal = new Zonal({
-          name:zonalName,
-          packageAmount:packageAmount,
-          stateName,
-          districtName
-        });
-        
-        const zonal = await newZonal.save();
-        if(zonal){
-          districtData.zonals.push(zonal._id)
-          await districtData.save();
-          res.status(200).json({
-            zonal,
-            sts: "01",
-            msg: "Zonal added Successfull",
-          });
-        }else{
-        next(errorHandler(401, "Zonal add Not success"));
-        }
-
-      }
-      else{
+      const districtData=await District.findOne({name:districtName});
+      if(!districtData){
         return next(errorHandler(401, "This District Not Found"));
       }
+      const zonalData=await Zonal.findOne({name:zonalName});
+      if(!zonalData){
+        return next(errorHandler(401, "This Zonal Not Found"));
+      }
+        const newPanchayath = new Panchayath({
+          name:panchayathName,
+          stateName,
+          districtName,
+          zonalName
+        });
+        
+        const panchayath = await newPanchayath.save();
+        if(panchayath){
+          zonalData.panchayaths.push(panchayath._id)
+          await zonalData.save();
+          res.status(200).json({
+            panchayath,
+            sts: "01",
+            msg: "Panchayath added Successfull",
+          });
+        }else{
+        next(errorHandler(401, "Panchayath add Not success"));
+        }
     } else {
       next(errorHandler(401, "Admin not found"));
     }

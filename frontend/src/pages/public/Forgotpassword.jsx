@@ -73,7 +73,7 @@ function Forgotpassword() {
       >
         <div
           className="position-relative overflow-hidden  min-vh-100 d-flex align-items-center justify-content-center"
-          style={{ backgroundColor: "#00335B" }}
+          style={{ backgroundColor: "#2a3547" }}
         >
           <div className="d-flex align-items-center justify-content-center w-100">
             <div className="row justify-content-center w-100">

@@ -11,7 +11,7 @@ export const protectAdmin = asyncHandler(async (req, res, next) => {
   ) {
     try {
       token = req.headers.authorization.split(" ")[1];
-      const decoded = jwt.verify(token, "Albetros");
+      const decoded = jwt.verify(token, "MarketJourney");
       req.admin = await Admin.findById(decoded.userId).select("-password");
 
       next();

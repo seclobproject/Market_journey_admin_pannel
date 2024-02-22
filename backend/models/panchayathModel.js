@@ -7,9 +7,18 @@ const panchayathSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    stateName: {
+      type: String
+    },
+    districtName: {
+      type: String
+    },
+    zonalName: {
+      type: String
+    },
     mobileUser: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "MobileUser",
+        ref: "User",
       }],
 
   },

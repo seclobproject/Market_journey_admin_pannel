@@ -7,10 +7,10 @@ const stateSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    districts: {
+    districts: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "District",
-      },
+      }],
 
   },
   {

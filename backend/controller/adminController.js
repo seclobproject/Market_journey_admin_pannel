@@ -102,89 +102,8 @@ export const addState=async(req,res,next)=>{
   }
 }
 
-//view States
-export const viewStates = async (req, res, next) => {
-  try {
-    const adminId = req.admin._id;
-    const admin = await Admin.findById(adminId);
 
-    if (admin) {
-      const stateData = await State.find({}, '_id name'); // Projection to get both '_id' and 'name' fields
-      if (!stateData || stateData.length === 0) {
-        return next(errorHandler(401, "No states exist"));
-      }
-      res.status(200).json({
-        states: stateData.map(state => ({
-          id: state._id,
-          name: state.name
-        })),
-        sts: "01",
-        msg: "States retrieved successfully",
-      });
-    } else {
-      next(errorHandler(401, "Admin not found"));
-    }
-  } catch (error) {
-    next(error);
-  }
-}
 
-// get all districts
-export const viewAllDistricts = async (req, res, next) => {
-  try {
-    const adminId = req.admin._id;
-    const admin = await Admin.findById(adminId);
-
-    if (admin) {
-      const districtData = await District.find({}, '_id name stateName packageAmount'); // Projection to get both '_id' and 'name' fields
-      if (!districtData || districtData.length === 0) {
-        return next(errorHandler(401, "No District exist"));
-      }
-      res.status(200).json({
-        districts: districtData.map(district => ({
-          id: district._id,
-          name: district.name,
-          stateName: district.stateName,
-          packageAmount: district.packageAmount,   
-        })),
-        sts: "01",
-        msg: "Districts retrieved successfully",
-      });
-    } else {
-      next(errorHandler(401, "Admin not found"));
-    }
-  } catch (error) {
-    next(error);
-  }
-}
-//view Districts
-export const viewDistricts = async (req, res, next) => {
-  try {
-    const {id}=req.params;
-    const adminId = req.admin._id;
-    const admin = await Admin.findById(adminId);
-
-    if (admin) {
-      const stateData = await State.findById(id).populate("districts")
-      if (!stateData || stateData.length === 0) {
-        return next(errorHandler(401, "No states exist"));
-      }
-      const districts=stateData.districts;
-      res.status(200).json({
-        districts: districts.map(district => ({
-          id: district._id,
-          name: district.name
-        })),
-        sts: "01",
-        msg: "Districts retrieved successfully",
-      });
-    } else {
-      next(errorHandler(401, "Admin not found"));
-    }
-  } catch (error) {
-    next(error);
-  }
-}
 
 //add District Franchise
 
@@ -195,7 +114,7 @@ export const addDistrict=async(req,res,next)=>{
 
     if (admin) {
       const {stateName,districtName,packageAmount}=req.body;
-
+      
       const districtData=await District.findOne({name:districtName});
       if(districtData){
         return next(errorHandler(401, "This District already exist"));
@@ -281,6 +200,7 @@ export const addZonal=async(req,res,next)=>{
   }
 }
 
+//add panchayath
 
 export const addPanchayath=async(req,res,next)=>{
   try {
@@ -329,4 +249,233 @@ export const addPanchayath=async(req,res,next)=>{
 }
 
 
+// view params locations-----------------------------------------------------------------------------------------------
 
+
+
+
+//view params Districts
+export const viewParamsDistricts = async (req, res, next) => {
+  try {
+    const {id}=req.params;
+    const adminId = req.admin._id;
+    const admin = await Admin.findById(adminId);
+
+    if (admin) {
+      const stateData = await State.findById(id).populate("districts")
+      if (!stateData || stateData.length === 0) {
+        return next(errorHandler(401, "No states exist"));
+      }
+      const districts=stateData.districts;
+      res.status(200).json({
+        districts: districts.map(district => ({
+          id: district._id,
+          name: district.name
+        })),
+        sts: "01",
+        msg: "Districts retrieved successfully",
+      });
+    } else {
+      next(errorHandler(401, "Admin not found"));
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
+
+//view params Zonals
+export const viewParamsZonals = async (req, res, next) => {
+  try {
+    const {id}=req.params;
+    const adminId = req.admin._id;
+    const admin = await Admin.findById(adminId);
+
+    if (admin) {
+      const districtData = await District.findById(id).populate("zonals")
+      if (!districtData || districtData.length === 0) {
+        return next(errorHandler(401, "No districts exist"));
+      }
+      const zonals=districtData.zonals;
+      res.status(200).json({
+        zonals: zonals.map(zonal => ({
+          id: zonal._id,
+          name: zonal.name
+        })),
+        sts: "01",
+        msg: "Zonals retrieved successfully",
+      });
+    } else {
+      next(errorHandler(401, "Admin not found"));
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
+
+
+//view params Panchayaths
+export const viewParamsPanchayaths = async (req, res, next) => {
+  try {
+    const {id}=req.params;
+    const adminId = req.admin._id;
+    const admin = await Admin.findById(adminId);
+
+    if (admin) {
+      const zonalData = await Zonal.findById(id).populate("panchayaths")
+      if (!zonalData || zonalData.length === 0) {
+        return next(errorHandler(401, "No districts exist"));
+      }
+      const panchayaths=zonalData.panchayaths;
+      res.status(200).json({
+        panchayaths: panchayaths.map(panchayath => ({
+          id: panchayath._id,
+          name: panchayath.name
+        })),
+        sts: "01",
+        msg: "panchayaths retrieved successfully",
+      });
+    } else {
+      next(errorHandler(401, "Admin not found"));
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// View all locations-------------------------------------------------------------------------------
+
+
+        //view States
+        export const viewStates = async (req, res, next) => {
+          try {
+            const adminId = req.admin._id;
+            const admin = await Admin.findById(adminId);
+        
+            if (admin) {
+              const stateData = await State.find({}, '_id name'); // Projection to get both '_id' and 'name' fields
+              if (!stateData || stateData.length === 0) {
+                return next(errorHandler(401, "No states exist"));
+              }
+              res.status(200).json({
+                states: stateData.map(state => ({
+                  id: state._id,
+                  name: state.name
+                })),
+                sts: "01",
+                msg: "States retrieved successfully",
+              });
+            } else {
+              next(errorHandler(401, "Admin not found"));
+            }
+          } catch (error) {
+            next(error);
+          }
+        }
+        
+        // get all districts
+        export const viewAllDistricts = async (req, res, next) => {
+          try {
+            const adminId = req.admin._id;
+            const admin = await Admin.findById(adminId);
+        
+            if (admin) {
+              const districtData = await District.find({}, '_id name stateName packageAmount'); // Projection to get both '_id' and 'name' fields
+              if (!districtData || districtData.length === 0) {
+                return next(errorHandler(401, "No District exist"));
+              }
+              res.status(200).json({
+                districts: districtData.map(district => ({
+                  id: district._id,
+                  name: district.name,
+                  stateName: district.stateName,
+                  packageAmount: district.packageAmount,   
+                })),
+                sts: "01",
+                msg: "Districts retrieved successfully",
+              });
+            } else {
+              next(errorHandler(401, "Admin not found"));
+            }
+          } catch (error) {
+            next(error);
+          }
+        }
+        
+        // get all Zonals
+        export const viewAllZonals = async (req, res, next) => {
+          try {
+            const adminId = req.admin._id;
+            const admin = await Admin.findById(adminId);
+        
+            if (admin) {
+              const zonalData = await Zonal.find({}, '_id name districtName stateName packageAmount'); 
+              if (!zonalData || zonalData.length === 0) {
+                return next(errorHandler(401, "No Zonals exist"));
+              }
+              res.status(200).json({
+                zonals: zonalData.map(zonal => ({
+                  id: zonal._id,
+                  name: zonal.name,
+                  stateName: zonal.stateName,
+                  packageAmount: zonal.packageAmount, 
+                  districtName: zonal.districtName, 
+        
+                })),
+                sts: "01",
+                msg: "Zonals retrieved successfully",
+              });
+            } else {
+              next(errorHandler(401, "Admin not found"));
+            }
+          } catch (error) {
+            next(error);
+          }
+        }
+
+                // get all Panchayaths
+        export const viewAllPanchayaths = async (req, res, next) => {
+          try {
+            const adminId = req.admin._id;
+            const admin = await Admin.findById(adminId);
+        
+            if (admin) {
+              const panchayathData = await Panchayath.find({}, '_id name districtName stateName zonalName packageAmount'); 
+              if (!panchayathData || panchayathData.length === 0) {
+                return next(errorHandler(401, "No Panchayaths exist"));
+              }
+              res.status(200).json({
+                panchayaths: panchayathData.map(panchayath => ({
+                  id: panchayath._id,
+                  name: panchayath.name,
+                  stateName: panchayath.stateName,
+                  stateName: panchayath.zonalName,
+                  packageAmount: panchayath.packageAmount, 
+                  districtName: panchayath.districtName, 
+        
+                })),
+                sts: "01",
+                msg: "Panchayaths retrieved successfully",
+              });
+            } else {
+              next(errorHandler(401, "Admin not found"));
+            }
+          } catch (error) {
+            next(error);
+          }
+        }

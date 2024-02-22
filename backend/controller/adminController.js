@@ -4,6 +4,7 @@ import Admin from "../models/adminModel.js";
 import bcryptjs from "bcryptjs";
 import State from "../models/stateModel.js";
 import District from "../models/districtModel.js";
+import Zonal from "../models/zonalModel.js";
 
 
 
@@ -101,20 +102,21 @@ export const addState=async(req,res,next)=>{
 }
 
 //view States
-
 export const viewStates = async (req, res, next) => {
   try {
     const adminId = req.admin._id;
     const admin = await Admin.findById(adminId);
 
     if (admin) {
-      const stateData = await State.find({}, 'name'); // Projection to only get the 'name' field
+      const stateData = await State.find({}, '_id name'); // Projection to get both '_id' and 'name' fields
       if (!stateData || stateData.length === 0) {
         return next(errorHandler(401, "No states exist"));
       }
-      const stateNames = stateData.map(state => state.name); // Extracting only the names
       res.status(200).json({
-        states: stateNames,
+        states: stateData.map(state => ({
+          id: state._id,
+          name: state.name
+        })),
         sts: "01",
         msg: "States retrieved successfully",
       });

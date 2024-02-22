@@ -6,9 +6,12 @@ import { Form } from "react-bootstrap";
 import {
   districtlistinZonalUrl,
   statelistPageUrl,
+  zonalPageUrl,
+  zonallistPageUrl,
 } from "../../../utils/Constants";
 import { ApiCall } from "../../../Services/Api";
 import Select from "react-select";
+import { Show_Toast } from "../../../utils/Toast";
 
 function Zonal() {
   const [zonalModal, setZonalModal] = useState({ show: false, id: null });
@@ -16,9 +19,14 @@ function Zonal() {
   const [validated, setValidated] = useState(false);
   const [stateList, setStateList] = useState([]);
   const [districtList, setdistrictList] = useState([]);
+  const [zonalList, setZonalList] = useState([]);
   const [selectedState, setSelectedState] = useState(null);
+  console.log(districtList,"districtList")
+  console.log(zonalList,"zonalList")
 
   const [addzonal, setAddZonal] = useState({});
+  console.log(addzonal,"addzonal")
+
   const [selectedId, setSelectedId] = useState(null);
   console.log(selectedId,"id")
 
@@ -47,7 +55,7 @@ function Zonal() {
       const response = await ApiCall("get", `${districtlistinZonalUrl}/${selectedId}`);
 console.log(response,"from api call")
       if (response.status === 200) {
-        setdistrictList(response?.data?.states);
+        setdistrictList(response?.data?.districts);
       } else {
         console.error(
           "Error fetching state list. Unexpected status:",
@@ -58,9 +66,49 @@ console.log(response,"from api call")
       console.error("Error fetching state list:", error);
     }
   };
+  //-----------list Zonals --------
+  const getZonallist = async () => {
+   
+    try {
+      const response = await ApiCall("get",zonallistPageUrl);
+console.log(response,"from api call")
+      if (response.status === 200) {
+        setZonalList(response?.data?.zonals);
+      } else {
+        console.error(
+          "Error fetching state list. Unexpected status:",
+          response.status
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching state list:", error);
+    }
+  };
+ //-----------Zonal---------
+ const addZonalFun = async () => {
+    console.log("here");
+
+    try {
+      const response = await ApiCall("post", zonalPageUrl, addzonal);
+console.log(response,"response")
+      if (response.status === 200) {
+        setZonalModal(false);
+        setValidated(false);
+        setAddZonal("");
+        getZonallist();
+        Show_Toast("District operation successful", true);
+      } else {
+        Show_Toast("District operation failed", false);
+      }
+    } catch (error) {
+      Show_Toast(error, false);
+    }
+  };
+  
 
   useEffect(() => {
     getStateList();
+    getZonallist();
   }, []);
   return (
     <>
@@ -88,7 +136,7 @@ console.log(response,"from api call")
                 onClick={() => {
                   setZonalModal({ show: true, id: null });
                   setValidated(false);
-                  setAddState("");
+                  setAddZonal("");
                 }}
               >
                 Add
@@ -98,24 +146,41 @@ console.log(response,"from api call")
           <div className="card-body p-2">
             <div className="table-container table-responsive rounded-2 mb-4">
               <table className="table border text-nowrap customize-table mb-0 align-middle">
-                <thead className="text-dark fs-4 table-light">
+                <thead className="text-light fs-4 table-light">
                   <tr>
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                     </th>
                     <th>
+                      <h6 className="fs-4 fw-semibold mb-0">Zonal Name</h6>
+                    </th>
+                    <th>
+                      <h6 className="fs-4 fw-semibold mb-0">District Name</h6>
+                    </th>
+                    <th>
                       <h6 className="fs-4 fw-semibold mb-0">State Name</h6>
+                    </th>
+                    <th>
+                      <h6 className="fs-4 fw-semibold mb-0">Package Amount</h6>
                     </th>
                     <th />
                   </tr>
                 </thead>
-                {/* <tbody>
-          {stateList?.length ? (
+                <tbody>
+          {zonalList?.length ? (
             <>
-              {stateList.map((states, index) => (
+              {zonalList.map((zonals, index) => (
+                console.log(zonals,"zonals"),
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{states?.name && states.name.toUpperCase()}</td>
+                  <td>{zonals?.name && zonals.name.toUpperCase()||"--"}</td>
+                  <td>{zonals?.districtName && zonals.districtName.toUpperCase()||"--"}</td>
+                  <td>{zonals?.stateName && zonals.stateName.toUpperCase()||"--"}</td>
+                  <td>{zonals?.packageAmount||"0"}</td>
+
+
+
+
                 </tr>
               ))}
             </>
@@ -126,7 +191,7 @@ console.log(response,"from api call")
               </td>
             </tr>
           )}
-        </tbody> */}
+        </tbody>
               </table>
             </div>
           </div>
@@ -153,7 +218,7 @@ console.log(response,"from api call")
           <Form
             Validate
             validated={validated}
-            onSubmit={(e) => Check_Validation(e, addStateFun, setValidated)}
+            onSubmit={(e) => Check_Validation(e, addZonalFun, setValidated)}
           >
             <div className="mb-4">
               <label htmlFor="exampleInputEmail1" className="form-label">
@@ -189,26 +254,54 @@ console.log(response,"from api call")
               <label htmlFor="exampleInputEmail1" className="form-label">
                 District
               </label>
-              <input
-              readOnly
-                  required
-                  className="form-control form-control-lg "
-                  rows="4"
-                  type="number"
-                  placeholder="Enter a district name"
-                //   value={addDistrict?.packageAmount}
-                //   onChange={(e) =>
-                //     setAddDistrict({
-                //       ...addDistrict,
-                //       packageAmount: e.target.value,
-                //     })
-                //   }
-                />
+              <Select
+                required
+                options={districtList?.map((districts) => ({
+                  value: districts?.id,
+                  label: districts?.name,
+                }))
+            }
+            value={selectedState?.stateName}
+            onChange={(selectedOption) => {
+                console.log(selectedOption,"selectedoptions")
+                setAddZonal({
+                  ...addzonal,
+                  districtName: selectedOption?.label,
+                });
+                getDistrictList(); // This action will be executed after setting the state
+              }}
+                
+                  
+                placeholder="Select a state"
+                isSearchable={true}
+              />
                 <Form.Control.Feedback type="invalid">
                   Please provide a package Amount.
                 </Form.Control.Feedback>
                 </div>
 
+                <div className="mb-4">
+                <label htmlFor="exampleInputEmail1" className="form-label">
+                  Zonal Name
+                </label>
+                <input
+                  required
+                  className="form-control form-control-lg "
+                  rows="4"
+                  type="text"
+                  placeholder="Enter a zonal name"
+                  value={addzonal?.zonalName}
+                  onChange={(e) =>
+                    setAddZonal({
+                      ...addzonal,
+                      zonalName: e.target.value,
+                    })
+                  }
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please provide a zonal name.
+                </Form.Control.Feedback>
+              </div>
               <div className="mb-4">
                 <label htmlFor="exampleInputEmail1" className="form-label">
                   Package Amount
@@ -218,14 +311,14 @@ console.log(response,"from api call")
                   className="form-control form-control-lg "
                   rows="4"
                   type="number"
-                  placeholder="Enter a district name"
-                //   value={addDistrict?.packageAmount}
-                //   onChange={(e) =>
-                //     setAddDistrict({
-                //       ...addDistrict,
-                //       packageAmount: e.target.value,
-                //     })
-                //   }
+                  placeholder="Enter a package amount"
+                  value={addzonal?.packageAmount}
+                  onChange={(e) =>
+                    setAddZonal({
+                      ...addzonal,
+                      packageAmount: e.target.value,
+                    })
+                  }
                 />
                 <Form.Control.Feedback type="invalid">
                   Please provide a package Amount.
@@ -236,7 +329,7 @@ console.log(response,"from api call")
 
             <div className="col-12 mt-4">
               <button type="submit" className="btn btn-custom float-end ms-1">
-                {/* {addState?._id ? 'Update' : 'Save'} */}
+              Save
               </button>
             </div>
           </Form>

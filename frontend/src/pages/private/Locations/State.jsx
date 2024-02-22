@@ -5,16 +5,16 @@ import DeleteConfirmation from "../../../Components/DeleteConfirmation";
 import { ContextData } from "../../../Services/Context";
 import { Form } from "react-bootstrap";
 import { ApiCall } from "../../../Services/Api";
-import { statePageUrl, statelistPageUrl,  } from "../../../utils/Constants";
+import { statePageUrl, statelistPageUrl } from "../../../utils/Constants";
 import { Show_Toast } from "../../../utils/Toast";
 
 function State() {
+  
   const [stateModal, setStateModal] = useState({ show: false, id: null });
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
   const [addState, setAddState] = useState({});
-  const [stateList,setStateList]=useState([])
-  console.log(stateList,"array")
+  const [stateList, setStateList] = useState([]);
 
   //---------add State---------
   const addStateFun = async () => {
@@ -29,7 +29,7 @@ function State() {
         if (updateResponse.status === 200) {
           setStateModal(false);
           setValidated(false);
-          getStateList()
+          getStateList();
 
           Show_Toast("State updated successfully", true);
         } else {
@@ -40,8 +40,8 @@ function State() {
         if (createResponse.status === 200) {
           setStateModal(false);
           setValidated(false);
-          setAddState('')
-          getStateList()
+          setAddState("");
+          getStateList();
 
           Show_Toast("State added successfully", true);
         } else {
@@ -55,106 +55,106 @@ function State() {
 
   //-----------list state--------
   const getStateList = async () => {
-  
     try {
       const response = await ApiCall("get", statelistPageUrl);
-  
+
       if (response.status === 200) {
         setStateList(response?.data?.states);
       } else {
-        console.error("Error fetching state list. Unexpected status:", response.status);
+        console.error(
+          "Error fetching state list. Unexpected status:",
+          response.status
+        );
       }
-  
     } catch (error) {
       console.error("Error fetching state list:", error);
-  
     }
   };
-  
-  
 
-  useEffect(()=>{
+  useEffect(() => {
     getStateList();
-  },[])
+  }, []);
 
   return (
     <>
       <SlideMotion>
-      <div className="card position-relative overflow-hidden">
-  <h5 className="card-title fw-semibold mb-0 lh-sm px-4 mt-3">States</h5>
-  <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
-    <div className="d-flex align-items-center">
-      <form className="position-relative">
-        <input
-          type="text"
-          className="form-control search-chat py-2 ps-5"
-          id="text-srh"
-          placeholder="Search"
-          // onChange={(e) => setParams({ ...params, query: e.target.value })}
-          // value={params?.query}
-        />
-        <i className="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3" />
-      </form>
-    </div>
+        <div className="card position-relative overflow-hidden">
+          <h5 className="card-title fw-semibold mb-0 lh-sm px-4 mt-3">
+            States
+          </h5>
+          <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
+            <div className="d-flex align-items-center">
+              <form className="position-relative">
+                <input
+                  type="text"
+                  className="form-control search-chat py-2 ps-5"
+                  id="text-srh"
+                  placeholder="Search"
+                  // onChange={(e) => setParams({ ...params, query: e.target.value })}
+                  // value={params?.query}
+                />
+                <i className="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3" />
+              </form>
+            </div>
 
-    <div>
-      <button
-        className="btn btn-custom ms-3 float-end"
-        onClick={() => {
-          setStateModal({ show: true, id: null });
-          setValidated(false);
-          setAddState('');
-        }}
-      >
-        Add
-      </button>
-    </div>
-  </div>
-  <div className="card-body p-2">
-    <div className="table-container table-responsive rounded-2 mb-4">
-      <table className="table border text-nowrap customize-table mb-0 align-middle">
-        <thead className="text-dark fs-4 table-light">
-          <tr>
-            <th>
-              <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
-            </th>
-            <th>
-              <h6 className="fs-4 fw-semibold mb-0">State Name</h6>
-            </th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {stateList?.length ? (
-            <>
-              {stateList.map((states, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{states?.name && states.name.toUpperCase()}</td>
-                </tr>
-              ))}
-            </>
-          ) : (
-            <tr>
-              <td colSpan={20} style={{ textAlign: "center" }}>
-                <b>No State Found</b>{" "}
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div className="me-2">
-    {/* -------------------------pagination--------------------- */}
-    {/* <Pagination
+            <div>
+              <button
+                className="btn btn-custom ms-3 float-end"
+                onClick={() => {
+                  setStateModal({ show: true, id: null });
+                  setValidated(false);
+                  setAddState("");
+                }}
+              >
+                Add
+              </button>
+            </div>
+          </div>
+          <div className="card-body p-2">
+            <div className="table-container table-responsive rounded-2 mb-4">
+              <table className="table border text-nowrap customize-table mb-0 align-middle">
+                <thead className="text-dark fs-4 table-light">
+                  <tr>
+                    <th>
+                      <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
+                    </th>
+                    <th>
+                      <h6 className="fs-4 fw-semibold mb-0">State Name</h6>
+                    </th>
+                    <th />
+                  </tr>
+                </thead>
+                <tbody>
+                  {stateList?.length ? (
+                    <>
+                      {stateList.map((states, index) => (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td>{states?.name && states.name.toUpperCase()}</td>
+                        </tr>
+                      ))}
+                    </>
+                  ) : (
+                    <tr>
+                      <td colSpan={20} style={{ textAlign: "center" }}>
+                        <b>No State Found</b>{" "}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="me-2">
+            {/* -------------------------pagination--------------------- */}
+            {/* <Pagination
         pagination={pagination}
         params={params}
         setParams={setParams}
       /> */}
-    {/* -------------------------pagination--------------------- */}
-  </div>
-</div>
+            {/* -------------------------pagination--------------------- */}
+          </div>
+        </div>
 
         <ModalComponent
           show={stateModal.show}
@@ -171,12 +171,10 @@ function State() {
             onSubmit={(e) => Check_Validation(e, addStateFun, setValidated)}
           >
             <div className="mb-4">
-            <label
-                            htmlFor="exampleInputEmail1"
-                            className="form-label"
-                          >
-                            State
-                          </label>              <input
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                State
+              </label>{" "}
+              <input
                 required
                 className="form-control form-control-lg "
                 rows="4"
@@ -193,14 +191,11 @@ function State() {
 
             <div className="col-12 mt-4">
               <button type="submit" className="btn btn-custom float-end ms-1">
-                {addState?._id ? 'Update' : 'Save'}
+                {addState?._id ? "Update" : "Save"}
               </button>
-              
             </div>
           </Form>
         </ModalComponent>
-
-       
       </SlideMotion>
     </>
   );

@@ -8,6 +8,7 @@ import { Form } from "react-bootstrap";
 import Select from "react-select";
 import { districtPageUrl, statelistPageUrl } from "../../../utils/Constants";
 import { ApiCall } from "../../../Services/Api";
+import { Show_Toast } from "../../../utils/Toast";
 
 function District() {
   const navigate = useNavigate();
@@ -16,44 +17,53 @@ function District() {
   const { Check_Validation } = useContext(ContextData);
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
   const [addDistrict, setAddDistrict] = useState({});
+  console.log(addDistrict,"addDistrict")
+
   const [districtModal, setDistrictModal] = useState({ show: false, id: null });
   const [stateList,setStateList]=useState([])
   console.log(stateList,"list")
 
-  //addDistrict
+  const [selectedState, setSelectedState] = useState(null);
+
+  console.log(selectedState,"selectedState")
+
+  //-----------list state--------
+  const getDistrict = async () => {
+  
+    try {
+      const response = await ApiCall("get", statelistPageUrl);
+  
+      if (response.status === 200) {
+        setStateList(response?.data?.states);
+      } else {
+        console.error("Error fetching state list. Unexpected status:", response.status);
+      }
+  
+    } catch (error) {
+      console.error("Error fetching state list:", error);
+  
+    }
+  };
+  //-----------addDistrict---------
   const addDisrtictFun = async () => {
     console.log("here");
+  
     try {
-      if (addDistrict._id) {
-        const updateResponse = await ApiCall(
-          "put",
-          `${districtPageUrl}/${addDistrict._id}`,
-          addDistrict
-        );
-        if (updateResponse.status === 200) {
-          setDistrictModal(false);
-          setValidated(false);
-          setAddDistrict('')
-          Show_Toast("District updated successfully", true);
-        } else {
-          Show_Toast("District update failed", false);
-        }
+      const response = await ApiCall("post", districtPageUrl, addDistrict);
+  
+      if (response.status === 200) {
+        setDistrictModal(false);
+        setValidated(false);
+        setAddDistrict('');
+        Show_Toast("District operation successful", true);
       } else {
-        const createResponse = await ApiCall("post", districtPageUrl, addDistrict);
-        if (createResponse.status === 200) {
-          districtModal(false);
-          setValidated(false);
-          setAddDistrict('')
-
-          Show_Toast("District added successfully", true);
-        } else {
-          Show_Toast("District creation failed", false);
-        }
+        Show_Toast("District operation failed", false);
       }
     } catch (error) {
       Show_Toast(error, false);
     }
   };
+  
   //-----------list state--------
   const getStateList = async () => {
   
@@ -71,6 +81,12 @@ function District() {
   
     }
   };
+
+ 
+  
+
+ 
+
   
 
   useEffect(() => {
@@ -116,7 +132,7 @@ function District() {
           <div className="card-body p-2">
             <div className="table-container table-responsive rounded-2 mb-4">
               <table className="table border text-nowrap customize-table mb-0 align-middle">
-                <thead className="text-dark fs-4 table-light">
+                <thead className="text-dark fs-4 "style={{ backgroundColor: 'yellow !important' }}>
                   <tr>
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">Name</h6>
@@ -205,43 +221,49 @@ function District() {
             validated={validated}
             onSubmit={(e) => Check_Validation(e,addDisrtictFun, setValidated)}
           >
-            <div className="mb-4">
-            <label
-                            htmlFor="exampleInputEmail1"
-                            className="form-label"
-                          >
-                            State
-                          </label>
-                          <Select
-  required
-  placeholder="Select a state"
-  // options={stateList?.map((states) => ({
-  //   value: product?._id,
-  //   label: product?.productDescription,
-  // }))}
-  // value={stateList.find((option) => option.value === addDistrict.stateName)}
-  // onChange={handleStateChange}
-/>
+                <div className="mb-4">
+      <label htmlFor="exampleInputEmail1" className="form-label">
+        State
+      </label>
 
-              <Form.Control.Feedback type="invalid">
-                Please select a state.
-              </Form.Control.Feedback>
-            </div>
+      <Select
+        required
+        options={stateList?.map((state) => ({
+          value: state?._id,
+          label: state?.name,
+        }))}
+        value={selectedState?.stateName}
+        onChange={(selectedOption) =>
+          setAddDistrict({
+            ...addDistrict,
+         
+              stateName: selectedOption?.label,
+          
+          })
+        }       
+         placeholder="Select a state"
+        isSearchable={true}
+      />
+
+      <Form.Control.Feedback type="invalid">
+        Please select a state.
+      </Form.Control.Feedback>
+    </div>
             <div className="mb-4">
             <label
                             htmlFor="exampleInputEmail1"
                             className="form-label"
                           >
-                            District Amount
+                            District Name
                           </label>
               <input
                 required
                 className="form-control form-control-lg "
                 rows="4"
                 placeholder="Enter a district name"
-                value={addDistrict?.DistName}
+                value={addDistrict?.districtName}
                 onChange={(e) =>
-                  setAddDistrict({ ...addDistrict, DistName: e.target.value })
+                  setAddDistrict({ ...addDistrict, districtName: e.target.value })
                 }
               ></input>
               <Form.Control.Feedback type="invalid">
@@ -259,12 +281,13 @@ function District() {
                 required
                 className="form-control form-control-lg "
                 rows="4"
+                type="number"
                 placeholder="Enter a district name"
                 value={addDistrict?.packageAmount}
                 onChange={(e) =>
                   setAddDistrict({ ...addDistrict, packageAmount: e.target.value })
                 }
-              ></input>
+              />
               <Form.Control.Feedback type="invalid">
                 Please provide a package Amount.
               </Form.Control.Feedback>

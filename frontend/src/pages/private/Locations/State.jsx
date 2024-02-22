@@ -125,9 +125,7 @@ function State() {
                       <h6 className="fs-4 fw-semibold mb-0"> State Name</h6>
                     </th>
 
-                    <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Action</h6>
-                    </th>
+                  
                     <th />
                   </tr>
                 </thead>
@@ -137,51 +135,10 @@ function State() {
                       {stateList.map((states, index) => (
                         console.log(states,"state"),
                         <tr>
-                          <td>{states}</td>
+                          <td>{states?.name}</td>
                       
                       
-                          <td>
-                            <div className="dropdown dropstart">
-                              <a
-                                href="#"
-                                className="text-muted"
-                                id="dropdownMenuButton"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                              >
-                                <i className="ti ti-dots fs-5" />
-                              </a>
-                              <ul
-                                className="dropdown-menu"
-                                aria-labelledby="dropdownMenuButton"
-                              >
-                                <li>
-                                  <a
-                                    className="dropdown-item d-flex align-items-center gap-3"
-                                    // onClick={() => handleEdit(staff)}
-                                  >
-                                    <i className="fs-4 ti ti-edit" />
-                                    Edit
-                                  </a>
-                                </li>
-                                <li>
-                                  <a
-                                    className="dropdown-item d-flex align-items-center gap-3"
-                                    href="#"
-                                    // onClick={() =>
-                                    //   setDeleteModal({
-                                    //     show: true,
-                                    //     id: staff?._id,
-                                    //   })
-                                    // }
-                                  >
-                                    <i className="fs-4 ti ti-trash" />
-                                    Delete
-                                  </a>
-                                </li>
-                              </ul>
-                            </div>
-                          </td>
+                          
                         </tr>
                       ))}
                     </>

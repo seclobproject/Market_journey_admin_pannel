@@ -8,10 +8,10 @@ import { Helmet } from "react-helmet";
 function OutletConnection() {
   const { hamburgClicked,isLoggedIn } = useContext(ContextData);
 
-  if(!isLoggedIn){
-    return  <Navigate to="/" />
+  // if(!isLoggedIn){
+  //   return  <Navigate to="/" />
 
-  }
+  // }
 
   return (
     <>

@@ -1,11 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SlideMotion } from "../../../libs/FramerMotion";
 import ModalComponent from "../../../Components/ModalComponet";
 import DeleteConfirmation from "../../../Components/DeleteConfirmation";
 import { ContextData } from "../../../Services/Context";
 import { Form } from "react-bootstrap";
 import { ApiCall } from "../../../Services/Api";
-import { statePageUrl } from "../../../utils/Constants";
+import { statePageUrl, statelistPageUrl,  } from "../../../utils/Constants";
 import { Show_Toast } from "../../../utils/Toast";
 
 function State() {
@@ -14,8 +14,10 @@ function State() {
   const [validated, setValidated] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
   const [addState, setAddState] = useState({});
+  const [stateList,setStateList]=useState([])
+  console.log(stateList,"array")
 
-  //add State
+  //---------add State---------
   const addStateFun = async () => {
     console.log("here");
     try {
@@ -28,6 +30,8 @@ function State() {
         if (updateResponse.status === 200) {
           setStateModal(false);
           setValidated(false);
+          getStateList()
+
           Show_Toast("State updated successfully", true);
         } else {
           Show_Toast("State Update Failed", false);
@@ -38,16 +42,42 @@ function State() {
           setStateModal(false);
           setValidated(false);
           setAddState('')
+          getStateList()
 
           Show_Toast("State added successfully", true);
         } else {
-          Show_Toast("State added failed", false);
+          Show_Toast(error, false);
         }
       }
     } catch (error) {
       Show_Toast(error, false);
     }
   };
+
+  //-----------list state--------
+  const getStateList = async () => {
+  
+    try {
+      const response = await ApiCall("get", statelistPageUrl);
+  
+      if (response.status === 200) {
+        setStateList(response?.data?.states);
+      } else {
+        console.error("Error fetching state list. Unexpected status:", response.status);
+      }
+  
+    } catch (error) {
+      console.error("Error fetching state list:", error);
+  
+    }
+  };
+  
+  
+
+  useEffect(()=>{
+    getStateList();
+  },[])
+
   return (
     <>
       <SlideMotion>
@@ -92,7 +122,7 @@ function State() {
                 <thead className="text-dark fs-4 table-light">
                   <tr>
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Name</h6>
+                      <h6 className="fs-4 fw-semibold mb-0"> State Name</h6>
                     </th>
 
                     <th>
@@ -102,54 +132,66 @@ function State() {
                   </tr>
                 </thead>
                 <tbody>
-                  <>
-                    <tr>
-                      <td></td>
-
-                      <td>
-                        <div className="dropdown dropstart">
-                          <a
-                            href="#"
-                            className="text-muted"
-                            id="dropdownMenuButton"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                          >
-                            <i className="ti ti-dots fs-5" />
-                          </a>
-                          <ul
-                            className="dropdown-menu"
-                            aria-labelledby="dropdownMenuButton"
-                          >
-                            <li>
+                  {stateList?.length ? (
+                    <>
+                      {stateList.map((states, index) => (
+                        console.log(states,"state"),
+                        <tr>
+                          <td>{states}</td>
+                      
+                      
+                          <td>
+                            <div className="dropdown dropstart">
                               <a
-                                className="dropdown-item d-flex align-items-center gap-3"
-                                //   onClick={() => handleEdit(staff)}
-                              >
-                                <i className="fs-4 ti ti-edit" />
-                                Edit
-                              </a>
-                            </li>
-                            <li>
-                              <a
-                                className="dropdown-item d-flex align-items-center gap-3"
                                 href="#"
-                                onClick={() =>
-                                  setDeleteModal({
-                                    show: true,
-                                    // id: staff?._id,
-                                  })
-                                }
+                                className="text-muted"
+                                id="dropdownMenuButton"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
                               >
-                                <i className="fs-4 ti ti-trash" />
-                                Delete
+                                <i className="ti ti-dots fs-5" />
                               </a>
-                            </li>
-                          </ul>
-                        </div>
-                      </td>
-                    </tr>
-                  </>
+                              <ul
+                                className="dropdown-menu"
+                                aria-labelledby="dropdownMenuButton"
+                              >
+                                <li>
+                                  <a
+                                    className="dropdown-item d-flex align-items-center gap-3"
+                                    // onClick={() => handleEdit(staff)}
+                                  >
+                                    <i className="fs-4 ti ti-edit" />
+                                    Edit
+                                  </a>
+                                </li>
+                                <li>
+                                  <a
+                                    className="dropdown-item d-flex align-items-center gap-3"
+                                    href="#"
+                                    // onClick={() =>
+                                    //   setDeleteModal({
+                                    //     show: true,
+                                    //     id: staff?._id,
+                                    //   })
+                                    // }
+                                  >
+                                    <i className="fs-4 ti ti-trash" />
+                                    Delete
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </>
+                  ) : (
+                    <tr>
+                    <td colSpan={20} style={{ textAlign: "center" }}>
+                      <b> No State Found </b>{" "}
+                    </td>
+                  </tr>
+                  )}
                 </tbody>
               </table>
             </div>

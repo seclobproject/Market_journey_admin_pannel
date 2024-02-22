@@ -1,6 +1,6 @@
 import express from "express";
 const adminRouter = express.Router();
-import {addDistrict, addPanchayath, addState, addZonal, adminLogin,  forgotPassword, viewAllDistricts, viewDistricts, viewStates} from "../controller/adminController.js";
+import {addDistrict, addPanchayath, addState, addZonal, adminLogin,  forgotPassword, viewAllDistricts, viewAllPanchayaths, viewAllZonals, viewParamsDistricts, viewStates} from "../controller/adminController.js";
 import { protectAdmin } from "../middleware/authMiddleware.js";
 
 adminRouter.post("/admin-login", adminLogin);
@@ -14,7 +14,9 @@ adminRouter.post("/add-panchayath", protectAdmin,addPanchayath);
 
 adminRouter.get("/view-states", protectAdmin,viewStates);
 adminRouter.get("/view-all-districts", protectAdmin,viewAllDistricts);
-adminRouter.get("/view-districts/:id", protectAdmin,viewDistricts);
+adminRouter.get("/view-all-zonals", protectAdmin,viewAllZonals);
+adminRouter.get("/view-all-panchayaths", protectAdmin,viewAllPanchayaths);
+adminRouter.get("/view-params-districts/:id", protectAdmin,viewParamsDistricts);
 
 
 

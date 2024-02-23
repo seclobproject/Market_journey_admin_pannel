@@ -13,10 +13,6 @@ const zonalSchema = new mongoose.Schema(
     districtName: {
       type: String
     },
-    packageAmount:{
-      type: Number,
-      required: true,
-    },
     panchayaths: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Panchayath",

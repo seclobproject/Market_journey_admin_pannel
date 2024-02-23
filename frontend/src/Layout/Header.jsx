@@ -5,11 +5,13 @@ import { useNavigate } from "react-router-dom";
 
 function Header() {
   const navigate =useNavigate();
-  const{setHamburgClicked,hamburgClicked}=useContext(ContextData)
+  const{setHamburgClicked,hamburgClicked,logout}=useContext(ContextData)
 
   const handleLogout = () => {
     localStorage.removeItem("User");
     navigate("/");
+    logout()
+
   };
 
   return (

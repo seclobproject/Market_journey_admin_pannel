@@ -74,3 +74,27 @@ export const editPackage = async (req, res, next) => {
       next(error);
     }
   };
+
+         // get all Packages
+         export const viewPackages = async (req, res, next) => {
+            try {
+              const adminId = req.admin._id;
+              const admin = await Admin.findById(adminId);
+          
+              if (admin) {
+                const packageData = await Package.find(); 
+                if (!packageData || packageData.length === 0) {
+                  return next(errorHandler(401, "No Package exist"));
+                }
+                res.status(200).json({
+                    packageData,
+                  sts: "01",
+                  msg: "Packages retrieved successfully",
+                });
+              } else {
+                next(errorHandler(401, "Admin not found"));
+              }
+            } catch (error) {
+              next(error);
+            }
+          }

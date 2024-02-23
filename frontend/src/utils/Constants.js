@@ -11,3 +11,8 @@ export const districtlistPageUrl="/api/admin/view-all-districts"
 export const districtlistinZonalUrl="/api/admin/view-dropdown-districts"
 export const zonalPageUrl="/api/admin/add-zonal"
 export const zonallistPageUrl="/api/admin/view-all-zonals"
+
+//packages
+export const packagesListUrl="/api/admin/view-package"
+export const packagesAddUrl="/api/admin/add-package"
+export const packagesEditUrl="/api/admin/edit-package/"

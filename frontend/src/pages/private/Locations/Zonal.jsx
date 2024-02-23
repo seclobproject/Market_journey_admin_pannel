@@ -96,9 +96,9 @@ console.log(response,"response")
         setValidated(false);
         setAddZonal("");
         getZonallist();
-        Show_Toast("District operation successful", true);
+        Show_Toast("Zonal added successfully", true);
       } else {
-        Show_Toast("District operation failed", false);
+        Show_Toast("Zonal added failed", false);
       }
     } catch (error) {
       Show_Toast(error, false);
@@ -109,7 +109,7 @@ console.log(response,"response")
   useEffect(() => {
     getStateList();
     getZonallist();
-  }, []);
+  }, [selectedId]);
   return (
     <>
       <SlideMotion>
@@ -265,7 +265,7 @@ console.log(response,"response")
                   ...addzonal,
                   districtName: selectedOption?.label,
                 });
-                getDistrictList(); // This action will be executed after setting the state
+                // getDistrictList(); // This action will be executed after setting the state
               }}
                 
                   

@@ -395,7 +395,7 @@ export const viewParamsPanchayaths = async (req, res, next) => {
             const admin = await Admin.findById(adminId);
         
             if (admin) {
-              const districtData = await District.find({}, '_id name stateName packageAmount'); // Projection to get both '_id' and 'name' fields
+              const districtData = await District.find({}, '_id name stateName'); // Projection to get both '_id' and 'name' fields
               if (!districtData || districtData.length === 0) {
                 return next(errorHandler(401, "No District exist"));
               }
@@ -404,7 +404,6 @@ export const viewParamsPanchayaths = async (req, res, next) => {
                   id: district._id,
                   name: district.name,
                   stateName: district.stateName,
-                  packageAmount: district.packageAmount,   
                 })),
                 sts: "01",
                 msg: "Districts retrieved successfully",
@@ -424,7 +423,7 @@ export const viewParamsPanchayaths = async (req, res, next) => {
             const admin = await Admin.findById(adminId);
         
             if (admin) {
-              const zonalData = await Zonal.find({}, '_id name districtName stateName packageAmount'); 
+              const zonalData = await Zonal.find({}, '_id name districtName stateName '); 
               if (!zonalData || zonalData.length === 0) {
                 return next(errorHandler(401, "No Zonals exist"));
               }
@@ -433,7 +432,6 @@ export const viewParamsPanchayaths = async (req, res, next) => {
                   id: zonal._id,
                   name: zonal.name,
                   stateName: zonal.stateName,
-                  packageAmount: zonal.packageAmount, 
                   districtName: zonal.districtName, 
         
                 })),
@@ -455,7 +453,7 @@ export const viewParamsPanchayaths = async (req, res, next) => {
             const admin = await Admin.findById(adminId);
         
             if (admin) {
-              const panchayathData = await Panchayath.find({}, '_id name districtName stateName zonalName packageAmount'); 
+              const panchayathData = await Panchayath.find({}, '_id name districtName stateName zonalName '); 
               if (!panchayathData || panchayathData.length === 0) {
                 return next(errorHandler(401, "No Panchayaths exist"));
               }
@@ -465,7 +463,6 @@ export const viewParamsPanchayaths = async (req, res, next) => {
                   name: panchayath.name,
                   stateName: panchayath.stateName,
                   stateName: panchayath.zonalName,
-                  packageAmount: panchayath.packageAmount, 
                   districtName: panchayath.districtName, 
         
                 })),

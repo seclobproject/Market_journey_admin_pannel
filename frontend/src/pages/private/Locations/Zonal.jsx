@@ -96,9 +96,9 @@ console.log(response,"response")
         setValidated(false);
         setAddZonal("");
         getZonallist();
-        Show_Toast("District operation successful", true);
+        Show_Toast("Zonal added successfully", true);
       } else {
-        Show_Toast("District operation failed", false);
+        Show_Toast("Zonal added failed", false);
       }
     } catch (error) {
       Show_Toast(error, false);

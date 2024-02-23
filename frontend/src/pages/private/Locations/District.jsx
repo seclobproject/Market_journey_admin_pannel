@@ -62,9 +62,9 @@ function District() {
         setValidated(false);
         setAddDistrict("");
         getDistrict();
-        Show_Toast("District operation successful", true);
+        Show_Toast("District added successfully", true);
       } else {
-        Show_Toast("District operation failed", false);
+        Show_Toast("District added failed", false);
       }
     } catch (error) {
       Show_Toast(error, false);

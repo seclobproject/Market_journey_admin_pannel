@@ -1,16 +1,42 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SlideMotion } from "../../libs/FramerMotion";
 import ModalComponent from "../../Components/ModalComponet";
 import { Form } from "react-bootstrap";
 import { ContextData } from "../../Services/Context";
 import DeleteConfirmation from "../../Components/DeleteConfirmation";
+import { packagesListUrl } from "../../utils/Constants";
+import { ApiCall } from "../../Services/Api";
 
 function Package() {
   const [packageModal,setPackageModal]=useState({ show: false, id: null });
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
+  const [packagesList,setpackagesList]=useState([]);
 
+
+  //------List packages-------
+  const getPackagesList = async () => {
+    try {
+      const response = await ApiCall("get", packagesListUrl);
+console.log(response,"response.....")
+      if (response.status === 200) {
+        setStateList(response?.data?.states);
+      } else {
+        console.error(
+          "Error fetching state list. Unexpected status:",
+          response.status
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching state list:", error);
+    }
+  };
+
+
+  useEffect(()=>{
+    getPackagesList();
+  },[]);
 
   return (
     <>

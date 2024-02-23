@@ -109,7 +109,7 @@ console.log(response,"response")
   useEffect(() => {
     getStateList();
     getZonallist();
-  }, []);
+  }, [selectedId]);
   return (
     <>
       <SlideMotion>
@@ -265,7 +265,7 @@ console.log(response,"response")
                   ...addzonal,
                   districtName: selectedOption?.label,
                 });
-                getDistrictList(); // This action will be executed after setting the state
+                // getDistrictList(); // This action will be executed after setting the state
               }}
                 
                   

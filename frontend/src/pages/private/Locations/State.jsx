@@ -30,7 +30,6 @@ function State() {
           setStateModal(false);
           setValidated(false);
           getStateList();
-
           Show_Toast("State updated successfully", true);
         } else {
           Show_Toast("State Update Failed", false);

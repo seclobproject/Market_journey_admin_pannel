@@ -11,7 +11,7 @@ function Login() {
   const navigate = useNavigate();
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({});
-  const { Check_Validation, setIsLoggedIn, getToken } = useContext(ContextData);
+  const { Check_Validation, setIsLoggedIn, getToken,loginFun } = useContext(ContextData);
   const [showPassword, setShowPassword] = useState(false);
 
   const handlePasswordToggle = () => {
@@ -27,6 +27,8 @@ function Login() {
 
         localStorage.setItem("User", res?.data?.access_token);
         navigate("/dashboard");
+        loginFun()
+
         Show_Toast("Login Successfull", true);
       } else {
         console.log("invalid user");

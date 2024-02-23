@@ -131,7 +131,7 @@ function District() {
             <div className="table-container table-responsive rounded-2 mb-4">
               <table className="table border text-nowrap customize-table mb-0 align-middle">
                 <thead
-                  className="text-dark fs-4"
+                  className="text-dark fs-4 table-light"
                   style={{ backgroundColor: "yellow" }}
                 >
                   <tr>
@@ -144,9 +144,9 @@ function District() {
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">State Name</h6>
                     </th>
-                    <th>
+                    {/* <th>
                       <h6 className="fs-4 fw-semibold mb-0">Package</h6>
-                    </th>
+                    </th> */}
                     <th />
                   </tr>
                 </thead>
@@ -166,11 +166,11 @@ function District() {
                               districts.stateName.toUpperCase()) ||
                               "--"}
                           </td>
-                          <td>
+                          {/* <td>
                             {(districts?.packageAmount &&
                               districts.packageAmount) ||
                               "--"}
-                          </td>
+                          </td> */}
                         </tr>
                       ))}
                     </>
@@ -258,7 +258,7 @@ function District() {
                 Please provide a state Name.
               </Form.Control.Feedback>
             </div>
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label htmlFor="exampleInputEmail1" className="form-label">
                 Package Amount
               </label>
@@ -279,7 +279,7 @@ function District() {
               <Form.Control.Feedback type="invalid">
                 Please provide a package Amount.
               </Form.Control.Feedback>
-            </div>
+            </div> */}
 
             <div className="col-12 mt-4">
               <button type="submit" className="btn btn-custom float-end ms-1">

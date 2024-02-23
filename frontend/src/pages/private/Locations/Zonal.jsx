@@ -160,9 +160,7 @@ console.log(response,"response")
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">State Name</h6>
                     </th>
-                    <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Package Amount</h6>
-                    </th>
+                    
                     <th />
                   </tr>
                 </thead>
@@ -176,7 +174,6 @@ console.log(response,"response")
                   <td>{zonals?.name && zonals.name.toUpperCase()||"--"}</td>
                   <td>{zonals?.districtName && zonals.districtName.toUpperCase()||"--"}</td>
                   <td>{zonals?.stateName && zonals.stateName.toUpperCase()||"--"}</td>
-                  <td>{zonals?.packageAmount||"0"}</td>
 
 
 
@@ -187,7 +184,7 @@ console.log(response,"response")
           ) : (
             <tr>
               <td colSpan={20} style={{ textAlign: "center" }}>
-                <b>No State Found</b>{" "}
+                <b>No Zonals Found</b>{" "}
               </td>
             </tr>
           )}
@@ -302,7 +299,7 @@ console.log(response,"response")
                   Please provide a zonal name.
                 </Form.Control.Feedback>
               </div>
-              <div className="mb-4">
+              {/* <div className="mb-4">
                 <label htmlFor="exampleInputEmail1" className="form-label">
                   Package Amount
                 </label>
@@ -323,7 +320,7 @@ console.log(response,"response")
                 <Form.Control.Feedback type="invalid">
                   Please provide a package Amount.
                 </Form.Control.Feedback>
-              </div>
+              </div> */}
 
              
 

@@ -93,7 +93,7 @@ const userSchema = new mongoose.Schema(
     sponserName: {
       type: String,
     },
-    username: {
+    name: {
       type: String,
       required: true,
       unique: true,
@@ -141,7 +141,6 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
 
-    capitalWithdrawHistory: [withdrawSchema],
     walletWithdrawHistory: [withdrawSchema],
     referalIncome: {
       type: Number,
@@ -193,9 +192,6 @@ const userSchema = new mongoose.Schema(
     walletWithdrawUrl: {
       type: String,
     },
-    referalStatus: {
-      type: String,
-    },
     addPackageStatus: {
       type: String,
     },
@@ -206,7 +202,6 @@ const userSchema = new mongoose.Schema(
     allTransactions: [allTransactionSchema],
     childLevel1: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     childLevel2: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    childLevel3: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   { timestamps: true }
 );

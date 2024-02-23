@@ -2,14 +2,14 @@ import { errorHandler } from "../middleware/errorHandler.js";
 import Admin from "../models/adminModel.js";
 import Package from "../models/packageModel.js";
 
-export const addPackage=async(req,res)=>{
+export const addPackage=async(req,res,next)=>{
     try {
         const adminId = req.admin._id;
     const admin = await Admin.findById(adminId);
 
     if (admin) {
       const {franchiseName,packageAmount}=req.body;
-      const packageData=await Package.findOne({franchiseName});
+      const packageData=await Package.findOne({franchiseName:franchiseName});
       if(packageData){
         return next(errorHandler(401, "This Package already exist"));
       }
@@ -31,7 +31,7 @@ export const addPackage=async(req,res)=>{
         next(errorHandler(401, "Admin not found"));
       }
     } catch (error) {
-        
+        next(error)
     }
 }
 

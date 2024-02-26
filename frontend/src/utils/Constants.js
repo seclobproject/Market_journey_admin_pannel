@@ -11,8 +11,14 @@ export const districtlistPageUrl="/api/admin/view-all-districts"
 export const districtlistinZonalUrl="/api/admin/view-dropdown-districts"
 export const zonalPageUrl="/api/admin/add-zonal"
 export const zonallistPageUrl="/api/admin/view-all-zonals"
-
+export const zonallistindropdownUrl="/api/admin/view-dropdown-zonals"
+export const panchayathPageUrl="/api/admin/add-panchayath"
+export const panchayathlistPageUrl="/api/admin/view-all-panchayaths"
+export const panchayathlistindropdownUrl="/api/admin/view-dropdown-panchayaths"
 //packages
 export const packagesListUrl="/api/admin/view-package"
 export const packagesAddUrl="/api/admin/add-package"
 export const packagesEditUrl="/api/admin/edit-package"
+export const viewpackageListUrl="/api/admin/view-package"
+// member
+export const memberaddUrl="/api/admin/add-user"

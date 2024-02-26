@@ -5,10 +5,15 @@ import ModalComponent from "../../../Components/ModalComponet";
 import { Form } from "react-bootstrap";
 import {
   districtlistinZonalUrl,
+  panchayathPageUrl,
+  panchayathlistPageUrl,
   statelistPageUrl,
+  zonallistindropdownUrl,
 } from "../../../utils/Constants";
 import { ApiCall } from "../../../Services/Api";
 import Select from "react-select";
+import { Show_Toast } from "../../../utils/Toast";
+import Loader from "../../../Components/Loader";
 
 function Panchayath() {
   const [PanchayathModal, setPanchayathModal] = useState({
@@ -23,6 +28,15 @@ function Panchayath() {
   const [selectedState, setSelectedState] = useState(null);
   const [districtList, setdistrictList] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
+  const [zonalList, setZonalList] = useState([]);
+  const [districtId, setDistrictId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [panchyathList, setPanchayathList] = useState([]);
+
+  console.log(districtId, "districtId");
+  console.log(selectedId, "selected id");
+  console.log(zonalList, "zonalList ");
+  console.log(addPanchayath, "addPanchayath");
 
   //-----------list state in drop down--------
   const getStateList = async () => {
@@ -61,10 +75,75 @@ function Panchayath() {
       console.error("Error fetching state list:", error);
     }
   };
+  //-----------list Zonal in drop down--------
+  const getZonallist = async () => {
+    try {
+      const response = await ApiCall(
+        "get",
+        `${zonallistindropdownUrl}/${districtId}`
+      );
+      console.log(response, "from api call");
+      if (response.status === 200) {
+        setZonalList(response?.data?.zonals);
+      } else {
+        console.error(
+          "Error fetching state list. Unexpected status:",
+          response.status
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching state list:", error);
+    }
+  };
+  //-----------list Zonals --------
+  const getPanchayathList = async () => {
+    try {
+      setIsLoading(true);
 
-  
+      const response = await ApiCall("get", panchayathlistPageUrl);
+      console.log(response, "from api call");
+      if (response.status === 200) {
+        setPanchayathList(response?.data?.panchayaths);
+        setIsLoading(false);
+      } else {
+        console.error(
+          "Error fetching state list. Unexpected status:",
+          response.status
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching state list:", error);
+    }
+  };
+  //---------Add--panchayath---------
+  const addPanchayathFun = async () => {
+    console.log("here");
+
+    try {
+      const response = await ApiCall("post", panchayathPageUrl, addPanchayath);
+      console.log(response, " from add panchyath");
+      if (response.status === 200) {
+        setPanchayathModal(false);
+        setValidated(false);
+        setAddPanchayath("");
+        // ();
+        Show_Toast("Panchayath added successfully", true);
+      } else {
+        Show_Toast("Panchayath added failed", false);
+      }
+    } catch (error) {
+      Show_Toast(error, false);
+    }
+  };
+
   useEffect(() => {
+    getPanchayathList();
     getStateList();
+    if (districtId) {
+      getZonallist();
+    }
+  }, [districtId]);
+  useEffect(() => {
     if (selectedId) {
       getDistrictList();
     }
@@ -73,7 +152,10 @@ function Panchayath() {
     <>
       <SlideMotion>
         <div className="card w-100 position-relative overflow-hidden">
-          <h5 className="card-title fw-semibold mb-0 lh-sm px-4 mt-3">
+          <h5
+            className="card-title fw-semibold mb-0 lh-sm px-4 mt-3"
+            style={{ color: "#F7AE15" }}
+          >
             Panchayath
           </h5>
           <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
@@ -104,59 +186,82 @@ function Panchayath() {
               </button>
             </div>
           </div>
-          {/* {isLoading ? (
+          {isLoading ? (
             <Loader />
-          ) : ( */}
-          <div className="card-body p-2">
-            <div className="table-container table-responsive rounded-2 mb-4">
-              <table className="table border text-nowrap customize-table mb-0 align-middle">
-                <thead className="text-light fs-4 table-light">
-                  <tr>
-                    <th>
-                      <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
-                    </th>
-                    <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Zonal Name</h6>
-                    </th>
-                    <th>
-                      <h6 className="fs-4 fw-semibold mb-0">District Name</h6>
-                    </th>
-                    <th>
-                      <h6 className="fs-4 fw-semibold mb-0">State Name</h6>
-                    </th>
-
-                    <th />
-                  </tr>
-                </thead>
-                {/* <tbody>
-          {zonalList?.length ? (
-            <>
-              {zonalList.map((zonals, index) => (
-                console.log(zonals,"zonals"),
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{zonals?.name && zonals.name.toUpperCase()||"--"}</td>
-                  <td>{zonals?.districtName && zonals.districtName.toUpperCase()||"--"}</td>
-                  <td>{zonals?.stateName && zonals.stateName.toUpperCase()||"--"}</td>
-
-
-
-
-                </tr>
-              ))}
-            </>
           ) : (
-            <tr>
-              <td colSpan={20} style={{ textAlign: "center" }}>
-                <b>No Zonals Found</b>{" "}
-              </td>
-            </tr>
-          )}
-        </tbody> */}
-              </table>
+            <div className="card-body p-2">
+              <div className="table-container table-responsive rounded-2 mb-4">
+                <table className="table border text-nowrap customize-table mb-0 align-middle">
+                  <thead className="text-light fs-4 table-light">
+                    <tr>
+                      <th>
+                        <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
+                      </th>
+                      <th>
+                        <h6 className="fs-4 fw-semibold mb-0">
+                          Panchayath Name
+                        </h6>
+                      </th>
+                      <th>
+                        <h6 className="fs-4 fw-semibold mb-0">Zonal Name</h6>
+                      </th>
+                      <th>
+                        <h6 className="fs-4 fw-semibold mb-0">District Name</h6>
+                      </th>
+                      <th>
+                        <h6 className="fs-4 fw-semibold mb-0">State Name</h6>
+                      </th>
+
+                      <th />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {panchyathList?.length ? (
+                      <>
+                        {panchyathList.map(
+                          (panchayaths, index) => (
+                            console.log(panchayaths, "panchayaths"),
+                            (
+                              <tr key={index}>
+                                <td>{index + 1}</td>
+                                <td>
+                                  {(panchayaths?.name &&
+                                    panchayaths.name.toUpperCase()) ||
+                                    "--"}
+                                </td>
+                                <td>
+                                  {(panchayaths?.zonalName &&
+                                    panchayaths.zonalName.toUpperCase()) ||
+                                    "--"}
+                                </td>
+
+                                <td>
+                                  {(panchayaths?.districtName &&
+                                    panchayaths.districtName.toUpperCase()) ||
+                                    "--"}
+                                </td>
+                                <td>
+                                  {(panchayaths?.stateName &&
+                                    panchayaths.stateName.toUpperCase()) ||
+                                    "--"}
+                                </td>
+                              </tr>
+                            )
+                          )
+                        )}
+                      </>
+                    ) : (
+                      <tr>
+                        <td colSpan={20} style={{ textAlign: "center" }}>
+                          <b>No Panchayath Found</b>{" "}
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-          {/* )} */}
+          )}
           <div className="me-2">
             {/* -------------------------pagination--------------------- */}
             {/* <Pagination
@@ -173,14 +278,18 @@ function Panchayath() {
           onHide={() => {
             setPanchayathModal({ show: false, id: null });
           }}
-          title={<h5>Add Panchayaat</h5>}
+          title={
+            <h5 style={{ color: "#F7AE15", margin: 0 }}>Add Panchayaat</h5>
+          }
           centered
           width={"500px"}
         >
           <Form
             noValidate
             validated={validated}
-            onSubmit={(e) => Check_Validation(e, setValidated)}
+            onSubmit={(e) =>
+              Check_Validation(e, addPanchayathFun, setValidated)
+            }
           >
             <div className="mb-4">
               <label htmlFor="exampleInputEmail1" className="form-label">
@@ -195,13 +304,11 @@ function Panchayath() {
                 }))}
                 value={selectedState?.stateName}
                 onChange={(selectedOption) => {
-                  // console.log(selectedOption,"selectedoptions")
                   setSelectedId(selectedOption?.value);
                   setAddPanchayath({
                     ...addPanchayath,
                     stateName: selectedOption?.label,
                   });
-                  getDistrictList(); // This action will be executed after setting the state
                 }}
                 placeholder="Select a state"
                 isSearchable={true}
@@ -224,11 +331,12 @@ function Panchayath() {
                 value={selectedState?.stateName}
                 onChange={(selectedOption) => {
                   console.log(selectedOption, "selectedoptions");
+                  setDistrictId(selectedOption?.value);
+
                   setAddPanchayath({
                     ...addPanchayath,
                     districtName: selectedOption?.label,
                   });
-                  // getDistrictList(); // This action will be executed after setting the state
                 }}
                 placeholder="Select a state"
                 isSearchable={true}
@@ -237,51 +345,55 @@ function Panchayath() {
                 Please provide a package Amount.
               </Form.Control.Feedback>
             </div>
-
             <div className="mb-4">
               <label htmlFor="exampleInputEmail1" className="form-label">
-                Zonal Name
+                Zonal
+              </label>
+              <Select
+                required
+                options={zonalList?.map((zonal) => ({
+                  value: zonal?.id,
+                  label: zonal?.name,
+                }))}
+                value={selectedState?.zonalName}
+                onChange={(selectedOption) => {
+                  console.log(selectedOption, "selectedoptions");
+
+                  setAddPanchayath({
+                    ...addPanchayath,
+                    zonalName: selectedOption?.label,
+                  });
+                }}
+                placeholder="Select a state"
+                isSearchable={true}
+              />
+              <Form.Control.Feedback type="invalid">
+                Please provide a zonal
+              </Form.Control.Feedback>
+            </div>
+            <div className="mb-4">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                Panchayath
               </label>
               <input
                 required
                 className="form-control form-control-lg "
                 rows="4"
                 type="text"
-                placeholder="Enter a zonal name"
-                //   value={addzonal?.zonalName}
-                //   onChange={(e) =>
-                //     setAddZonal({
-                //       ...addzonal,
-                //       zonalName: e.target.value,
-                //     })
-                //   }
+                placeholder="Enter panchayath name"
+                value={addPanchayath?.panchayathName}
+                onChange={(e) =>
+                  setAddPanchayath({
+                    ...addPanchayath,
+                    panchayathName: e.target.value,
+                  })
+                }
               />
               <Form.Control.Feedback type="invalid">
-                Please provide a zonal name.
+                Please provide a panchayath name.
               </Form.Control.Feedback>
             </div>
-            {/* <div className="mb-4">
-                <label htmlFor="exampleInputEmail1" className="form-label">
-                  Package Amount
-                </label>
-                <input
-                  required
-                  className="form-control form-control-lg "
-                  rows="4"
-                  type="number"
-                  placeholder="Enter a package amount"
-                  value={addzonal?.packageAmount}
-                  onChange={(e) =>
-                    setAddZonal({
-                      ...addzonal,
-                      packageAmount: e.target.value,
-                    })
-                  }
-                />
-                <Form.Control.Feedback type="invalid">
-                  Please provide a package Amount.
-                </Form.Control.Feedback>
-              </div> */}
+           
 
             <div className="col-12 mt-4">
               <button type="submit" className="btn btn-custom float-end ms-1">

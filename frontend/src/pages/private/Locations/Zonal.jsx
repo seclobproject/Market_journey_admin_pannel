@@ -125,7 +125,7 @@ console.log(response,"response")
     <>
       <SlideMotion>
         <div className="card w-100 position-relative overflow-hidden">
-          <h5 className="card-title fw-semibold mb-0 lh-sm px-4 mt-3">Zonal</h5>
+          <h5 className="card-title fw-semibold mb-0 lh-sm px-4 mt-3" style={{color: '#F7AE15'}}>Zonal</h5>
           <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
             <div className="d-flex align-items-center">
               <form className="position-relative">
@@ -223,7 +223,11 @@ console.log(response,"response")
           onHide={() => {
             setZonalModal({ show: false, id: null });
           }}
-          title={<h5>Add Zonal</h5>}
+          title={
+            <h5 style={{ color: '#F7AE15', margin: 0}}>
+            Add Zonal
+            </h5>
+          }
           centered
           width={"500px"}
         >

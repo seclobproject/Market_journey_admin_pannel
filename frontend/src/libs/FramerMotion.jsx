@@ -23,8 +23,8 @@ export   function SlideMotion({children}){
   return (
     <AnimatePresence>
       <motion.div
-        initial={{x: "5%", opacity: 0 }}
-        animate={{ x: "0px", opacity: 1 }}
+        initial={{x: "15%", opacity: 0 }}
+        animate={{ x: "10px", opacity: 1 }}
         exit={{  x: "100%", opacity: 0 }}
         transition={{ duration: .5 }}
         

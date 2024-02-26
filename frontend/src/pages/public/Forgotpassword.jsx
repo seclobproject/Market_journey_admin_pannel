@@ -16,6 +16,7 @@ function Forgotpassword() {
   const { Check_Validation } = useContext(ContextData);
   const [showPassword, setShowPassword] = useState(false);
   const [showconfirmPassword, setShowConfirmpassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handlePasswordToggle = () => {
     setShowPassword(!showPassword);
@@ -43,9 +44,12 @@ function Forgotpassword() {
     }
 
     try {
+      setIsLoading(true)
       const res = await ApiCall("post", update_PasswordURL, formData);
       if (res?.status === 200) {
         Show_Toast("Successfully updated password", true);
+        setIsLoading(false)
+
         navigate("/");
       } else {
         console.log("Invalid user");
@@ -98,12 +102,13 @@ function Forgotpassword() {
                             htmlFor="exampleInputEmail1"
                             className="form-label"
                           >
-                            Email
-                          </label>
+Username                          </label>
                           <input
                             //   value={formData?.username}
                             type="email"
-                            required
+                            
+                            placeholder="Enter Username"
+
                             className="form-control"
                             id="exampleInputEmail1"
                             aria-describedby="emailHelp"
@@ -116,7 +121,7 @@ function Forgotpassword() {
                             }}
                           />
                           <Form.Control.Feedback type="invalid">
-                            Please enter the Email
+                            Please enter the Username
                           </Form.Control.Feedback>
                         </div>
                       
@@ -209,11 +214,12 @@ function Forgotpassword() {
                           </Link>
                         </div>
                         <Button
-                          className="btn btn-custom w-100 py-8 mb-4 rounded-2 mt-3"
-                          type="submit"
-                        >
-                          Save
-                        </Button>
+        className={`btn btn-custom w-100 py-8 mb-4 rounded-2 mt-3 ${isLoading ? 'loading' : ''}`}
+        type="submit"
+        disabled={isLoading}
+      >
+        {isLoading ? 'Updating...' : 'Save'}
+      </Button>
                       </Form>
                     </div>
                   </div>

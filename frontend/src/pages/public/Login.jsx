@@ -81,12 +81,14 @@ function Login() {
                             htmlFor="exampleInputEmail1"
                             className="form-label"
                           >
-                            Email
-                          </label>
+Username                         
+ </label>
                           <input
                             value={formData?.username}
                             type="email"
                             required
+                            placeholder="Enter Username"
+
                             className="form-control"
                             id="exampleInputEmail1"
                             aria-describedby="emailHelp"

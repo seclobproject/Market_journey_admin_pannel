@@ -11,6 +11,7 @@ import {
 } from "../../utils/Constants";
 import { ApiCall } from "../../Services/Api";
 import { Show_Toast } from "../../utils/Toast";
+import Loader from "../../Components/Loader";
 
 function Package() {
   const [packageModal, setPackageModal] = useState({ show: false, id: null });
@@ -19,15 +20,20 @@ function Package() {
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
   const [packagesList, setpackagesList] = useState([]);
   const [addPackages, setAddPackages] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
   console.log(addPackages, "add");
 
   //------List packages-------
   const getPackagesList = async () => {
     try {
+      setIsLoading(true)
       const response = await ApiCall("get", packagesListUrl);
       console.log(response, "response.....");
       if (response.status === 200) {
         setpackagesList(response?.data?.packageData);
+        setIsLoading(false)
+
       } else {
         console.error(
           "Error fetching state list. Unexpected status:",
@@ -87,6 +93,7 @@ function Package() {
   return (
     <>
       <SlideMotion>
+        
         <div className="card w-100 position-relative overflow-hidden">
           {" "}
           <h5 className="card-title fw-semibold mb-0 lh-sm px-4 mt-3">
@@ -123,6 +130,9 @@ function Package() {
               </button>
             </div>
           </div>
+          {isLoading ? (
+            <Loader />
+          ) : (
           <div className="card-body p-2">
             <div className="table-container table-responsive rounded-2 mb-4">
               <table className="table border text-nowrap customize-table mb-0 align-middle">
@@ -183,6 +193,7 @@ function Package() {
               </table>
             </div>
           </div>
+               )}
           <div className="me-2">
             {/* -------------------------pagination--------------------- */}
             {/* <Pagination
@@ -261,7 +272,7 @@ function Package() {
             </div>
 
             <div className="col-12 mt-4">
-              <button type="submit" className="btn btn-custom float-end ms-1">
+  <button type="submit" className="btn btn-custom float-end ms-1">
                 {addPackages?._id ? "Update" : "Save"}
               </button>
             </div>

@@ -13,6 +13,7 @@ import {
 } from "../../../utils/Constants";
 import { ApiCall } from "../../../Services/Api";
 import { Show_Toast } from "../../../utils/Toast";
+import Loader from "../../../Components/Loader";
 
 function District() {
   const navigate = useNavigate();
@@ -25,6 +26,8 @@ function District() {
   const [districtModal, setDistrictModal] = useState({ show: false, id: null });
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   console.log(districtList, "districtList");
 
   console.log(stateList, "list");
@@ -36,10 +39,13 @@ function District() {
   //-----------list state--------
   const getDistrict = async () => {
     try {
+      setIsLoading(true)
       const response = await ApiCall("get", districtlistPageUrl);
 
       if (response.status === 200) {
         setDistrictList(response?.data?.districts);
+        setIsLoading(false)
+
       } else {
         console.error(
           "Error fetching state list. Unexpected status:",
@@ -127,6 +133,9 @@ function District() {
               </button>
             </div>
           </div>
+          {isLoading ? (
+            <Loader />
+          ) : (
           <div className="card-body p-2">
             <div className="table-container table-responsive rounded-2 mb-4">
               <table className="table border text-nowrap customize-table mb-0 align-middle">
@@ -185,6 +194,7 @@ function District() {
               </table>
             </div>
           </div>
+          )}
           <div className="me-2">
             {/* -------------------------pagination--------------------- */}
             {/* <Pagination

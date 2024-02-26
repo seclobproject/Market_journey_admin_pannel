@@ -7,6 +7,7 @@ import { Form } from "react-bootstrap";
 import { ApiCall } from "../../../Services/Api";
 import { statePageUrl, statelistPageUrl } from "../../../utils/Constants";
 import { Show_Toast } from "../../../utils/Toast";
+import Loader from "../../../Components/Loader";
 
 function State() {
   
@@ -15,6 +16,7 @@ function State() {
   const [validated, setValidated] = useState(false);
   const [addState, setAddState] = useState({});
   const [stateList, setStateList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   //---------add State---------
   const addStateFun = async () => {
@@ -55,10 +57,13 @@ function State() {
   //-----------list state--------
   const getStateList = async () => {
     try {
+      setIsLoading(true)
       const response = await ApiCall("get", statelistPageUrl);
 
       if (response.status === 200) {
         setStateList(response?.data?.states);
+        setIsLoading(false)
+
       } else {
         console.error(
           "Error fetching state list. Unexpected status:",
@@ -109,6 +114,9 @@ function State() {
               </button>
             </div>
           </div>
+          {isLoading ? (
+            <Loader />
+          ) : (
           <div className="card-body p-2">
             <div className="table-container table-responsive rounded-2 mb-4">
               <table className="table border text-nowrap customize-table mb-0 align-middle">
@@ -144,6 +152,7 @@ function State() {
               </table>
             </div>
           </div>
+          )}
           <div className="me-2">
             {/* -------------------------pagination--------------------- */}
             {/* <Pagination

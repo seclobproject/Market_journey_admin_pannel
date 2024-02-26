@@ -109,6 +109,9 @@ console.log(response,"response")
   useEffect(() => {
     getStateList();
     getZonallist();
+    if(selectedId){
+      getDistrictList();
+    }
   }, [selectedId]);
   return (
     <>
@@ -213,7 +216,7 @@ console.log(response,"response")
           width={"500px"}
         >
           <Form
-            Validate
+            noValidate
             validated={validated}
             onSubmit={(e) => Check_Validation(e, addZonalFun, setValidated)}
           >
@@ -230,13 +233,13 @@ console.log(response,"response")
                 }))}
                 value={selectedState?.stateName}
                 onChange={(selectedOption) => {
-                    console.log(selectedOption,"selectedoptions")
+                    // console.log(selectedOption,"selectedoptions")
                 setSelectedId(selectedOption?.value)
                     setAddZonal({
                       ...addzonal,
                       stateName: selectedOption?.label,
                     });
-                    getDistrictList(); // This action will be executed after setting the state
+                    // getDistrictList(); // This action will be executed after setting the state
                   }}
                   
                 placeholder="Select a state"
@@ -330,6 +333,14 @@ console.log(response,"response")
               </button>
             </div>
           </Form>
+          <button
+            className="btn btn-cancel float-end me-1"
+            onClick={() => {
+              setZonalModal({ show: false, id: null });
+            }}
+          >
+            cancel
+          </button>
         </ModalComponent>
       </SlideMotion>
     </>

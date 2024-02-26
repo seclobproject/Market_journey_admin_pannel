@@ -206,7 +206,7 @@ function District() {
           width={"500px"}
         >
           <Form
-            Validate
+            noValidate
             validated={validated}
             onSubmit={(e) => Check_Validation(e, addDisrtictFun, setValidated)}
           >
@@ -287,6 +287,14 @@ function District() {
               </button>
             </div>
           </Form>
+          <button
+            className="btn btn-cancel float-end me-1"
+            onClick={() => {
+              setDistrictModal({ show: false, id: null });
+            }}
+          >
+            cancel
+          </button>
         </ModalComponent>
       </SlideMotion>
     </>

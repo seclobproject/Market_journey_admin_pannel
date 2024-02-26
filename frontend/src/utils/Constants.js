@@ -15,4 +15,4 @@ export const zonallistPageUrl="/api/admin/view-all-zonals"
 //packages
 export const packagesListUrl="/api/admin/view-package"
 export const packagesAddUrl="/api/admin/add-package"
-export const packagesEditUrl="/api/admin/edit-package/"
+export const packagesEditUrl="/api/admin/edit-package"

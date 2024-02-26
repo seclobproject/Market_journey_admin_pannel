@@ -4,24 +4,30 @@ import ModalComponent from "../../Components/ModalComponet";
 import { Form } from "react-bootstrap";
 import { ContextData } from "../../Services/Context";
 import DeleteConfirmation from "../../Components/DeleteConfirmation";
-import { packagesListUrl } from "../../utils/Constants";
+import {
+  packagesAddUrl,
+  packagesEditUrl,
+  packagesListUrl,
+} from "../../utils/Constants";
 import { ApiCall } from "../../Services/Api";
+import { Show_Toast } from "../../utils/Toast";
 
 function Package() {
-  const [packageModal,setPackageModal]=useState({ show: false, id: null });
+  const [packageModal, setPackageModal] = useState({ show: false, id: null });
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
-  const [packagesList,setpackagesList]=useState([]);
-
+  const [packagesList, setpackagesList] = useState([]);
+  const [addPackages, setAddPackages] = useState({});
+  console.log(addPackages, "add");
 
   //------List packages-------
   const getPackagesList = async () => {
     try {
       const response = await ApiCall("get", packagesListUrl);
-console.log(response,"response.....")
+      console.log(response, "response.....");
       if (response.status === 200) {
-        setStateList(response?.data?.states);
+        setpackagesList(response?.data?.packageData);
       } else {
         console.error(
           "Error fetching state list. Unexpected status:",
@@ -32,11 +38,51 @@ console.log(response,"response.....")
       console.error("Error fetching state list:", error);
     }
   };
+  //---------add or edit packages---------
+  const addOrEdit = async () => {
+    console.log("here");
+    try {
+      if (addPackages._id) {
+        const updateResponse = await ApiCall(
+          "post",
+          `${packagesEditUrl}/${addPackages._id}`,
+          addPackages
+        );
+        console.log(updateResponse, "response");
+        if (updateResponse.status === 200) {
+          setPackageModal(false);
+          setValidated(false);
 
+          getPackagesList();
+          Show_Toast("Package updated successfully", true);
+        } else {
+          Show_Toast("Package Update Failed", false);
+        }
+      } else {
+        const createResponse = await ApiCall(
+          "post",
+          packagesAddUrl,
+          addPackages
+        );
+        if (createResponse.status === 200) {
+          setPackageModal(false);
+          setValidated(false);
+          setAddPackages("");
+          getPackagesList();
 
-  useEffect(()=>{
+          Show_Toast("Packages added successfully", true);
+        } else {
+          Show_Toast(error, false);
+        }
+      }
+    } catch (error) {
+      Show_Toast(error, false);
+    }
+  };
+
+  useEffect(() => {
     getPackagesList();
-  },[]);
+  }, []);
 
   return (
     <>
@@ -46,6 +92,7 @@ console.log(response,"response.....")
           <h5 className="card-title fw-semibold mb-0 lh-sm px-4 mt-3">
             Packages
           </h5>
+
           <div className="px-4 py-3 border-bottom d-flex  align-items-center justify-content-between">
             <div className=" d-flex align-items-center ">
               <form className="position-relative">
@@ -66,7 +113,11 @@ console.log(response,"response.....")
             <div>
               <button
                 className="btn btn-custom  ms-3 float-end"
-                onClick={() => setPackageModal({ show: true, id: null })}
+                onClick={() => {
+                  setPackageModal({ show: true, id: null });
+                  setValidated(false);
+                  setAddPackages("");
+                }}
               >
                 Add
               </button>
@@ -78,97 +129,56 @@ console.log(response,"response.....")
                 <thead className="text-dark fs-4 table-light">
                   <tr>
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Name</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
+                    </th>
+                    <th>
+                      <h6 className="fs-4 fw-semibold mb-0">Franchise Name</h6>
                     </th>
 
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Phone</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">Package Amount</h6>
                     </th>
-                    <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Email</h6>
-                    </th>
-                    <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Username</h6>
-                    </th>
-                    <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Password</h6>
-                    </th>
-                    <th>
-                      <h6 className="fs-4 fw-semibold mb-0">User Role</h6>
-                    </th>
+                    <th>Actions</th>
 
-                    <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Action</h6>
-                    </th>
                     <th />
                   </tr>
                 </thead>
                 <tbody>
-                  <>
+                  {packagesList?.length ? (
+                    <>
+                      {packagesList.map((packages, index) => (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td>
+                            {(packages?.franchiseName &&
+                              packages.franchiseName.toUpperCase()) ||
+                              "--"}
+                          </td>
+                          <td>{packages?.packageAmount || "0"}</td>
+                          <td>
+                            {" "}
+                            <a
+                              className="dropdown-item d-flex align-items-center gap-3"
+                              onClick={() => {
+                                setPackageModal({ show: true, id: null });
+                                setAddPackages(packages);
+                              }}
+                            >
+                              <i className="fs-4 ti ti-edit" />
+                              Edit
+                            </a>
+                          </td>
+                          <td></td>
+                        </tr>
+                      ))}
+                    </>
+                  ) : (
                     <tr>
-                      <td>
-                        <div className="d-flex align-items-center">
-                          <div className="ms-1">
-                            <h6 className="fs-4 fw-semibold mb-0"></h6>
-                          </div>
-                        </div>
-                      </td>
-
-                      <td></td>
-                      <td>
-                        <p className="mb-0 fw-normal"></p>
-                      </td>
-                      <td>
-                        <span className="mb-0 fw-normal"></span>
-                      </td>
-                      <td>
-                        <span className="mb-0 fw-normal"></span>
-                      </td>
-
-                      <td>
-                        <div className="dropdown dropstart">
-                          <a
-                            href="#"
-                            className="text-muted"
-                            id="dropdownMenuButton"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                          >
-                            <i className="ti ti-dots fs-5" />
-                          </a>
-                          <ul
-                            className="dropdown-menu"
-                            aria-labelledby="dropdownMenuButton"
-                          >
-                            <li>
-                              <a
-                                className="dropdown-item d-flex align-items-center gap-3"
-                                //   onClick={() => handleEdit(staff)}
-                              >
-                                <i className="fs-4 ti ti-edit" />
-                                Edit
-                              </a>
-                            </li>
-                            <li>
-                              <a
-                                className="dropdown-item d-flex align-items-center gap-3"
-                                href="#"
-                                  onClick={() =>
-                                    setDeleteModal({
-                                      show: true,
-                                      // id: staff?._id,
-                                    })
-                                  }
-                              >
-                                <i className="fs-4 ti ti-trash" />
-                                Delete
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
+                      <td colSpan={20} style={{ textAlign: "center" }}>
+                        <b>No Packages Found</b>{" "}
                       </td>
                     </tr>
-                  </>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -193,66 +203,78 @@ console.log(response,"response.....")
           width={"500px"}
         >
           <Form
-            Validate
+            noValidate
             validated={validated}
-            onSubmit={(e) => Check_Validation(e, setValidated)}
+            onSubmit={(e) => Check_Validation(e, addOrEdit, setValidated)}
           >
-            <div className="mb-4">
-              <input
-                required
-                className="form-control form-control-lg "
-                rows="4"
-                placeholder="Location"
-                // value={addLocation?.name}
-                // onChange={(e) => setAddLocation({ ...addLocation, name: e.target.value })}
-              ></input>
-              <Form.Control.Feedback type="invalid">
-                Please provide a Location Name.
-              </Form.Control.Feedback>
-            </div>
-            <div className="mb-4">
-              <select
-                id="emiratesSelect"
-                required
-                className="form-select form-control-lg"
-                placeholder="Emirates"
-                // value={addLocation?.emirates_id}
+            {!addPackages?._id && (
+              <div className="mb-4">
+                <label htmlFor="franchiseType" className="form-label">
+                  Franchise Type
+                </label>
+                <select
+                  required
+                  id="franchiseType"
+                  className="form-select form-control-lg"
+                  value={addPackages?.franchiseName}
+                  onChange={(e) =>
+                    setAddPackages({
+                      ...addPackages,
+                      franchiseName: e.target.value,
+                    })
+                  }
+                >
+                  <option value="" disabled selected>
+                    Select Franchise Type
+                  </option>
+                  <option value="District Franchise">District Franchise</option>
+                  <option value="Zonal Franchise">Zonal Franchise</option>
+                  <option value="Mobile Franchise">Mobile Franchise</option>
+                </select>
+                <Form.Control.Feedback type="invalid">
+                  Please select a franchise type.
+                </Form.Control.Feedback>
+              </div>
+            )}
 
-                // onChange={(e) => {
-                //   setAddLocation({ ...addLocation, emirates_id: e.target.value });
-                // }}
-              >
-                <option value="" disabled selected>
-                  Emirates
-                </option>
-                {/* {getemirates?.map((emirate, index) => (
-      <option key={index} value={emirate._id}>
-        {emirate.name}
-      </option>
-    ))} */}
-              </select>
+            <div className="mb-4">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                Package Amount
+              </label>
+              <input
+                type="number"
+                id="packageAmountInput"
+                className="form-control form-control-lg"
+                placeholder="Package Amount"
+                value={addPackages?.packageAmount}
+                onChange={(e) => {
+                  setAddPackages({
+                    ...addPackages,
+                    packageAmount: e.target.value,
+                  });
+                }}
+                required
+              />
               <Form.Control.Feedback type="invalid">
-                Please select an Emirates.
+                Please enter a package amount.
               </Form.Control.Feedback>
             </div>
 
             <div className="col-12 mt-4">
-            <button type="submit" className="btn btn-custom float-end ms-1">
-                {/* {addLocation?._id ? 'Update' : 'Save'}  */}Save
+              <button type="submit" className="btn btn-custom float-end ms-1">
+                {addPackages?._id ? "Update" : "Save"}
               </button>
-            <button type="submit" className="btn btn-cancel float-end me-1">
-                {/* {addLocation?._id ? 'Update' : 'Save'}  */}Cancel
-              </button>
-              
             </div>
           </Form>
+          <button
+            className="btn btn-cancel float-end me-1"
+            onClick={() => {
+              setPackageModal({ show: false, id: null });
+            }}
+          >
+            cancel
+          </button>
         </ModalComponent>
-             {/* -------------deleteConfirmation */}
-       <DeleteConfirmation
-        show={deleteModal.show}
-        onHide={() => setDeleteModal({ show: false, id: null })}
-        onDelete={() => handleDelete(deleteModal.id)}
-      />
       </SlideMotion>
     </>
   );

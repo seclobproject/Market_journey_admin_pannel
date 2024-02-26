@@ -165,7 +165,7 @@ function State() {
           width={"500px"}
         >
           <Form
-            Validate
+            noValidate
             validated={validated}
             onSubmit={(e) => Check_Validation(e, addStateFun, setValidated)}
           >
@@ -194,6 +194,14 @@ function State() {
               </button>
             </div>
           </Form>
+          <button
+            className="btn btn-cancel float-end me-1"
+            onClick={() => {
+              setStateModal({ show: false, id: null });
+            }}
+          >
+            cancel
+          </button>
         </ModalComponent>
       </SlideMotion>
     </>

@@ -112,6 +112,21 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    franchise: {
+      type: String,
+    },
+        state: {
+          type: String,
+        },
+        district: {
+          type: String,
+        },
+        zonal: {
+          type: String,
+        },
+        panchayath: {
+          type: String,
+        },
     password: {
       type: String,
       required: true,
@@ -182,6 +197,10 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    tempPackageAmount: {
+      type: Number,
+      default: 0,
+    },
     packageName: {
       type: String,
     },
@@ -190,9 +209,6 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
     walletWithdrawUrl: {
-      type: String,
-    },
-    addPackageStatus: {
       type: String,
     },
     userStatus: {

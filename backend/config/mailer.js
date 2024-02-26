@@ -9,16 +9,16 @@ const sendMail = (mailId, name, sponserid, transactionPassword, password) => {
     secure: false,
     requireTLS: true,
     auth: {
-      user: "octtaview@gmail.com",
-      pass: "iang hqul swgd xedk",
+      user: "shyamkumarbeypore@gmail.com",
+      pass: "beha ywht lrdo ichp",
     },
   });
   const mailOptions = {
-    from: `OCTTAVIEW GROUP <octtaview@gmail.com>`,
+    from: `MARKET JOURNEY GROUP <shyamkumarbeypore@gmail.com>`,
     to: `${recipient}`,
     subject: `Hi ${name}, Registration successful.`,
-    text: `Hi ${name}, Welcome to OCTTAVIEW`,
-    html: `<h4>Congrats! You have joined the OCTTAVIEW Group.</h4><p>Your sponserID is <strong>${sponserid}</strong><br/>Username: ${recipient}<br />Transaction Password: ${transactionPassword}<br />Password: ${password}</p>`,
+    text: `Hi ${name}, Welcome to MARKET JOURNEY`,
+    html: `<h4>Congrats! You have joined the MARKET JOURNEY Group.</h4><p>Your sponserID is <strong>${sponserid}</strong><br/>Username: ${recipient}<br />Transaction Password: ${transactionPassword}<br />Password: ${password}</p>`,
   };
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {

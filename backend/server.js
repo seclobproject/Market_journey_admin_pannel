@@ -2,6 +2,7 @@ import  express  from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import adminRouter from "./router/adminRoute.js";
+import userRouter from "./router/userRoute.js";
 
 import dbConnect from "./config/dbConnect.js";
 dbConnect();
@@ -13,6 +14,7 @@ app.use(cors())
 app.use(express.json());
 app.use(cookieParser());
 
+app.use("/api/user",userRouter );
 app.use("/api/admin", adminRouter);
 
 

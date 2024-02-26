@@ -3,6 +3,7 @@ const adminRouter = express.Router();
 import {addDistrict, addPanchayath, addState, addZonal, adminLogin,  forgotPassword, viewAllDistricts, viewAllPanchayaths, viewAllZonals, viewParamsDistricts, viewParamsPanchayaths, viewParamsZonals, viewStates} from "../controller/adminController.js";
 import { protectAdmin } from "../middleware/authMiddleware.js";
 import { addPackage, editPackage, viewPackages } from "../controller/packageController.js";
+import { addUser } from "../controller/userController.js";
 
 adminRouter.post("/admin-login", adminLogin);
 adminRouter.post("/forgot-password", forgotPassword);
@@ -12,6 +13,7 @@ adminRouter.post("/add-zonal", protectAdmin,addZonal);
 adminRouter.post("/add-panchayath", protectAdmin,addPanchayath);
 adminRouter.post("/add-package", protectAdmin,addPackage);
 adminRouter.post("/edit-package/:id", protectAdmin,editPackage);
+adminRouter.post("/add-user", protectAdmin, addUser);
 
 
 

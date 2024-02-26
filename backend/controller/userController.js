@@ -20,7 +20,7 @@ export const generateRandomString = () => {
 export const addUser = async (req, res, next) => {
     try {
       console.log("Reached here");
-        const sponser=req.admin._id || req.user._id
+      const sponser = req.admin ? req.admin._id : (req.user ? req.user._id : null);
         console.log(sponser);
         let { name, email, phone,packageAmount,franchise, address,state,district,zonal,panchayath, transactionPassword, password } =
           req.body;

@@ -39,6 +39,11 @@ function Sidebar() {
           route: "locations/zonal",
           // icon: "fas fa-landmark",
         },
+        {
+          title: "Panchayath",
+          route: "locations/panchayath",
+          // icon: "fas fa-landmark",
+        },
       ],
     },
 
@@ -81,7 +86,7 @@ function Sidebar() {
                 id="sidebarCollapse"
               >
                 <i
-                  className="ti ti-x fs-8 text-muted"
+                  className="ti ti-x fs-8 sm-3"
                   onClick={() => setHamburgClicked(!hamburgClicked)}
                 />
               </div>

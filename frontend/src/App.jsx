@@ -9,6 +9,7 @@ import Forgotpassword from "./pages/public/Forgotpassword";
 import State from "./pages/private/Locations/State";
 import District from "./pages/private/Locations/District";
 import Zonal from "./pages/private/Locations/Zonal";
+import Panchayath from "./pages/private/Locations/Panchayath";
 
 
 function App() {
@@ -24,6 +25,9 @@ function App() {
           <Route path="/locations/state" element={<State />}/>
           <Route path="/locations/district" element={<District />}/>
           <Route path="/locations/zonal" element={<Zonal />}/>
+          <Route path="/locations/panchayath" element={<Panchayath />}/>
+
+
 
 
 

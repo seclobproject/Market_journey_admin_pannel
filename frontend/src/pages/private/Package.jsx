@@ -96,7 +96,7 @@ function Package() {
         
         <div className="card w-100 position-relative overflow-hidden">
           {" "}
-          <h5 className="card-title fw-semibold mb-0 lh-sm px-4 mt-3">
+          <h5 className="card-title fw-semibold mb-0 lh-sm px-4 mt-3" style={{color: '#F7AE15'}}>
             Packages
           </h5>
 
@@ -209,7 +209,12 @@ function Package() {
           onHide={() => {
             setPackageModal({ show: false, id: null });
           }}
-          title={<h5>Add Packages</h5>}
+          title={
+            <h5 style={{ color: '#F7AE15', margin: 0}}>
+            Add Packages
+            </h5>
+          }          
+          
           centered
           width={"500px"}
         >
@@ -236,7 +241,7 @@ function Package() {
                   }
                 >
                   <option value="" disabled selected>
-                    Select Franchise Type
+                    Select franchise type
                   </option>
                   <option value="District Franchise">District Franchise</option>
                   <option value="Zonal Franchise">Zonal Franchise</option>
@@ -256,7 +261,7 @@ function Package() {
                 type="number"
                 id="packageAmountInput"
                 className="form-control form-control-lg"
-                placeholder="Package Amount"
+                placeholder="Enter package amount"
                 value={addPackages?.packageAmount}
                 onChange={(e) => {
                   setAddPackages({

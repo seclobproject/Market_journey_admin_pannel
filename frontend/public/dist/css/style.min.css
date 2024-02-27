@@ -46447,4 +46447,20 @@ ul {
   color: #555;
 }
 
+.form-label {
+  position: relative;
+  display: inline-block;
+}
 
+.eye-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.eye-icon i {
+  font-size: 1.2em;
+  color: black; /* Adjust color as needed */
+}

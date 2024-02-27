@@ -83,7 +83,7 @@ function State() {
     <>
       <SlideMotion>
         <div className="card position-relative overflow-hidden">
-          <h5 className="card-title fw-semibold mb-0 lh-sm px-4 mt-3">
+          <h5 className="card-title fw-semibold mb-0 lh-sm px-4 mt-3" style={{color: '#F7AE15'}}>
             States
           </h5>
           <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
@@ -169,7 +169,11 @@ function State() {
           onHide={() => {
             setStateModal({ show: false, id: null });
           }}
-          title={<h5>Add State</h5>}
+          title={
+            <h5 style={{ color: '#F7AE15', margin: 0}}>
+             Add State
+            </h5>
+          }
           centered
           width={"500px"}
         >

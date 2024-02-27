@@ -21,7 +21,6 @@ function Login() {
   const Login = async () => {
     try {
       let res = await ApiCall("post", login_PageURL, formData);
-      console.log(res, "res,res");
       if (res.status === 200) {
         setIsLoggedIn(true);
 

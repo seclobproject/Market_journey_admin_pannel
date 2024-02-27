@@ -24,7 +24,6 @@ function Panchayath() {
   const [validated, setValidated] = useState(false);
   const [addPanchayath, setAddPanchayath] = useState({});
   const [stateList, setStateList] = useState([]);
-  console.log(stateList, "stateList");
   const [selectedState, setSelectedState] = useState(null);
   const [districtList, setdistrictList] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
@@ -33,10 +32,7 @@ function Panchayath() {
   const [isLoading, setIsLoading] = useState(false);
   const [panchyathList, setPanchayathList] = useState([]);
 
-  console.log(districtId, "districtId");
-  console.log(selectedId, "selected id");
-  console.log(zonalList, "zonalList ");
-  console.log(addPanchayath, "addPanchayath");
+ 
 
   //-----------list state in drop down--------
   const getStateList = async () => {
@@ -62,7 +58,6 @@ function Panchayath() {
         "get",
         `${districtlistinZonalUrl}/${selectedId}`
       );
-      console.log(response, "from api call");
       if (response.status === 200) {
         setdistrictList(response?.data?.districts);
       } else {
@@ -82,7 +77,6 @@ function Panchayath() {
         "get",
         `${zonallistindropdownUrl}/${districtId}`
       );
-      console.log(response, "from api call");
       if (response.status === 200) {
         setZonalList(response?.data?.zonals);
       } else {
@@ -101,7 +95,6 @@ function Panchayath() {
       setIsLoading(true);
 
       const response = await ApiCall("get", panchayathlistPageUrl);
-      console.log(response, "from api call");
       if (response.status === 200) {
         setPanchayathList(response?.data?.panchayaths);
         setIsLoading(false);
@@ -117,15 +110,14 @@ function Panchayath() {
   };
   //---------Add--panchayath---------
   const addPanchayathFun = async () => {
-    console.log("here");
 
     try {
       const response = await ApiCall("post", panchayathPageUrl, addPanchayath);
-      console.log(response, " from add panchyath");
       if (response.status === 200) {
         setPanchayathModal(false);
         setValidated(false);
         setAddPanchayath("");
+        getPanchayathList();
         // ();
         Show_Toast("Panchayath added successfully", true);
       } else {
@@ -208,7 +200,6 @@ function Panchayath() {
                       <>
                         {panchyathList.map(
                           (panchayaths, index) => (
-                            console.log(panchayaths, "panchayaths"),
                             (
                               <tr key={index}>
                                 <td>{index + 1}</td>
@@ -318,7 +309,6 @@ function Panchayath() {
                 }))}
                 value={selectedState?.stateName}
                 onChange={(selectedOption) => {
-                  console.log(selectedOption, "selectedoptions");
                   setDistrictId(selectedOption?.value);
 
                   setAddPanchayath({
@@ -345,7 +335,6 @@ function Panchayath() {
                 }))}
                 value={selectedState?.zonalName}
                 onChange={(selectedOption) => {
-                  console.log(selectedOption, "selectedoptions");
 
                   setAddPanchayath({
                     ...addPanchayath,

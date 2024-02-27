@@ -20,7 +20,6 @@ function State() {
 
   //---------add State---------
   const addStateFun = async () => {
-    console.log("here");
     try {
       if (addState._id) {
         const updateResponse = await ApiCall(

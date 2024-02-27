@@ -10,7 +10,6 @@ import { Show_Toast } from "../../../utils/Toast";
 
 function Pendingusers() {
   const [approveModal, setApproveModal] = useState({ show: false, id: null });
-  console.log(approveModal, "user approve");
   const [pendingMemberList, setPendingMemberList] = useState([]);
   const [pendingUserName, setpendingUserName] = useState({});
 
@@ -18,7 +17,6 @@ function Pendingusers() {
   const getpendingMenbers = async () => {
     try {
       const response = await ApiCall("get", viewpendingmemberUrl);
-      console.log(response, "from api callssssssssssss");
       if (response.status === 200) {
         setPendingMemberList(response?.data?.userData);
       } else {
@@ -38,7 +36,6 @@ function Pendingusers() {
         "post",
         `${approvependingsUrl}/${approveModal.id}`
       );
-      console.log(resposne, "user..........");
       if (resposne?.status === 200) {
         Show_Toast("User Approved successfully", true);
         setApproveModal(false);

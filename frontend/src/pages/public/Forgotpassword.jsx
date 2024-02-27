@@ -10,7 +10,6 @@ import { SlideMotion } from "../../libs/FramerMotion";
 function Forgotpassword() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({});
-  console;
   const [validated, setValidated] = useState(false);
   const [password, setPassword] = useState({});
   const { Check_Validation } = useContext(ContextData);

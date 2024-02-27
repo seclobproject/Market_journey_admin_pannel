@@ -83,23 +83,11 @@ function State() {
     <>
       <SlideMotion>
         <div className="card position-relative overflow-hidden">
-          <h5 className="card-title fw-semibold mb-0 lh-sm px-4 mt-3" style={{color: '#F7AE15'}}>
+         
+          <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
+          <h5 className="card-title fw-semibold mb-0 lh-sm px-0 mt-3" style={{color: '#F7AE15'}}>
             States
           </h5>
-          <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
-            <div className="d-flex align-items-center">
-              <form className="position-relative">
-                <input
-                  type="text"
-                  className="form-control search-chat py-2 ps-5"
-                  id="text-srh"
-                  placeholder="Search"
-                  // onChange={(e) => setParams({ ...params, query: e.target.value })}
-                  // value={params?.query}
-                />
-                <i className="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3" />
-              </form>
-            </div>
 
             <div>
               <button

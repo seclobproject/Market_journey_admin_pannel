@@ -23,3 +23,5 @@ export const viewpackageListUrl="/api/admin/view-package"
 // member
 export const memberaddUrl="/api/admin/add-user"
 export const viewpendingmemberUrl="/api/admin/view-ready-to-approved-users"
+export const approvependingsUrl="/api/admin/accept-user"
+export const viewalluserUrl="/api/admin/view-all-users"

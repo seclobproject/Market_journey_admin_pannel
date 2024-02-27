@@ -11,6 +11,7 @@ import {
   packagesListUrl,
   panchayathlistindropdownUrl,
   statelistPageUrl,
+  viewalluserUrl,
   zonallistindropdownUrl,
 } from "../../../utils/Constants";
 import { ApiCall } from "../../../Services/Api";
@@ -22,6 +23,8 @@ function Member() {
   const [validated, setValidated] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
   const [addMember, setAddMember] = useState({});
+  console.log(addMember, "addMember addMember addMember");
+
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [zonalList, setZonalList] = useState([]);
@@ -41,6 +44,8 @@ function Member() {
 
   console.log(districtList, "district List");
   const [selectedState, setSelectedState] = useState(null);
+  const [allUser, setAllUser] = useState([]);
+  console.log(allUser, "allUser List");
 
   //-----------list district in drop down--------
   const getStateList = async () => {
@@ -149,6 +154,7 @@ function Member() {
         setMemberModal(false);
         setValidated(false);
         setAddMember("");
+        getallUsers();
         // ();
         Show_Toast("Member added successfully", true);
       } else {
@@ -156,6 +162,25 @@ function Member() {
       }
     } catch (error) {
       Show_Toast(error, false);
+    }
+  };
+
+  //-----------get all users
+  const getallUsers = async () => {
+    try {
+      const response = await ApiCall("get", viewalluserUrl);
+      console.log(response, "from api call00");
+      if (response.status === 201) {
+        setAllUser(response?.data?.userData);
+
+      } else {
+        console.error(
+          "Error fetching state list. Unexpected status:",
+          response.status
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching state list:", error);
     }
   };
 
@@ -167,6 +192,7 @@ function Member() {
   };
 
   useEffect(() => {
+    getallUsers();
     getPackagesList();
     if (
       selectedStateId &&
@@ -191,37 +217,23 @@ function Member() {
 
   const packageOptions = packageList.map((pack) => ({
     value: pack.franchiseName,
-    label: pack.franchiseName,
-    packageAmount: pack.packageAmount, // Add the packageAmount property
+    label: pack.franchiseName,// Add the packageAmount property
+    packageAmount: pack.packageAmount,
   }));
   return (
     <>
       <SlideMotion>
         <div className="card w-100 position-relative overflow-hidden">
           {" "}
+         
+          <div className="px-4 py-3 border-bottom d-flex  align-items-center justify-content-between">
+            
           <h5
-            className="card-title fw-semibold mb-0 lh-sm px-4 mt-3"
+            className="card-title fw-semibold mb-0 lh-sm px-0 mt-3"
             style={{ color: "#F7AE15" }}
           >
             Members
           </h5>
-          <div className="px-4 py-3 border-bottom d-flex  align-items-center justify-content-between">
-            <div className=" d-flex align-items-center ">
-              <form className="position-relative">
-                <input
-                  type="text"
-                  className="form-control search-chat py-2 ps-5"
-                  id="text-srh"
-                  placeholder="Search "
-                  // onChange={(e) =>
-                  //   setParams({ ...params, query: e.target.value })
-                  // }
-                  // value={params?.query}
-                />
-                <i className="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3" />
-              </form>
-            </div>
-
             <div>
               <button
                 className="btn btn-custom  ms-3 float-end"
@@ -236,98 +248,123 @@ function Member() {
               <table className="table border text-nowrap customize-table mb-0 align-middle">
                 <thead className="text-dark fs-4 table-light">
                   <tr>
+                  <th>
+                      <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
+                    </th>
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">Name</h6>
                     </th>
 
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Phone</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">Sponser Name</h6>
                     </th>
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">Email</h6>
                     </th>
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Username</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">Phone</h6>
                     </th>
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Password</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">Package Amount</h6>
                     </th>
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">User Role</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">Franchise Type</h6>
                     </th>
-
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Action</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">Status</h6>
                     </th>
+                    
                     <th />
                   </tr>
                 </thead>
                 <tbody>
-                  <>
-                    <tr>
-                      <td>
-                        <div className="d-flex align-items-center">
-                          <div className="ms-1">
-                            <h6 className="fs-4 fw-semibold mb-0"></h6>
-                          </div>
-                        </div>
-                      </td>
+                  {allUser?.length ? (
+                    <>
+                      {allUser.map((users, index) => (
+                        console.log(users,users),
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td>
+                            {(users?.name && users.name.toUpperCase()) ||
+                              "--"}
+                          </td> 
+                          <td>
+                            {(users?.sponserName && users.sponserName.toUpperCase()) ||
+                              "--"}
+                          </td>
+                          
+                          <td>
+                            {users?.email ||
+                              "--"}
+                          </td>
+                          <td>
+                            {users?.phone ||
+                              "--"}
+                          </td>
+                          <td>
+                            {users?.packageAmount}
+                          </td>
+                          <td>
+                            {users?.franchise
+ ||
+                              "--"}
+                          </td>
+                          
 
-                      <td></td>
-                      <td>
-                        <p className="mb-0 fw-normal"></p>
-                      </td>
-                      <td>
-                        <span className="mb-0 fw-normal"></span>
-                      </td>
-                      <td>
-                        <span className="mb-0 fw-normal"></span>
-                      </td>
+                          <td>
+  {users?.userStatus === 'readyToApprove' ? (
+    <span className="badge bg-danger rounded-3 fw-semibold">
+      Ready to Approve
+    </span>
+  ) : users?.userStatus === 'pending' ? (
+    <span className="badge bg-primary rounded-3 fw-semibold">
+      Pending
+    </span>
+  ) : (
+    <span className="badge bg-success rounded-3 fw-semibold">
+      Approved
+    </span>
+  )}
+</td>
 
-                      <td>
-                        <div className="dropdown dropstart">
-                          <a
-                            href="#"
-                            className="text-muted"
-                            id="dropdownMenuButton"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                          >
-                            <i className="ti ti-dots fs-5" />
-                          </a>
-                          <ul
-                            className="dropdown-menu"
-                            aria-labelledby="dropdownMenuButton"
-                          >
-                            <li>
-                              <a
-                                className="dropdown-item d-flex align-items-center gap-3"
-                                //   onClick={() => handleEdit(staff)}
-                              >
-                                <i className="fs-4 ti ti-edit" />
-                                Edit
-                              </a>
-                            </li>
-                            <li>
-                              <a
-                                className="dropdown-item d-flex align-items-center gap-3"
-                                href="#"
+                          {/* <td>{zonals?.stateName && zonals.stateName.toUpperCase()||"--"}</td> */}
+                          {/* <td>{members?.email || "--"}</td>
+                          <td>{members?.phone || "--"}</td>
+                          <td>{members?.tempPackageAmount || "0"}</td>
+                        
+                          <td>
+                            {members?.userStatus === "readyToApprove" && (
+                              <span className="badge bg-danger rounded-3 fw-semibold">
+                                Pending
+                              </span>
+                            )}
+                          </td>
+
+                          <td>
+                            {members?.userStatus === "readyToApprove" && (
+                              <button
+                                className="btn btn-success"
                                 onClick={() =>
-                                  setDeleteModal({
+                                  setApproveModal({
                                     show: true,
-                                    // id: staff?._id,
+                                    id: members._id,
                                   })
                                 }
                               >
-                                <i className="fs-4 ti ti-trash" />
-                                Delete
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
+                                Approve
+                              </button>
+                            )}
+                          </td> */}
+                        </tr>
+                      ))}
+                    </>
+                  ) : (
+                    <tr>
+                      <td colSpan={20} style={{ textAlign: "center" }}>
+                        <b>No Pending Users Found</b>{" "}
                       </td>
                     </tr>
-                  </>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -467,6 +504,7 @@ function Member() {
                     label: addMember?.franchise,
                   }}
                   onChange={(selectedOption) => {
+                    console.log(selectedOption,"options,,,,,")
                     setAddMember({
                       ...addMember,
                       franchise: selectedOption.value,

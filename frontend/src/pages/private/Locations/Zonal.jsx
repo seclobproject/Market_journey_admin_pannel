@@ -23,15 +23,8 @@ function Zonal() {
   const [zonalList, setZonalList] = useState([]);
   const [selectedState, setSelectedState] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  console.log(districtList,"districtList")
-  console.log(zonalList,"zonalList")
-
   const [addzonal, setAddZonal] = useState({});
-  console.log(addzonal,"addzonal")
-
   const [selectedId, setSelectedId] = useState(null);
-  console.log(selectedId,"id")
 
   //-----------list state in drop down--------
   const getStateList = async () => {
@@ -56,7 +49,6 @@ function Zonal() {
    
     try {
       const response = await ApiCall("get", `${districtlistinZonalUrl}/${selectedId}`);
-console.log(response,"from api call")
       if (response.status === 200) {
         setdistrictList(response?.data?.districts);
 
@@ -77,7 +69,6 @@ console.log(response,"from api call")
       setIsLoading(true)
 
       const response = await ApiCall("get",zonallistPageUrl);
-console.log(response,"from api call")
       if (response.status === 200) {
         setZonalList(response?.data?.zonals);
         setIsLoading(false)
@@ -94,11 +85,9 @@ console.log(response,"from api call")
   };
  //-----------Zonal---------
  const addZonalFun = async () => {
-    console.log("here");
 
     try {
       const response = await ApiCall("post", zonalPageUrl, addzonal);
-console.log(response,"response")
       if (response.status === 200) {
         setZonalModal(false);
         setValidated(false);
@@ -170,7 +159,6 @@ console.log(response,"response")
           {zonalList?.length ? (
             <>
               {zonalList.map((zonals, index) => (
-                console.log(zonals,"zonals"),
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{zonals?.name && zonals.name.toUpperCase()||"--"}</td>
@@ -239,7 +227,6 @@ console.log(response,"response")
                 }))}
                 value={selectedState?.stateName}
                 onChange={(selectedOption) => {
-                    // console.log(selectedOption,"selectedoptions")
                 setSelectedId(selectedOption?.value)
                     setAddZonal({
                       ...addzonal,
@@ -269,7 +256,6 @@ console.log(response,"response")
             }
             value={selectedState?.stateName}
             onChange={(selectedOption) => {
-                console.log(selectedOption,"selectedoptions")
                 setAddZonal({
                   ...addzonal,
                   districtName: selectedOption?.label,

@@ -21,20 +21,12 @@ function District() {
   const [formData, setFormData] = useState({});
   const { Check_Validation } = useContext(ContextData);
   const [addDistrict, setAddDistrict] = useState({});
-  console.log(addDistrict, "addDistrict");
-
   const [districtModal, setDistrictModal] = useState({ show: false, id: null });
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  console.log(districtList, "districtList");
-
-  console.log(stateList, "list");
-
   const [selectedState, setSelectedState] = useState(null);
 
-  console.log(selectedState, "selectedState");
 
   //-----------list state--------
   const getDistrict = async () => {
@@ -58,7 +50,6 @@ function District() {
   };
   //-----------addDistrict---------
   const addDisrtictFun = async () => {
-    console.log("here");
 
     try {
       const response = await ApiCall("post", districtPageUrl, addDistrict);

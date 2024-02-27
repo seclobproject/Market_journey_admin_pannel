@@ -22,14 +22,12 @@ function Package() {
   const [addPackages, setAddPackages] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log(addPackages, "add");
 
   //------List packages-------
   const getPackagesList = async () => {
     try {
       setIsLoading(true)
       const response = await ApiCall("get", packagesListUrl);
-      console.log(response, "response.....");
       if (response.status === 200) {
         setpackagesList(response?.data?.packageData);
         setIsLoading(false)
@@ -46,7 +44,6 @@ function Package() {
   };
   //---------add or edit packages---------
   const addOrEdit = async () => {
-    console.log("here");
     try {
       if (addPackages._id) {
         const updateResponse = await ApiCall(
@@ -54,7 +51,6 @@ function Package() {
           `${packagesEditUrl}/${addPackages._id}`,
           addPackages
         );
-        console.log(updateResponse, "response");
         if (updateResponse.status === 200) {
           setPackageModal(false);
           setValidated(false);

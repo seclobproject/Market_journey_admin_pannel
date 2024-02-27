@@ -23,29 +23,19 @@ function Member() {
   const [validated, setValidated] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
   const [addMember, setAddMember] = useState({});
-  console.log(addMember, "addMember addMember addMember");
-
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [zonalList, setZonalList] = useState([]);
   const [panchayathList, setPanchayathList] = useState([]);
   const [packageList, setPackageList] = useState([]);
-  console.log(packageList, "packageList dataaaaa");
   const [packageAmount, setPackageAmount] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showTransPassword, setShowTransPassword] = useState(false);
-
   const [selectedStateId, setSelectedStateId] = useState(null);
   const [selectedDistrictId, setSelectedDistrictId] = useState(null);
   const [selectedZonalId, setSelectedZonalId] = useState(null);
-  console.log(selectedStateId, "selectedStateId List");
-  console.log(selectedDistrictId, "selectedDistrictId List");
-  console.log(selectedZonalId, "selectedZonalId");
-
-  console.log(districtList, "district List");
   const [selectedState, setSelectedState] = useState(null);
   const [allUser, setAllUser] = useState([]);
-  console.log(allUser, "allUser List");
 
   //-----------list district in drop down--------
   const getStateList = async () => {
@@ -67,13 +57,11 @@ function Member() {
   //-----------list district in drop down--------
   const getDistrictList = async () => {
     try {
-      console.log("District api is called api ");
 
       const response = await ApiCall(
         "get",
         `${districtlistinZonalUrl}/${selectedStateId}`
       );
-      console.log(response, "from api call");
       if (response.status === 200) {
         setDistrictList(response?.data?.districts);
       } else {
@@ -93,7 +81,6 @@ function Member() {
         "get",
         `${zonallistindropdownUrl}/${selectedDistrictId}`
       );
-      console.log(response, "from api call");
       if (response.status === 200) {
         setZonalList(response?.data?.zonals);
       } else {
@@ -113,7 +100,6 @@ function Member() {
         "get",
         `${panchayathlistindropdownUrl}/${selectedZonalId}`
       );
-      console.log(response, "from api callssssssssssss");
       if (response.status === 200) {
         setPanchayathList(response?.data?.panchayaths);
       } else {
@@ -130,7 +116,6 @@ function Member() {
   const getPackagesList = async () => {
     try {
       const response = await ApiCall("get", packagesListUrl);
-      console.log(response, "from api callssssssssssss");
       if (response.status === 200) {
         setPackageList(response?.data?.packageData);
       } else {
@@ -145,11 +130,9 @@ function Member() {
   };
   //---------Add--panchayath---------
   const addMemberFun = async () => {
-    console.log("here");
 
     try {
       const response = await ApiCall("post", memberaddUrl, addMember);
-      console.log(response, " from add panchyath");
       if (response.status === 200) {
         setMemberModal(false);
         setValidated(false);
@@ -169,7 +152,6 @@ function Member() {
   const getallUsers = async () => {
     try {
       const response = await ApiCall("get", viewalluserUrl);
-      console.log(response, "from api call00");
       if (response.status === 201) {
         setAllUser(response?.data?.userData);
 
@@ -213,7 +195,6 @@ function Member() {
     }
   }, [selectedDistrictId, selectedZonalId]);
 
-  console.log(addMember, "add member");
 
   const packageOptions = packageList.map((pack) => ({
     value: pack.franchiseName,
@@ -281,7 +262,6 @@ function Member() {
                   {allUser?.length ? (
                     <>
                       {allUser.map((users, index) => (
-                        console.log(users,users),
                         <tr key={index}>
                           <td>{index + 1}</td>
                           <td>
@@ -504,7 +484,6 @@ function Member() {
                     label: addMember?.franchise,
                   }}
                   onChange={(selectedOption) => {
-                    console.log(selectedOption,"options,,,,,")
                     setAddMember({
                       ...addMember,
                       franchise: selectedOption.value,
@@ -545,7 +524,6 @@ function Member() {
                     }))}
                     value={selectedState?.state}
                     onChange={(selectedOption) => {
-                      console.log(selectedOption, "selectedoptions");
 
                       setAddMember({
                         ...addMember,
@@ -576,7 +554,6 @@ function Member() {
                     }))}
                     value={selectedState?.state}
                     onChange={(selectedOption) => {
-                      console.log(selectedOption, "selectedoptions");
                       setSelectedStateId(selectedOption?.value);
 
                       setAddMember({
@@ -604,7 +581,6 @@ function Member() {
                     }))}
                     value={selectedState?.district}
                     onChange={(selectedOption) => {
-                      console.log(selectedOption, "selectedoptions");
 
                       setAddMember({
                         ...addMember,
@@ -635,7 +611,6 @@ function Member() {
                     }))}
                     value={selectedState?.state}
                     onChange={(selectedOption) => {
-                      console.log(selectedOption, "selectedoptions");
                       setSelectedStateId(selectedOption?.value);
 
                       setAddMember({
@@ -663,7 +638,6 @@ function Member() {
                     }))}
                     value={selectedState?.district}
                     onChange={(selectedOption) => {
-                      console.log(selectedOption, "selectedoptions");
                       setSelectedDistrictId(selectedOption?.value);
 
                       setAddMember({
@@ -691,7 +665,6 @@ function Member() {
                     }))}
                     value={selectedState?.zonal}
                     onChange={(selectedOption) => {
-                      console.log(selectedOption, "selectedoptions");
                       setSelectedZonalId(selectedOption?.value);
                       setAddMember({
                         ...addMember,
@@ -718,8 +691,6 @@ function Member() {
                     }))}
                     value={selectedState?.panchayath}
                     onChange={(selectedOption) => {
-                      console.log(selectedOption, "selectedoptions");
-
                       setAddMember({
                         ...addMember,
                         panchayath: selectedOption?.label,

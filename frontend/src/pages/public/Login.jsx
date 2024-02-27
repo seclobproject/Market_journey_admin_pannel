@@ -65,7 +65,7 @@ function Login() {
                   <div className="card mb-0">
                     <div className="card-body">
                     <a href="./index.html" className="text-nowrap logo-img text-center d-block py-3 w-100">
-  <img src="public/dist/images/marketlogo.png" alt="Logo" width="100" height="100" />
+  <img src="public/dist/images/marketlogo.png" alt="Logo" width="200" height="100" />
 </a>
 
 

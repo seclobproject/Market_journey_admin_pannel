@@ -22,3 +22,4 @@ export const packagesEditUrl="/api/admin/edit-package"
 export const viewpackageListUrl="/api/admin/view-package"
 // member
 export const memberaddUrl="/api/admin/add-user"
+export const viewpendingmemberUrl="/api/admin/view-ready-to-approved-users"

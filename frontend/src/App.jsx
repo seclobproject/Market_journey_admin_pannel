@@ -3,13 +3,15 @@ import OutletConnection from "./Routes/OutletConnection";
 import Home from "./pages/private/Home";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "./pages/public/Login";
-import Member from "./pages/private/Member";
+
 import Package from "./pages/private/Package";
 import Forgotpassword from "./pages/public/Forgotpassword";
 import State from "./pages/private/Locations/State";
 import District from "./pages/private/Locations/District";
 import Zonal from "./pages/private/Locations/Zonal";
 import Panchayath from "./pages/private/Locations/Panchayath";
+import Member from "./pages/private/Users/Member";
+import Pendingusers from "./pages/private/Users/Pendingusers";
 
 
 function App() {
@@ -26,6 +28,7 @@ function App() {
           <Route path="/locations/district" element={<District />}/>
           <Route path="/locations/zonal" element={<Zonal />}/>
           <Route path="/locations/panchayath" element={<Panchayath />}/>
+          <Route path="/user/pending" element={<Pendingusers />}/>
 
 
 

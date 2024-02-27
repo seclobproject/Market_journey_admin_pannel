@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { SlideMotion } from "../../libs/FramerMotion";
-import ModalComponent from "../../Components/ModalComponet";
-import { ContextData } from "../../Services/Context";
+import { SlideMotion } from "../../../libs/FramerMotion";
+import ModalComponent from "../../../Components/ModalComponet";
+import { ContextData } from "../../../Services/Context";
 import { Form } from "react-bootstrap";
-import DeleteConfirmation from "../../Components/DeleteConfirmation";
+import DeleteConfirmation from "../../../Components/DeleteConfirmation";
 import Select from "react-select";
 import {
   districtlistinZonalUrl,
@@ -12,9 +12,9 @@ import {
   panchayathlistindropdownUrl,
   statelistPageUrl,
   zonallistindropdownUrl,
-} from "../../utils/Constants";
-import { ApiCall } from "../../Services/Api";
-import { Show_Toast } from "../../utils/Toast";
+} from "../../../utils/Constants";
+import { ApiCall } from "../../../Services/Api";
+import { Show_Toast } from "../../../utils/Toast";
 
 function Member() {
   const [memberModal, setMemberModal] = useState({ show: false, id: null });

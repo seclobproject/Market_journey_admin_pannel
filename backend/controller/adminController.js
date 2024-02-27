@@ -75,7 +75,7 @@ export const viewAllUsers = async (req, res, next) => {
     const admin = await Admin.findById(adminId);
     if (admin) {
     const userData = await User.find().select(
-      "name ownSponserId phone address email userStatus packageAmount sponserName packageName"
+      "name ownSponserId phone address email userStatus packageAmount sponserName franchise"
     );
       return res.status(201).json({
         userData,
@@ -524,7 +524,7 @@ export const getReadyToApproveUsers = async (req, res, next) => {
       const userData = await User.find({
         userStatus: { $eq: "readyToApprove" },
       }).select(
-        "username email phone userStatus screenshot tempPackageAmount sponserName createdAt"
+        "name email phone userStatus screenshot tempPackageAmount sponserName createdAt"
       );
 
         if(!userData){

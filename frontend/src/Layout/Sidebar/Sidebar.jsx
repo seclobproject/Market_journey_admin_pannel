@@ -16,8 +16,8 @@ function Sidebar() {
       sub: [
         { title: "All Users", route: "member"},
         {
-          title: "View Users",
-          route: "settings-locations",
+          title: "Pending Users",
+          route: "user/pending",
           // icon: "fas fa-user-check",
         },
 

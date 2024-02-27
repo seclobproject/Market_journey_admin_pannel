@@ -1,19 +1,26 @@
-import React, { useEffect, useState } from 'react'
-import { SlideMotion } from '../../../libs/FramerMotion';
-import { ApiCall } from '../../../Services/Api';
-import { viewpendingmemberUrl } from '../../../utils/Constants';
+import React, { useEffect, useState } from "react";
+import { SlideMotion } from "../../../libs/FramerMotion";
+import { ApiCall } from "../../../Services/Api";
+import {
+  approvependingsUrl,
+  viewpendingmemberUrl,
+} from "../../../utils/Constants";
+import ModalComponent from "../../../Components/ModalComponet";
+import { Show_Toast } from "../../../utils/Toast";
 
 function Pendingusers() {
-    const [pendingModal, setPendingModals] = useState({ show: false, id: null });
-    const [pendingMemberList,setPendingMemberList]=useState([])
+  const [approveModal, setApproveModal] = useState({ show: false, id: null });
+  console.log(approveModal, "user approve");
+  const [pendingMemberList, setPendingMemberList] = useState([]);
+  const [pendingUserName, setpendingUserName] = useState({});
 
- //-----------pending member --------
- const getpendingMenbers = async () => {
+  //-----------pending member --------
+  const getpendingMenbers = async () => {
     try {
       const response = await ApiCall("get", viewpendingmemberUrl);
       console.log(response, "from api callssssssssssss");
       if (response.status === 200) {
-        setPendingMemberList(response?.data?.packageData);
+        setPendingMemberList(response?.data?.userData);
       } else {
         console.error(
           "Error fetching state list. Unexpected status:",
@@ -25,145 +32,147 @@ function Pendingusers() {
     }
   };
 
+  const approveUser = async () => {
+    try {
+      const resposne = await ApiCall(
+        "post",
+        `${approvependingsUrl}/${approveModal.id}`
+      );
+      console.log(resposne, "user..........");
+      if (resposne?.status === 200) {
+        Show_Toast("User Approved successfully", true);
+        setApproveModal(false);
+        getpendingMenbers();
+      } else {
+        Show_Toast("Failed", true);
+      }
+    } catch (error) {}
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     getpendingMenbers();
-  },[])
+  }, []);
 
   return (
     <>
-     <SlideMotion>
+      <SlideMotion>
         <div className="card w-100 position-relative overflow-hidden">
           {" "}
+          <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
           <h5
-            className="card-title fw-semibold mb-0 lh-sm px-4 mt-3"
+            className="card-title fw-semibold mb-0 lh-sm px-0 mt-4"
             style={{ color: "#F7AE15" }}
           >
             Pending Members
           </h5>
-          <div className="px-4 py-3 border-bottom d-flex  align-items-center justify-content-between">
-            <div className=" d-flex align-items-center ">
-              <form className="position-relative">
-                <input
-                  type="text"
-                  className="form-control search-chat py-2 ps-5"
-                  id="text-srh"
-                  placeholder="Search "
-                  // onChange={(e) =>
-                  //   setParams({ ...params, query: e.target.value })
-                  // }
-                  // value={params?.query}
-                />
-                <i className="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3" />
-              </form>
-            </div>
-
-            <div>
-              <button
-                className="btn btn-custom  ms-3 float-end"
-                onClick={() => setPendingModals({ show: true, id: null })}
-              >
-                Add
-              </button>
-            </div>
+           
           </div>
-          <div className="card-body p-2">
+      
+          <div className="card-body p-2 mb-2">
             <div className="table-container table-responsive rounded-2 mb-4">
               <table className="table border text-nowrap customize-table mb-0 align-middle">
                 <thead className="text-dark fs-4 table-light">
                   <tr>
                     <th>
+                      <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
+                    </th>
+                    <th>
                       <h6 className="fs-4 fw-semibold mb-0">Name</h6>
                     </th>
 
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Phone</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">Sponser Name</h6>
                     </th>
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">Email</h6>
                     </th>
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Username</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">Phone</h6>
                     </th>
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Password</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">Package Amount</h6>
                     </th>
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">User Role</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">Image</h6>
                     </th>
 
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Action</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">Status</h6>
+                    </th>
+                    <th>
+                      <h6 className="fs-4 fw-semibold mb-0">Actions</h6>
                     </th>
                     <th />
                   </tr>
                 </thead>
                 <tbody>
-                  <>
-                    <tr>
-                      <td>
-                        <div className="d-flex align-items-center">
-                          <div className="ms-1">
-                            <h6 className="fs-4 fw-semibold mb-0"></h6>
-                          </div>
-                        </div>
-                      </td>
+                  {pendingMemberList?.length ? (
+                    <>
+                      {pendingMemberList.map((members, index) => (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td>
+                            {(members?.name && members.name.toUpperCase()) ||
+                              "--"}
+                          </td>
+                          <td>
+                            {(members?.sponserName &&
+                              members.sponserName.toUpperCase()) ||
+                              "--"}
+                          </td>
+                          {/* <td>{zonals?.stateName && zonals.stateName.toUpperCase()||"--"}</td> */}
+                          <td>{members?.email || "--"}</td>
+                          <td>{members?.phone || "--"}</td>
+                          <td>{members?.tempPackageAmount || "0"}</td>
+                          <td>
+                            {/* <img
+                                            alt="image"
+                                            src={members?.screenshot`http://localhost:3000${members.screenshot}`}
+                                            style={{
+                                              width: "100px",
+                                              height: "100px",
+                                              objectFit: "cover",
+                                              borderRadius: "5px",
+                                            }}
+                                          /> */}
+                            <img
+                              src={`http://localhost:3000/${members?.screenshot}`}
+                              alt="Screenshot"
+                            />
+                          </td>
+                          <td>
+                            {members?.userStatus === "readyToApprove" && (
+                              <span className="badge bg-danger rounded-3 fw-semibold">
+                                Pending
+                              </span>
+                            )}
+                          </td>
 
-                      <td></td>
-                      <td>
-                        <p className="mb-0 fw-normal"></p>
-                      </td>
-                      <td>
-                        <span className="mb-0 fw-normal"></span>
-                      </td>
-                      <td>
-                        <span className="mb-0 fw-normal"></span>
-                      </td>
-
-                      <td>
-                        <div className="dropdown dropstart">
-                          <a
-                            href="#"
-                            className="text-muted"
-                            id="dropdownMenuButton"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                          >
-                            <i className="ti ti-dots fs-5" />
-                          </a>
-                          <ul
-                            className="dropdown-menu"
-                            aria-labelledby="dropdownMenuButton"
-                          >
-                            <li>
-                              <a
-                                className="dropdown-item d-flex align-items-center gap-3"
-                                //   onClick={() => handleEdit(staff)}
-                              >
-                                <i className="fs-4 ti ti-edit" />
-                                Edit
-                              </a>
-                            </li>
-                            <li>
-                              <a
-                                className="dropdown-item d-flex align-items-center gap-3"
-                                href="#"
+                          <td>
+                            {members?.userStatus === "readyToApprove" && (
+                              <button
+                                className="btn btn-success"
                                 onClick={() =>
-                                  setDeleteModal({
+                                  setApproveModal({
                                     show: true,
-                                    // id: staff?._id,
+                                    id: members._id,
                                   })
                                 }
                               >
-                                <i className="fs-4 ti ti-trash" />
-                                Delete
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
+                                Approve
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </>
+                  ) : (
+                    <tr>
+                      <td colSpan={20} style={{ textAlign: "center" }}>
+                        <b>No Pending Users Found</b>{" "}
                       </td>
                     </tr>
-                  </>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -178,11 +187,61 @@ function Pendingusers() {
             {/* -------------------------pagination--------------------- */}
           </div>
         </div>
-
-     
       </SlideMotion>
+      <ModalComponent
+        show={approveModal.show}
+        onHide={() => {
+          setApproveModal({ show: false, id: null });
+        }}
+      
+        centered
+        width={"500px"}
+      >
+        <div className="modal-body">
+          <div className="row mb-4">
+            <div className="col d-flex justify-content-center">
+              <i
+                style={{ fontSize: "50px", color: "#fe9423" }}
+                className="fa fa-exclamation-triangle "
+                aria-hidden="true"
+              ></i>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col d-flex justify-content-center ">
+              <h5 className="">
+                Are you sure you want to approve this pending user {""} ?
+              </h5>
+            </div>
+          </div>
+        </div>
+
+        <div className="modal-footer">
+          <div className="col gap-3 d-flex justify-content-center">
+            <button
+              onClick={() => {
+                setApproveModal({ show: false, id: null });
+              }}
+              type="button"
+              className="btn btn-cancel"
+              data-bs-dismiss="modal"
+            >
+              No, keep it
+            </button>
+            <button
+              type="button"
+              className="btn btn-custom text-white"
+              onClick={() => {
+                approveUser(); 
+              }}
+            >
+              Yes, Approve it
+            </button>
+          </div>
+        </div>
+      </ModalComponent>
     </>
-  )
+  );
 }
 
-export default Pendingusers
+export default Pendingusers;

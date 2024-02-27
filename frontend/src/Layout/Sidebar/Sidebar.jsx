@@ -78,7 +78,7 @@ function Sidebar() {
           <div>
             <div className="brand-logo d-flex align-items-center justify-content-center">
               <Link to={"/"} className="text-nowrap logo-img ">
-                <h2 className="fw-bolder">MJ</h2>
+                <h2 className="fw-bolder" style={{ color: "#F7AE15" }}>MJ</h2>
               </Link>
 
               <div

@@ -68,7 +68,7 @@ function Login() {
                         href="./index.html"
                         className="text-nowrap logo-img text-center d-block py-3 w-100"
                       >
-                        <h2 className="align-item-center">MJ</h2>
+                        <h2 className="align-item-center"      style={{ color: "#F7AE15" }}>MJ</h2>
                       </a>
 
                       <Form

@@ -285,12 +285,9 @@ function Home() {
                           <p className="mb-0 fw-normal">MedicalPro WP Theme</p>
                         </td>
                         <td className="border-bottom-0">
-                          <div className="d-flex align-items-center gap-2">
-                            <span className="badge bg-danger rounded-3 fw-semibold">
-                              High
-                            </span>
-                          </div>
-                        </td>
+    
+</td>
+
                         <td className="border-bottom-0">
                           <h6 className="fw-semibold mb-0 fs-4">$12.8k</h6>
                         </td>

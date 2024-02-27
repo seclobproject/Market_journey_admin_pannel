@@ -2,8 +2,10 @@ import jwt from "jsonwebtoken";
 import Admin from "../models/adminModel.js";
 import asyncHandler from "express-async-handler";
 import { errorHandler } from "./errorHandler.js";
+import User from "../models/userModel.js";
 
 export const protectAdmin = asyncHandler(async (req, res, next) => {
+
   let token;
   if (
     req.headers.authorization &&
@@ -35,7 +37,6 @@ export const protectUser = asyncHandler(async (req, res, next) => {
       token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, "MarketJourney");
       req.user = await User.findById(decoded.userId).select("-password");
-
       next();
     } catch (error) {
       next(error);

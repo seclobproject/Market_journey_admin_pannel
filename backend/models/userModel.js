@@ -135,6 +135,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    transactionNumber: {
+      type: String,
+    },
+    screenshot: {
+      type: String,
+      default: null,
+    },
     aadhaar: {
       type: String,
       default: null,

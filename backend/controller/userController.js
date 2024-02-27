@@ -4,6 +4,7 @@ import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { errorHandler } from "../middleware/errorHandler.js";
 import User from "../models/userModel.js";
+import upload from "../config/multifileUpload.js";
 
 
 
@@ -20,7 +21,7 @@ export const generateRandomString = () => {
 export const addUser = async (req, res, next) => {
     try {
       console.log("Reached here");
-        const sponser=req.admin._id || req.user._id
+      const sponser = req.admin ? req.admin._id : (req.user ? req.user._id : null);
         console.log(sponser);
         let { name, email, phone,packageAmount,franchise, address,state,district,zonal,panchayath, transactionPassword, password } =
           req.body;
@@ -135,6 +136,51 @@ export const userLogin = async (req, res, next) => {
 
     // res.status(200).json(
     // });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+
+//verify users using Screenshot of Payment
+
+export const verifyUser= async (req, res, next) => {
+  try {
+    upload(req, res, async function (err) {
+      if (err) {
+        return next(errorHandler(401, "File upload error"));
+      }
+      
+      const {transactionNumber } = req.body;
+      if(!req.files.screenshot){
+        return next(errorHandler(401, " Image not found"));
+
+      }
+
+        const screenshotImage = req.files.screenshot[0].filename;
+        const userId = req.user._id;
+        const user = await User.findById(userId);
+        
+        if (!user) {
+          return next(errorHandler(401, "User not found"));
+        }
+
+      user.screenshot = screenshotImage;
+      user.userStatus = "readyToApprove";
+      user.transactionNumber =transactionNumber;
+
+      const updatedUser = await user.save();
+      if(updatedUser){
+        return res.status(201).json({
+          updatedUser,
+          sts: "01",
+          msg: "Verification screenshot added successfully",
+        });
+      }
+      
+    });
   } catch (error) {
     next(error);
   }

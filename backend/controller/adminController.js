@@ -6,6 +6,7 @@ import State from "../models/stateModel.js";
 import District from "../models/districtModel.js";
 import Zonal from "../models/zonalModel.js";
 import Panchayath from "../models/panchayathModel.js";
+import User from "../models/userModel.js";
 
 
 
@@ -64,6 +65,33 @@ export const adminLogin = async (req, res, next) => {
       next(error);
     }
   };
+
+
+//view all users by Admin
+export const viewAllUsers = async (req, res, next) => {
+  const adminId = req.admin._id;
+
+  try {
+    const admin = await Admin.findById(adminId);
+    if (admin) {
+    const userData = await User.find().select(
+      "name ownSponserId phone address email userStatus packageAmount sponserName packageName"
+    );
+      return res.status(201).json({
+        userData,
+        sts: "01",
+          msg: " Successfully Get all users",
+      });
+    } else {
+      next(errorHandler("User not found"));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
 
 
 //add State Franchise
@@ -325,7 +353,7 @@ export const viewParamsPanchayaths = async (req, res, next) => {
     if (admin) {
       const zonalData = await Zonal.findById(id).populate("panchayaths")
       if (!zonalData || zonalData.length === 0) {
-        return next(errorHandler(401, "No districts exist"));
+        return next(errorHandler(401, "No zonal exist"));
       }
       const panchayaths=zonalData.panchayaths;
       res.status(200).json({
@@ -462,7 +490,7 @@ export const viewParamsPanchayaths = async (req, res, next) => {
                   id: panchayath._id,
                   name: panchayath.name,
                   stateName: panchayath.stateName,
-                  stateName: panchayath.zonalName,
+                  zonalName: panchayath.zonalName,
                   districtName: panchayath.districtName, 
         
                 })),
@@ -481,6 +509,83 @@ export const viewParamsPanchayaths = async (req, res, next) => {
 
 
 
-//add user functions-------------------------------------------------------------------------------------------------------
+//admin verify user functions-------------------------------------------------------------------------------------------------------
 
 
+// view Users to Approve
+
+export const getReadyToApproveUsers = async (req, res, next) => {
+  const userId = req.admin._id;
+  const adminData = await Admin.findById(userId);
+  try {
+    if (!adminData) {
+      return next(errorHandler(401, "Admin Login Failed"));
+    }
+      const userData = await User.find({
+        userStatus: { $eq: "readyToApprove" },
+      }).select(
+        "username email phone userStatus screenshot tempPackageAmount sponserName createdAt"
+      );
+
+        if(!userData){
+      return next(errorHandler(401, "no user found"));
+
+        }
+
+      res.status(200).json({
+        userData,
+        sts: "01",
+        msg: "get approved users Success",
+      });
+   
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+//admin can verify users
+
+export const acceptUser = async (req, res, next) => {
+  try {
+    const adminId = req.admin._id;
+    const { id } = req.params;
+
+    const adminData = await Admin.findById(adminId);
+    if (adminData) {
+      const userData = await User.findById(id);
+      
+      if (userData) {
+        const sponserId1=userData.sponser;
+        const sponserUser1= (await User.findById(sponserId1)) || (await Admin.findById(sponserId1));
+        let sponserUser2;
+        const sponserId2 = sponserUser1.sponser || null;
+        if (sponserId2)sponserUser2 = (await User.findById(sponserId2)) || (await Admin.findById(sponserId2));
+        
+        userData.userStatus = "approved";
+        userData.packageAmount=userData.tempPackageAmount;
+        const updatedUser = await userData.save();
+        if (updatedUser) {
+          if (sponserUser2) {
+            sponserUser2.childLevel2.push(updatedUser._id);
+            await sponserUser2.save();
+          }
+          if (sponserUser1) {
+            sponserUser1.childLevel1.push(updatedUser._id);
+            await sponserUser1.save();
+          }
+          // const referalIncome=generateReferalIncome(sponserId,updatedUser.packageAmount)
+          res
+            .status(200)
+            .json({ updatedUser, msg: "User verification Accepted!" });
+        }
+      } else {
+        next(errorHandler("User not Found"));
+      }
+    } else {
+      return next(errorHandler(401, "Admin Login Failed"));
+    }
+  } catch (error) {
+    next(error);
+  }
+};

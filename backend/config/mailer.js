@@ -9,12 +9,12 @@ const sendMail = (mailId, name, sponserid, transactionPassword, password) => {
     secure: false,
     requireTLS: true,
     auth: {
-      user: "shyamkumarbeypore@gmail.com",
-      pass: "beha ywht lrdo ichp",
+      user: "seclobclt@gmail.com",
+      pass: "tplg bisd mapf emsb",
     },
   });
   const mailOptions = {
-    from: `MARKET JOURNEY GROUP <shyamkumarbeypore@gmail.com>`,
+    from: `MARKET JOURNEY GROUP <seclobclt@gmail.com>`,
     to: `${recipient}`,
     subject: `Hi ${name}, Registration successful.`,
     text: `Hi ${name}, Welcome to MARKET JOURNEY`,

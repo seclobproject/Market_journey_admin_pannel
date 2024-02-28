@@ -122,20 +122,21 @@ function Pendingusers() {
                           <td>{members?.phone || "--"}</td>
                           <td>{members?.tempPackageAmount || "0"}</td>
                           <td>
+                          <img
+  alt="images"
+  src={`http://localhost:8000${members?.screenshot}`}
+  style={{
+    width: "100px",
+    height: "100px",
+    objectFit: "cover",
+    borderRadius: "5px",
+  }}
+/>
+
                             {/* <img
-                                            alt="image"
-                                            src={members?.screenshot`http://localhost:3000${members.screenshot}`}
-                                            style={{
-                                              width: "100px",
-                                              height: "100px",
-                                              objectFit: "cover",
-                                              borderRadius: "5px",
-                                            }}
-                                          /> */}
-                            <img
                               src={`http://localhost:3000/${members?.screenshot}`}
                               alt="Screenshot"
-                            />
+                            /> */}
                           </td>
                           <td>
                             {members?.userStatus === "readyToApprove" && (

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Button } from "react-bootstrap";
 import { ContextData } from "../Services/Context";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Header() {
   const navigate =useNavigate();
@@ -41,34 +41,32 @@ console.log(user,"user from headre")
         <ul className="navbar-nav flex-row ms-auto align-items-center justify-content-center">
 
           <li className="nav-item dropdown">
-            <a className="nav-link pe-0" href="javascript:void(0)" id="drop1" data-bs-toggle="dropdown" aria-expanded="false">
-              <div className="d-flex align-items-center">
-                <div className="user-profile-img">
-                  <img src="../../dist/images/profile/user-1.jpg" className="rounded-circle" width={35} height={35} alt />
-                </div>
-              </div>
-            </a>
-            <div className="dropdown-menu content-dd dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop1">
-              <div className="profile-dropdown position-relative" data-simplebar>
-                <div className="py-3 px-7 pb-0">
-                  <h5 className="mb-0 fs-5 fw-semibold">User Profile</h5>
-                </div>
-                <div className="d-flex align-items-center py-9 mx-7 border-bottom">
-                  <img src="../../dist/images/profile/user-1.jpg" className="rounded-circle" width={80} height={80} alt />
-                  <div className="ms-3">
-                    <h5 className="mb-1 fs-5 text-white">Master Journey</h5>
-                    <span className="mb-1 d-block text-white">Admin</span>
-                    <p className="mb-0 d-flex text-white align-items-center gap-2">
-                      <i className="ti ti-mail fs-4" />{user?.email}
-                    </p>
-                  </div>
-                </div>
+          
+         
+            <div className="navbar-collapse justify-content-end px-0" id="navbarNav">
+  <ul className="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+    <li className="nav-item dropdown">
+      <a className="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="false">
+      <img src="../../dist/images/profile/user-1.jpg" className="rounded-circle" width={35} height={35} alt />
+      </a>
+      <div className="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
+        <div className="message-body">
+          <Link to={'/admin/profile'} className="d-flex align-items-center gap-2 dropdown-item">
+            <i className="ti ti-user fs-6" />
+            <p className="mb-0 fs-3">My Profile</p>
+          </Link>
+          <Link to={'/resetpassword'} className="d-flex align-items-center gap-2 dropdown-item">
+            <i className="ti ti-mail fs-6" />
+            <p className="mb-0 fs-3">Change Password</p>
+          </Link>
+         
+          <a href={undefined}  onClick={handleLogout} className="btn btn-cancel mx-3 mt-2 d-block">Logout</a>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
 
-                <div className="d-grid py-4 px-7 pt-8">
-                  <Button  onClick={handleLogout} className="btn btn-cancel" >Log out</Button>
-                </div>
-              </div>
-            </div>
           </li>
         </ul>
       </div>

@@ -65,8 +65,11 @@ function Sidebar() {
       title: "My Account",
       icon: "fas fa-user",
       sub: [
+        { title: "Profile", route: "admin/profile",  },
         { title: "Change password", route: "resetpassword",  },
+
       ],
+      
     }
     
   ];
@@ -105,7 +108,7 @@ function Sidebar() {
       </aside>
       
       {/* <Helmet>
-      <script src="/public/dist/js/sidebarmenu.js"></script>
+      <script src="public/dist/js/sidebarmenu.js"></script>
 
       </Helmet> */}
     </>

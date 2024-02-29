@@ -209,13 +209,30 @@ Username                          </label>
                             Have a account?.Login
                           </Link> */}
                         </div>
-                        <Button
-        className={`btn btn-custom w-100 py-8 mb-4 rounded-2 mt-3 ${isLoading ? 'loading' : ''}`}
-        type="submit"
-        disabled={isLoading}
-      >
-        {isLoading ? 'Updating...' : 'Save'}
-      </Button>
+                        <div className="row">
+  <div className="col-md-6 mb-4">
+    <Button
+      className={'btn btn-cancel w-100 py-8 rounded-2'}
+      type="submit"
+      onClick={() => {
+       
+        navigate('/dashboard'); 
+      }}   
+    >
+        Cancel
+     
+    </Button>
+  </div>
+  <div className="col-md-6 mb-4">
+  <Button
+      className={`btn btn-custom w-100 py-8 rounded-2 ${isLoading ? 'loading' : ''}`}
+      type="submit"
+      disabled={isLoading}
+    >
+      {isLoading ? 'Updating...' : 'Save'}
+    </Button>  </div>
+</div>
+
                       </Form>
                     </div>
                   </div>

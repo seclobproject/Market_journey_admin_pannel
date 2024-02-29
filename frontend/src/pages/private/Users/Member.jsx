@@ -184,6 +184,13 @@ function Member() {
     ) {
       getDistrictList();
     }
+    if (
+      selectedStateId &&
+      (addMember?.franchise === "Mobile Franchise"
+        )
+    ) {
+      getDistrictList();
+    }
   }, [selectedStateId, addMember?.franchise]);
 
   useEffect(() => {

@@ -85,7 +85,7 @@ function Forgotpassword() {
                   <div className="card mb-0">
                     <div className="card-body">
                     <a href="./index.html" className="text-nowrap logo-img text-center d-block py-3 w-100">
-  <img src="public/dist/images/marketlogo.png" alt="Logo" width="200" height="100" />
+                    <img src="public/dist/images/marketlogo.png" alt="Logo" width="130" height="90" />
 </a>
 
                       <Form
@@ -102,7 +102,7 @@ Username                          </label>
                           <input
                             //   value={formData?.username}
                             type="email"
-                            
+                            required
                             placeholder="Enter Username"
 
                             className="form-control"
@@ -206,7 +206,7 @@ Username                          </label>
                             style={{ color: "#926c15", fontSize: "15px" }} // Change the color property to red
                             to={"/"}
                           >
-                            Have a account?.Login
+                            Already have an account ? Login
                           </Link>
                         </div>
                         <Button

@@ -679,3 +679,36 @@ export const generateReferalIncome = async (
     next(error);
   }
 };
+
+
+
+//reject Userverification
+
+export const rejectUser = async (req, res, next) => {
+  try {
+    const adminId = req.admin._id;
+
+    const { id } = req.params;
+    const adminData = await Admin.findById(adminId);
+    if (adminData) {
+      const userData = await User.findById(id);
+      if (userData) {
+        userData.userStatus = "pending";
+        userData.screenshot=null;
+        const updatedUser = await userData.save();
+
+        if (updatedUser) {
+         
+          res.status(200).json({ updatedUser, msg: "User verification rejected!" });
+        }
+      } else {
+        next(errorHandler("User not Found"));
+      }
+    } else {
+      return next(errorHandler(401, "Admin Login Failed"));
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};

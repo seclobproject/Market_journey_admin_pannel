@@ -16,7 +16,7 @@ export const generateRandomString = () => {
   };
 
  
-
+// add user by another user
 
 export const addUser = async (req, res, next) => {
     try {
@@ -181,6 +181,52 @@ export const verifyUser= async (req, res, next) => {
       }
       
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+//View Profile
+
+export const viewUserProfile = async (req, res, next) => {
+  const userId = req.user._id;
+  try {
+    const userData = await User.findById(userId)
+    const directIncome = userData.directReferalIncome.toFixed(2);
+    const inDirectIncome = userData.inDirectReferalIncome.toFixed(2);
+    const totalLevelIncome=userData.totalLevelIncome.toFixed(2);
+    const franchise = userData.franchise;
+    const wallet = userData.walletAmount.toFixed(2);
+
+    const countFirstChild = userData.childLevel1.length;
+    const countSecondChild = userData.childLevel2.length;
+
+    if (userData) {
+      res.status(200).json({
+        id: userData._id,
+        userStatus: userData.userStatus,
+        ownSponserId: userData.ownSponserId,
+        franchise: franchise,
+        name: userData.name,
+        email: userData.email,
+        phone: userData.phone,
+        address: userData.address,
+        aadhaar: userData.aadhaar,
+        screenshot: userData.screenshot,
+        packageAmount: userData.packageAmount,
+        myDownline: countFirstChild,
+        directIncome: directIncome,
+        inDirectIncome: inDirectIncome,
+        walletAmount: wallet,
+        totalLevelIncome:totalLevelIncome,
+        sts: "01",
+        msg: "get user profile Success",
+      });
+    } else {
+      next(errorHandler("User not found"));
+    }
   } catch (error) {
     next(error);
   }

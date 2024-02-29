@@ -343,11 +343,11 @@ export const viewParamsDistricts = async (req, res, next) => {
     const {id}=req.params;
     // const adminId = req.admin._id;
     // const admin = await Admin.findById(adminId);
-    const adminId = req.admin ? req.admin._id : (req.user ? req.user._id : null);
-    const admin = (await User.findById(adminId)) || (await Admin.findById(adminId));
+    // const adminId = req.admin ? req.admin._id : (req.user ? req.user._id : null);
+    // const admin = (await User.findById(adminId)) || (await Admin.findById(adminId));
     
 
-    if (admin) {
+    // if (admin) {
       const stateData = await State.findById(id).populate("districts")
       if (!stateData || stateData.length === 0) {
         return next(errorHandler(401, "No states exist"));
@@ -361,9 +361,9 @@ export const viewParamsDistricts = async (req, res, next) => {
         sts: "01",
         msg: "Districts retrieved success",
       });
-    } else {
-      next(errorHandler(401, "Admin not found"));
-    }
+    // } else {
+    //   next(errorHandler(401, "Admin not found"));
+    // }
   } catch (error) {
     next(error);
   }
@@ -376,11 +376,11 @@ export const viewParamsZonals = async (req, res, next) => {
     const {id}=req.params;
     // const adminId = req.admin._id;
     // const admin = await Admin.findById(adminId);
-    const adminId = req.admin ? req.admin._id : (req.user ? req.user._id : null);
-    const admin = (await User.findById(adminId)) || (await Admin.findById(adminId));
+    // const adminId = req.admin ? req.admin._id : (req.user ? req.user._id : null);
+    // const admin = (await User.findById(adminId)) || (await Admin.findById(adminId));
     
 
-    if (admin) {
+    // if (admin) {
       const districtData = await District.findById(id).populate("zonals")
       if (!districtData || districtData.length === 0) {
         return next(errorHandler(401, "No districts exist"));
@@ -394,9 +394,9 @@ export const viewParamsZonals = async (req, res, next) => {
         sts: "01",
         msg: "Zonals retrieved successfully",
       });
-    } else {
-      next(errorHandler(401, "Admin not found"));
-    }
+    // } else {
+    //   next(errorHandler(401, "Admin not found"));
+    // }
   } catch (error) {
     next(error);
   }
@@ -408,13 +408,13 @@ export const viewParamsZonals = async (req, res, next) => {
 export const viewParamsPanchayaths = async (req, res, next) => {
   try {
     const {id}=req.params;
-    const adminId = req.admin ? req.admin._id : (req.user ? req.user._id : null);
-    const admin = (await User.findById(adminId)) || (await Admin.findById(adminId));
+    // const adminId = req.admin ? req.admin._id : (req.user ? req.user._id : null);
+    // const admin = (await User.findById(adminId)) || (await Admin.findById(adminId));
     
     // const adminId = req.admin._id;
     // const admin = await Admin.findById(adminId);
 
-    if (admin) {
+    // if (admin) {
       const zonalData = await Zonal.findById(id).populate("panchayaths")
       if (!zonalData || zonalData.length === 0) {
         return next(errorHandler(401, "No zonal exist"));
@@ -428,9 +428,9 @@ export const viewParamsPanchayaths = async (req, res, next) => {
         sts: "01",
         msg: "panchayaths retrieved successfully",
       });
-    } else {
-      next(errorHandler(401, "Admin not found"));
-    }
+    // } else {
+    //   next(errorHandler(401, "Admin not found"));
+    // }
   } catch (error) {
     next(error);
   }
@@ -458,10 +458,8 @@ export const viewParamsPanchayaths = async (req, res, next) => {
           try {
             // const adminId = req.admin._id;
             // const admin = await Admin.findById(adminId);
-            const adminId = req.admin ? req.admin._id : (req.user ? req.user._id : null);
-            const admin = (await User.findById(adminId)) || (await Admin.findById(adminId));
-            
-            if (admin) {
+        
+            // if (admin) {
               const stateData = await State.find({}, '_id name'); // Projection to get both '_id' and 'name' fields
               if (!stateData || stateData.length === 0) {
                 return next(errorHandler(401, "No states exist"));
@@ -474,9 +472,9 @@ export const viewParamsPanchayaths = async (req, res, next) => {
                 sts: "01",
                 msg: "States retrieved successfully",
               });
-            } else {
-              next(errorHandler(401, "Admin not found"));
-            }
+            // } else {
+            //   next(errorHandler(401, "Admin not found"));
+            // }
           } catch (error) {
             next(error);
           }

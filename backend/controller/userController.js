@@ -22,12 +22,10 @@ export const addUser = async (req, res, next) => {
     try {
       console.log("Reached here");
       const sponser = req.admin ? req.admin._id : (req.user ? req.user._id : null);
-        console.log(sponser);
         let { name, email, phone,packageAmount,franchise, address,state,district,zonal,panchayath, transactionPassword, password } =
           req.body;
         console.log(state);
           const sponserData = (await User.findById(sponser)) || (await Admin.findById(sponser));
-          console.log(sponserData);
         const sponserName = sponserData.name;
      
 

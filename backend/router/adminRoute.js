@@ -21,14 +21,14 @@ adminRouter.post("/reject-user/:id", protectAdmin, rejectUser);
 
 
 
-adminRouter.get("/view-states", protectAdmin,viewStates);
+adminRouter.get("/view-states",viewStates);
 adminRouter.get("/view-all-districts", protectAdmin,viewAllDistricts);
 adminRouter.get("/view-all-zonals", protectAdmin,viewAllZonals);
 adminRouter.get("/view-all-panchayaths", protectAdmin,viewAllPanchayaths);
-adminRouter.get("/view-dropdown-districts/:id", protectAdmin,viewParamsDistricts);
-adminRouter.get("/view-dropdown-zonals/:id", protectAdmin,viewParamsZonals);
-adminRouter.get("/view-dropdown-panchayaths/:id", protectAdmin,viewParamsPanchayaths);
-adminRouter.get("/view-package", protectAdmin,viewPackages);
+adminRouter.get("/view-dropdown-districts/:id",viewParamsDistricts);
+adminRouter.get("/view-dropdown-zonals/:id",viewParamsZonals);
+adminRouter.get("/view-dropdown-panchayaths/:id",viewParamsPanchayaths);
+adminRouter.get("/view-package",viewPackages);
 adminRouter.get("/view-all-users", protectAdmin,viewAllUsers);
 
 

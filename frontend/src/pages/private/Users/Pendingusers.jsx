@@ -52,11 +52,16 @@ function Pendingusers() {
   //-------------Reject user----------------
   const rejectUser =async()=>{
     try {
-      const resposne=await ApiCall("post",`${rejectuserUrl}/${approveModal.id}`)
-      
+      const resposne=await ApiCall("post",`${rejectuserUrl}/${rejectModal.id}`);
+      if (resposne?.status === 200) {
+        Show_Toast("User Rejected successfully", true);
+        setrejectModal(false);
+        getpendingMenbers();
+      } 
     } catch (error) {
-      
+      Show_Toast(error,false)
     }
+  
 
   };
 
@@ -319,7 +324,7 @@ function Pendingusers() {
               type="button"
               className="btn btn-custom text-white"
               onClick={() => {
-                approveUser(); 
+                rejectUser(); 
               }}
             >
               Yes, Reject it

@@ -35,7 +35,7 @@ console.log(user,"user from headre")
     </button> */}
     <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
       <div className="d-flex align-items-center justify-content-between">
-        <a href="javascript:void(0)" className="nav-link d-flex d-lg-none align-items-center justify-content-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobilenavbar" aria-controls="offcanvasWithBothOptions">
+        <a href={undefined} className="nav-link d-flex d-lg-none align-items-center justify-content-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobilenavbar" aria-controls="offcanvasWithBothOptions">
           <i className="ti ti-align-justified fs-7" />
         </a>
         <ul className="navbar-nav flex-row ms-auto align-items-center justify-content-center">

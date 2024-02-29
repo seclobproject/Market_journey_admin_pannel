@@ -27540,7 +27540,7 @@ fieldset:disabled .btn {
   background-color: var(--bs-success-bg-subtle) !important;
 }
 .bg-info-subtle {
-  background-color: var(--bs-info-bg-subtle) !important;
+  background-color:  rgb(212 182 115 / 90)
 }
 .bg-warning-subtle {
   background-color: var(--bs-warning-bg-subtle) !important;

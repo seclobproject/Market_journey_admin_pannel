@@ -82,7 +82,7 @@ function Sidebar() {
             <div className="brand-logo d-flex align-items-center justify-content-center">
               <Link to={undefined} className="text-nowrap logo-img ">
               <a href={undefined} className="text-nowrap logo-img text-center d-block py-3 w-100">
-  <img src="public/dist/images/marketlogo.png" alt="Logo" width="100" height="50" />
+  <img src="/public/dist/images/marketlogo.png" alt="Logo" width="100" height="50" />
 </a>              </Link>
 
               <div

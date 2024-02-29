@@ -3,7 +3,7 @@ import MenuItem from "./MenuItem";
 import { Link } from "react-router-dom";
 import { ContextData } from "../../Services/Context";
 import { SidebarAnimation } from "../../libs/FramerMotion";
-
+import { Helmet } from 'react-helmet';
 function Sidebar() {
   const { setHamburgClicked, hamburgClicked } = useContext(ContextData);
 
@@ -65,7 +65,7 @@ function Sidebar() {
       title: "My Account",
       icon: "fas fa-user",
       sub: [
-        { title: "Change password", route: "forgotpassword",  },
+        { title: "Change password", route: "resetpassword",  },
       ],
     }
     
@@ -77,8 +77,8 @@ function Sidebar() {
         <SidebarAnimation>
           <div>
             <div className="brand-logo d-flex align-items-center justify-content-center">
-              <Link to={"/"} className="text-nowrap logo-img ">
-              <a href="./index.html" className="text-nowrap logo-img text-center d-block py-3 w-100">
+              <Link to={undefined} className="text-nowrap logo-img ">
+              <a href={undefined} className="text-nowrap logo-img text-center d-block py-3 w-100">
   <img src="public/dist/images/marketlogo.png" alt="Logo" width="100" height="50" />
 </a>              </Link>
 
@@ -103,8 +103,8 @@ function Sidebar() {
           </div>
         </SidebarAnimation>
       </aside>
-      {/* 
-      <Helmet>
+      
+      {/* <Helmet>
       <script src="/public/dist/js/sidebarmenu.js"></script>
 
       </Helmet> */}

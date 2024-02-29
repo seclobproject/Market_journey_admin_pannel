@@ -32,6 +32,7 @@ function Member() {
   const [showPassword, setShowPassword] = useState(false);
   const [showTransPassword, setShowTransPassword] = useState(false);
   const [selectedStateId, setSelectedStateId] = useState(null);
+  console.log(selectedStateId,"selectedStateId");
   const [selectedDistrictId, setSelectedDistrictId] = useState(null);
   const [selectedZonalId, setSelectedZonalId] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
@@ -56,12 +57,14 @@ function Member() {
   };
   //-----------list district in drop down--------
   const getDistrictList = async () => {
+
     try {
 
       const response = await ApiCall(
         "get",
         `${districtlistinZonalUrl}/${selectedStateId}`
       );
+      console.log(response,"ddistrict get")
       if (response.status === 200) {
         setDistrictList(response?.data?.districts);
       } else {
@@ -140,9 +143,7 @@ function Member() {
         getallUsers();
         // ();
         Show_Toast("Member added successfully", true);
-      } else {
-        Show_Toast("Member added failed", false);
-      }
+      } 
     } catch (error) {
       Show_Toast(error, false);
     }
@@ -178,8 +179,8 @@ function Member() {
     getPackagesList();
     if (
       selectedStateId &&
-      (addMember?.franchise === "Zonal Franchise" ||
-        addMember?.franchise === "Mobile Franchise")
+      (addMember?.franchise === "District Franchise" ||
+        addMember?.franchise === "Zonal Franchise")
     ) {
       getDistrictList();
     }
@@ -218,7 +219,12 @@ function Member() {
             <div>
               <button
                 className="btn btn-custom  ms-3 float-end"
-                onClick={() => setMemberModal({ show: true, id: null })}
+                onClick={() => {
+                  setMemberModal({ show: true, id: null });
+                  setAddMember('');
+                  setValidated(false)
+                }}
+                
               >
                 Add
               </button>
@@ -444,8 +450,8 @@ function Member() {
                 </Form.Control.Feedback>
               </div>
             </div>
-
-            <div className="mb-4">
+<div className="row">
+<div className="col-md-6">
               <label htmlFor="franchiseType" className="form-label">
                 Address
               </label>
@@ -466,6 +472,100 @@ function Member() {
               <Form.Control.Feedback type="invalid">
                 Please provide an address.
               </Form.Control.Feedback>
+            </div>
+            <div className="col-md-6">
+                <div className="row">
+                  <div className="col-9">
+                    <label htmlFor="transactionPassword" className="form-label">
+                      Password
+                    </label>
+                    <label
+                      htmlFor="transactionPassword"
+                      className="form-label"
+                      onClick={handlePasswordToggle}
+                    >
+                      {showPassword ? (
+                        <i className="fas fa-eye-slash"></i>
+                      ) : (
+                        <i className="fas fa-eye"></i>
+                      )}{" "}
+                    </label>
+                  </div>
+                  {/* <div className="col-3">
+            <span className="eye-icon" onClick={handlePasswordToggle}>
+                {showPassword ? (
+                    <i className="fas fa-eye-slash"></i>
+                ) : (
+                    <i className="fas fa-eye"></i>
+                )}
+            </span>
+        </div> */}
+                </div>
+
+                <div className="input-group">
+                  <input
+                  required
+                    type={showPassword ? "text" : "password"}
+                    className="form-control form-control-lg"
+                    placeholder="Enter your password"
+                    value={addMember?.password}
+                    onChange={(e) =>
+                      setAddMember({
+                        ...addMember,
+                        password: e.target.value,
+                      })
+                    }
+                  />
+                   <Form.Control.Feedback type="invalid">
+                    Please provide a Password.
+                  </Form.Control.Feedback>
+                </div>
+              </div>
+</div>
+           
+            <div className="mb-4 row">
+              {/* <div className="col-md-6">
+                <div className="row">
+                  <div className="col-9">
+                    <label htmlFor="transactionPassword" className="form-label">
+                      Transaction Password
+                    </label>
+                    <label
+                      htmlFor="transactionPassword"
+                      className="form-label"
+                      onClick={handlePasswordTransToggle}
+                    >
+                      {showTransPassword ? (
+                        <i className="fas fa-eye-slash"></i>
+                      ) : (
+                        <i className="fas fa-eye"></i>
+                      )}{" "}
+                    </label>
+                  </div>
+            
+                </div>
+
+                <div className="input-group">
+                  <input
+                  required 
+                    type={showTransPassword ? "text" : "password"}
+                    className="form-control form-control-lg"
+                    placeholder="Enter your Transition password"
+                    value={addMember?.transactionPassword}
+                    onChange={(e) =>
+                      setAddMember({
+                        ...addMember,
+                        transactionPassword: e.target.value,
+                      })
+                    }
+                  />
+                      <Form.Control.Feedback type="invalid">
+                    Please provide a Transaction Password.
+                  </Form.Control.Feedback>
+                </div>
+              </div> */}
+
+              
             </div>
             <div
               className=""
@@ -508,42 +608,71 @@ function Member() {
                   type="text"
                   className="form-control form-control-lg"
                   readOnly
-                  value={addMember?.packageAmount || "0"}
+                  value={addMember?.packageAmount}
                 />
               </div>
               {addMember?.franchise === "District Franchise" && (
-                <div className="col-md-6">
-                  <label htmlFor="exampleInputEmail1" className="form-label">
-                    State
-                  </label>
-                  <Select
-                    required
-                    options={stateList?.map((states) => ({
-                      value: states?.id,
-                      label: states?.name,
-                    }))}
-                    value={selectedState?.state}
-                    onChange={(selectedOption) => {
+            <div className="row">
+            <div className="col-md-6 mb-4">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                State
+              </label>
+              <Select
+                required
+                options={stateList?.map((states) => ({
+                  value: states?.id,
+                  label: states?.name,
+                }))}
+                value={selectedState?.state}
+                onChange={(selectedOption) => {
+                  setSelectedStateId(selectedOption?.value);
 
-                      setAddMember({
-                        ...addMember,
-                        state: selectedOption?.label,
-                      });
-                    }}
-                    placeholder="Select a state"
-                    isSearchable={true}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Please provide a state name.
-                  </Form.Control.Feedback>
-                </div>
+                  setAddMember({
+                    ...addMember,
+                    state: selectedOption?.label,
+                  });
+                }}
+                placeholder="Select a state"
+                isSearchable={true}
+              />
+              <Form.Control.Feedback type="invalid">
+                Please provide a package Amount.
+              </Form.Control.Feedback>
+            </div>
+
+            <div className="col-md-6 mb-4">
+              <label htmlFor="stateDropdown2" className="form-label">
+                District
+              </label>
+              <Select
+                required
+                options={districtList?.map((districts) => ({
+                  value: districts?.id,
+                  label: districts?.name,
+                }))}
+                value={selectedState?.district}
+                onChange={(selectedOption) => {
+
+                  setAddMember({
+                    ...addMember,
+                    district: selectedOption?.label,
+                  });
+                }}
+                placeholder="Select a state"
+                isSearchable={true}
+              />{" "}
+              <Form.Control.Feedback type="invalid">
+                Please provide a district name.
+              </Form.Control.Feedback>
+            </div>
+          </div>
               )}
             </div>
 
             {addMember?.franchise === "Zonal Franchise" && (
-              <div className="row">
-                <div className="col-md-6 mb-4">
-                  <label htmlFor="exampleInputEmail1" className="form-label">
+                <div className="row">
+                <div className="col-md-4 mb-4">
+                  <label htmlFor="stateDropdown1" className="form-label">
                     State
                   </label>
                   <Select
@@ -565,11 +694,11 @@ function Member() {
                     isSearchable={true}
                   />
                   <Form.Control.Feedback type="invalid">
-                    Please provide a package Amount.
+                    Please provide a state Amount.
                   </Form.Control.Feedback>
                 </div>
 
-                <div className="col-md-6 mb-4">
+                <div className="col-md-4 mb-4">
                   <label htmlFor="stateDropdown2" className="form-label">
                     District
                   </label>
@@ -581,20 +710,48 @@ function Member() {
                     }))}
                     value={selectedState?.district}
                     onChange={(selectedOption) => {
+                      setSelectedDistrictId(selectedOption?.value);
 
                       setAddMember({
                         ...addMember,
                         district: selectedOption?.label,
                       });
                     }}
-                    placeholder="Select a state"
+                    placeholder="Select a district"
                     isSearchable={true}
                   />{" "}
                   <Form.Control.Feedback type="invalid">
-                    Please provide a district name.
+                    Please provide a district Amount.
                   </Form.Control.Feedback>
                 </div>
-              </div>
+
+                <div className="col-md-4 mb-4">
+                  <label htmlFor="stateDropdown3" className="form-label">
+                    Zonal
+                  </label>
+                  <Select
+                    required
+                    options={zonalList?.map((zonal) => ({
+                      value: zonal?.id,
+                      label: zonal?.name,
+                    }))}
+                    value={selectedState?.zonal}
+                    onChange={(selectedOption) => {
+                      setSelectedZonalId(selectedOption?.value);
+                      setAddMember({
+                        ...addMember,
+                        zonal: selectedOption?.label,
+                      });
+                    }}
+                    placeholder="Select a zonal"
+                    isSearchable={true}
+                  />{" "}
+                  <Form.Control.Feedback type="invalid">
+                    Please provide a zonal name.
+                  </Form.Control.Feedback>
+                </div>
+                </div>
+              
             )}
 
             {addMember?.franchise === "Mobile Franchise" && (
@@ -706,113 +863,22 @@ function Member() {
               </div>
             )}
 
-            <div className="mb-4 row">
-              <div className="col-md-6">
-                <div className="row">
-                  <div className="col-9">
-                    <label htmlFor="transactionPassword" className="form-label">
-                      Transaction Password
-                    </label>
-                    <label
-                      htmlFor="transactionPassword"
-                      className="form-label"
-                      onClick={handlePasswordTransToggle}
-                    >
-                      {showTransPassword ? (
-                        <i className="fas fa-eye-slash"></i>
-                      ) : (
-                        <i className="fas fa-eye"></i>
-                      )}{" "}
-                    </label>
-                  </div>
-                  {/* <div className="col-3">
-            <span className="eye-icon" onClick={handlePasswordToggle}>
-                {showPassword ? (
-                    <i className="fas fa-eye-slash"></i>
-                ) : (
-                    <i className="fas fa-eye"></i>
-                )}
-            </span>
-        </div> */}
-                </div>
+           
 
-                <div className="input-group">
-                  <input
-                  required 
-                    type={showTransPassword ? "text" : "password"}
-                    className="form-control form-control-lg"
-                    placeholder="Enter your Transition password"
-                    value={addMember?.transactionPassword}
-                    onChange={(e) =>
-                      setAddMember({
-                        ...addMember,
-                        transactionPassword: e.target.value,
-                      })
-                    }
-                  />
-                      <Form.Control.Feedback type="invalid">
-                    Please provide a Transaction Password.
-                  </Form.Control.Feedback>
-                </div>
-              </div>
-
-              {/* Add another div for the regular password input */}
-              <div className="col-md-6">
-                <div className="row">
-                  <div className="col-9">
-                    <label htmlFor="transactionPassword" className="form-label">
-                      Password
-                    </label>
-                    <label
-                      htmlFor="transactionPassword"
-                      className="form-label"
-                      onClick={handlePasswordToggle}
-                    >
-                      {showPassword ? (
-                        <i className="fas fa-eye-slash"></i>
-                      ) : (
-                        <i className="fas fa-eye"></i>
-                      )}{" "}
-                    </label>
-                  </div>
-                  {/* <div className="col-3">
-            <span className="eye-icon" onClick={handlePasswordToggle}>
-                {showPassword ? (
-                    <i className="fas fa-eye-slash"></i>
-                ) : (
-                    <i className="fas fa-eye"></i>
-                )}
-            </span>
-        </div> */}
-                </div>
-
-                <div className="input-group">
-                  <input
-                  required
-                    type={showPassword ? "text" : "password"}
-                    className="form-control form-control-lg"
-                    placeholder="Enter your password"
-                    value={addMember?.password}
-                    onChange={(e) =>
-                      setAddMember({
-                        ...addMember,
-                        password: e.target.value,
-                      })
-                    }
-                  />
-                   <Form.Control.Feedback type="invalid">
-                    Please provide a Password.
-                  </Form.Control.Feedback>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-12 mt-4">
+            <div className="col-12 mt-5">
               <button type="submit" className="btn btn-custom float-end">
                 {/* {addLocation?._id ? 'Update' : 'Save'}  */}Save
               </button>
             </div>
           </Form>
+          <button
+            className="btn btn-cancel float-end me-1"
+            onClick={() => {
+              setMemberModal({ show: false, id: null });
+            }}
+          >
+            cancel
+          </button>
         </ModalComponent>
 
         {/* -------------deleteConfirmation */}

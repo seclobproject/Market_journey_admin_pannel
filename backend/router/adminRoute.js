@@ -1,6 +1,6 @@
 import express from "express";
 const adminRouter = express.Router();
-import {acceptUser, addDistrict, addPanchayath, addState, addZonal, adminLogin,  forgotPassword, getReadyToApproveUsers, viewAllDistricts, viewAllPanchayaths, viewAllUsers, viewAllZonals, viewParamsDistricts, viewParamsPanchayaths, viewParamsZonals, viewStates} from "../controller/adminController.js";
+import {acceptUser, addDistrict, addPanchayath, addState, addZonal, adminLogin,  forgotPassword, getReadyToApproveUsers, rejectUser, viewAllDistricts, viewAllPanchayaths, viewAllUsers, viewAllZonals, viewParamsDistricts, viewParamsPanchayaths, viewParamsZonals, viewStates} from "../controller/adminController.js";
 import { protectAdmin } from "../middleware/authMiddleware.js";
 import { addPackage, editPackage, viewPackages } from "../controller/packageController.js";
 import { addUser } from "../controller/userController.js";
@@ -15,6 +15,8 @@ adminRouter.post("/add-package", protectAdmin,addPackage);
 adminRouter.post("/edit-package/:id", protectAdmin,editPackage);
 adminRouter.post("/add-user", protectAdmin, addUser);
 adminRouter.post("/accept-user/:id", protectAdmin, acceptUser);
+adminRouter.post("/reject-user/:id", protectAdmin, rejectUser);
+
 
 
 

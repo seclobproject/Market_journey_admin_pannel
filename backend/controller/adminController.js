@@ -341,8 +341,11 @@ export const addPanchayath=async(req,res,next)=>{
 export const viewParamsDistricts = async (req, res, next) => {
   try {
     const {id}=req.params;
-    const adminId = req.admin._id;
-    const admin = await Admin.findById(adminId);
+    // const adminId = req.admin._id;
+    // const admin = await Admin.findById(adminId);
+    const adminId = req.admin ? req.admin._id : (req.user ? req.user._id : null);
+    const admin = (await User.findById(adminId)) || (await Admin.findById(adminId));
+    
 
     if (admin) {
       const stateData = await State.findById(id).populate("districts")
@@ -371,8 +374,11 @@ export const viewParamsDistricts = async (req, res, next) => {
 export const viewParamsZonals = async (req, res, next) => {
   try {
     const {id}=req.params;
-    const adminId = req.admin._id;
-    const admin = await Admin.findById(adminId);
+    // const adminId = req.admin._id;
+    // const admin = await Admin.findById(adminId);
+    const adminId = req.admin ? req.admin._id : (req.user ? req.user._id : null);
+    const admin = (await User.findById(adminId)) || (await Admin.findById(adminId));
+    
 
     if (admin) {
       const districtData = await District.findById(id).populate("zonals")
@@ -402,8 +408,11 @@ export const viewParamsZonals = async (req, res, next) => {
 export const viewParamsPanchayaths = async (req, res, next) => {
   try {
     const {id}=req.params;
-    const adminId = req.admin._id;
-    const admin = await Admin.findById(adminId);
+    const adminId = req.admin ? req.admin._id : (req.user ? req.user._id : null);
+    const admin = (await User.findById(adminId)) || (await Admin.findById(adminId));
+    
+    // const adminId = req.admin._id;
+    // const admin = await Admin.findById(adminId);
 
     if (admin) {
       const zonalData = await Zonal.findById(id).populate("panchayaths")
@@ -447,9 +456,11 @@ export const viewParamsPanchayaths = async (req, res, next) => {
         //view States
         export const viewStates = async (req, res, next) => {
           try {
-            const adminId = req.admin._id;
-            const admin = await Admin.findById(adminId);
-        
+            // const adminId = req.admin._id;
+            // const admin = await Admin.findById(adminId);
+            const adminId = req.admin ? req.admin._id : (req.user ? req.user._id : null);
+            const admin = (await User.findById(adminId)) || (await Admin.findById(adminId));
+            
             if (admin) {
               const stateData = await State.find({}, '_id name'); // Projection to get both '_id' and 'name' fields
               if (!stateData || stateData.length === 0) {

@@ -150,16 +150,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    wallet: {
-      type: Number,
-    },
     withdrawAmount: {
       type: Number,
     },
     withdrawStatus: {
-      type: String,
-    },
-    transactionID: {
       type: String,
     },
 
@@ -169,6 +163,10 @@ const userSchema = new mongoose.Schema(
       default: 0,
     },
     inDirectReferalIncome: {
+      type: Number,
+      default: 0,
+    },
+    totalLevelIncome:{
       type: Number,
       default: 0,
     },
@@ -213,9 +211,7 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    packageName: {
-      type: String,
-    },
+
     addFundHistory: [addFundSchema],
     transactionCode: {
       type: String,

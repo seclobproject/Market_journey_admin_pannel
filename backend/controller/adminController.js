@@ -67,7 +67,8 @@ export const adminLogin = async (req, res, next) => {
   };
 
 
-//view all users by Admin
+//view all users by Admin---------------------------------------------------------------------------------------------------------------------
+
 export const viewAllUsers = async (req, res, next) => {
   const adminId = req.admin._id;
 
@@ -90,6 +91,52 @@ export const viewAllUsers = async (req, res, next) => {
   }
 };
 
+// pagination for user list
+
+const paginate = async (model, query, page = 1, pageSize = 10) => {
+  try {
+      const totalDocs = await model.countDocuments(query);
+      const totalPages = Math.ceil(totalDocs / pageSize);
+
+      const offset = pageSize * (page - 1);
+
+      const results = await model.find(query).skip(offset).limit(pageSize);
+
+      return {
+          results,
+          page,
+          pageSize,
+          totalPages,
+          totalDocs
+      };
+  } catch (error) {
+      throw new Error(`Pagination error: ${error.message}`);
+  }
+};
+
+
+export const viewAllPageUsers = async (req, res, next) => {
+  const adminId = req.admin._id;
+  const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+  const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+
+  try {
+      const admin = await Admin.findById(adminId);
+      if (admin) {
+          const userData = await paginate(User, {}, page, pageSize);
+
+          return res.status(200).json({
+              userData,
+              sts: "01",
+              msg: "Successfully Get all users",
+          });
+      } else {
+          next(errorHandler("User not found"));
+      }
+  } catch (error) {
+      next(error);
+  }
+};
 
 
 
@@ -103,13 +150,16 @@ export const addState=async(req,res,next)=>{
 
     if (admin) {
       const {stateName}=req.body;
+      const stateNameLowercase = stateName.toLowerCase();
 
-      const stateData=await State.findOne({name:stateName});
-      if(stateData){
+      // Use a case-insensitive query to find existing state names
+      const existingState = await State.findOne({ name: { $regex: new RegExp('^' + stateNameLowercase + '$', 'i') } });
+
+      if(existingState){
         return next(errorHandler(401, "This state already exist"));
       }
       const newState = new State({
-        name:stateName
+        name:stateNameLowercase
       });
       const state = await newState.save();
       if(state){
@@ -141,17 +191,19 @@ export const addDistrict=async(req,res,next)=>{
     const admin = await Admin.findById(adminId);
 
     if (admin) {
-      const {stateName,districtName,packageAmount}=req.body;
-      
-      const districtData=await District.findOne({name:districtName});
-      if(districtData){
+      const {stateName,districtName}=req.body;
+      const districtNameLowercase = districtName.toLowerCase();
+
+
+      const existingDistrict = await District.findOne({ name: { $regex: new RegExp('^' + districtNameLowercase + '$', 'i') } });
+
+      if(existingDistrict){
         return next(errorHandler(401, "This District already exist"));
       }
       const stateData=await State.findOne({name:stateName});
       if(stateData){
         const newDistrict = new District({
-          name:districtName,
-          packageAmount:packageAmount,
+          name:districtNameLowercase,
           stateName
         });
         
@@ -191,9 +243,11 @@ export const addZonal=async(req,res,next)=>{
     const admin = await Admin.findById(adminId);
 
     if (admin) {
-      const {stateName,districtName,zonalName,packageAmount}=req.body;
-      const zonalData=await Zonal.findOne({name:zonalName});
-      if(zonalData){
+      const {stateName,districtName,zonalName}=req.body;
+      const zonalNameLowercase = zonalName.toLowerCase();
+      const existingZonal = await Zonal.findOne({ name: { $regex: new RegExp('^' + zonalNameLowercase + '$', 'i') } });
+
+      if(existingZonal){
         return next(errorHandler(401, "This Zonal already exist"));
       }
       const districtData=await District.findOne({name:districtName});
@@ -202,8 +256,7 @@ export const addZonal=async(req,res,next)=>{
 
       }
         const newZonal = new Zonal({
-          name:zonalName,
-          packageAmount:packageAmount,
+          name:zonalNameLowercase,
           stateName,
           districtName
         });
@@ -237,8 +290,10 @@ export const addPanchayath=async(req,res,next)=>{
 
     if (admin) {
       const {stateName,districtName,zonalName,panchayathName}=req.body;
-      const panchayathData=await Panchayath.findOne({name:panchayathName});
-      if(panchayathData){
+      const panchayathNameLowercase = panchayathName.toLowerCase();
+
+      const existingPanchayath = await State.findOne({ name: { $regex: new RegExp('^' + panchayathNameLowercase + '$', 'i') } });
+      if(existingPanchayath){
         return next(errorHandler(401, "This Panchayath already exist"));
       }
       const districtData=await District.findOne({name:districtName});
@@ -250,7 +305,7 @@ export const addPanchayath=async(req,res,next)=>{
         return next(errorHandler(401, "This Zonal Not Found"));
       }
         const newPanchayath = new Panchayath({
-          name:panchayathName,
+          name:panchayathNameLowercase,
           stateName,
           districtName,
           zonalName
@@ -574,7 +629,7 @@ export const acceptUser = async (req, res, next) => {
             sponserUser1.childLevel1.push(updatedUser._id);
             await sponserUser1.save();
           }
-          // const referalIncome=generateReferalIncome(sponserId,updatedUser.packageAmount)
+          const referalIncome=generateReferalIncome(sponserUser1,sponserUser2,updatedUser)
           res
             .status(200)
             .json({ updatedUser, msg: "User verification Accepted!" });
@@ -584,6 +639,41 @@ export const acceptUser = async (req, res, next) => {
       }
     } else {
       return next(errorHandler(401, "Admin Login Failed"));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+//generate referal income for all
+
+export const generateReferalIncome = async (
+  sponser1,
+  sponser2,
+ updatedUser
+) => {
+  try {
+    const directReferalIncome = updatedUser.packageAmount * 0.20;
+    const inDirectReferalIncome =updatedUser.packageAmount * 0.05;
+    if (sponser1) {
+      const totalRaferal = sponserData.directReferalIncome + directReferalIncome;
+      sponserData.directReferalIncome = totalRaferal;
+      sponserData.walletAmount = sponserData.walletAmount + referalIncome;
+      sponserData.referalHistory.push({
+        reportName: "DirectIncome",
+        userID: userData.ownSponserId,
+        name: userData.username,
+        amountCredited: referalIncome,
+        transactionCode: transactionCode,
+        status: "Approved",
+      });
+      const updatedSponser = await sponserData.save();
+      if (updatedSponser) {
+        return totalRaferal;
+      }
+    } else {
+      next(errorHandler("Sponser not found"));
     }
   } catch (error) {
     next(error);

@@ -57,7 +57,7 @@ export const addUser = async (req, res, next) => {
         }
         
       const hashedPassword = bcryptjs.hashSync(password, 10);
-      const hashedTxnPassword = bcryptjs.hashSync(transactionPassword, 10);
+      // const hashedTxnPassword = bcryptjs.hashSync(transactionPassword, 10);
   
       const user = await User.create({
         sponser,
@@ -75,7 +75,7 @@ export const addUser = async (req, res, next) => {
         isDistrictFranchise,
         isZonalFranchise,
         isMobileFranchise,
-        transactionPassword: hashedTxnPassword,
+        // transactionPassword: hashedTxnPassword,
         password: hashedPassword,
         ownSponserId,
         userStatus,

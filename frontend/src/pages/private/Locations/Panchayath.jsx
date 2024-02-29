@@ -120,9 +120,7 @@ function Panchayath() {
         getPanchayathList();
         // ();
         Show_Toast("Panchayath added successfully", true);
-      } else {
-        Show_Toast("Panchayath added failed", false);
-      }
+      } 
     } catch (error) {
       Show_Toast(error, false);
     }
@@ -178,20 +176,21 @@ function Panchayath() {
                         <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                       </th>
                       <th>
-                        <h6 className="fs-4 fw-semibold mb-0">
-                          Panchayath Name
-                        </h6>
-                      </th>
-                      <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Zonal Name</h6>
+                        <h6 className="fs-4 fw-semibold mb-0">State Name</h6>
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">District Name</h6>
                       </th>
                       <th>
-                        <h6 className="fs-4 fw-semibold mb-0">State Name</h6>
+                        <h6 className="fs-4 fw-semibold mb-0">Zonal Name</h6>
                       </th>
-
+                     
+                      
+                      <th>
+                        <h6 className="fs-4 fw-semibold mb-0">
+                          Panchayath Name
+                        </h6>
+                      </th>
                       <th />
                     </tr>
                   </thead>
@@ -204,8 +203,13 @@ function Panchayath() {
                               <tr key={index}>
                                 <td>{index + 1}</td>
                                 <td>
-                                  {(panchayaths?.name &&
-                                    panchayaths.name.toUpperCase()) ||
+                                  {(panchayaths?.stateName &&
+                                    panchayaths.stateName.toUpperCase()) ||
+                                    "--"}
+                                </td>
+                                <td>
+                                  {(panchayaths?.districtName &&
+                                    panchayaths.districtName.toUpperCase()) ||
                                     "--"}
                                 </td>
                                 <td>
@@ -215,15 +219,13 @@ function Panchayath() {
                                 </td>
 
                                 <td>
-                                  {(panchayaths?.districtName &&
-                                    panchayaths.districtName.toUpperCase()) ||
+                                  {(panchayaths?.name &&
+                                    panchayaths.name.toUpperCase()) ||
                                     "--"}
                                 </td>
-                                <td>
-                                  {(panchayaths?.stateName &&
-                                    panchayaths.stateName.toUpperCase()) ||
-                                    "--"}
-                                </td>
+                              
+                             
+                               
                               </tr>
                             )
                           )

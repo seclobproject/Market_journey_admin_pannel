@@ -3,6 +3,7 @@ import { SlideMotion } from "../../../libs/FramerMotion";
 import { ApiCall } from "../../../Services/Api";
 import {
   approvependingsUrl,
+  rejectuserUrl,
   viewpendingmemberUrl,
 } from "../../../utils/Constants";
 import ModalComponent from "../../../Components/ModalComponet";
@@ -10,8 +11,10 @@ import { Show_Toast } from "../../../utils/Toast";
 
 function Pendingusers() {
   const [approveModal, setApproveModal] = useState({ show: false, id: null });
+  const [rejectModal, setrejectModal] = useState({ show: false, id: null });
   const [pendingMemberList, setPendingMemberList] = useState([]);
   const [pendingUserName, setpendingUserName] = useState({});
+
 
   //-----------pending member --------
   const getpendingMenbers = async () => {
@@ -29,7 +32,7 @@ function Pendingusers() {
       console.error("Error fetching state list:", error);
     }
   };
-
+//------------approve user--------------
   const approveUser = async () => {
     try {
       const resposne = await ApiCall(
@@ -40,10 +43,21 @@ function Pendingusers() {
         Show_Toast("User Approved successfully", true);
         setApproveModal(false);
         getpendingMenbers();
-      } else {
-        Show_Toast("Failed", true);
-      }
-    } catch (error) {}
+      } 
+    } catch (error) {
+      Show_Toast(error,false)
+    }
+  };
+
+  //-------------Reject user----------------
+  const rejectUser =async()=>{
+    try {
+      const resposne=await ApiCall("post",`${rejectuserUrl}/${approveModal.id}`)
+      
+    } catch (error) {
+      
+    }
+
   };
 
   useEffect(() => {
@@ -97,7 +111,10 @@ function Pendingusers() {
                       <h6 className="fs-4 fw-semibold mb-0">Status</h6>
                     </th>
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Actions</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">Aprrove User</h6>
+                    </th>
+                    <th>
+                      <h6 className="fs-4 fw-semibold mb-0">Reject user</h6>
                     </th>
                     <th />
                   </tr>
@@ -106,6 +123,7 @@ function Pendingusers() {
                   {pendingMemberList?.length ? (
                     <>
                       {pendingMemberList.map((members, index) => (
+                        console.log(members,"45678"),
                         <tr key={index}>
                           <td>{index + 1}</td>
                           <td>
@@ -124,7 +142,7 @@ function Pendingusers() {
                           <td>
                           <img
   alt="images"
-  src={`http://localhost:8000${members?.screenshot}`}
+  src={`http://localhost:8000/uploads/${members?.screenshot || ''}`}
   style={{
     width: "100px",
     height: "100px",
@@ -132,6 +150,7 @@ function Pendingusers() {
     borderRadius: "5px",
   }}
 />
+
 
                             {/* <img
                               src={`http://localhost:3000/${members?.screenshot}`}
@@ -161,6 +180,21 @@ function Pendingusers() {
                               </button>
                             )}
                           </td>
+                          <td>
+                            {members?.userStatus === "readyToApprove" && (
+                              <button
+                                className="btn btn-cancel"
+                                onClick={() =>
+                                  setrejectModal({
+                                    show: true,
+                                    id: members._id,
+                                  })
+                                }
+                              >
+                                Reject 
+                              </button>
+                            )}
+                          </td>
                         </tr>
                       ))}
                     </>
@@ -186,6 +220,7 @@ function Pendingusers() {
           </div>
         </div>
       </SlideMotion>
+      {/* approve modal */}
       <ModalComponent
         show={approveModal.show}
         onHide={() => {
@@ -234,6 +269,60 @@ function Pendingusers() {
               }}
             >
               Yes, Approve it
+            </button>
+          </div>
+        </div>
+      </ModalComponent>
+      {/* Reject modal */}
+
+      <ModalComponent
+        show={rejectModal.show}
+        onHide={() => {
+          setrejectModal({ show: false, id: null });
+        }}
+      
+        centered
+        width={"500px"}
+      >
+        <div className="modal-body">
+          <div className="row mb-4">
+            <div className="col d-flex justify-content-center">
+              <i
+                style={{ fontSize: "50px", color: "#fe9423" }}
+                className="fa fa-exclamation-triangle "
+                aria-hidden="true"
+              ></i>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col d-flex justify-content-center ">
+              <h5 className="">
+                Are you sure you want to reject this pending user {""} ?
+              </h5>
+            </div>
+          </div>
+        </div>
+
+        <div className="modal-footer">
+          <div className="col gap-3 d-flex justify-content-center">
+            <button
+              onClick={() => {
+                setrejectModal({ show: false, id: null });
+              }}
+              type="button"
+              className="btn btn-cancel"
+              data-bs-dismiss="modal"
+            >
+              No, keep it
+            </button>
+            <button
+              type="button"
+              className="btn btn-custom text-white"
+              onClick={() => {
+                approveUser(); 
+              }}
+            >
+              Yes, Reject it
             </button>
           </div>
         </div>

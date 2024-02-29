@@ -94,9 +94,7 @@ function Zonal() {
         setAddZonal("");
         getZonallist();
         Show_Toast("Zonal added successfully", true);
-      } else {
-        Show_Toast("Zonal added failed", false);
-      }
+      } 
     } catch (error) {
       Show_Toast(error, false);
     }
@@ -143,14 +141,16 @@ function Zonal() {
                       <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                     </th>
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Zonal Name</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">State Name</h6>
                     </th>
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">District Name</h6>
                     </th>
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">State Name</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">Zonal Name</h6>
                     </th>
+                    
+                    
                     
                     <th />
                   </tr>
@@ -161,9 +161,9 @@ function Zonal() {
               {zonalList.map((zonals, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{zonals?.name && zonals.name.toUpperCase()||"--"}</td>
-                  <td>{zonals?.districtName && zonals.districtName.toUpperCase()||"--"}</td>
                   <td>{zonals?.stateName && zonals.stateName.toUpperCase()||"--"}</td>
+                  <td>{zonals?.districtName && zonals.districtName.toUpperCase()||"--"}</td>
+                  <td>{zonals?.name && zonals.name.toUpperCase()||"--"}</td>
 
 
 

@@ -46391,7 +46391,7 @@ ul {
 
 .table-container {
   overflow-x: auto;
-  max-height: 400px; /* Set a max height for the scroll */
+  /* max-height: 400px; Set a max height for the scroll */
 }
 
 .table {

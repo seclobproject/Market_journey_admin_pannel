@@ -3,7 +3,7 @@ import MenuItem from "./MenuItem";
 import { Link } from "react-router-dom";
 import { ContextData } from "../../Services/Context";
 import { SidebarAnimation } from "../../libs/FramerMotion";
-
+import { Helmet } from 'react-helmet';
 function Sidebar() {
   const { setHamburgClicked, hamburgClicked } = useContext(ContextData);
 
@@ -65,7 +65,7 @@ function Sidebar() {
       title: "My Account",
       icon: "fas fa-user",
       sub: [
-        { title: "Change password", route: "forgotpassword",  },
+        { title: "Change password", route: "resetpassword",  },
       ],
     }
     
@@ -103,8 +103,8 @@ function Sidebar() {
           </div>
         </SidebarAnimation>
       </aside>
-      {/* 
-      <Helmet>
+      
+      {/* <Helmet>
       <script src="/public/dist/js/sidebarmenu.js"></script>
 
       </Helmet> */}

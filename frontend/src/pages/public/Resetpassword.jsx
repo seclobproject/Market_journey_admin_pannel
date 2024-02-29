@@ -1,70 +1,69 @@
-import React, { useContext, useState } from "react";
-import { Button, Form } from "react-bootstrap";
-import { ContextData } from "../../Services/Context";
-import { update_PasswordURL } from "../../utils/Constants";
-import { Link, useNavigate } from "react-router-dom";
-import { ApiCall } from "../../Services/Api";
-import { Show_Toast } from "../../utils/Toast";
-import { SlideMotion } from "../../libs/FramerMotion";
+import React, { useContext, useState } from 'react'
+import { ApiCall } from '../../Services/Api';
+import { update_PasswordURL } from '../../utils/Constants';
+import { Link, useNavigate } from 'react-router-dom';
+import { SlideMotion } from '../../libs/FramerMotion';
+import { Button, Form } from 'react-bootstrap';
+import { ContextData } from '../../Services/Context';
+import { Show_Toast } from '../../utils/Toast';
 
-function Forgotpassword() {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({});
-  const [validated, setValidated] = useState(false);
-  const [password, setPassword] = useState({});
-  const { Check_Validation } = useContext(ContextData);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showconfirmPassword, setShowConfirmpassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handlePasswordToggle = () => {
-    setShowPassword(!showPassword);
-    setShowConfirmpassword(!showconfirmPassword);
-  };
-
-  const clearMessageDiv = () => {
-    const messageDiv = document.getElementById("msg");
-    if (messageDiv) {
-      messageDiv.innerHTML = "";
-    }
-  };
-
-  const updatePassword = async () => {
-    const messageDiv = document.getElementById("msg");
-
-    if (
-      typeof password?.password === "string" &&
-      typeof formData?.newPassword === "string" &&
-      password?.password.trim() !== formData?.newPassword.trim()
-    ) {
-      messageDiv.innerHTML = "Password and confirm password do not match";
-      Show_Toast("Password and confirm password do not match", false);
-      return;
-    }
-
-    try {
-      setIsLoading(true)
-      const res = await ApiCall("post", update_PasswordURL, formData);
-      if (res?.status === 200) {
-        Show_Toast("Successfully updated password", true);
-        setIsLoading(false)
-
-        navigate("/");
-      } else {
-        console.log("Invalid user");
+function Resetpassword() {
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({});
+    const [validated, setValidated] = useState(false);
+    const [password, setPassword] = useState({});
+    const { Check_Validation } = useContext(ContextData);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showconfirmPassword, setShowConfirmpassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+  
+    const handlePasswordToggle = () => {
+      setShowPassword(!showPassword);
+      setShowConfirmpassword(!showconfirmPassword);
+    };
+  
+    const clearMessageDiv = () => {
+      const messageDiv = document.getElementById("msg");
+      if (messageDiv) {
+        messageDiv.innerHTML = "";
       }
-    } catch (error) {
-      Show_Toast(error, false);
-    }
-  };
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    Check_Validation(e, updatePassword, setValidated);
-  };
-
+    };
+  
+    const updatePassword = async () => {
+      const messageDiv = document.getElementById("msg");
+  
+      if (
+        typeof password?.password === "string" &&
+        typeof formData?.newPassword === "string" &&
+        password?.password.trim() !== formData?.newPassword.trim()
+      ) {
+        messageDiv.innerHTML = "Password and confirm password do not match";
+        Show_Toast("Password and confirm password do not match", false);
+        return;
+      }
+  
+      try {
+        setIsLoading(true)
+        const res = await ApiCall("post", update_PasswordURL, formData);
+        if (res?.status === 200) {
+          Show_Toast("Successfully updated password", true);
+          setIsLoading(false)
+  
+          navigate("/dashboard");
+        } else {
+          console.log("Invalid user");
+        }
+      } catch (error) {
+        Show_Toast(error, false);
+      }
+    };
+  
+    const handleLogin = (e) => {
+      e.preventDefault();
+      Check_Validation(e, updatePassword, setValidated);
+    };
   return (
-    <>
+<>
       <div
         className="page-wrapper"
         id="main-wrapper"
@@ -201,13 +200,13 @@ Username                          </label>
                         <div id="msg" style={{ color: "red" }}></div>
                         <div className="d-flex align-items-center justify-content-between mb-4">
                           <div className="form-check"></div>
-                          <Link
+                          {/* <Link
                             className="fw-medium"
                             style={{ color: "#926c15", fontSize: "15px" }} // Change the color property to red
                             to={"/"}
                           >
                             Have a account?.Login
-                          </Link>
+                          </Link> */}
                         </div>
                         <Button
         className={`btn btn-custom w-100 py-8 mb-4 rounded-2 mt-3 ${isLoading ? 'loading' : ''}`}
@@ -225,8 +224,7 @@ Username                          </label>
           </div>
         </div>
       </div>
-    </>
-  );
+    </>  )
 }
 
-export default Forgotpassword;
+export default Resetpassword

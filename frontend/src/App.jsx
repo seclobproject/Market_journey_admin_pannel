@@ -12,6 +12,7 @@ import Zonal from "./pages/private/Locations/Zonal";
 import Panchayath from "./pages/private/Locations/Panchayath";
 import Member from "./pages/private/Users/Member";
 import Pendingusers from "./pages/private/Users/Pendingusers";
+import Resetpassword from "./pages/public/Resetpassword";
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
       <Routes>
         <Route index element={<Login />} />
          <Route path="/forgotpassword" element={<Forgotpassword/>}/>
+         <Route path="/resetpassword" element={<Resetpassword/>}/>
          <Route path="/" element={<OutletConnection />}>
           <Route path="/dashboard" element={<Home />} />
           <Route path="/member" element={<Member />} />

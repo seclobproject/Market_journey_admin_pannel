@@ -11,6 +11,7 @@ export const ContextDataProvider = ({ children }) => {
   const[hamburgClicked,setHamburgClicked]=useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  console.log(user,"user")
 
   console.log(isLoggedIn,"logged")
 

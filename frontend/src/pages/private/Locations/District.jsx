@@ -60,9 +60,7 @@ function District() {
         setAddDistrict("");
         getDistrict();
         Show_Toast("District added successfully", true);
-      } else {
-        Show_Toast("District added failed", false);
-      }
+      } 
     } catch (error) {
       Show_Toast(error, false);
     }
@@ -126,11 +124,12 @@ function District() {
                       <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                     </th>
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">District Name</h6>
-                    </th>
-                    <th>
                       <h6 className="fs-4 fw-semibold mb-0">State Name</h6>
                     </th>
+                    <th>
+                      <h6 className="fs-4 fw-semibold mb-0">District Name</h6>
+                    </th>
+                   
                     {/* <th>
                       <h6 className="fs-4 fw-semibold mb-0">Package</h6>
                     </th> */}
@@ -144,15 +143,16 @@ function District() {
                         <tr key={index}>
                           <td>{index + 1}</td>
                           <td>
-                            {(districts?.name &&
-                              districts.name.toUpperCase()) ||
-                              "--"}
-                          </td>
-                          <td>
                             {(districts?.stateName &&
                               districts.stateName.toUpperCase()) ||
                               "--"}
                           </td>
+                          <td>
+                            {(districts?.name &&
+                              districts.name.toUpperCase()) ||
+                              "--"}
+                          </td>
+                         
                           {/* <td>
                             {(districts?.packageAmount &&
                               districts.packageAmount) ||

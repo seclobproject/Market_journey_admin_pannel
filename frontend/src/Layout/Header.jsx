@@ -5,8 +5,9 @@ import { useNavigate } from "react-router-dom";
 
 function Header() {
   const navigate =useNavigate();
-  const{setHamburgClicked,hamburgClicked,logout}=useContext(ContextData)
-
+  const{setHamburgClicked,hamburgClicked,logout,user}=useContext(ContextData)
+  
+console.log(user,"user from headre")
   const handleLogout = () => {
     localStorage.removeItem("User");
     navigate("/");
@@ -55,10 +56,10 @@ function Header() {
                 <div className="d-flex align-items-center py-9 mx-7 border-bottom">
                   <img src="../../dist/images/profile/user-1.jpg" className="rounded-circle" width={80} height={80} alt />
                   <div className="ms-3">
-                    <h5 className="mb-1 fs-5 text-white">Master Jourany</h5>
+                    <h5 className="mb-1 fs-5 text-white">Master Journey</h5>
                     <span className="mb-1 d-block text-white">Admin</span>
                     <p className="mb-0 d-flex text-white align-items-center gap-2">
-                      <i className="ti ti-mail fs-4" /> Masterinfo@.com
+                      <i className="ti ti-mail fs-4" />{user?.email}
                     </p>
                   </div>
                 </div>

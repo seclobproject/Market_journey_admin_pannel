@@ -11,7 +11,7 @@ function Login() {
   const navigate = useNavigate();
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({});
-  const { Check_Validation, setIsLoggedIn, getToken,loginFun } = useContext(ContextData);
+  const { Check_Validation, setIsLoggedIn, getToken,loginFun,setUser } = useContext(ContextData);
   const [showPassword, setShowPassword] = useState(false);
 
   const handlePasswordToggle = () => {
@@ -22,9 +22,12 @@ function Login() {
     try {
       let res = await ApiCall("post", login_PageURL, formData);
       if (res.status === 200) {
+        
         setIsLoggedIn(true);
+        setUser(res?.data)
 
         localStorage.setItem("User", res?.data?.access_token);
+        
         navigate("/dashboard");
         loginFun()
 

@@ -131,10 +131,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    transactionPassword: {
-      type: String,
-      required: true,
-    },
+    // transactionPassword: {
+    //   type: String,
+    //   required: true,
+    // },
     transactionNumber: {
       type: String,
     },
@@ -164,11 +164,16 @@ const userSchema = new mongoose.Schema(
     },
 
     walletWithdrawHistory: [withdrawSchema],
-    referalIncome: {
+    directReferalIncome: {
       type: Number,
       default: 0,
     },
-    referalHistory: [ReferalAmountSchema],
+    inDirectReferalIncome: {
+      type: Number,
+      default: 0,
+    },
+    directReferalHistory: [ReferalAmountSchema],
+    inDirectReferalHistory: [ReferalAmountSchema],
     isDistrictFranchise: {
       type: Boolean,
       default: false,

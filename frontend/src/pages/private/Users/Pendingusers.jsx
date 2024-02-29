@@ -54,6 +54,7 @@ function Pendingusers() {
     try {
       const resposne=await ApiCall("post",`${rejectuserUrl}/${rejectModal.id}`);
       if (resposne?.status === 200) {
+        console.log(resposne,"from rject")
         Show_Toast("User Rejected successfully", true);
         setrejectModal(false);
         getpendingMenbers();

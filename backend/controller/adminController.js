@@ -95,52 +95,6 @@ export const viewAllUsers = async (req, res, next) => {
   }
 };
 
-// pagination for user list
-
-const paginate = async (model, query, page = 1, pageSize = 10) => {
-  try {
-      const totalDocs = await model.countDocuments(query);
-      const totalPages = Math.ceil(totalDocs / pageSize);
-
-      const offset = pageSize * (page - 1);
-
-      const results = await model.find(query).skip(offset).limit(pageSize);
-
-      return {
-          results,
-          page,
-          pageSize,
-          totalPages,
-          totalDocs
-      };
-  } catch (error) {
-      throw new Error(`Pagination error: ${error.message}`);
-  }
-};
-
-
-export const viewAllPageUsers = async (req, res, next) => {
-  const adminId = req.admin._id;
-  const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
-  const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
-
-  try {
-      const admin = await Admin.findById(adminId);
-      if (admin) {
-          const userData = await paginate(User, {}, page, pageSize);
-
-          return res.status(200).json({
-              userData,
-              sts: "01",
-              msg: "Successfully Get all users",
-          });
-      } else {
-          next(errorHandler("User not found"));
-      }
-  } catch (error) {
-      next(error);
-  }
-};
 
 
 
@@ -462,7 +416,7 @@ export const viewParamsPanchayaths = async (req, res, next) => {
           try {
             // const adminId = req.admin._id;
             // const admin = await Admin.findById(adminId);
-        
+            
             // if (admin) {
               const stateData = await State.find({}, '_id name'); // Projection to get both '_id' and 'name' fields
               if (!stateData || stateData.length === 0) {
@@ -688,3 +642,97 @@ export const rejectUser = async (req, res, next) => {
     next(error);
   }
 };
+            
+// pagination for user list
+            
+    const paginate = async (model, query, page = 1, pageSize = 10) => {
+              try {
+                  const totalDocs = await model.countDocuments(query);
+                  const totalPages = Math.ceil(totalDocs / pageSize);
+            
+                  const offset = pageSize * (page - 1);
+            
+                  const results = await model.find(query).skip(offset).limit(pageSize);
+            
+                  return {
+                      results,
+                      page,
+                      pageSize,
+                      totalPages,
+                      totalDocs
+                  };
+              } catch (error) {
+                  throw new Error(`Pagination error: ${error.message}`);
+              }
+        };
+            
+              export const viewAllPageUsers = async (req, res, next) => {
+              const adminId = req.admin._id;
+              const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+              const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+            
+              try {
+                  const admin = await Admin.findById(adminId);
+                  if (admin) {
+                      const userData = await paginate(User, {}, page, pageSize);
+            
+                      return res.status(200).json({
+                          userData,
+                          sts: "01",
+                          msg: "Successfully Get all users",
+                      });
+                  } else {
+                      next(errorHandler("User not found"));
+                  }
+              } catch (error) {
+                  next(error);
+              }
+            };
+
+
+
+    // pagination for zonal list
+            
+    const zonalpaginate = async (model, query, page = 1, pageSize = 10) => {
+      try {
+          const totalDocs = await model.countDocuments(query);
+          const totalPages = Math.ceil(totalDocs / pageSize);
+    
+          const offset = pageSize * (page - 1);
+    
+          const results = await model.find(query).skip(offset).limit(pageSize);
+    
+          return {
+              results,
+              page,
+              pageSize,
+              totalPages,
+              totalDocs
+          };
+      } catch (error) {
+          throw new Error(`Pagination error: ${error.message}`);
+      }
+};
+    
+      export const viewAllPageZonal = async (req, res, next) => {
+      const adminId = req.admin._id;
+      const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+      const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+    
+      try {
+          const admin = await Admin.findById(adminId);
+          if (admin) {
+              const zonalData = await zonalpaginate(Zonal, {}, page, pageSize);
+    
+              return res.status(200).json({
+                zonalData,
+                  sts: "01",
+                  msg: "Successfully Get all users",
+              });
+          } else {
+              next(errorHandler("User not found"));
+          }
+      } catch (error) {
+          next(error);
+      }
+    };

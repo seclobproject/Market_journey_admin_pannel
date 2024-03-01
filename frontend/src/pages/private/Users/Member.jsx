@@ -16,6 +16,7 @@ import {
 } from "../../../utils/Constants";
 import { ApiCall } from "../../../Services/Api";
 import { Show_Toast } from "../../../utils/Toast";
+import PaginationComponent from "../../../Components/PaginationComponent.jsx";
 
 function Member() {
   const [memberModal, setMemberModal] = useState({ show: false, id: null });
@@ -37,12 +38,16 @@ function Member() {
   const [selectedZonalId, setSelectedZonalId] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
   const [allUser, setAllUser] = useState([]);
-
+const [pagination,setPagination] = useState({})
+const [params, setParams] = useState({
+  page: 1,
+  limit: 10,
+});
   //-----------list district in drop down--------
   const getStateList = async () => {
     try {
       const response = await ApiCall("get", statelistPageUrl);
-
+console.log(response,"respones")
       if (response.status === 200) {
         setStateList(response?.data?.states);
       } else {
@@ -364,11 +369,11 @@ function Member() {
           </div>
           <div className="me-2">
             {/* -------------------------pagination--------------------- */}
-            {/* <Pagination
+            <PaginationComponent
               pagination={pagination}
               params={params}
               setParams={setParams}
-            /> */}
+            />
             {/* -------------------------pagination--------------------- */}
           </div>
         </div>

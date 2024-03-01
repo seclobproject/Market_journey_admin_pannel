@@ -35,7 +35,9 @@ export const addUser = async (req, res, next) => {
         let isDistrictFranchise;
         let isZonalFranchise;
         let isMobileFranchise;
-        const frachiseName=district;
+        let frachiseName;
+        let districtFranchise;
+        let zonalFranchise;
         console.log(frachiseName);
         const existingUser = await User.findOne({ email });
         const existingUserByPhone = await User.findOne({ phone });
@@ -44,18 +46,25 @@ export const addUser = async (req, res, next) => {
         }
 
         if(franchise==="District Franchise") {
+          frachiseName=district;
           isDistrictFranchise=true;
           district=null;
           zonal=null;
           panchayath=null;
         }
         if(franchise==="Zonal Franchise"){
+          frachiseName=zonal;
           zonal=null;
             isZonalFranchise=true;
             panchayath=null;
         } 
         if(franchise==="Mobile Franchise") {
             isMobileFranchise=true;
+            frachiseName=null;
+            const districtData=await User.findOne({franchiseName:district})
+            districtFranchise=districtData._id;
+            const zonalData=await User.findOne({franchiseName:zonal})
+            zonalFranchise=zonalData._id;
         }
         
       const hashedPassword = bcryptjs.hashSync(password, 10);
@@ -82,6 +91,8 @@ export const addUser = async (req, res, next) => {
         password: hashedPassword,
         ownSponserId,
         userStatus,
+        districtFranchise,
+        zonalFranchise
       });
       if (user) {
         await sendMail(

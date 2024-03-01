@@ -117,11 +117,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // franchiseName: {
-    //   type: String,
-    //   required: true,
-    //   unique: true,
-    // },
+    franchiseName: {
+      type: String,
+      required: true,
+      unique: true,
+    },
         state: {
           type: String,
         },
@@ -231,6 +231,8 @@ const userSchema = new mongoose.Schema(
       enum: ["pending", "readyToApprove", "approved"],
     },
     allTransactions: [allTransactionSchema],
+    districtFranchise:{ type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    zonalFranchise:{ type: mongoose.Schema.Types.ObjectId, ref: "User" },
     childLevel1: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     childLevel2: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },

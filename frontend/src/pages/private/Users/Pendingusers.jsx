@@ -8,13 +8,18 @@ import {
 } from "../../../utils/Constants";
 import ModalComponent from "../../../Components/ModalComponet";
 import { Show_Toast } from "../../../utils/Toast";
+import PaginationComponent from "../../../Components/PaginationComponent.jsx";
 
 function Pendingusers() {
   const [approveModal, setApproveModal] = useState({ show: false, id: null });
   const [rejectModal, setrejectModal] = useState({ show: false, id: null });
   const [pendingMemberList, setPendingMemberList] = useState([]);
   const [pendingUserName, setpendingUserName] = useState({});
-
+  const [pagination,setPagination] = useState({})
+  const [params, setParams] = useState({
+    page: 1,
+    limit: 10,
+  });
 
   //-----------pending member --------
   const getpendingMenbers = async () => {
@@ -217,11 +222,11 @@ function Pendingusers() {
           </div>
           <div className="me-2">
             {/* -------------------------pagination--------------------- */}
-            {/* <Pagination
+            <PaginationComponent
               pagination={pagination}
               params={params}
               setParams={setParams}
-            /> */}
+            />
             {/* -------------------------pagination--------------------- */}
           </div>
         </div>

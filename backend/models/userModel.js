@@ -119,7 +119,6 @@ const userSchema = new mongoose.Schema(
     },
     franchiseName: {
       type: String,
-      required: true,
       unique: true,
     },
         state: {

@@ -736,3 +736,50 @@ export const rejectUser = async (req, res, next) => {
           next(error);
       }
     };
+
+
+     // pagination for panchayath list
+            
+     const panchayathpaginate = async (model, query, page = 1, pageSize = 10) => {
+      try {
+          const totalDocs = await model.countDocuments(query);
+          const totalPages = Math.ceil(totalDocs / pageSize);
+    
+          const offset = pageSize * (page - 1);
+    
+          const results = await model.find(query).skip(offset).limit(pageSize);
+    
+          return {
+              results,
+              page,
+              pageSize,
+              totalPages,
+              totalDocs
+          };
+      } catch (error) {
+          throw new Error(`Pagination error: ${error.message}`);
+      }
+};
+    
+      export const viewAllPagePanchayath = async (req, res, next) => {
+      const adminId = req.admin._id;
+      const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+      const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+    
+      try {
+          const admin = await Admin.findById(adminId);
+          if (admin) {
+              const panchayathData = await panchayathpaginate(Panchayath, {}, page, pageSize);
+    
+              return res.status(200).json({
+                panchayathData,
+                  sts: "01",
+                  msg: "Successfully Get all users",
+              });
+          } else {
+              next(errorHandler("User not found"));
+          }
+      } catch (error) {
+          next(error);
+      }
+    };

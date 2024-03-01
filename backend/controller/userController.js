@@ -35,10 +35,10 @@ export const addUser = async (req, res, next) => {
         let isDistrictFranchise;
         let isZonalFranchise;
         let isMobileFranchise;
-        let frachiseName;
+        let franchiseName;
         let districtFranchise;
         let zonalFranchise;
-        console.log(frachiseName);
+        console.log(district);
         const existingUser = await User.findOne({ email });
         const existingUserByPhone = await User.findOne({ phone });
         if (existingUser || existingUserByPhone) {
@@ -46,21 +46,21 @@ export const addUser = async (req, res, next) => {
         }
 
         if(franchise==="District Franchise") {
-          frachiseName=district;
+          franchiseName=district;
           isDistrictFranchise=true;
           district=null;
           zonal=null;
           panchayath=null;
         }
         if(franchise==="Zonal Franchise"){
-          frachiseName=zonal;
+          franchiseName=zonal;
           zonal=null;
             isZonalFranchise=true;
             panchayath=null;
         } 
         if(franchise==="Mobile Franchise") {
             isMobileFranchise=true;
-            frachiseName=null;
+            franchiseName=null;
             const districtData=await User.findOne({franchiseName:district})
             districtFranchise=districtData._id;
             const zonalData=await User.findOne({franchiseName:zonal})
@@ -69,7 +69,7 @@ export const addUser = async (req, res, next) => {
         
       const hashedPassword = bcryptjs.hashSync(password, 10);
       // const hashedTxnPassword = bcryptjs.hashSync(transactionPassword, 10);
-      console.log(frachiseName);
+      console.log(franchiseName);
       const user = await User.create({
         sponser,
         sponserName,
@@ -78,7 +78,7 @@ export const addUser = async (req, res, next) => {
         phone,
         address,
         franchise,
-        frachiseName,
+        franchiseName,
         state,
         district,
         zonal,
@@ -266,6 +266,49 @@ export const viewUserProfile = async (req, res, next) => {
       });
     } else {
       next(errorHandler("User not found"));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+// edit user profile by admin
+
+export const editProfileByAdmin = async (req, res, next) => {
+  const adminId = req.user._id;
+  const { id } = req.params;
+  const adminData = await User.findById(adminId);
+  try {
+    if (adminData.isSuperAdmin) {
+      const userData = await User.findById(id);
+      if (userData) {
+        const { username, email, password, txnPassword, phone, address } =
+          req.body;
+        userData.username = username || userData.username;
+        userData.address = address || userData.address;
+        userData.phone = phone || userData.phone;
+        userData.email = email || userData.email;
+
+        if (password) {
+          const hashedPassword = bcryptjs.hashSync(password, 10);
+          userData.password = hashedPassword;
+        }
+
+        if (txnPassword) {
+          const hashedPassword = bcryptjs.hashSync(txnPassword, 10);
+          userData.transactionPassword = hashedPassword;
+        }
+
+        const updatedUser = await userData.save();
+        res
+          .status(200)
+          .json({ updatedUser, sts: "01", msg: "Successfully Updated" });
+      } else {
+        next(errorHandler("User not found, Please Login first"));
+      }
+    } else {
+      return next(errorHandler(401, "Admin Login Failed"));
     }
   } catch (error) {
     next(error);

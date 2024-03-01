@@ -5,6 +5,7 @@ import ModalComponent from "../../../Components/ModalComponet";
 import { Form } from "react-bootstrap";
 import {
   districtlistinZonalUrl,
+  paginatedZonals,
   statelistPageUrl,
   zonalPageUrl,
   zonallistPageUrl,
@@ -13,6 +14,8 @@ import { ApiCall } from "../../../Services/Api";
 import Select from "react-select";
 import { Show_Toast } from "../../../utils/Toast";
 import Loader from "../../../Components/Loader";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 function Zonal() {
   const [zonalModal, setZonalModal] = useState({ show: false, id: null });
@@ -25,7 +28,11 @@ function Zonal() {
   const [isLoading, setIsLoading] = useState(false);
   const [addzonal, setAddZonal] = useState({});
   const [selectedId, setSelectedId] = useState(null);
-
+  const [params, setParams] = useState({
+    page: 1,
+    pageSize: 10,
+  });
+  const [totalPages, setTotalPages] = useState(1);
   //-----------list state in drop down--------
   const getStateList = async () => {
     try {
@@ -68,9 +75,12 @@ function Zonal() {
     try {
       setIsLoading(true)
 
-      const response = await ApiCall("get",zonallistPageUrl);
+      const response = await ApiCall("get",paginatedZonals,{},params);
+      console.log(response,"......")
       if (response.status === 200) {
-        setZonalList(response?.data?.zonals);
+        setZonalList(response?.data?.zonalData?.results);
+        setTotalPages(response?.data?.zonalData?.totalPages);
+
         setIsLoading(false)
 
       } else {
@@ -99,6 +109,13 @@ function Zonal() {
       Show_Toast(error, false);
     }
   };
+
+  const handlePageChange = (event, newPage) => {
+    setParams((prevParams) => ({
+      ...prevParams,
+      page: newPage,
+    }));
+  };
   
 
   useEffect(() => {
@@ -107,7 +124,7 @@ function Zonal() {
     if(selectedId){
       getDistrictList();
     }
-  }, [selectedId]);
+  }, [selectedId,params]);
   return (
     <>
       <SlideMotion>
@@ -183,14 +200,16 @@ function Zonal() {
             </div>
           </div>
           )}
-          <div className="me-2">
-            {/* -------------------------pagination--------------------- */}
-            {/* <Pagination
-          pagination={pagination}
-          params={params}
-          setParams={setParams}
-        /> */}
-            {/* -------------------------pagination--------------------- */}
+           {/* -------------------------pagination--------------------- */}
+           <div className="me-2 mb-3 d-flex ms-auto">
+            <Stack spacing={2}>
+              <Pagination
+                count={totalPages}
+                page={params.page}
+                onChange={handlePageChange}
+                color="primary"
+              />
+            </Stack>
           </div>
         </div>
 
@@ -232,7 +251,6 @@ function Zonal() {
                       ...addzonal,
                       stateName: selectedOption?.label,
                     });
-                    // getDistrictList(); // This action will be executed after setting the state
                   }}
                   
                 placeholder="Select a state"
@@ -260,7 +278,6 @@ function Zonal() {
                   ...addzonal,
                   districtName: selectedOption?.label,
                 });
-                // getDistrictList(); // This action will be executed after setting the state
               }}
                 
                   
@@ -294,7 +311,7 @@ function Zonal() {
                   Please provide a zonal name.
                 </Form.Control.Feedback>
               </div>
-              {/* <div className="mb-4">
+          {/* <div className="mb-4">
                 <label htmlFor="exampleInputEmail1" className="form-label">
                   Package Amount
                 </label>

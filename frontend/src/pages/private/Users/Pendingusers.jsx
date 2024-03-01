@@ -8,14 +8,13 @@ import {
 } from "../../../utils/Constants";
 import ModalComponent from "../../../Components/ModalComponet";
 import { Show_Toast } from "../../../utils/Toast";
-import PaginationComponent from "../../../Components/PaginationComponent.jsx";
 
 function Pendingusers() {
   const [approveModal, setApproveModal] = useState({ show: false, id: null });
   const [rejectModal, setrejectModal] = useState({ show: false, id: null });
   const [pendingMemberList, setPendingMemberList] = useState([]);
   const [pendingUserName, setpendingUserName] = useState({});
-  const [pagination,setPagination] = useState({})
+  const [pagination, setPagination] = useState({});
   const [params, setParams] = useState({
     page: 1,
     limit: 10,
@@ -37,7 +36,7 @@ function Pendingusers() {
       console.error("Error fetching state list:", error);
     }
   };
-//------------approve user--------------
+  //------------approve user--------------
   const approveUser = async () => {
     try {
       const resposne = await ApiCall(
@@ -48,27 +47,28 @@ function Pendingusers() {
         Show_Toast("User Approved successfully", true);
         setApproveModal(false);
         getpendingMenbers();
-      } 
+      }
     } catch (error) {
-      Show_Toast(error,false)
+      Show_Toast(error, false);
     }
   };
 
   //-------------Reject user----------------
-  const rejectUser =async()=>{
+  const rejectUser = async () => {
     try {
-      const resposne=await ApiCall("post",`${rejectuserUrl}/${rejectModal.id}`);
+      const resposne = await ApiCall(
+        "post",
+        `${rejectuserUrl}/${rejectModal.id}`
+      );
       if (resposne?.status === 200) {
-        console.log(resposne,"from rject")
+        console.log(resposne, "from rject");
         Show_Toast("User Rejected successfully", true);
         setrejectModal(false);
         getpendingMenbers();
-      } 
+      }
     } catch (error) {
-      Show_Toast(error,false)
+      Show_Toast(error, false);
     }
-  
-
   };
 
   useEffect(() => {
@@ -81,15 +81,13 @@ function Pendingusers() {
         <div className="card w-100 position-relative overflow-hidden">
           {" "}
           <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
-          <h5
-            className="card-title fw-semibold mb-0 lh-sm px-0 mt-4"
-            style={{ color: "#F7AE15" }}
-          >
-            Pending Members
-          </h5>
-           
+            <h5
+              className="card-title fw-semibold mb-0 lh-sm px-0 mt-4"
+              style={{ color: "#F7AE15" }}
+            >
+              Pending Members
+            </h5>
           </div>
-      
           <div className="card-body p-2 mb-2">
             <div className="table-container table-responsive rounded-2 mb-4">
               <table className="table border text-nowrap customize-table mb-0 align-middle">
@@ -133,81 +131,87 @@ function Pendingusers() {
                 <tbody>
                   {pendingMemberList?.length ? (
                     <>
-                      {pendingMemberList.map((members, index) => (
-                        console.log(members,"45678"),
-                        <tr key={index}>
-                          <td>{index + 1}</td>
-                          <td>
-                            {(members?.name && members.name.toUpperCase()) ||
-                              "--"}
-                          </td>
-                          <td>
-                            {(members?.sponserName &&
-                              members.sponserName.toUpperCase()) ||
-                              "--"}
-                          </td>
-                          {/* <td>{zonals?.stateName && zonals.stateName.toUpperCase()||"--"}</td> */}
-                          <td>{members?.email || "--"}</td>
-                          <td>{members?.phone || "--"}</td>
-                          <td>{members?.tempPackageAmount || "0"}</td>
-                          <td>
-                          <img
-  alt="images"
-  src={`http://localhost:8000/uploads/${members?.screenshot || ''}`}
-  style={{
-    width: "100px",
-    height: "100px",
-    objectFit: "cover",
-    borderRadius: "5px",
-  }}
-/>
+                      {pendingMemberList.map(
+                        (members, index) => (
+                          console.log(members, "45678"),
+                          (
+                            <tr key={index}>
+                              <td>{index + 1}</td>
+                              <td>
+                                {(members?.name &&
+                                  members.name.toUpperCase()) ||
+                                  "--"}
+                              </td>
+                              <td>
+                                {(members?.sponserName &&
+                                  members.sponserName.toUpperCase()) ||
+                                  "--"}
+                              </td>
+                              {/* <td>{zonals?.stateName && zonals.stateName.toUpperCase()||"--"}</td> */}
+                              <td>{members?.email || "--"}</td>
+                              <td>{members?.phone || "--"}</td>
+                              <td>{members?.tempPackageAmount || "0"}</td>
+                              <td>
+                                <img
+                                  alt="images"
+                                  src={`http://localhost:8000/uploads/${
+                                    members?.screenshot || ""
+                                  }`}
+                                  style={{
+                                    width: "100px",
+                                    height: "100px",
+                                    objectFit: "cover",
+                                    borderRadius: "5px",
+                                  }}
+                                />
 
-
-                            {/* <img
+                                {/* <img
                               src={`http://localhost:3000/${members?.screenshot}`}
                               alt="Screenshot"
                             /> */}
-                          </td>
-                          <td>
-                            {members?.userStatus === "readyToApprove" && (
-                              <span className="badge bg-danger rounded-3 fw-semibold">
-                                Pending
-                              </span>
-                            )}
-                          </td>
+                              </td>
+                              <td>
+                                {members?.userStatus === "readyToApprove" && (
+                                  <span className="badge bg-danger rounded-3 fw-semibold">
+                                    Pending
+                                  </span>
+                                )}
+                              </td>
 
-                          <td>
-                            {members?.userStatus === "readyToApprove" && (
-                              <button
-                                className="btn btn-success"
-                                onClick={() =>
-                                  setApproveModal({
-                                    show: true,
-                                    id: members._id,
-                                  })
-                                }
-                              >
-                                Approve
-                              </button>
-                            )}
-                          </td>
-                          <td>
-                            {members?.userStatus === "readyToApprove" && (
-                              <button
-                                className="btn btn-cancel"
-                                onClick={() =>
-                                  setrejectModal({
-                                    show: true,
-                                    id: members._id,
-                                  })
-                                }
-                              >
-                                Reject 
-                              </button>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
+                              <td>
+                                {members?.userStatus === "readyToApprove" && (
+                                  <button
+                                    className="btn btn-success"
+                                    onClick={() =>
+                                      setApproveModal({
+                                        show: true,
+                                        id: members._id,
+                                      })
+                                    }
+                                  >
+                                    Approve
+                                  </button>
+                                )}
+                              </td>
+                              <td>
+                                {members?.userStatus === "readyToApprove" && (
+                                  <button
+                                    className="btn btn-cancel"
+                                    onClick={() =>
+                                      setrejectModal({
+                                        show: true,
+                                        id: members._id,
+                                      })
+                                    }
+                                  >
+                                    Reject
+                                  </button>
+                                )}
+                              </td>
+                            </tr>
+                          )
+                        )
+                      )}
                     </>
                   ) : (
                     <tr>
@@ -222,11 +226,7 @@ function Pendingusers() {
           </div>
           <div className="me-2">
             {/* -------------------------pagination--------------------- */}
-            <PaginationComponent
-              pagination={pagination}
-              params={params}
-              setParams={setParams}
-            />
+
             {/* -------------------------pagination--------------------- */}
           </div>
         </div>
@@ -237,7 +237,6 @@ function Pendingusers() {
         onHide={() => {
           setApproveModal({ show: false, id: null });
         }}
-      
         centered
         width={"500px"}
       >
@@ -276,7 +275,7 @@ function Pendingusers() {
               type="button"
               className="btn btn-custom text-white"
               onClick={() => {
-                approveUser(); 
+                approveUser();
               }}
             >
               Yes, Approve it
@@ -291,7 +290,6 @@ function Pendingusers() {
         onHide={() => {
           setrejectModal({ show: false, id: null });
         }}
-      
         centered
         width={"500px"}
       >
@@ -330,7 +328,7 @@ function Pendingusers() {
               type="button"
               className="btn btn-custom text-white"
               onClick={() => {
-                rejectUser(); 
+                rejectUser();
               }}
             >
               Yes, Reject it

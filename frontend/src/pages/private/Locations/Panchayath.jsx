@@ -5,6 +5,7 @@ import ModalComponent from "../../../Components/ModalComponet";
 import { Form } from "react-bootstrap";
 import {
   districtlistinZonalUrl,
+  paginatedPanchayathUrl,
   panchayathPageUrl,
   panchayathlistPageUrl,
   statelistPageUrl,
@@ -14,7 +15,8 @@ import { ApiCall } from "../../../Services/Api";
 import Select from "react-select";
 import { Show_Toast } from "../../../utils/Toast";
 import Loader from "../../../Components/Loader";
-
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 function Panchayath() {
   const [PanchayathModal, setPanchayathModal] = useState({
     show: false,
@@ -32,7 +34,12 @@ function Panchayath() {
   const [isLoading, setIsLoading] = useState(false);
   const [panchyathList, setPanchayathList] = useState([]);
 
- 
+  const [params, setParams] = useState({
+    page: 1,
+    pageSize: 10,
+  });
+
+  const [totalPages, setTotalPages] = useState(1);
 
   //-----------list state in drop down--------
   const getStateList = async () => {
@@ -94,9 +101,13 @@ function Panchayath() {
     try {
       setIsLoading(true);
 
-      const response = await ApiCall("get", panchayathlistPageUrl);
+      const response = await ApiCall("get", paginatedPanchayathUrl,{},params);
+     console.log(response,"response")
       if (response.status === 200) {
-        setPanchayathList(response?.data?.panchayaths);
+        setPanchayathList(response?.data?.
+          panchayathData?.results);
+          setTotalPages(response?.data?.panchayathData?.totalPages);
+
         setIsLoading(false);
       } else {
         console.error(
@@ -125,14 +136,19 @@ function Panchayath() {
       Show_Toast(error, false);
     }
   };
-
+  const handlePageChange = (event, newPage) => {
+    setParams((prevParams) => ({
+      ...prevParams,
+      page: newPage,
+    }));
+  };
   useEffect(() => {
     getPanchayathList();
     getStateList();
     if (districtId) {
       getZonallist();
     }
-  }, [districtId]);
+  }, [districtId,params]);
   useEffect(() => {
     if (selectedId) {
       getDistrictList();
@@ -243,7 +259,17 @@ function Panchayath() {
               </div>
             </div>
           )}
-          <div className="me-2">
+            {/* -------------------------pagination--------------------- */}
+            <div className="me-2 mb-3 d-flex ms-auto">
+            <Stack spacing={2}>
+              <Pagination
+                count={totalPages}
+                page={params.page}
+                onChange={handlePageChange}
+                color="primary"
+              />
+            </Stack>
+          </div><div className="me-2">
             {/* -------------------------pagination--------------------- */}
             {/* <Pagination
           pagination={pagination}

@@ -16,8 +16,9 @@ import {
 } from "../../../utils/Constants";
 import { ApiCall } from "../../../Services/Api";
 import { Show_Toast } from "../../../utils/Toast";
-import PaginationComponent from "../../../Components/PaginationComponent.jsx";
-
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import { useNavigate } from "react-router-dom";
 function Member() {
   const [memberModal, setMemberModal] = useState({ show: false, id: null });
   const { Check_Validation } = useContext(ContextData);
@@ -33,21 +34,21 @@ function Member() {
   const [showPassword, setShowPassword] = useState(false);
   const [showTransPassword, setShowTransPassword] = useState(false);
   const [selectedStateId, setSelectedStateId] = useState(null);
-  console.log(selectedStateId,"selectedStateId");
+  console.log(selectedStateId, "selectedStateId");
   const [selectedDistrictId, setSelectedDistrictId] = useState(null);
   const [selectedZonalId, setSelectedZonalId] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
   const [allUser, setAllUser] = useState([]);
-const [pagination,setPagination] = useState({})
-const [params, setParams] = useState({
-  page: 1,
-  limit: 10,
-});
+  const [params, setParams] = useState({
+    page: 1,
+    pageSize: 10,
+  });
+  const [totalPages, setTotalPages] = useState(1);
+  const navigate = useNavigate();
   //-----------list district in drop down--------
   const getStateList = async () => {
     try {
       const response = await ApiCall("get", statelistPageUrl);
-console.log(response,"respones")
       if (response.status === 200) {
         setStateList(response?.data?.states);
       } else {
@@ -62,14 +63,12 @@ console.log(response,"respones")
   };
   //-----------list district in drop down--------
   const getDistrictList = async () => {
-
     try {
-
       const response = await ApiCall(
         "get",
         `${districtlistinZonalUrl}/${selectedStateId}`
       );
-      console.log(response,"ddistrict get")
+      console.log(response, "ddistrict get");
       if (response.status === 200) {
         setDistrictList(response?.data?.districts);
       } else {
@@ -138,7 +137,6 @@ console.log(response,"respones")
   };
   //---------Add--panchayath---------
   const addMemberFun = async () => {
-
     try {
       const response = await ApiCall("post", memberaddUrl, addMember);
       if (response.status === 200) {
@@ -148,7 +146,7 @@ console.log(response,"respones")
         getallUsers();
         // ();
         Show_Toast("Member added successfully", true);
-      } 
+      }
     } catch (error) {
       Show_Toast(error, false);
     }
@@ -157,18 +155,18 @@ console.log(response,"respones")
   //-----------get all users
   const getallUsers = async () => {
     try {
-      const response = await ApiCall("get", viewalluserUrl);
-      if (response.status === 201) {
-        setAllUser(response?.data?.userData);
-
+      const response = await ApiCall("get", viewalluserUrl, {}, params);
+      if (response.status === 200) {
+        setAllUser(response?.data?.userData?.results);
+        setTotalPages(response?.data?.userData?.totalPages);
       } else {
         console.error(
-          "Error fetching state list. Unexpected status:",
+          "Error fetching user data. Unexpected status:",
           response.status
         );
       }
     } catch (error) {
-      console.error("Error fetching state list:", error);
+      console.error("Error fetching user data:", error);
     }
   };
 
@@ -178,7 +176,12 @@ console.log(response,"respones")
   const handlePasswordTransToggle = () => {
     setShowTransPassword(!showTransPassword);
   };
-
+  const handlePageChange = (event, newPage) => {
+    setParams((prevParams) => ({
+      ...prevParams,
+      page: newPage,
+    }));
+  };
   useEffect(() => {
     getallUsers();
     getPackagesList();
@@ -189,14 +192,10 @@ console.log(response,"respones")
     ) {
       getDistrictList();
     }
-    if (
-      selectedStateId &&
-      (addMember?.franchise === "Mobile Franchise"
-        )
-    ) {
+    if (selectedStateId && addMember?.franchise === "Mobile Franchise") {
       getDistrictList();
     }
-  }, [selectedStateId, addMember?.franchise]);
+  }, [selectedStateId, addMember?.franchise, params]);
 
   useEffect(() => {
     if (selectedDistrictId) {
@@ -208,10 +207,9 @@ console.log(response,"respones")
     }
   }, [selectedDistrictId, selectedZonalId]);
 
-
   const packageOptions = packageList.map((pack) => ({
     value: pack.franchiseName,
-    label: pack.franchiseName,// Add the packageAmount property
+    label: pack.franchiseName, 
     packageAmount: pack.packageAmount,
   }));
   return (
@@ -219,24 +217,21 @@ console.log(response,"respones")
       <SlideMotion>
         <div className="card w-100 position-relative overflow-hidden">
           {" "}
-         
           <div className="px-4 py-3 border-bottom d-flex  align-items-center justify-content-between">
-            
-          <h5
-            className="card-title fw-semibold mb-0 lh-sm px-0 mt-3"
-            style={{ color: "#F7AE15" }}
-          >
-            Members
-          </h5>
+            <h5
+              className="card-title fw-semibold mb-0 lh-sm px-0 mt-3"
+              style={{ color: "#F7AE15" }}
+            >
+              Members
+            </h5>
             <div>
               <button
                 className="btn btn-custom  ms-3 float-end"
                 onClick={() => {
                   setMemberModal({ show: true, id: null });
-                  setAddMember('');
-                  setValidated(false)
+                  setAddMember("");
+                  setValidated(false);
                 }}
-                
               >
                 Add
               </button>
@@ -247,7 +242,7 @@ console.log(response,"respones")
               <table className="table border text-nowrap customize-table mb-0 align-middle">
                 <thead className="text-dark fs-4 table-light">
                   <tr>
-                  <th>
+                    <th>
                       <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                     </th>
                     <th>
@@ -272,7 +267,14 @@ console.log(response,"respones")
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">Status</h6>
                     </th>
+                    <th>
+                      <h6 className="fs-4 fw-semibold mb-0">Details</h6>
+                    </th>
+                    <th>
+                      <h6 className="fs-4 fw-semibold mb-0">Tree</h6>
+                    </th>
                     
+
                     <th />
                   </tr>
                 </thead>
@@ -283,83 +285,58 @@ console.log(response,"respones")
                         <tr key={index}>
                           <td>{index + 1}</td>
                           <td>
-                            {(users?.name && users.name.toUpperCase()) ||
-                              "--"}
-                          </td> 
-                          <td>
-                            {(users?.sponserName && users.sponserName.toUpperCase()) ||
-                              "--"}
-                          </td>
-                          
-                          <td>
-                            {users?.email ||
-                              "--"}
+                            {(users?.name && users.name.toUpperCase()) || "--"}
                           </td>
                           <td>
-                            {users?.phone ||
+                            {(users?.sponserName &&
+                              users.sponserName.toUpperCase()) ||
                               "--"}
                           </td>
-                          <td>
-                            {users?.packageAmount}
-                          </td>
-                          <td>
-                            {users?.franchise
- ||
-                              "--"}
-                          </td>
-                          
+
+                          <td>{users?.email || "--"}</td>
+                          <td>{users?.phone || "--"}</td>
+                          <td>{users?.packageAmount}</td>
+                          <td>{users?.franchise || "--"}</td>
 
                           <td>
-  {users?.userStatus === 'readyToApprove' ? (
-    <span className="badge bg-danger rounded-3 fw-semibold">
-      Ready to Approve
-    </span>
-  ) : users?.userStatus === 'pending' ? (
-    <span className="badge bg-primary rounded-3 fw-semibold">
-      Pending
-    </span>
-  ) : (
-    <span className="badge bg-success rounded-3 fw-semibold">
-      Approved
-    </span>
-  )}
-</td>
-
-                          {/* <td>{zonals?.stateName && zonals.stateName.toUpperCase()||"--"}</td> */}
-                          {/* <td>{members?.email || "--"}</td>
-                          <td>{members?.phone || "--"}</td>
-                          <td>{members?.tempPackageAmount || "0"}</td>
-                        
-                          <td>
-                            {members?.userStatus === "readyToApprove" && (
+                            {users?.userStatus === "readyToApprove" ? (
                               <span className="badge bg-danger rounded-3 fw-semibold">
+                                Ready to Approve
+                              </span>
+                            ) : users?.userStatus === "pending" ? (
+                              <span className="badge bg-primary rounded-3 fw-semibold">
                                 Pending
+                              </span>
+                            ) : (
+                              <span className="badge bg-success rounded-3 fw-semibold">
+                                Approved
                               </span>
                             )}
                           </td>
-
                           <td>
-                            {members?.userStatus === "readyToApprove" && (
-                              <button
-                                className="btn btn-success"
-                                onClick={() =>
-                                  setApproveModal({
-                                    show: true,
-                                    id: members._id,
-                                  })
-                                }
-                              >
-                                Approve
-                              </button>
-                            )}
-                          </td> */}
+
+                          <i className="fas fa-eye"></i>   
+
+</td>
+<td>
+  {/* {users?.userStatus === "approved" ? ( */}
+    <button className="btn btn-custom " 
+    onClick={() => navigate('/user/details')}
+    >
+      <i className="fas fa-sitemap"></i> View Tree
+    </button>
+  {/* ) : null}  */}
+</td>
+
+
+
                         </tr>
                       ))}
                     </>
                   ) : (
                     <tr>
                       <td colSpan={20} style={{ textAlign: "center" }}>
-                        <b>No Pending Users Found</b>{" "}
+                        <b>No Users Found</b>{" "}
                       </td>
                     </tr>
                   )}
@@ -367,14 +344,16 @@ console.log(response,"respones")
               </table>
             </div>
           </div>
-          <div className="me-2">
-            {/* -------------------------pagination--------------------- */}
-            <PaginationComponent
-              pagination={pagination}
-              params={params}
-              setParams={setParams}
-            />
-            {/* -------------------------pagination--------------------- */}
+          {/* -------------------------pagination--------------------- */}
+          <div className="me-2 mb-3 d-flex ms-auto">
+            <Stack spacing={2}>
+              <Pagination
+                count={totalPages}
+                page={params.page}
+                onChange={handlePageChange}
+                color="primary"
+              />
+            </Stack>
           </div>
         </div>
         <ModalComponent
@@ -444,12 +423,8 @@ console.log(response,"respones")
                   value={addMember?.phone}
                   onChange={(e) => {
                     const enteredValue = e.target.value;
-                    // Allow only numeric characters
                     const numericValue = enteredValue.replace(/\D/g, "");
-
-                    // Restrict to a maximum of 10 digits
                     const limitedValue = numericValue.slice(0, 15);
-
                     setAddMember({
                       ...addMember,
                       phone: limitedValue,
@@ -462,30 +437,30 @@ console.log(response,"respones")
                 </Form.Control.Feedback>
               </div>
             </div>
-<div className="row">
-<div className="col-md-6">
-              <label htmlFor="franchiseType" className="form-label">
-                Address
-              </label>
-              <textarea
-                required
-                className="form-control form-control-lg"
-                style={{ height: "100px" }}
-                placeholder="Enter a address"
-                value={addMember?.address}
-                onChange={(e) =>
-                  setAddMember({
-                    ...addMember,
-                    address: e.target.value,
-                  })
-                }
-              />
+            <div className="row">
+              <div className="col-md-6">
+                <label htmlFor="franchiseType" className="form-label">
+                  Address
+                </label>
+                <textarea
+                  required
+                  className="form-control form-control-lg"
+                  style={{ height: "100px" }}
+                  placeholder="Enter a address"
+                  value={addMember?.address}
+                  onChange={(e) =>
+                    setAddMember({
+                      ...addMember,
+                      address: e.target.value,
+                    })
+                  }
+                />
 
-              <Form.Control.Feedback type="invalid">
-                Please provide an address.
-              </Form.Control.Feedback>
-            </div>
-            <div className="col-md-6">
+                <Form.Control.Feedback type="invalid">
+                  Please provide an address.
+                </Form.Control.Feedback>
+              </div>
+              <div className="col-md-6">
                 <div className="row">
                   <div className="col-9">
                     <label htmlFor="transactionPassword" className="form-label">
@@ -503,20 +478,12 @@ console.log(response,"respones")
                       )}{" "}
                     </label>
                   </div>
-                  {/* <div className="col-3">
-            <span className="eye-icon" onClick={handlePasswordToggle}>
-                {showPassword ? (
-                    <i className="fas fa-eye-slash"></i>
-                ) : (
-                    <i className="fas fa-eye"></i>
-                )}
-            </span>
-        </div> */}
+            
                 </div>
 
                 <div className="input-group">
                   <input
-                  required
+                    required
                     type={showPassword ? "text" : "password"}
                     className="form-control form-control-lg"
                     placeholder="Enter your password"
@@ -528,56 +495,15 @@ console.log(response,"respones")
                       })
                     }
                   />
-                   <Form.Control.Feedback type="invalid">
+                  <Form.Control.Feedback type="invalid">
                     Please provide a Password.
                   </Form.Control.Feedback>
                 </div>
               </div>
-</div>
-           
-            <div className="mb-4 row">
-              {/* <div className="col-md-6">
-                <div className="row">
-                  <div className="col-9">
-                    <label htmlFor="transactionPassword" className="form-label">
-                      Transaction Password
-                    </label>
-                    <label
-                      htmlFor="transactionPassword"
-                      className="form-label"
-                      onClick={handlePasswordTransToggle}
-                    >
-                      {showTransPassword ? (
-                        <i className="fas fa-eye-slash"></i>
-                      ) : (
-                        <i className="fas fa-eye"></i>
-                      )}{" "}
-                    </label>
-                  </div>
-            
-                </div>
+            </div>
 
-                <div className="input-group">
-                  <input
-                  required 
-                    type={showTransPassword ? "text" : "password"}
-                    className="form-control form-control-lg"
-                    placeholder="Enter your Transition password"
-                    value={addMember?.transactionPassword}
-                    onChange={(e) =>
-                      setAddMember({
-                        ...addMember,
-                        transactionPassword: e.target.value,
-                      })
-                    }
-                  />
-                      <Form.Control.Feedback type="invalid">
-                    Please provide a Transaction Password.
-                  </Form.Control.Feedback>
-                </div>
-              </div> */}
-
-              
+          <div className="mb-4 row">
+             
             </div>
             <div
               className=""
@@ -623,66 +549,66 @@ console.log(response,"respones")
                   value={addMember?.packageAmount}
                 />
               </div>
+              
               {addMember?.franchise === "District Franchise" && (
-            <div className="row">
-            <div className="col-md-6 mb-4">
-              <label htmlFor="exampleInputEmail1" className="form-label">
-                State
-              </label>
-              <Select
-                required
-                options={stateList?.map((states) => ({
-                  value: states?.id,
-                  label: states?.name,
-                }))}
-                value={selectedState?.state}
-                onChange={(selectedOption) => {
-                  setSelectedStateId(selectedOption?.value);
+                <div className="row mt-4">
+                  <div className="col-md-6 mb-4">
+                    <label htmlFor="exampleInputEmail1" className="form-label">
+                      State
+                    </label>
+                    <Select
+                      required
+                      options={stateList?.map((states) => ({
+                        value: states?.id,
+                        label: states?.name,
+                      }))}
+                      value={selectedState?.state}
+                      onChange={(selectedOption) => {
+                        setSelectedStateId(selectedOption?.value);
 
-                  setAddMember({
-                    ...addMember,
-                    state: selectedOption?.label,
-                  });
-                }}
-                placeholder="Select a state"
-                isSearchable={true}
-              />
-              <Form.Control.Feedback type="invalid">
-                Please provide a package Amount.
-              </Form.Control.Feedback>
-            </div>
+                        setAddMember({
+                          ...addMember,
+                          state: selectedOption?.label,
+                        });
+                      }}
+                      placeholder="Select a state"
+                      isSearchable={true}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a package Amount.
+                    </Form.Control.Feedback>
+                  </div>
 
-            <div className="col-md-6 mb-4">
-              <label htmlFor="stateDropdown2" className="form-label">
-                District
-              </label>
-              <Select
-                required
-                options={districtList?.map((districts) => ({
-                  value: districts?.id,
-                  label: districts?.name,
-                }))}
-                value={selectedState?.district}
-                onChange={(selectedOption) => {
-
-                  setAddMember({
-                    ...addMember,
-                    district: selectedOption?.label,
-                  });
-                }}
-                placeholder="Select a state"
-                isSearchable={true}
-              />{" "}
-              <Form.Control.Feedback type="invalid">
-                Please provide a district name.
-              </Form.Control.Feedback>
-            </div>
-          </div>
+                  <div className="col-md-6 mb-4">
+                    <label htmlFor="stateDropdown2" className="form-label">
+                      District Franchise Name
+                    </label>
+                    <Select
+                      required
+                      options={districtList?.map((districts) => ({
+                        value: districts?.id,
+                        label: districts?.name,
+                      }))}
+                      value={selectedState?.district}
+                      onChange={(selectedOption) => {
+                        setAddMember({
+                          ...addMember,
+                          district: selectedOption?.label,
+                        });
+                      }}
+                      placeholder="Select a state"
+                      isSearchable={true}
+                    />{" "}
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a district name.
+                    </Form.Control.Feedback>
+                  </div>
+                </div>
               )}
             </div>
 
             {addMember?.franchise === "Zonal Franchise" && (
-                <div className="row">
+              <div className="row">
                 <div className="col-md-4 mb-4">
                   <label htmlFor="stateDropdown1" className="form-label">
                     State
@@ -739,7 +665,7 @@ console.log(response,"respones")
 
                 <div className="col-md-4 mb-4">
                   <label htmlFor="stateDropdown3" className="form-label">
-                    Zonal
+                    Zonal Franchise Name
                   </label>
                   <Select
                     required
@@ -762,8 +688,7 @@ console.log(response,"respones")
                     Please provide a zonal name.
                   </Form.Control.Feedback>
                 </div>
-                </div>
-              
+              </div>
             )}
 
             {addMember?.franchise === "Mobile Franchise" && (
@@ -875,8 +800,6 @@ console.log(response,"respones")
               </div>
             )}
 
-           
-
             <div className="col-12 mt-5">
               <button type="submit" className="btn btn-custom float-end">
                 {/* {addLocation?._id ? 'Update' : 'Save'}  */}Save
@@ -893,12 +816,6 @@ console.log(response,"respones")
           </button>
         </ModalComponent>
 
-        {/* -------------deleteConfirmation */}
-        <DeleteConfirmation
-          show={deleteModal.show}
-          onHide={() => setDeleteModal({ show: false, id: null })}
-          onDelete={() => handleDelete(deleteModal.id)}
-        />
       </SlideMotion>
     </>
   );

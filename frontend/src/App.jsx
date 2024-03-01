@@ -14,6 +14,7 @@ import Member from "./pages/private/Users/Member";
 import Pendingusers from "./pages/private/Users/Pendingusers";
 import Resetpassword from "./pages/public/Resetpassword";
 import Myprofile from "./pages/private/Myprofile";
+import Viewdetails from "./pages/private/Users/Viewdetails";
 
 
 function App() {
@@ -33,6 +34,8 @@ function App() {
           <Route path="/locations/panchayath" element={<Panchayath />}/>
           <Route path="/user/pending" element={<Pendingusers />}/>
           <Route path="/admin/profile" element={<Myprofile />}/>
+          <Route path="/user/details" element={<Viewdetails />}/>
+
 
 
 

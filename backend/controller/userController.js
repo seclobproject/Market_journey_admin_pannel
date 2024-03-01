@@ -55,18 +55,18 @@ export const addUser = async (req, res, next) => {
         if(franchise==="Zonal Franchise"){
           franchiseName=zonal;
           zonal=null;
-            isZonalFranchise=true;
-            panchayath=null;
+          isZonalFranchise=true;
+          panchayath=null;
         } 
         if(franchise==="Mobile Franchise") {
             isMobileFranchise=true;
             franchiseName=null;
             const districtData=await User.findOne({franchiseName:district})
+            console.log(districtData);
             districtFranchise=districtData._id;
             const zonalData=await User.findOne({franchiseName:zonal})
             zonalFranchise=zonalData._id;
         }
-        
       const hashedPassword = bcryptjs.hashSync(password, 10);
       // const hashedTxnPassword = bcryptjs.hashSync(transactionPassword, 10);
       console.log(franchiseName);
@@ -273,44 +273,3 @@ export const viewUserProfile = async (req, res, next) => {
 };
 
 
-// edit user profile by admin
-
-export const editProfileByAdmin = async (req, res, next) => {
-  const adminId = req.user._id;
-  const { id } = req.params;
-  const adminData = await User.findById(adminId);
-  try {
-    if (adminData.isSuperAdmin) {
-      const userData = await User.findById(id);
-      if (userData) {
-        const { username, email, password, txnPassword, phone, address } =
-          req.body;
-        userData.username = username || userData.username;
-        userData.address = address || userData.address;
-        userData.phone = phone || userData.phone;
-        userData.email = email || userData.email;
-
-        if (password) {
-          const hashedPassword = bcryptjs.hashSync(password, 10);
-          userData.password = hashedPassword;
-        }
-
-        if (txnPassword) {
-          const hashedPassword = bcryptjs.hashSync(txnPassword, 10);
-          userData.transactionPassword = hashedPassword;
-        }
-
-        const updatedUser = await userData.save();
-        res
-          .status(200)
-          .json({ updatedUser, sts: "01", msg: "Successfully Updated" });
-      } else {
-        next(errorHandler("User not found, Please Login first"));
-      }
-    } else {
-      return next(errorHandler(401, "Admin Login Failed"));
-    }
-  } catch (error) {
-    next(error);
-  }
-};

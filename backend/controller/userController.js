@@ -35,6 +35,8 @@ export const addUser = async (req, res, next) => {
         let isDistrictFranchise;
         let isZonalFranchise;
         let isMobileFranchise;
+        const frachiseName=district;
+        console.log(frachiseName);
         const existingUser = await User.findOne({ email });
         const existingUserByPhone = await User.findOne({ phone });
         if (existingUser || existingUserByPhone) {
@@ -43,10 +45,12 @@ export const addUser = async (req, res, next) => {
 
         if(franchise==="District Franchise") {
           isDistrictFranchise=true;
+          district=null;
           zonal=null;
           panchayath=null;
         }
         if(franchise==="Zonal Franchise"){
+          zonal=null;
             isZonalFranchise=true;
             panchayath=null;
         } 
@@ -56,7 +60,7 @@ export const addUser = async (req, res, next) => {
         
       const hashedPassword = bcryptjs.hashSync(password, 10);
       // const hashedTxnPassword = bcryptjs.hashSync(transactionPassword, 10);
-  
+      console.log(frachiseName);
       const user = await User.create({
         sponser,
         sponserName,
@@ -65,6 +69,7 @@ export const addUser = async (req, res, next) => {
         phone,
         address,
         franchise,
+        frachiseName,
         state,
         district,
         zonal,
@@ -140,6 +145,32 @@ export const userLogin = async (req, res, next) => {
 };
 
 
+//reset user password
+
+//change password
+
+export const changePassword = async (req, res, next) => {
+  const userId = req.user._id;
+  const userData = await User.findById(userId);
+  try {
+    if (userData) {
+      const { newPassword, confirmPassword } = req.body;
+      if (newPassword) {
+        const hashedPassword = bcryptjs.hashSync(newPassword, 10);
+        userData.password = hashedPassword;
+      }
+      const updatedUser = await userData.save();
+
+      res
+        .status(200)
+        .json({ updatedUser, sts: "01", msg: "Successfully Updated" });
+    } else {
+      next(errorHandler("User not found, Please Login first"));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
 
 
 //verify users using Screenshot of Payment

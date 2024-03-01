@@ -74,9 +74,10 @@ const ReferalAmountSchema = new mongoose.Schema(
   {
     reportName: String,
     userID: String,
+    franchise:String,
     name: String,
+    percentageCredited:String,
     amountCredited: Number,
-    transactionCode: String,
     status: String,
   },
   {
@@ -114,7 +115,13 @@ const userSchema = new mongoose.Schema(
     },
     franchise: {
       type: String,
+      required: true,
     },
+    // franchiseName: {
+    //   type: String,
+    //   required: true,
+    //   unique: true,
+    // },
         state: {
           type: String,
         },

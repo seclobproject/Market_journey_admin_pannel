@@ -5,6 +5,8 @@ import jwt from "jsonwebtoken";
 import { errorHandler } from "../middleware/errorHandler.js";
 import User from "../models/userModel.js";
 import upload from "../config/multifileUpload.js";
+import District from "../models/districtModel.js";
+import Zonal from "../models/zonalModel.js";
 
 
 
@@ -62,7 +64,6 @@ export const addUser = async (req, res, next) => {
             isMobileFranchise=true;
             franchiseName=null;
             const districtData=await User.findOne({franchiseName:district})
-            console.log(districtData);
             districtFranchise=districtData._id;
             const zonalData=await User.findOne({franchiseName:zonal})
             zonalFranchise=zonalData._id;
@@ -102,7 +103,17 @@ export const addUser = async (req, res, next) => {
           transactionPassword,
           password
         );
-  
+        if(isDistrictFranchise){
+          const districtTakeData=await District.findOne({name:district})
+          districtTakeData.taken=true;
+          await districtTakeData.save();
+        }
+        if(isZonalFranchise){
+          zonalTakeData=await Zonal.findOne({name:zonal})
+          zonalTakeData.taken=true;
+          await zonalTakeData.save();
+        }
+
         res.status(200).json({
           user,
         sts: "01",
@@ -249,6 +260,7 @@ export const viewUserProfile = async (req, res, next) => {
         userStatus: userData.userStatus,
         ownSponserId: userData.ownSponserId,
         franchise: franchise,
+        franchiseName: userData.franchiseName,
         name: userData.name,
         email: userData.email,
         phone: userData.phone,

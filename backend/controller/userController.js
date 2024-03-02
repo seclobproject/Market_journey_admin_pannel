@@ -273,3 +273,36 @@ export const viewUserProfile = async (req, res, next) => {
 };
 
 
+   // edit user profile by user
+
+   export const editProfile = async (req, res, next) => {
+    const id = req.user._id;
+    try {
+        const userData = await User.findById(id);
+        if (userData) {
+          const { name, password, address } =
+            req.body;
+          userData.username = name || userData.name;
+          userData.address = address || userData.address;
+  
+          if (password) {
+            const hashedPassword = bcryptjs.hashSync(password, 10);
+            userData.password = hashedPassword;
+          }
+  
+          // if (txnPassword) {
+          //   const hashedPassword = bcryptjs.hashSync(txnPassword, 10);
+          //   userData.transactionPassword = hashedPassword;
+          // }
+  
+          const updatedUser = await userData.save();
+          res
+            .status(200)
+            .json({ updatedUser, sts: "01", msg: "Successfully Updated" });
+        } else {
+          next(errorHandler("User not found, Please Login first"));
+        }
+    } catch (error) {
+      next(error);
+    }
+  };

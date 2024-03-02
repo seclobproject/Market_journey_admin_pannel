@@ -832,19 +832,17 @@ export const viewUserDetails = async (req, res, next) => {
     // edit user profile by admin
 
 export const editProfileByAdmin = async (req, res, next) => {
-  const adminId = req.user._id;
+  const adminId = req.admin._id;
   const { id } = req.params;
-  const adminData = await User.findById(adminId);
+  const adminData = await Admin.findById(adminId);
   try {
-    if (adminData.isSuperAdmin) {
+    if (adminData) {
       const userData = await User.findById(id);
       if (userData) {
-        const { name, email, password, phone, address } =
+        const { name, password, address } =
           req.body;
         userData.username = name || userData.name;
         userData.address = address || userData.address;
-        userData.phone = phone || userData.phone;
-        userData.email = email || userData.email;
 
         if (password) {
           const hashedPassword = bcryptjs.hashSync(password, 10);

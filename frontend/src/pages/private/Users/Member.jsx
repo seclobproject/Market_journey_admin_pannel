@@ -19,6 +19,7 @@ import { Show_Toast } from "../../../utils/Toast";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
+import Loader from "../../../Components/Loader";
 function Member() {
   const [memberModal, setMemberModal] = useState({ show: false, id: null });
   const { Check_Validation } = useContext(ContextData);
@@ -39,6 +40,8 @@ function Member() {
   const [selectedZonalId, setSelectedZonalId] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
   const [allUser, setAllUser] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [params, setParams] = useState({
     page: 1,
     pageSize: 10,
@@ -154,11 +157,13 @@ function Member() {
 
   //-----------get all users
   const getallUsers = async () => {
+    setIsLoading(true)
     try {
       const response = await ApiCall("get", viewalluserUrl, {}, params);
       if (response.status === 200) {
         setAllUser(response?.data?.userData?.results);
         setTotalPages(response?.data?.userData?.totalPages);
+        setIsLoading(false);
       } else {
         console.error(
           "Error fetching user data. Unexpected status:",
@@ -237,6 +242,9 @@ function Member() {
               </button>
             </div>
           </div>
+          {isLoading ? (
+            <Loader />
+          ) : (
           <div className="card-body p-2">
             <div className="table-container table-responsive rounded-2 mb-4">
               <table className="table border text-nowrap customize-table mb-0 align-middle">
@@ -263,6 +271,9 @@ function Member() {
                     </th>
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">Franchise Type</h6>
+                    </th>
+                    <th>
+                      <h6 className="fs-4 fw-semibold mb-0">Franchise Name</h6>
                     </th>
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">Status</h6>
@@ -297,7 +308,7 @@ function Member() {
                           <td>{users?.phone || "--"}</td>
                           <td>{users?.packageAmount}</td>
                           <td>{users?.franchise || "--"}</td>
-
+<td>{users?.franchiseName||"--"}</td>
                           <td>
                             {users?.userStatus === "readyToApprove" ? (
                               <span className="badge bg-danger rounded-3 fw-semibold">
@@ -315,13 +326,13 @@ function Member() {
                           </td>
                           <td>
 
-                          <i className="fas fa-eye"></i>   
+                          <i className="fas fa-eye"    onClick={() =>   navigate('/user/details', { state: { data: users } })}
+></i>   
 
 </td>
 <td>
   {/* {users?.userStatus === "approved" ? ( */}
     <button className="btn btn-custom " 
-    onClick={() => navigate('/user/details')}
     >
       <i className="fas fa-sitemap"></i> View Tree
     </button>
@@ -344,6 +355,7 @@ function Member() {
               </table>
             </div>
           </div>
+             )}
           {/* -------------------------pagination--------------------- */}
           <div className="me-2 mb-3 d-flex ms-auto">
             <Stack spacing={2}>

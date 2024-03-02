@@ -28,5 +28,4 @@ export const viewpendingmemberUrl="/api/admin/view-ready-to-approved-users"
 export const approvependingsUrl="/api/admin/accept-user"
 export const viewalluserUrl="/api/admin/view-paginated-users"
 export const rejectuserUrl ="/api/admin/reject-user"
-
-//pagina
+export const edituserUrl="/api/admin/edit-user-details"

@@ -8,6 +8,7 @@ import {
 } from "../../../utils/Constants";
 import ModalComponent from "../../../Components/ModalComponet";
 import { Show_Toast } from "../../../utils/Toast";
+import Loader from "../../../Components/Loader";
 
 function Pendingusers() {
   const [approveModal, setApproveModal] = useState({ show: false, id: null });
@@ -19,13 +20,17 @@ function Pendingusers() {
     page: 1,
     limit: 10,
   });
+  const [isLoading, setIsLoading] = useState(false);
+
 
   //-----------pending member --------
   const getpendingMenbers = async () => {
+    setIsLoading(true);
     try {
       const response = await ApiCall("get", viewpendingmemberUrl);
       if (response.status === 200) {
         setPendingMemberList(response?.data?.userData);
+        setIsLoading(false);
       } else {
         console.error(
           "Error fetching state list. Unexpected status:",
@@ -88,6 +93,9 @@ function Pendingusers() {
               Pending Members
             </h5>
           </div>
+          {isLoading ? (
+            <Loader />
+          ) : (
           <div className="card-body p-2 mb-2">
             <div className="table-container table-responsive rounded-2 mb-4">
               <table className="table border text-nowrap customize-table mb-0 align-middle">
@@ -224,6 +232,7 @@ function Pendingusers() {
               </table>
             </div>
           </div>
+            )}
           <div className="me-2">
             {/* -------------------------pagination--------------------- */}
 

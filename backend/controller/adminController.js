@@ -162,8 +162,7 @@ export const addDistrict=async(req,res,next)=>{
       if(stateData){
         const newDistrict = new District({
           name:districtNameLowercase,
-          stateName,
-          taken:true
+          stateName
         });
         
         const district = await newDistrict.save();

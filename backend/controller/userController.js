@@ -109,7 +109,7 @@ export const addUser = async (req, res, next) => {
           await districtTakeData.save();
         }
         if(isZonalFranchise){
-          zonalTakeData=await Zonal.findOne({name:zonal})
+          const zonalTakeData=await Zonal.findOne({name:zonal})
           zonalTakeData.taken=true;
           await zonalTakeData.save();
         }
@@ -294,7 +294,7 @@ export const viewUserProfile = async (req, res, next) => {
         if (userData) {
           const { name, password, address } =
             req.body;
-          userData.username = name || userData.name;
+          userData.name = name || userData.name;
           userData.address = address || userData.address;
   
           if (password) {

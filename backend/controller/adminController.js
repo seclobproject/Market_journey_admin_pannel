@@ -162,7 +162,8 @@ export const addDistrict=async(req,res,next)=>{
       if(stateData){
         const newDistrict = new District({
           name:districtNameLowercase,
-          stateName
+          stateName,
+          taken:true
         });
         
         const district = await newDistrict.save();
@@ -328,6 +329,35 @@ export const viewParamsDistricts = async (req, res, next) => {
 }
 
 
+// view params Not taken Districts-
+export const viewNotTakenDistricts = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // Find the state by ID and populate its districts
+    const stateData = await State.findById(id).populate("districts");
+
+    if (!stateData || stateData.length === 0) {
+      return next(errorHandler(401, "No states exist"));
+    }
+
+    // Filter out the districts where taken is false
+    const districts = stateData.districts.filter(district => !district.taken);
+
+    res.status(200).json({
+      districts: districts.map(district => ({
+        id: district._id,
+        name: district.name
+      })),
+      sts: "01",
+      msg: "Districts retrieved successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 //view params Zonals
 export const viewParamsZonals = async (req, res, next) => {
   try {
@@ -359,6 +389,35 @@ export const viewParamsZonals = async (req, res, next) => {
     next(error);
   }
 }
+
+// view params Not taken Districts-
+export const viewNotTakenZonals = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // Find the state by ID and populate its districts
+    const districtData = await District.findById(id).populate("zonals");
+
+    if (!districtData || districtData.length === 0) {
+      return next(errorHandler(401, "No District exist"));
+    }
+
+    // Filter out the districts where taken is false
+    const zonals = districtData.zonals.filter(zonal => !zonal.taken);
+
+    res.status(200).json({
+      zonals: zonals.map(zonal => ({
+        id: zonal._id,
+        name: zonal.name
+      })),
+      sts: "01",
+      msg: "Zonals retrieved successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 
 
@@ -792,6 +851,11 @@ export const viewUserDetails = async (req, res, next) => {
   const { id } = req.params;
   const adminId = req.admin._id;
   try {
+    const adminData = await Admin.findById(adminId)
+    if(!adminData){
+      return next(errorHandler(401, "Admin not exist"));
+    }
+
     const userData = await User.findById(id)
 
     const countFirstChild = userData.childLevel1.length;
@@ -841,7 +905,7 @@ export const editProfileByAdmin = async (req, res, next) => {
       if (userData) {
         const { name, password, address } =
           req.body;
-        userData.username = name || userData.name;
+        userData.name = name || userData.name;
         userData.address = address || userData.address;
 
         if (password) {

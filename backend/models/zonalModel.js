@@ -17,6 +17,10 @@ const zonalSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "Panchayath",
       }],
+      taken:{
+        type:Boolean,
+        default:false
+      }
 
   },
   {

@@ -1,6 +1,6 @@
 import express from "express";
 const adminRouter = express.Router();
-import {acceptUser, addDistrict, addPanchayath, addState, addZonal, adminLogin,  editProfileByAdmin,  forgotPassword, getReadyToApproveUsers, rejectUser, viewAllDistricts, viewAllPagePanchayath, viewAllPageUsers, viewAllPageZonal, viewAllPanchayaths, viewAllUsers, viewAllZonals, viewParamsDistricts, viewParamsPanchayaths, viewParamsZonals, viewStates} from "../controller/adminController.js";
+import {acceptUser, addDistrict, addPanchayath, addState, addZonal, adminLogin,  editProfileByAdmin,  forgotPassword, getReadyToApproveUsers, rejectUser, viewAllDistricts, viewAllPagePanchayath, viewAllPageUsers, viewAllPageZonal, viewAllPanchayaths, viewAllUsers, viewAllZonals, viewNotTakenDistricts, viewNotTakenZonals, viewParamsDistricts, viewParamsPanchayaths, viewParamsZonals, viewStates, viewUserDetails} from "../controller/adminController.js";
 import { protectAdmin } from "../middleware/authMiddleware.js";
 import { addPackage, editPackage, viewPackages } from "../controller/packageController.js";
 import { addUser } from "../controller/userController.js";
@@ -27,6 +27,8 @@ adminRouter.get("/view-all-districts", protectAdmin,viewAllDistricts);
 adminRouter.get("/view-all-zonals", protectAdmin,viewAllZonals);
 adminRouter.get("/view-all-panchayaths", protectAdmin,viewAllPanchayaths);
 adminRouter.get("/view-dropdown-districts/:id",viewParamsDistricts);
+adminRouter.get("/view-nottaken-districts/:id",viewNotTakenDistricts);
+adminRouter.get("/view-nottaken-zonals/:id",viewNotTakenZonals);
 adminRouter.get("/view-dropdown-zonals/:id",viewParamsZonals);
 adminRouter.get("/view-dropdown-panchayaths/:id",viewParamsPanchayaths);
 adminRouter.get("/view-package",viewPackages);
@@ -34,6 +36,7 @@ adminRouter.get("/view-all-users", protectAdmin,viewAllUsers);
 adminRouter.get("/view-paginated-users", protectAdmin,viewAllPageUsers);
 adminRouter.get("/view-paginated-zonal", protectAdmin,viewAllPageZonal);
 adminRouter.get("/view-paginated-panchayath", protectAdmin,viewAllPagePanchayath);
+adminRouter.get("/view-user-profile/:id", protectAdmin, viewUserDetails);
 
 
 

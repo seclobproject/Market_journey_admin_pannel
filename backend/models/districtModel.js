@@ -14,7 +14,10 @@ const districtSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "Zonal",
       }],
-
+      taken:{
+        type:Boolean,
+        default:false
+      }
   },
   {
     timestamps: true,

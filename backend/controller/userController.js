@@ -322,7 +322,7 @@ export const viewUserProfile = async (req, res, next) => {
 // add user by Referal link
 export const addReferalUser = async (req, res, next) => {
   try {
-    let { userId,name, email, phone,packageAmount,franchise, address,state,district,zonal,panchayath, transactionPassword, password } =
+    let { userId,name, email, phone,packageAmount,franchiseName,franchise, address,state,district,zonal,panchayath, transactionPassword, password } =
     req.body;
     const sponser = userId;
           const sponserData = (await User.findById(sponser)) || (await Admin.findById(sponser));
@@ -335,7 +335,6 @@ export const addReferalUser = async (req, res, next) => {
         let isDistrictFranchise;
         let isZonalFranchise;
         let isMobileFranchise;
-        let franchiseName;
         let districtFranchise;
         let zonalFranchise;
         console.log(district);
@@ -346,13 +345,11 @@ export const addReferalUser = async (req, res, next) => {
         }
 
         if(franchise==="District Franchise") {
-          franchiseName=district;
           isDistrictFranchise=true;
           zonal=null;
           panchayath=null;
         }
         if(franchise==="Zonal Franchise"){
-          franchiseName=zonal;
           isZonalFranchise=true;
           panchayath=null;
         } 

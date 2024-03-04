@@ -5,18 +5,19 @@ const packageSchema = new mongoose.Schema(
     franchiseName: {
       type: String,
       required: true,
-      unique: true,
+      // Remove the unique constraint from franchiseName
+    },
+    packageName:{
+      type: String
     },
     packageAmount: {
-        type: String,
-        required: true,
-      },
-
-      packageUsers: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-      
+      type: String,
+      required: true,
+    },
+    packageUsers: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },  
   },
   {
     timestamps: true,

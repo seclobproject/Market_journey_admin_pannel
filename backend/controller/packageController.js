@@ -8,13 +8,15 @@ export const addPackage=async(req,res,next)=>{
     const admin = await Admin.findById(adminId);
 
     if (admin) {
-      const {franchiseName,packageAmount}=req.body;
+      const {franchiseName,packageAmount,packageName}=req.body;
       const packageData=await Package.findOne({franchiseName:franchiseName});
-      if(packageData){
-        return next(errorHandler(401, "This Package already exist"));
-      }
+      if (franchiseName !== "Mobile Franchise" && packageData) {
+        // Returning an error message if the package already exists
+        return next(errorHandler(401, "This Package already exists"));
+    }
       const newPackage = new Package({
         franchiseName,
+        packageName,
         packageAmount
       });
       const addPackage = await newPackage.save();

@@ -50,13 +50,11 @@ export const addUser = async (req, res, next) => {
         if(franchise==="District Franchise") {
           franchiseName=district;
           isDistrictFranchise=true;
-          district=null;
           zonal=null;
           panchayath=null;
         }
         if(franchise==="Zonal Franchise"){
           franchiseName=zonal;
-          zonal=null;
           isZonalFranchise=true;
           panchayath=null;
         } 
@@ -318,3 +316,106 @@ export const viewUserProfile = async (req, res, next) => {
       next(error);
     }
   };
+
+
+
+// add user by Referal link
+export const addReferalUser = async (req, res, next) => {
+  try {
+    let { userId,name, email, phone,packageAmount,franchiseName,franchise, address,state,district,zonal,panchayath, transactionPassword, password } =
+    req.body;
+    const sponser = userId;
+          const sponserData = (await User.findById(sponser)) || (await Admin.findById(sponser));
+        const sponserName = sponserData.name;
+     
+
+      const userStatus = "pending";
+      const tempPackageAmount=packageAmount;
+      const ownSponserId = generateRandomString();
+        let isDistrictFranchise;
+        let isZonalFranchise;
+        let isMobileFranchise;
+        let districtFranchise;
+        let zonalFranchise;
+        console.log(district);
+        const existingUser = await User.findOne({ email });
+        const existingUserByPhone = await User.findOne({ phone });
+        if (existingUser || existingUserByPhone) {
+            return next(errorHandler(401, "User Already Exist"));
+        }
+
+        if(franchise==="District Franchise") {
+          isDistrictFranchise=true;
+          zonal=null;
+          panchayath=null;
+        }
+        if(franchise==="Zonal Franchise"){
+          isZonalFranchise=true;
+          panchayath=null;
+        } 
+        if(franchise==="Mobile Franchise") {
+            isMobileFranchise=true;
+            franchiseName=null;
+            const districtData=await User.findOne({franchiseName:district})
+            districtFranchise=districtData._id;
+            const zonalData=await User.findOne({franchiseName:zonal})
+            zonalFranchise=zonalData._id;
+        }
+      const hashedPassword = bcryptjs.hashSync(password, 10);
+      // const hashedTxnPassword = bcryptjs.hashSync(transactionPassword, 10);
+      console.log(franchiseName);
+      const user = await User.create({
+        sponser,
+        sponserName,
+        name,
+        email,
+        phone,
+        address,
+        franchise,
+        franchiseName,
+        state,
+        district,
+        zonal,
+        panchayath,
+        tempPackageAmount,
+        isDistrictFranchise,
+        isZonalFranchise,
+        isMobileFranchise,
+        // transactionPassword: hashedTxnPassword,
+        password: hashedPassword,
+        ownSponserId,
+        userStatus,
+        districtFranchise,
+        zonalFranchise
+      });
+      if (user) {
+        await sendMail(
+          user.email,
+          user.name,
+          user.ownSponserId,
+          transactionPassword,
+          password
+        );
+        if(isDistrictFranchise){
+          const districtTakeData=await District.findOne({name:district})
+          districtTakeData.taken=true;
+          await districtTakeData.save();
+        }
+        if(isZonalFranchise){
+          const zonalTakeData=await Zonal.findOne({name:zonal})
+          zonalTakeData.taken=true;
+          await zonalTakeData.save();
+        }
+
+        res.status(200).json({
+          user,
+        sts: "01",
+          msg: "Add user Success",
+        });
+      } else {
+        return next(errorHandler(400, "Registration failed. Please try again!"));
+      }
+  } catch (error) {
+    next(error);
+  }
+};

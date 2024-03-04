@@ -7,6 +7,7 @@ import DeleteConfirmation from "../../../Components/DeleteConfirmation";
 import Select from "react-select";
 import {
   districtlistinZonalUrl,
+  districtnotTakenUrl,
   memberaddUrl,
   packagesListUrl,
   panchayathlistindropdownUrl,
@@ -26,6 +27,7 @@ function Member() {
   const [validated, setValidated] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
   const [addMember, setAddMember] = useState({});
+  console.log(addMember,"addMmber")
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [zonalList, setZonalList] = useState([]);
@@ -47,7 +49,15 @@ function Member() {
     pageSize: 10,
   });
   const [totalPages, setTotalPages] = useState(1);
+  const [filteredData, setFilteredData] = useState([]); // Data after filtering
+  console.log(filteredData,"filteredData")
+  const [filter, setFilter] = useState({
+    name:''
+  });
+  console.log(filter,"filter.................")
+
   const navigate = useNavigate();
+
   //-----------list district in drop down--------
   const getStateList = async () => {
     try {
@@ -69,7 +79,7 @@ function Member() {
     try {
       const response = await ApiCall(
         "get",
-        `${districtlistinZonalUrl}/${selectedStateId}`
+        `${districtnotTakenUrl}/${selectedStateId}`
       );
       console.log(response, "ddistrict get");
       if (response.status === 200) {
@@ -161,7 +171,9 @@ function Member() {
     try {
       const response = await ApiCall("get", viewalluserUrl, {}, params);
       if (response.status === 200) {
+        console.log("all userssss",response)
         setAllUser(response?.data?.userData?.results);
+        setFilteredData(response?.data?.userData?.results)
         setTotalPages(response?.data?.userData?.totalPages);
         setIsLoading(false);
       } else {
@@ -202,6 +214,13 @@ function Member() {
     }
   }, [selectedStateId, addMember?.franchise, params]);
 
+  // useEffect(()=>{
+  //    getallUsers();
+  //   getPackagesList();
+  //   if(selectedStateId){
+  //     getDistrictList();
+  //   }
+  // },[params,selectedStateId])
   useEffect(() => {
     if (selectedDistrictId) {
       getZonallist();
@@ -212,6 +231,41 @@ function Member() {
     }
   }, [selectedDistrictId, selectedZonalId]);
 
+useEffect(()=>{
+if(filter?.name==="View_all"){
+  getallUsers()
+}
+},[filter])
+  
+  // const handleFilter = () => {
+  //   const filtered = allUser.filter(item => {
+  //     const franchiseName = item.franchise || ''; // default to an empty string if franchise is undefined
+  //     const filterText = filter || ''; // default to an empty string if filter is undefined
+  
+  //     return franchiseName.toLowerCase().includes(filterText.toLowerCase());
+  //   });
+  // console.log(filtered,"filtered")
+  // setFilteredData(filtered)
+  // };
+  const handleReset = () => {
+
+      setFilteredData(''); // Reset the filter to an empty string
+
+  
+    // Additional logic if needed
+  };
+  const handleFilterAndSetFilter = (e) => {
+    const filter = e.target.value
+
+  setFilter(filter);
+  const newFilteredData =allUser.filter((item)=>{
+    return filter? item.franchise===filter : true
+  })
+  setFilteredData(newFilteredData)
+};
+
+  
+  
   const packageOptions = packageList.map((pack) => ({
     value: pack.franchiseName,
     label: pack.franchiseName, 
@@ -229,6 +283,24 @@ function Member() {
             >
               Members
             </h5>
+            <div>
+            <select
+    value={filter}
+    onChange={(e) => handleFilterAndSetFilter(e)}
+    className="form-control"
+  >
+    <option value="View_all">View All</option>
+    <option value="District Franchise">District Franchise</option>
+    <option value="Zonal Franchise">Zonal Franchise</option>
+    <option value="Mobile Franchise">Mobile Franchise</option>
+    {/* Add more filter options as needed */}
+  </select>
+</div>
+      
+
+{/* <button onClick={handleFilter}>Filter</button> */}
+
+
             <div>
               <button
                 className="btn btn-custom  ms-3 float-end"
@@ -279,10 +351,10 @@ function Member() {
                       <h6 className="fs-4 fw-semibold mb-0">Status</h6>
                     </th>
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Details</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">View Details</h6>
                     </th>
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Tree</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">View Tree</h6>
                     </th>
                     
 
@@ -290,9 +362,9 @@ function Member() {
                   </tr>
                 </thead>
                 <tbody>
-                  {allUser?.length ? (
+                  {filteredData?.length ? (
                     <>
-                      {allUser.map((users, index) => (
+                      {filteredData.map((users, index) => (
                         <tr key={index}>
                           <td>{index + 1}</td>
                           <td>
@@ -326,17 +398,15 @@ function Member() {
                           </td>
                           <td>
 
-                          <i className="fas fa-eye"    onClick={() =>   navigate('/user/details', { state: { data: users } })}
+                          <i className="fas fa-eye"    onClick={() =>   navigate('/user/details', { state: { data: users?._id } })}
 ></i>   
 
 </td>
 <td>
-  {/* {users?.userStatus === "approved" ? ( */}
     <button className="btn btn-custom " 
     >
       <i className="fas fa-sitemap"></i> View Tree
     </button>
-  {/* ) : null}  */}
 </td>
 
 
@@ -521,7 +591,7 @@ function Member() {
               className=""
               style={{ border: "1px solid ", height: "1px", color: "#F7AE15" }}
             ></div>
-            <div className="mb-4 row mt-3">
+            <div className="mb-4 row mt-2">
               <div className="col-md-6">
                 <label htmlFor="franchiseType" className="form-label">
                   Franchise Type
@@ -601,11 +671,11 @@ function Member() {
                         value: districts?.id,
                         label: districts?.name,
                       }))}
-                      value={selectedState?.district}
+                      value={selectedState?.franchiseName}
                       onChange={(selectedOption) => {
                         setAddMember({
                           ...addMember,
-                          district: selectedOption?.label,
+                          franchiseName: selectedOption?.label,
                         });
                       }}
                       placeholder="Select a state"
@@ -658,13 +728,13 @@ function Member() {
                       value: districts?.id,
                       label: districts?.name,
                     }))}
-                    value={selectedState?.district}
+                    value={selectedState?.franchiseName}
                     onChange={(selectedOption) => {
                       setSelectedDistrictId(selectedOption?.value);
 
                       setAddMember({
                         ...addMember,
-                        district: selectedOption?.label,
+                        franchiseName: selectedOption?.label,
                       });
                     }}
                     placeholder="Select a district"
@@ -705,6 +775,36 @@ function Member() {
 
             {addMember?.franchise === "Mobile Franchise" && (
               <div className="row">
+                 <div className="mt-2 mb-2">
+        <label htmlFor="mobileFranchiseType" className="form-label">
+          Mobile Franchise Type
+        </label>
+        <select
+          required
+          id="mobileFranchiseType"
+          className="form-select form-control-lg"
+          value={setAddMember?.mobileFranchiseType}
+          onChange={(e) =>
+            setAddMember({
+              ...addMember,
+              mobileFranchiseType: e.target.value,
+            })
+          }
+        >
+          <option value="" disabled selected>
+            Select mobile franchise type
+          </option>
+          <option value="Mobile Franchise">Mobile Franchise</option>
+          <option value="premium_calls">Premium calls</option>
+          <option value="diamond_course">Diamond course</option>
+          <option value="platinum_course">Platinum course</option>
+          <option value="algo_course">Algo Course</option>
+
+        </select>
+        <Form.Control.Feedback type="invalid">
+          Please select a mobile franchise type.
+        </Form.Control.Feedback>
+      </div>
                 <div className="col-md-3 mb-4">
                   <label htmlFor="stateDropdown1" className="form-label">
                     State
@@ -742,13 +842,13 @@ function Member() {
                       value: districts?.id,
                       label: districts?.name,
                     }))}
-                    value={selectedState?.district}
+                    value={selectedState?.franchiseName}
                     onChange={(selectedOption) => {
                       setSelectedDistrictId(selectedOption?.value);
 
                       setAddMember({
                         ...addMember,
-                        district: selectedOption?.label,
+                        franchiseName: selectedOption?.label,
                       });
                     }}
                     placeholder="Select a district"

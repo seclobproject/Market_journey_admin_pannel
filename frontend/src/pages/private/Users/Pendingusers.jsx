@@ -48,6 +48,7 @@ function Pendingusers() {
         "post",
         `${approvependingsUrl}/${approveModal.id}`
       );
+      console.log(resposne,"res ress res")
       if (resposne?.status === 200) {
         Show_Toast("User Approved successfully", true);
         setApproveModal(false);
@@ -66,7 +67,7 @@ function Pendingusers() {
         `${rejectuserUrl}/${rejectModal.id}`
       );
       if (resposne?.status === 200) {
-        console.log(resposne, "from rject");
+        console.log(resposne, "from rjecctct");
         Show_Toast("User Rejected successfully", true);
         setrejectModal(false);
         getpendingMenbers();

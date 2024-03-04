@@ -205,35 +205,68 @@ function Package() {
             validated={validated}
             onSubmit={(e) => Check_Validation(e, addOrEdit, setValidated)}
           >
-            {!addPackages?._id && (
-              <div className="mb-4">
-                <label htmlFor="franchiseType" className="form-label">
-                  Franchise Type
-                </label>
-                <select
-                  required
-                  id="franchiseType"
-                  className="form-select form-control-lg"
-                  value={addPackages?.franchiseName}
-                  onChange={(e) =>
-                    setAddPackages({
-                      ...addPackages,
-                      franchiseName: e.target.value,
-                    })
-                  }
-                >
-                  <option value="" disabled selected>
-                    Select franchise type
-                  </option>
-                  <option value="District Franchise">District Franchise</option>
-                  <option value="Zonal Franchise">Zonal Franchise</option>
-                  <option value="Mobile Franchise">Mobile Franchise</option>
-                </select>
-                <Form.Control.Feedback type="invalid">
-                  Please select a franchise type.
-                </Form.Control.Feedback>
-              </div>
-            )}
+          {!addPackages?._id && (
+  <div className="mb-4">
+    <label htmlFor="franchiseType" className="form-label">
+      Franchise Type
+    </label>
+    <select
+      required
+      id="franchiseType"
+      className="form-select form-control-lg"
+      value={addPackages?.franchiseName}
+      onChange={(e) =>
+        setAddPackages({
+          ...addPackages,
+          franchiseName: e.target.value,
+        })
+      }
+    >
+      <option value="" disabled selected>
+        Select franchise type
+      </option>
+      <option value="District Franchise">District Franchise</option>
+      <option value="Zonal Franchise">Zonal Franchise</option>
+      <option value="Mobile Franchise">Mobile Franchise</option>
+    </select>
+    <Form.Control.Feedback type="invalid">
+      Please select a franchise type.
+    </Form.Control.Feedback>
+
+    {addPackages?.franchiseName === "Mobile Franchise" && (
+      <div className="mt-4">
+        <label htmlFor="mobileFranchiseType" className="form-label">
+          Mobile Franchise Type
+        </label>
+        <select
+          required
+          id="mobileFranchiseType"
+          className="form-select form-control-lg"
+          value={addPackages?.mobileFranchiseType}
+          onChange={(e) =>
+            setAddPackages({
+              ...addPackages,
+              mobileFranchiseType: e.target.value,
+            })
+          }
+        >
+          <option value="" disabled selected>
+            Select mobile franchise type
+          </option>
+          <option value="Mobile Franchise">Mobile Franchise</option>
+          <option value="premium_calls">Premium calls</option>
+          <option value="diamond_course">Diamond course</option>
+          <option value="platinum_course">Platinum course</option>
+          <option value="algo_course">Algo Course</option>
+
+        </select>
+        <Form.Control.Feedback type="invalid">
+          Please select a mobile franchise type.
+        </Form.Control.Feedback>
+      </div>
+    )}
+  </div>
+)}
 
             <div className="mb-4">
               <label htmlFor="exampleInputEmail1" className="form-label">

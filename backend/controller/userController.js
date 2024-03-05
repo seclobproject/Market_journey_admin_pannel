@@ -97,12 +97,12 @@ export const addUser = async (req, res, next) => {
           password
         );
         if(isDistrictFranchise){
-          const districtTakeData=await District.findOne({name:district})
+          const districtTakeData=await District.findOne({name:franchiseName})
           districtTakeData.taken=true;
           await districtTakeData.save();
         }
         if(isZonalFranchise){
-          const zonalTakeData=await Zonal.findOne({name:zonal})
+          const zonalTakeData=await Zonal.findOne({name:franchiseName})
           zonalTakeData.taken=true;
           await zonalTakeData.save();
         }

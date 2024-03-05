@@ -50,17 +50,14 @@ function Sidebar() {
     {
       title: "Uploads",
       icon: "fas fa-cloud-upload-alt",
-      sub: [
-        { title: "Videos", route: "settings-emirates", },
-        { title: "Images", route: "settings-locations",  },
-      ],
+      route: "user/uploads", 
     },
 
     { title: "Alerts", icon: "fas fa-bell", route: "" },
     { title: "Live News", icon: "fas fa-newspaper", route: "" },
     { title: "Wallets", icon: "fas fa-wallet", route: "" },
     { title: "Withdrawals", icon: "fas fa-money-bill", route: "" },
-    { title: "Awards & Rewards", icon: "fas fa-trophy", route: "" },
+    { title: "Awards & Rewards", icon: "fas fa-trophy", route: "user/awards" },
     {
       title: "My Account",
       icon: "fas fa-user",

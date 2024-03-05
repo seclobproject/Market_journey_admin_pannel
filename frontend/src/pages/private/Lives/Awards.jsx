@@ -1,94 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
-import { SlideMotion } from "../../libs/FramerMotion";
-import ModalComponent from "../../Components/ModalComponet";
-import { Form } from "react-bootstrap";
-import { ContextData } from "../../Services/Context";
-import DeleteConfirmation from "../../Components/DeleteConfirmation";
-import {
-  packagesAddUrl,
-  packagesEditUrl,
-  packagesListUrl,
-} from "../../utils/Constants";
-import { ApiCall } from "../../Services/Api";
-import { Show_Toast } from "../../utils/Toast";
-import Loader from "../../Components/Loader";
+import React, { useContext, useState } from 'react'
+import { SlideMotion } from '../../../libs/FramerMotion';
+import Loader from '../../../Components/Loader';
+import ModalComponent from '../../../Components/ModalComponet';
+import { ContextData } from '../../../Services/Context';
+import { Form } from 'react-bootstrap';
 
-function Package() {
-  const [packageModal, setPackageModal] = useState({ show: false, id: null });
-  const { Check_Validation } = useContext(ContextData);
-  const [validated, setValidated] = useState(false);
-  const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
-  const [packagesList, setpackagesList] = useState([]);
-  const [addPackages, setAddPackages] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-
-
-  //------List packages-------
-  const getPackagesList = async () => {
-    try {
-      setIsLoading(true)
-      const response = await ApiCall("get", packagesListUrl);
-      if (response.status === 200) {
-        setpackagesList(response?.data?.packageData);
-        setIsLoading(false)
-
-      } else {
-        console.error(
-          "Error fetching state list. Unexpected status:",
-          response.status
-        );
-      }
-    } catch (error) {
-      console.error("Error fetching state list:", error);
-    }
-  };
-  //---------add or edit packages---------
-  const addOrEdit = async () => {
-    try {
-      if (addPackages._id) {
-        const updateResponse = await ApiCall(
-          "post",
-          `${packagesEditUrl}/${addPackages._id}`,
-          addPackages
-        );
-        if (updateResponse.status === 200) {
-          setPackageModal(false);
-          setValidated(false);
-
-          getPackagesList();
-          Show_Toast("Package updated successfully", true);
-        } else {
-          Show_Toast("Package Update Failed", false);
-        }
-      } else {
-        const createResponse = await ApiCall(
-          "post",
-          packagesAddUrl,
-          addPackages
-        );
-        if (createResponse.status === 200) {
-          setPackageModal(false);
-          setValidated(false);
-          setAddPackages("");
-          getPackagesList();
-
-          Show_Toast("Packages added successfully", true);
-        } else {
-          Show_Toast(error, false);
-        }
-      }
-    } catch (error) {
-      Show_Toast(error, false);
-    }
-  };
-
-  useEffect(() => {
-    getPackagesList();
-  }, []);
+function Awards() {
+    const [isLoading, setIsLoading] = useState(false);
+    const { Check_Validation } = useContext(ContextData);
+    const [validated, setValidated] = useState(false);
+    const [showModal, setShowModal] = useState({ show: false, id: null });
+    const [addDetails, setAddDetails] = useState({});
 
   return (
     <>
-      <SlideMotion>
+       <SlideMotion>
         
         <div className="card w-100 position-relative overflow-hidden">
           {" "}
@@ -96,16 +22,16 @@ function Package() {
 
           <div className="px-4 py-3 border-bottom d-flex  align-items-center justify-content-between">
           <h5 className="card-title fw-semibold mb-0  px-0 mt-3" style={{color: '#F7AE15'}}>
-            Packages
+            Awards & Rewards
           </h5>
 
             <div>
               <button
                 className="btn btn-custom  ms-3 float-end"
                 onClick={() => {
-                  setPackageModal({ show: true, id: null });
+                  setShowModal({ show: true, id: null });
                   setValidated(false);
-                  setAddPackages("");
+                //   setAddPackages("");
                 }}
               >
                 Add
@@ -138,7 +64,7 @@ function Package() {
                     <th />
                   </tr>
                 </thead>
-                <tbody>
+                {/* <tbody>
                   {packagesList?.length ? (
                     <>
                       {packagesList.map((packages, index) => (
@@ -179,7 +105,7 @@ function Package() {
                       </td>
                     </tr>
                   )}
-                </tbody>
+                </tbody> */}
               </table>
             </div>
           </div>
@@ -195,13 +121,13 @@ function Package() {
           </div>
         </div>
         <ModalComponent
-          show={packageModal.show}
+          show={showModal.show}
           onHide={() => {
-            setPackageModal({ show: false, id: null });
+            setShowModal({ show: false, id: null });
           }}
           title={
             <h5 style={{ color: '#F7AE15', margin: 0}}>
-            Add Packages
+            Add Details
             </h5>
           }          
           
@@ -211,9 +137,9 @@ function Package() {
           <Form
             noValidate
             validated={validated}
-            onSubmit={(e) => Check_Validation(e, addOrEdit, setValidated)}
+            // onSubmit={(e) => Check_Validation(e, addOrEdit, setValidated)}
           >
-          {!addPackages?._id && (
+          {/* {!addPackages?._id && (
   <div className="mb-4">
     <label htmlFor="franchiseType" className="form-label">
       Franchise Type
@@ -274,22 +200,22 @@ function Package() {
       </div>
     )}
   </div>
-)}
+)} */}
 
             <div className="mb-4">
               <label htmlFor="exampleInputEmail1" className="form-label">
-                Package Amount
+                Member Name
               </label>
               <input
-                type="number"
+                type="text"
                 id="packageAmountInput"
                 className="form-control form-control-lg"
-                placeholder="Enter package amount"
-                value={addPackages?.packageAmount}
+                placeholder="Enter user name"
+                value={addDetails?.name}
                 onChange={(e) => {
-                  setAddPackages({
-                    ...addPackages,
-                    packageAmount: e.target.value,
+                  setAddDetails({
+                    ...addDetails,
+                    name: e.target.value,
                   });
                 }}
                 required
@@ -298,25 +224,71 @@ function Package() {
                 Please enter a package amount.
               </Form.Control.Feedback>
             </div>
+            <div className="mb-4">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                Achived Detaills
+              </label>
+              <textarea
+              style={{height:'100px'}}
+  id="packageAmountInput"
+  className="form-control form-control-lg"
+  placeholder="Enter achieved details"
+  value={addDetails?.details}
+  onChange={(e) => {
+    setAddDetails({
+      ...addDetails,
+      details: e.target.value,
+    });
+  }}
+  required
+/>
+
+              <Form.Control.Feedback type="invalid">
+                Please enter a package amount.
+              </Form.Control.Feedback>
+            </div>
+            <div className="mb-4">
+  <label htmlFor="exampleInputEmail1" className="form-label">
+    Upload Image
+  </label>
+  <div className="d-flex align-items-center">
+    <label htmlFor="imageUpload" className="btn btn-custom">
+      <input
+        type="file"
+        accept="image/*"
+        id="imageUpload"
+        className="d-none"
+      />
+<i className="fa fa-cloud-upload-alt text-white"></i> Upload
+    </label>
+  </div>
+
+  <Form.Control.Feedback type="invalid">
+    Please enter a package amount.
+  </Form.Control.Feedback>
+</div>
+
+            
 
             <div className="col-12 mt-4">
   <button type="submit" className="btn btn-custom float-end ms-1">
-                {addPackages?._id ? "Update" : "Save"}
+                {addDetails?._id ? "Update" : "Save"}
               </button>
             </div>
           </Form>
           <button
             className="btn btn-cancel float-end me-1"
             onClick={() => {
-              setPackageModal({ show: false, id: null });
+              setShowModal({ show: false, id: null });
             }}
           >
             cancel
           </button>
         </ModalComponent>
       </SlideMotion>
+
     </>
-  );
+  )
 }
 
-export default Package;
+export default Awards

@@ -634,7 +634,7 @@ export const acceptUser = async (req, res, next) => {
     const adminData = await Admin.findById(adminId);
     if (adminData) {
       const userData = await User.findById(id);
-      
+      console.log(userData);
       if (userData) {
         const sponserId1=userData.sponser;
         const sponserUser1= (await User.findById(sponserId1)) || (await Admin.findById(sponserId1));
@@ -654,7 +654,7 @@ export const acceptUser = async (req, res, next) => {
             sponserUser1.childLevel1.push(updatedUser._id);
             await sponserUser1.save();
           }
-          const referalIncome=generateReferalIncome(sponserUser1,sponserUser2,updatedUser)
+          // const referalIncome=generateReferalIncome(sponserUser1,sponserUser2,updatedUser)
           res
             .status(200)
             .json({ updatedUser, msg: "User verification Accepted!" });

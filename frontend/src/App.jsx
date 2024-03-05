@@ -15,6 +15,8 @@ import Pendingusers from "./pages/private/Users/Pendingusers";
 import Resetpassword from "./pages/public/Resetpassword";
 import Myprofile from "./pages/private/Myprofile";
 import Viewdetails from "./pages/private/Users/Viewdetails";
+import Awards from "./pages/private/Lives/Awards";
+import Uploads from "./pages/private/Lives/Uploads";
 
 
 function App() {
@@ -35,6 +37,10 @@ function App() {
           <Route path="/user/pending" element={<Pendingusers />}/>
           <Route path="/admin/profile" element={<Myprofile />}/>
           <Route path="/user/details" element={<Viewdetails />}/>
+          <Route path="/user/awards" element={<Awards />}/>
+          <Route path="/user/uploads" element={<Uploads />}/>
+
+
 
 
 

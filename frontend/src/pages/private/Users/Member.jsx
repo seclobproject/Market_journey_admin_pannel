@@ -27,12 +27,14 @@ function Member() {
   const [validated, setValidated] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
   const [addMember, setAddMember] = useState({});
-  console.log(addMember,"addMmber")
+  console.log(addMember,"addMmber................................")
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [zonalList, setZonalList] = useState([]);
   const [panchayathList, setPanchayathList] = useState([]);
   const [packageList, setPackageList] = useState([]);
+  console.log(packageList,"packageList................................")
+
   const [packageAmount, setPackageAmount] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showTransPassword, setShowTransPassword] = useState(false);
@@ -51,9 +53,7 @@ function Member() {
   const [totalPages, setTotalPages] = useState(1);
   const [filteredData, setFilteredData] = useState([]); // Data after filtering
   console.log(filteredData,"filteredData")
-  const [filter, setFilter] = useState({
-    name:''
-  });
+  const [filter, setFilter] = useState();
   console.log(filter,"filter.................")
 
   const navigate = useNavigate();
@@ -232,28 +232,13 @@ function Member() {
   }, [selectedDistrictId, selectedZonalId]);
 
 useEffect(()=>{
-if(filter?.name==="View_all"){
+if(filter==="View_all"){
   getallUsers()
 }
 },[filter])
   
-  // const handleFilter = () => {
-  //   const filtered = allUser.filter(item => {
-  //     const franchiseName = item.franchise || ''; // default to an empty string if franchise is undefined
-  //     const filterText = filter || ''; // default to an empty string if filter is undefined
-  
-  //     return franchiseName.toLowerCase().includes(filterText.toLowerCase());
-  //   });
-  // console.log(filtered,"filtered")
-  // setFilteredData(filtered)
-  // };
-  const handleReset = () => {
-
-      setFilteredData(''); // Reset the filter to an empty string
 
   
-    // Additional logic if needed
-  };
   const handleFilterAndSetFilter = (e) => {
     const filter = e.target.value
 
@@ -267,10 +252,12 @@ if(filter?.name==="View_all"){
   
   
   const packageOptions = packageList.map((pack) => ({
-    value: pack.franchiseName,
-    label: pack.franchiseName, 
-    packageAmount: pack.packageAmount,
+    value: pack?.packageName,
+    label: pack?.packageName||pack?.franchiseName,
+    packageAmount: pack?.packageAmount,
   }));
+
+  console.log(packageOptions,"options")
   return (
     <>
       <SlideMotion>
@@ -283,19 +270,7 @@ if(filter?.name==="View_all"){
             >
               Members
             </h5>
-            <div>
-            <select
-    value={filter}
-    onChange={(e) => handleFilterAndSetFilter(e)}
-    className="form-control"
-  >
-    <option value="View_all">View All</option>
-    <option value="District Franchise">District Franchise</option>
-    <option value="Zonal Franchise">Zonal Franchise</option>
-    <option value="Mobile Franchise">Mobile Franchise</option>
-    {/* Add more filter options as needed */}
-  </select>
-</div>
+   
       
 
 {/* <button onClick={handleFilter}>Filter</button> */}
@@ -314,6 +289,22 @@ if(filter?.name==="View_all"){
               </button>
             </div>
           </div>
+          <div className="row p-2">
+            <div className="col-3">
+            <select
+    value={filter}
+    onChange={(e) => handleFilterAndSetFilter(e)}
+    className="form-control"
+  >
+    <option value="View_all">View All</option>
+    <option value="District Franchise">District Franchise</option>
+    <option value="Zonal Franchise">Zonal Franchise</option>
+    <option value="Mobile Franchise">Mobile Franchise</option>
+    {/* Add more filter options as needed */}
+  </select>
+            </div>
+      
+</div>
           {isLoading ? (
             <Loader />
           ) : (
@@ -773,144 +764,7 @@ if(filter?.name==="View_all"){
               </div>
             )}
 
-            {addMember?.franchise === "Mobile Franchise" && (
-              <div className="row">
-                 <div className="mt-2 mb-2">
-        <label htmlFor="mobileFranchiseType" className="form-label">
-          Mobile Franchise Type
-        </label>
-        <select
-          required
-          id="mobileFranchiseType"
-          className="form-select form-control-lg"
-          value={setAddMember?.mobileFranchiseType}
-          onChange={(e) =>
-            setAddMember({
-              ...addMember,
-              mobileFranchiseType: e.target.value,
-            })
-          }
-        >
-          <option value="" disabled selected>
-            Select mobile franchise type
-          </option>
-          <option value="Mobile Franchise">Mobile Franchise</option>
-          <option value="premium_calls">Premium calls</option>
-          <option value="diamond_course">Diamond course</option>
-          <option value="platinum_course">Platinum course</option>
-          <option value="algo_course">Algo Course</option>
-
-        </select>
-        <Form.Control.Feedback type="invalid">
-          Please select a mobile franchise type.
-        </Form.Control.Feedback>
-      </div>
-                <div className="col-md-3 mb-4">
-                  <label htmlFor="stateDropdown1" className="form-label">
-                    State
-                  </label>
-                  <Select
-                    required
-                    options={stateList?.map((states) => ({
-                      value: states?.id,
-                      label: states?.name,
-                    }))}
-                    value={selectedState?.state}
-                    onChange={(selectedOption) => {
-                      setSelectedStateId(selectedOption?.value);
-
-                      setAddMember({
-                        ...addMember,
-                        state: selectedOption?.label,
-                      });
-                    }}
-                    placeholder="Select a state"
-                    isSearchable={true}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Please provide a state Amount.
-                  </Form.Control.Feedback>
-                </div>
-
-                <div className="col-md-3 mb-4">
-                  <label htmlFor="stateDropdown2" className="form-label">
-                    District
-                  </label>
-                  <Select
-                    required
-                    options={districtList?.map((districts) => ({
-                      value: districts?.id,
-                      label: districts?.name,
-                    }))}
-                    value={selectedState?.franchiseName}
-                    onChange={(selectedOption) => {
-                      setSelectedDistrictId(selectedOption?.value);
-
-                      setAddMember({
-                        ...addMember,
-                        franchiseName: selectedOption?.label,
-                      });
-                    }}
-                    placeholder="Select a district"
-                    isSearchable={true}
-                  />{" "}
-                  <Form.Control.Feedback type="invalid">
-                    Please provide a district Amount.
-                  </Form.Control.Feedback>
-                </div>
-
-                <div className="col-md-3 mb-4">
-                  <label htmlFor="stateDropdown3" className="form-label">
-                    Zonal
-                  </label>
-                  <Select
-                    required
-                    options={zonalList?.map((zonal) => ({
-                      value: zonal?.id,
-                      label: zonal?.name,
-                    }))}
-                    value={selectedState?.zonal}
-                    onChange={(selectedOption) => {
-                      setSelectedZonalId(selectedOption?.value);
-                      setAddMember({
-                        ...addMember,
-                        zonal: selectedOption?.label,
-                      });
-                    }}
-                    placeholder="Select a zonal"
-                    isSearchable={true}
-                  />{" "}
-                  <Form.Control.Feedback type="invalid">
-                    Please provide a zonal name.
-                  </Form.Control.Feedback>
-                </div>
-
-                <div className="col-md-3 mb-4">
-                  <label htmlFor="stateDropdown4" className="form-label">
-                    Panchayath
-                  </label>
-                  <Select
-                    required
-                    options={panchayathList?.map((panchayath) => ({
-                      value: panchayath?.id,
-                      label: panchayath?.name,
-                    }))}
-                    value={selectedState?.panchayath}
-                    onChange={(selectedOption) => {
-                      setAddMember({
-                        ...addMember,
-                        panchayath: selectedOption?.label,
-                      });
-                    }}
-                    placeholder="Select a panchayath"
-                    isSearchable={true}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Please provide a panchayath Amount.
-                  </Form.Control.Feedback>
-                </div>
-              </div>
-            )}
+            
 
             <div className="col-12 mt-5">
               <button type="submit" className="btn btn-custom float-end">

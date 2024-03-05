@@ -13,7 +13,7 @@ router.post("/user-login", userLogin);
 router.post("/user-verification", protectUser,verifyUser);
 router.post("/change-password", protectUser,changePassword);
 router.post("/edit-profile", protectUser,editProfile);
-router.post("/add-referal-user", protectUser,addReferalUser);
+router.post("/add-referal-user",addReferalUser);
 
 
 router.get("/view-user-profile", protectUser,viewUserProfile);

@@ -1,6 +1,6 @@
 import express from "express";
 import {
-  addUser, changePassword, editProfile, userLogin, verifyUser, viewUserProfile,
+  addUser, changePassword, editProfile, userLogin, verifyUser, viewLevel1User, viewLevel2User, viewUserProfile,
 } from "../controller/userController.js";
 import { protectUser } from "../middleware/authMiddleware.js";
 
@@ -15,6 +15,9 @@ router.post("/edit-profile", protectUser,editProfile);
 
 
 router.get("/view-user-profile", protectUser,viewUserProfile);
+router.get("/view-level1-user", protectUser,viewLevel1User);
+router.get("/view-level2-user", protectUser,viewLevel2User);
+
 
 
 export default router;

@@ -2,39 +2,90 @@ import { errorHandler } from "../middleware/errorHandler.js";
 import Admin from "../models/adminModel.js";
 import Package from "../models/packageModel.js";
 
-export const addPackage=async(req,res,next)=>{
-    try {
-        const adminId = req.admin._id;
-    const admin = await Admin.findById(adminId);
+// export const addPackage=async(req,res,next)=>{
+//     try {
+//         const adminId = req.admin._id;
+//     const admin = await Admin.findById(adminId);
 
-    if (admin) {
-      const {franchiseName,packageAmount,packageName}=req.body;
-      const packageData=await Package.findOne({franchiseName:franchiseName});
-      if (franchiseName !== "Mobile Franchise" && packageData) {
-        // Returning an error message if the package already exists
-        return next(errorHandler(401, "This Package already exists"));
-    }
+//     if (admin) {
+//       const {franchiseName,packageAmount,packageName}=req.body;
+//       const packageData=await Package.findOne({franchiseName:franchiseName});
+//       if (franchiseName !== "Mobile Franchise" && packageData) {
+//         // Returning an error message if the package already exists
+//         return next(errorHandler(401, "This Package already exists"));
+//     }
+//     if(franchiseName==="Mobile Franchise"){
+//       const newPackage = new Package({
+//         franchiseName,
+//         packageName,
+//         packageAmount
+//       });
+//     }else{
+//       const newPackage = new Package({
+//         franchiseName,
+//         packageName:franchiseName,
+//         packageAmount
+//       });
+//     }
+//     const addPackage = await newPackage.save();
+//     if(addPackage){
+//       res.status(200).json({
+//           addPackage,
+//         sts: "01",
+//         msg: "Package added Successfull",
+//       });
+//     }else{
+//     next(errorHandler(401, "Package add Not success"));
+//     }
+      
+//     } else {
+//         next(errorHandler(401, "Admin not found"));
+//       }
+//     } catch (error) {
+//         next(error)
+//     }
+// }
+export const addPackage = async (req, res, next) => {
+  try {
+      const adminId = req.admin._id;
+      const admin = await Admin.findById(adminId);
+
+      if (!admin) {
+          return next(errorHandler(401, "Admin not found"));
+      }
+
+      const { franchiseName, packageAmount, packageName } = req.body;
+
+      if (franchiseName !== "Mobile Franchise") {
+          const packageData = await Package.findOne({ franchiseName: franchiseName });
+          if (packageData) {
+              return next(errorHandler(401, "This Package already exists"));
+          }
+      }
+
+      const newPackageName = franchiseName !== "Mobile Franchise" ? franchiseName : packageName;
+
       const newPackage = new Package({
-        franchiseName,
-        packageName,
-        packageAmount
+          franchiseName,
+          packageName: newPackageName,
+          packageAmount
       });
+
       const addPackage = await newPackage.save();
-      if(addPackage){
-        res.status(200).json({
-            addPackage,
-          sts: "01",
-          msg: "Package added Successfull",
-        });
-      }else{
-      next(errorHandler(401, "Package add Not success"));
+
+      if (addPackage) {
+          return res.status(200).json({
+              addPackage,
+              sts: "01",
+              msg: "Package added successfully",
+          });
+      } else {
+          return next(errorHandler(401, "Package add not successful"));
       }
-    } else {
-        next(errorHandler(401, "Admin not found"));
-      }
-    } catch (error) {
-        next(error)
-    }
+
+  } catch (error) {
+      return next(error);
+  }
 }
 
 

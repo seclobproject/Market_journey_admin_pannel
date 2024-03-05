@@ -5,7 +5,6 @@ const packageSchema = new mongoose.Schema(
     franchiseName: {
       type: String,
       required: true,
-      // Remove the unique constraint from franchiseName
     },
     packageName:{
       type: String

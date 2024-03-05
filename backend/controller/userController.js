@@ -24,7 +24,7 @@ export const addUser = async (req, res, next) => {
     try {
       console.log("Reached here");
       const sponser = req.admin ? req.admin._id : (req.user ? req.user._id : null);
-        let { name, email, phone,packageAmount,franchise, address,state,district,zonal,panchayath, transactionPassword, password } =
+        let { name, email, phone,packageAmount,franchise,franchiseName, address,state,district,zonal,panchayath, transactionPassword, password } =
           req.body;
         console.log(state);
           const sponserData = (await User.findById(sponser)) || (await Admin.findById(sponser));
@@ -37,7 +37,6 @@ export const addUser = async (req, res, next) => {
         let isDistrictFranchise;
         let isZonalFranchise;
         let isMobileFranchise;
-        let franchiseName;
         let districtFranchise;
         let zonalFranchise;
         console.log(district);
@@ -46,26 +45,22 @@ export const addUser = async (req, res, next) => {
         if (existingUser || existingUserByPhone) {
             return next(errorHandler(401, "User Already Exist"));
         }
+            
 
         if(franchise==="District Franchise") {
-          franchiseName=district;
           isDistrictFranchise=true;
           zonal=null;
           panchayath=null;
-        }
-        if(franchise==="Zonal Franchise"){
-          franchiseName=zonal;
+        }else if(franchise==="Zonal Franchise"){
           isZonalFranchise=true;
           panchayath=null;
+        }else{
+          isMobileFranchise=true;
+          const districtData=await User.findOne({franchiseName:district})
+          districtFranchise=districtData._id;
+          const zonalData=await User.findOne({franchiseName:zonal})
+          zonalFranchise=zonalData._id;
         } 
-        if(franchise==="Mobile Franchise") {
-            isMobileFranchise=true;
-            franchiseName=null;
-            const districtData=await User.findOne({franchiseName:district})
-            districtFranchise=districtData._id;
-            const zonalData=await User.findOne({franchiseName:zonal})
-            zonalFranchise=zonalData._id;
-        }
       const hashedPassword = bcryptjs.hashSync(password, 10);
       // const hashedTxnPassword = bcryptjs.hashSync(transactionPassword, 10);
       console.log(franchiseName);
@@ -355,7 +350,6 @@ export const addReferalUser = async (req, res, next) => {
         } 
         if(franchise==="Mobile Franchise") {
             isMobileFranchise=true;
-            franchiseName=null;
             const districtData=await User.findOne({franchiseName:district})
             districtFranchise=districtData._id;
             const zonalData=await User.findOne({franchiseName:zonal})
@@ -419,3 +413,80 @@ export const addReferalUser = async (req, res, next) => {
     next(error);
   }
 };
+
+
+
+export const viewLevel1User=async(req,res,next)=>{
+  try {
+    const userId = req.query.id || req.user._id;
+
+    // Fetch the user document by its ID and populate its child documents
+    const user = await User.findById(userId)
+      .select("childLevel1 ownSponserId userStatus")
+      .populate([
+        {
+          path: "childLevel1",
+          select:
+            "username ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName",
+        },
+      ]);
+
+    // If user document is not found, return an error
+    if (!user) {
+      return next(errorHandler("User not found"));
+    }
+
+    // Destructure relevant fields from the user document
+    const { childLevel1, ownSponserId, userStatus } =
+      user;
+
+    // Send the response with child documents and other relevant information
+    res.status(200).json({
+      child1: childLevel1,
+      ownSponserId,
+      userStatus,
+      sts: "01",
+      msg: "Success",
+    });
+  } catch (error) {
+    next(error)
+  }
+}
+
+
+export const viewLevel2User=async(req,res,next)=>{
+  try {
+    const userId = req.query.id || req.user._id;
+
+    // Fetch the user document by its ID and populate its child documents
+    const user = await User.findById(userId)
+      .select("childLevel2 ownSponserId userStatus")
+      .populate([
+        {
+          path: "childLevel2",
+          select:
+            "username ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName",
+        },
+      ]);
+
+    // If user document is not found, return an error
+    if (!user) {
+      return next(errorHandler("User not found"));
+    }
+
+    // Destructure relevant fields from the user document
+    const { childLevel2, ownSponserId, userStatus } =
+      user;
+
+    // Send the response with child documents and other relevant information
+    res.status(200).json({
+      child2: childLevel2,
+      ownSponserId,
+      userStatus,
+      sts: "01",
+      msg: "Success",
+    });
+  } catch (error) {
+    next(error)
+  }
+}

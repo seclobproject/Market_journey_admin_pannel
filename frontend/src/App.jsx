@@ -17,6 +17,8 @@ import Myprofile from "./pages/private/Myprofile";
 import Viewdetails from "./pages/private/Users/Viewdetails";
 import Awards from "./pages/private/Lives/Awards";
 import Uploads from "./pages/private/Lives/Uploads";
+import Alert from "./pages/private/Lives/Alert";
+import Uploadvideos from "./pages/private/Lives/Uploadvideos";
 
 
 function App() {
@@ -39,6 +41,10 @@ function App() {
           <Route path="/user/details" element={<Viewdetails />}/>
           <Route path="/user/awards" element={<Awards />}/>
           <Route path="/user/uploads" element={<Uploads />}/>
+          <Route path="/user/alerts" element={<Alert />}/>
+          <Route path="/user/videos" element={<Uploadvideos />}/>
+
+ 
 
 
 

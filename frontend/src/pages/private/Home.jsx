@@ -6,120 +6,115 @@ function Home() {
     <>
     <SlideMotion>
     <div className="container-fluid">
-        <div className="row">
-          <div className="col-lg-8 d-flex align-items-strech">
-    
-   
-            </div>
-   
-          <div className="col-lg-4">
-          <QRCode
-    size={256}
-    style={{ height: "auto", maxWidth: "100%", width: "50%" }}
-    value='hai'
-    viewBox={`0 0 256 256`}
-    />
-       
-          </div>
+      
+
+  <div class="row">
+    <div class="col-md-6 col-lg-3 mb-4">
+    <div class="card " style={{background:"#00335B"}}>
+      <div className="row align-items-center  p-4">
+      <div className="col-8">
+        <h5 className="card-title mb-9 fw-semibold"
+         style={{color:"white"}}
+         >
+          Yearly Breakup
+        </h5>
+        <div className="d-flex align-items-center mb-3">
+        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>$36,358</h4>
+
+     
         </div>
+      
+      </div>
+    
+    </div>      
+    </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-4">
+    <div class="card " style={{background:"#00335B"}}>
+      <div className="row align-items-center  p-4">
+      <div className="col-8">
+        <h5 className="card-title mb-9 fw-semibold"
+         style={{color:"white"}}
+         >
+          Yearly Breakup
+        </h5>
+        <div className="d-flex align-items-center mb-3">
+        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>$36,358</h4>
+
+     
+        </div>
+      
+      </div>
+    
+    </div>      
+    </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-4">
+    <div class="card " style={{background:"#00335B"}}>
+      <div className="row align-items-center  p-4">
+      <div className="col-8">
+        <h5 className="card-title mb-9 fw-semibold"
+         style={{color:"white"}}
+         >
+          Yearly Breakup
+        </h5>
+        <div className="d-flex align-items-center mb-3">
+        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>$36,358</h4>
+
+     
+        </div>
+      
+      </div>
+    
+    </div>      
+    </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-4">
+    <div class="card " style={{background:"#00335B"}}>
+      <div className="row align-items-center p-4">
+      <div className="col-8">
+        <h5 className="card-title mb-9 fw-semibold"
+         style={{color:"white"}}
+         >
+          Yearly Breakup
+        </h5>
+        <div className="d-flex align-items-center mb-3">
+        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>$36,358</h4>
+
+     
+        </div>
+      
+      </div>
+    
+    </div>      
+    </div>
+    </div>
+  </div>
+
+
+
+    
+
+
+  
+ 
+
+
+
+
         <div className="row">
-          <div className="col-lg-4 d-flex align-items-stretch">
-            <div className="card w-100">
-              <div className="card-body p-4">
-                <div className="mb-4">
-                  <h5 className="card-title fw-semibold">
-                    Recent Transactions
-                  </h5>
-                </div>
-                <ul className="timeline-widget mb-0 position-relative mb-n5">
-                  <li className="timeline-item d-flex position-relative overflow-hidden">
-                    <div className="timeline-time text-dark flex-shrink-0 text-end">
-                      09:30
-                    </div>
-                    <div className="timeline-badge-wrap d-flex flex-column align-items-center">
-                      <span className="timeline-badge border-2 border border-primary flex-shrink-0 my-8" />
-                      <span className="timeline-badge-border d-block flex-shrink-0" />
-                    </div>
-                    <div className="timeline-desc fs-3 text-dark mt-n1">
-                      Payment received from John Doe of $385.90
-                    </div>
-                  </li>
-                  <li className="timeline-item d-flex position-relative overflow-hidden">
-                    <div className="timeline-time text-dark flex-shrink-0 text-end">
-                      10:00 am
-                    </div>
-                    <div className="timeline-badge-wrap d-flex flex-column align-items-center">
-                      <span className="timeline-badge border-2 border border-info flex-shrink-0 my-8" />
-                      <span className="timeline-badge-border d-block flex-shrink-0" />
-                    </div>
-                    <div className="timeline-desc fs-3 text-dark mt-n1 fw-semibold">
-                      New sale recorded{" "}
-                      <a
-                        href="javascript:void(0)"
-                        className="text-primary d-block fw-normal"
-                      >
-                        #ML-3467
-                      </a>
-                    </div>
-                  </li>
-                  <li className="timeline-item d-flex position-relative overflow-hidden">
-                    <div className="timeline-time text-dark flex-shrink-0 text-end">
-                      12:00 am
-                    </div>
-                    <div className="timeline-badge-wrap d-flex flex-column align-items-center">
-                      <span className="timeline-badge border-2 border border-success flex-shrink-0 my-8" />
-                      <span className="timeline-badge-border d-block flex-shrink-0" />
-                    </div>
-                    <div className="timeline-desc fs-3 text-dark mt-n1">
-                      Payment was made of $64.95 to Michael
-                    </div>
-                  </li>
-                  <li className="timeline-item d-flex position-relative overflow-hidden">
-                    <div className="timeline-time text-dark flex-shrink-0 text-end">
-                      09:30 am
-                    </div>
-                    <div className="timeline-badge-wrap d-flex flex-column align-items-center">
-                      <span className="timeline-badge border-2 border border-warning flex-shrink-0 my-8" />
-                      <span className="timeline-badge-border d-block flex-shrink-0" />
-                    </div>
-                    <div className="timeline-desc fs-3 text-dark mt-n1 fw-semibold">
-                      New sale recorded{" "}
-                      <a
-                        href="javascript:void(0)"
-                        className="text-primary d-block fw-normal"
-                      >
-                        #ML-3467
-                      </a>
-                    </div>
-                  </li>
-                  <li className="timeline-item d-flex position-relative overflow-hidden">
-                    <div className="timeline-time text-dark flex-shrink-0 text-end">
-                      09:30 am
-                    </div>
-                    <div className="timeline-badge-wrap d-flex flex-column align-items-center">
-                      <span className="timeline-badge border-2 border border-danger flex-shrink-0 my-8" />
-                      <span className="timeline-badge-border d-block flex-shrink-0" />
-                    </div>
-                    <div className="timeline-desc fs-3 text-dark mt-n1 fw-semibold">
-                      New arrival recorded
-                    </div>
-                  </li>
-                  <li className="timeline-item d-flex position-relative overflow-hidden">
-                    <div className="timeline-time text-dark flex-shrink-0 text-end">
-                      12:00 am
-                    </div>
-                    <div className="timeline-badge-wrap d-flex flex-column align-items-center">
-                      <span className="timeline-badge border-2 border border-success flex-shrink-0 my-8" />
-                    </div>
-                    <div className="timeline-desc fs-3 text-dark mt-n1">
-                      Payment Done
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-8 d-flex align-items-stretch">
+        <div className="col-6 mb-3 mx-auto">
+  <div className="card w-100">
+    <QRCode
+      size={200}
+      style={{ height: "auto", maxWidth: "100%", width: "50%" }}
+      value="hai"
+      viewBox={`0 0 256 256`}
+    />
+  </div>
+</div>
+
+          <div className="col-lg-6 d-flex align-items-stretch">
             <div className="card w-100">
               <div className="card-body p-4">
                 <h5 className="card-title fw-semibold mb-4">
@@ -243,6 +238,88 @@ function Home() {
             </div>
           </div>
         </div>
+        <div className="row mt-3">
+    <div class="col-md-6 col-lg-3 mb-4">
+    <div class="card " style={{background:"#00335B"}}>
+      <div className="row align-items-center  p-4">
+      <div className="col-8">
+        <h5 className="card-title mb-9 fw-semibold"
+         style={{color:"white"}}
+         >
+          Yearly Breakup
+        </h5>
+        <div className="d-flex align-items-center mb-3">
+        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>$36,358</h4>
+
+     
+        </div>
+      
+      </div>
+    
+    </div>      
+    </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-4">
+    <div class="card " style={{background:"#00335B"}}>
+      <div className="row align-items-center  p-4">
+      <div className="col-8">
+        <h5 className="card-title mb-9 fw-semibold"
+         style={{color:"white"}}
+         >
+          Yearly Breakup
+        </h5>
+        <div className="d-flex align-items-center mb-3">
+        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>$36,358</h4>
+
+     
+        </div>
+      
+      </div>
+    
+    </div>      
+    </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-4">
+    <div class="card " style={{background:"#00335B"}}>
+      <div className="row align-items-center  p-4">
+      <div className="col-8">
+        <h5 className="card-title mb-9 fw-semibold"
+         style={{color:"white"}}
+         >
+          Yearly Breakup
+        </h5>
+        <div className="d-flex align-items-center mb-3">
+        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>$36,358</h4>
+
+     
+        </div>
+      
+      </div>
+    
+    </div>      
+    </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-4">
+    <div class="card " style={{background:"#00335B"}}>
+      <div className="row align-items-center p-4">
+      <div className="col-8">
+        <h5 className="card-title mb-9 fw-semibold"
+         style={{color:"white"}}
+         >
+          Yearly Breakup
+        </h5>
+        <div className="d-flex align-items-center mb-3">
+        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>$36,358</h4>
+
+     
+        </div>
+      
+      </div>
+    
+    </div>      
+    </div>
+    </div>
+  </div>
       </div>
     </SlideMotion>
      

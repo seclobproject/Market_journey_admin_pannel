@@ -43,6 +43,8 @@ function District() {
           "Error fetching state list. Unexpected status:",
           response.status
         );
+        setIsLoading(false);
+
       }
     } catch (error) {
       console.error("Error fetching state list:", error);

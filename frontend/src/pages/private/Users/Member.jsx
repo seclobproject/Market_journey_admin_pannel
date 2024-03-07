@@ -9,6 +9,7 @@ import {
   districtlistinZonalUrl,
   districtnotTakenUrl,
   memberaddUrl,
+  nottakenZonalUrl,
   packagesListUrl,
   panchayathlistindropdownUrl,
   statelistPageUrl,
@@ -21,27 +22,42 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../../Components/Loader";
+import moment from 'moment';
+
 function Member() {
   const [memberModal, setMemberModal] = useState({ show: false, id: null });
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
   const [addMember, setAddMember] = useState({});
-  console.log(addMember,"addMmber................................")
+  console.log(addMember,"addMmber...44.............................")
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [zonalList, setZonalList] = useState([]);
+  console.log(zonalList,"all...........Zonal................................")
+
+  const [notTakenZonal, setNotTakenZonal] = useState([]);
+  console.log(notTakenZonal,"not...Taken........Zonal................................")
+
   const [panchayathList, setPanchayathList] = useState([]);
+  console.log(panchayathList,"panchayathList.............")
+
   const [packageList, setPackageList] = useState([]);
   console.log(packageList,"packageList................................")
+  const [notTakenDistrict, setnotTakenDistrict] = useState([]);
+  console.log(notTakenDistrict,"notTakenDistrict................................")
 
   const [packageAmount, setPackageAmount] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showTransPassword, setShowTransPassword] = useState(false);
   const [selectedStateId, setSelectedStateId] = useState(null);
-  console.log(selectedStateId, "selectedStateId");
+  // console.log(selectedStateId, "selectedStateId......");
   const [selectedDistrictId, setSelectedDistrictId] = useState(null);
+  // console.log(selectedDistrictId, "selectedDistrictId......");
+
   const [selectedZonalId, setSelectedZonalId] = useState(null);
+  console.log(selectedZonalId, "selectedZonalId......");
+
   const [selectedState, setSelectedState] = useState(null);
   const [allUser, setAllUser] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -74,12 +90,34 @@ function Member() {
       console.error("Error fetching state list:", error);
     }
   };
-  //-----------list district in drop down--------
+  //----------- not taken district in drop down--------
   const getDistrictList = async () => {
+    console.log("here")
     try {
       const response = await ApiCall(
         "get",
         `${districtnotTakenUrl}/${selectedStateId}`
+      );
+      console.log(response, "not taken");
+      if (response.status === 200) {
+        setnotTakenDistrict(response?.data?.districts);
+      } else {
+        console.error(
+          "Error fetching state list. Unexpected status:",
+          response.status
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching state list:", error);
+    }
+  };
+    //-----------  all district in drop down--------
+
+  const getAllDistrictList = async () => {
+    try {
+      const response = await ApiCall(
+        "get",
+        `${districtlistinZonalUrl}/${selectedStateId}`
       );
       console.log(response, "ddistrict get");
       if (response.status === 200) {
@@ -94,15 +132,18 @@ function Member() {
       console.error("Error fetching state list:", error);
     }
   };
-  //-----------list Zonal in drop down--------
+  //-----------not taken Zonal in drop down--------
   const getZonallist = async () => {
+    console.log("reached hereee ver bad");
     try {
       const response = await ApiCall(
         "get",
-        `${zonallistindropdownUrl}/${selectedDistrictId}`
+        `${nottakenZonalUrl}/${selectedDistrictId}`
       );
+      console.log(response,"reached hereee ver bad");
+
       if (response.status === 200) {
-        setZonalList(response?.data?.zonals);
+        setNotTakenZonal(response?.data?.zonals);
       } else {
         console.error(
           "Error fetching state list. Unexpected status:",
@@ -113,13 +154,35 @@ function Member() {
       console.error("Error fetching state list:", error);
     }
   };
+    //-----------list Zonal in drop down--------
+    const getAllZonallist = async () => {
+      try {
+        const response = await ApiCall(
+          "get",
+          `${zonallistindropdownUrl}/${selectedDistrictId}`
+        );
+        if (response.status === 200) {
+          setZonalList(response?.data?.zonals);
+        } else {
+          console.error(
+            "Error fetching state list. Unexpected status:",
+            response.status
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching state list:", error);
+      }
+    };
   //-----------list Zonal in drop down--------
   const getPanchayathList = async () => {
+
+    console.log("reaction")
     try {
       const response = await ApiCall(
         "get",
         `${panchayathlistindropdownUrl}/${selectedZonalId}`
       );
+      console.log(response,"res res res from api")
       if (response.status === 200) {
         setPanchayathList(response?.data?.panchayaths);
       } else {
@@ -157,6 +220,9 @@ function Member() {
         setValidated(false);
         setAddMember("");
         getallUsers();
+        setSelectedStateId("")
+        selectedDistrictId("")
+        selectedZonalId("")
         // ();
         Show_Toast("Member added successfully", true);
       }
@@ -202,34 +268,18 @@ function Member() {
   useEffect(() => {
     getallUsers();
     getPackagesList();
-    if (
-      selectedStateId &&
-      (addMember?.franchise === "District Franchise" ||
-        addMember?.franchise === "Zonal Franchise")
-    ) {
-      getDistrictList();
-    }
-    if (selectedStateId && addMember?.franchise === "Mobile Franchise") {
-      getDistrictList();
-    }
-  }, [selectedStateId, addMember?.franchise, params]);
+   
+  }, [ params]);
 
-  // useEffect(()=>{
-  //    getallUsers();
-  //   getPackagesList();
-  //   if(selectedStateId){
-  //     getDistrictList();
+  // useEffect(() => {
+  //   if (selectedDistrictId) {
+  //     getZonallist();
   //   }
-  // },[params,selectedStateId])
-  useEffect(() => {
-    if (selectedDistrictId) {
-      getZonallist();
-    }
 
-    if (selectedZonalId) {
-      getPanchayathList();
-    }
-  }, [selectedDistrictId, selectedZonalId]);
+  //   if (selectedZonalId) {
+  //     getPanchayathList();
+  //   }
+  // }, [selectedDistrictId, selectedZonalId]);
 
 useEffect(()=>{
 if(filter==="View_all"){
@@ -238,6 +288,29 @@ if(filter==="View_all"){
 },[filter])
   
 
+
+useEffect(()=>{
+  if(selectedStateId){
+    if(addMember?.franchise === "District Franchise"){
+      getDistrictList();
+    }else{
+      getAllDistrictList();
+    }
+  }
+ if(selectedDistrictId){
+  if(addMember?.franchise === "Zonal Franchise"){
+    getZonallist();
+  }else{
+    getAllZonallist();
+  }
+ }
+
+  if (selectedZonalId) {
+    getPanchayathList();
+  
+ }
+  
+},[selectedStateId,selectedDistrictId,selectedZonalId]);
   
   const handleFilterAndSetFilter = (e) => {
     const filter = e.target.value
@@ -330,6 +403,9 @@ if(filter==="View_all"){
                       <h6 className="fs-4 fw-semibold mb-0">Phone</h6>
                     </th>
                     <th>
+                      <h6 className="fs-4 fw-semibold mb-0">Date</h6>
+                    </th>
+                    <th>
                       <h6 className="fs-4 fw-semibold mb-0">Package Amount</h6>
                     </th>
                     <th>
@@ -369,6 +445,7 @@ if(filter==="View_all"){
 
                           <td>{users?.email || "--"}</td>
                           <td>{users?.phone || "--"}</td>
+                          <td>{users?.createdAt ? moment(users.createdAt).format('DD/MM/YYYY') : "--"}</td>
                           <td>{users?.packageAmount}</td>
                           <td>{users?.franchise || "--"}</td>
 <td>{users?.franchiseName||"--"}</td>
@@ -638,7 +715,9 @@ if(filter==="View_all"){
                       value={selectedState?.state}
                       onChange={(selectedOption) => {
                         setSelectedStateId(selectedOption?.value);
-
+if(selectedStateId){
+  getDistrictList();
+}
                         setAddMember({
                           ...addMember,
                           state: selectedOption?.label,
@@ -658,7 +737,7 @@ if(filter==="View_all"){
                     </label>
                     <Select
                       required
-                      options={districtList?.map((districts) => ({
+                      options={notTakenDistrict?.map((districts) => ({
                         value: districts?.id,
                         label: districts?.name,
                       }))}
@@ -719,13 +798,13 @@ if(filter==="View_all"){
                       value: districts?.id,
                       label: districts?.name,
                     }))}
-                    value={selectedState?.franchiseName}
+                    value={selectedState?.district}
                     onChange={(selectedOption) => {
                       setSelectedDistrictId(selectedOption?.value);
 
                       setAddMember({
                         ...addMember,
-                        franchiseName: selectedOption?.label,
+                        district: selectedOption?.label,
                       });
                     }}
                     placeholder="Select a district"
@@ -739,6 +818,97 @@ if(filter==="View_all"){
                 <div className="col-md-4 mb-4">
                   <label htmlFor="stateDropdown3" className="form-label">
                     Zonal Franchise Name
+                  </label>
+                  <Select
+                    required
+                    options={notTakenZonal?.map((zonal) => ({
+                      value: zonal?.id,
+                      label: zonal?.name,
+                    }))}
+                    value={selectedState?.franchiseName}
+                    onChange={(selectedOption) => {
+                      setSelectedZonalId(selectedOption?.value);
+                      setAddMember({
+                        ...addMember,
+                        franchiseName: selectedOption?.label,
+                      });
+                    }}
+                    placeholder="Select a zonal"
+                    isSearchable={true}
+                  />{" "}
+                  <Form.Control.Feedback type="invalid">
+                    Please provide a zonal name.
+                  </Form.Control.Feedback>
+                </div>
+              </div>
+            )}
+
+{(
+addMember?.franchise === "Mobile Franchise"||
+addMember?.franchise === "Premium calls"||
+addMember?.franchise === "Diamond course"||
+addMember?.franchise === "Platinum course"||
+addMember?.franchise === "Algo course"
+)&&
+ (
+              <div className="row">
+                <div className="col-md-3 mb-4">
+                  <label htmlFor="stateDropdown1" className="form-label">
+                    State
+                  </label>
+                  <Select
+                    required
+                    options={stateList?.map((states) => ({
+                      value: states?.id,
+                      label: states?.name,
+                    }))}
+                    value={selectedState?.state}
+                    onChange={(selectedOption) => {
+                      setSelectedStateId(selectedOption?.value);
+
+                      setAddMember({
+                        ...addMember,
+                        state: selectedOption?.label,
+                      });
+                    }}
+                    placeholder="Select a state"
+                    isSearchable={true}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Please provide a state Amount.
+                  </Form.Control.Feedback>
+                </div>
+
+                <div className="col-md-3 mb-4">
+                  <label htmlFor="stateDropdown2" className="form-label">
+                    District
+                  </label>
+                  <Select
+                    required
+                    options={districtList?.map((districts) => ({
+                      value: districts?.id,
+                      label: districts?.name,
+                    }))}
+                    value={selectedState?.district}
+                    onChange={(selectedOption) => {
+                      setSelectedDistrictId(selectedOption?.value);
+
+                      setAddMember({
+                        ...addMember,
+                        district: selectedOption?.label,
+                      });
+                    }}
+                    placeholder="Select a district"
+                    isSearchable={true}
+                  />{" "}
+                  <Form.Control.Feedback type="invalid">
+                    Please provide a district Amount.
+                  </Form.Control.Feedback>
+                </div>
+
+                <div className="col-md-3 mb-4">
+                  <label htmlFor="stateDropdown3" className="form-label">
+                    Zonal
                   </label>
                   <Select
                     required
@@ -761,10 +931,33 @@ if(filter==="View_all"){
                     Please provide a zonal name.
                   </Form.Control.Feedback>
                 </div>
+
+                <div className="col-md-3 mb-4">
+                  <label htmlFor="stateDropdown4" className="form-label">
+                    Panchayath
+                  </label>
+                  <Select
+                    required
+                    options={panchayathList?.map((panchayath) => ({
+                      value: panchayath?.id,
+                      label: panchayath?.name,
+                    }))}
+                    value={selectedState?.panchayath}
+                    onChange={(selectedOption) => {
+                      setAddMember({
+                        ...addMember,
+                        panchayath: selectedOption?.label,
+                      });
+                    }}
+                    placeholder="Select a panchayath"
+                    isSearchable={true}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Please provide a panchayath Amount.
+                  </Form.Control.Feedback>
+                </div>
               </div>
             )}
-
-            
 
             <div className="col-12 mt-5">
               <button type="submit" className="btn btn-custom float-end">
@@ -776,6 +969,9 @@ if(filter==="View_all"){
             className="btn btn-cancel float-end me-1"
             onClick={() => {
               setMemberModal({ show: false, id: null });
+              setSelectedStateId("")
+              selectedDistrictId("")
+              selectedZonalId("")
             }}
           >
             cancel

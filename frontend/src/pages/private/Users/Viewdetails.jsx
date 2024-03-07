@@ -16,8 +16,10 @@ function Viewdetails() {
   const [details, setDetails] = useState({});
   console.log(details,"sss")
   const [showPassword, setShowPassword] = useState(false);
+
   const [editUser, setEditUser] = useState({});
   const [update, setUpdate] = useState({});
+  console.log(editUser,"editUser")
 
 
 
@@ -63,7 +65,15 @@ function Viewdetails() {
       if (res?.status === 200) {
         Show_Toast("Successfully updated password", true);
         setIsLoading(false);
-        setEditUser("");
+        setEditUser({
+          name:"",
+          address:"",
+          password:""
+        });
+        setPassword({
+          confirmpassword:""
+        });
+        set
         getUserDetails();
       } else {
         console.log("Invalid user");
@@ -137,7 +147,7 @@ function Viewdetails() {
                             <div className="col-3">
                               {details?.userStatus === "readyToApprove" ? (
                                 <span className="badge bg-danger rounded-3 fw-semibold">
-                                  Ready to Approve
+                                  Ready to approve
                                 </span>
                               ) : details?.userStatus === "pending" ? (
                                 <span className="badge bg-primary rounded-3 fw-semibold">
@@ -315,6 +325,7 @@ function Viewdetails() {
                             className="form-control"
                             id="exampleInputPassword1"
                             placeholder="**********"
+                            value={editUser?.password}
                             onChange={(e) => {
                               setEditUser({
                                 ...editUser,
@@ -347,6 +358,7 @@ function Viewdetails() {
                             className="form-control"
                             id="exampleInputPassword1"
                             placeholder="**********"
+                            value={password?.confirmpassword}
                             onChange={(e) => {
                               setPassword({
                                 ...password,

@@ -50,10 +50,24 @@ function Sidebar() {
     {
       title: "Uploads",
       icon: "fas fa-cloud-upload-alt",
-      route: "user/uploads", 
+      // route: "user/uploads",
+      sub: [
+        {
+          title: "Upload Image",
+          route: "user/uploads",
+          // icon: "fas fa-user-check",
+        },
+
+        {
+          title: "Upload Video",
+          route: "user/videos",
+
+          // icon: "fas fa-building",
+        },
+      ],
     },
 
-    { title: "Alerts", icon: "fas fa-bell", route: "" },
+    { title: "Alerts", icon: "fas fa-bell", route: "user/alerts" },
     { title: "Live News", icon: "fas fa-newspaper", route: "" },
     { title: "Wallets", icon: "fas fa-wallet", route: "" },
     { title: "Withdrawals", icon: "fas fa-money-bill", route: "" },

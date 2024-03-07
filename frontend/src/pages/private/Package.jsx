@@ -21,22 +21,29 @@ function Package() {
   const [packagesList, setpackagesList] = useState([]);
   const [addPackages, setAddPackages] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  console.log(addPackages,"addPackages")
 
 
   //------List packages-------
   const getPackagesList = async () => {
+    setIsLoading(true)
+
     try {
-      setIsLoading(true)
       const response = await ApiCall("get", packagesListUrl);
+      console.log(response,"res")
       if (response.status === 200) {
+        setIsLoading(false);
+
         setpackagesList(response?.data?.packageData);
-        setIsLoading(false)
 
       } else {
         console.error(
           "Error fetching state list. Unexpected status:",
           response.status
+          
         );
+        setIsLoading(false);
+
       }
     } catch (error) {
       console.error("Error fetching state list:", error);
@@ -261,7 +268,7 @@ function Package() {
           <option value="" disabled selected>
             Select mobile franchise type
           </option>
-          <option value="Mobile">Mobile</option>
+          <option value="Mobile Franchise">Mobile Franchise</option>
           <option value="Premium calls">Premium calls</option>
           <option value="Diamond course">Diamond course</option>
           <option value="Platinum course">Platinum course</option>

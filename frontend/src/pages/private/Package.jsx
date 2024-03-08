@@ -171,11 +171,9 @@ function Package() {
                                 setAddPackages(packages);
                               }}
                             >
-                              <i className="fs-4 ti ti-edit" />
-                              Edit
+<i className="fs-4 fas fa-pencil-alt" style={{ color: 'red' }}></i>                              
                             </a>
                           </td>
-                          <td></td>
                         </tr>
                       ))}
                     </>

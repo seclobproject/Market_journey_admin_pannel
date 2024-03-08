@@ -25,17 +25,14 @@ function Uploads() {
   const [viewImage, setViewImage] = useState({});
   const [ImageList, setImageList] = useState({});
 
-  console.log(addImage, "addImage");
   const [filename, setFileName] = useState({});
 
-  console.log();
 
   //-----------list state--------
   const getImageList = async () => {
     try {
       setIsLoading(true);
       const response = await ApiCall("get", viewuploadsUrl);
-      console.log(response, "response");
 
       if (response.status === 200) {
         setImageList(response?.data?.homeImageData);
@@ -56,7 +53,6 @@ function Uploads() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setAddImage(file);
-    console.log(addImage, "mage ");
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -90,8 +86,13 @@ function Uploads() {
       const formdata = new FormData();
       formdata.append("homeImage", addImage, addImage?.name);
       formdata.append("description", description);
-      const response = await ApiCall("post", uploadimageUrl, formdata);
-
+      const response = await ApiCall(
+        "post",
+        uploadimageUrl,
+        formdata,
+        "",
+        "multipart/form-data"
+      );
       if (response.status === 201 || response.status === 200) {
         setImageModal(false);
         setValidated(false);
@@ -99,7 +100,7 @@ function Uploads() {
         setViewImage("");
         setFileName("");
         getImageList();
-        setDescription("")
+        setDescription("");
         Show_Toast("Image uploaded successfully", true);
       } else {
         Show_Toast("Image upload failed", false);
@@ -155,7 +156,7 @@ function Uploads() {
                       setFileName("");
                       setViewImage("");
                       setAddImage("");
-                      setDescription("")
+                      setDescription("");
                     }}
                   >
                     Add
@@ -207,10 +208,7 @@ function Uploads() {
                                       borderRadius: "5px",
                                     }}
                                   />
-
-                              
                                 </td>
-                               
                                 <td>{image?.description}</td>
                                 <td>
                                   {" "}
@@ -221,7 +219,10 @@ function Uploads() {
                                       setAddImage(image);
                                     }}
                                   >
-  <i className="fs-4 fas fa-trash-alt" style={{ color: 'red' }} />
+                                    <i
+                                      className="fs-4 fas fa-trash-alt"
+                                      style={{ color: "red" }}
+                                    />
                                   </a>
                                 </td>{" "}
                               </tr>
@@ -396,16 +397,18 @@ function Uploads() {
               No, keep it
             </button>
             <button
-  type="button"
-  className="btn btn-custom text-white"
-  onClick={() => {
-    deleteImage();
-  }}
->
-  <i className="fs-4 fas fa-trash-alt me-2" style={{ color: 'white' }} />
-  {' '} Yes, Delete it
-</button>
-
+              type="button"
+              className="btn btn-custom text-white"
+              onClick={() => {
+                deleteImage();
+              }}
+            >
+              <i
+                className="fs-4 fas fa-trash-alt me-2"
+                style={{ color: "white" }}
+              />{" "}
+              Yes, Delete it
+            </button>
           </div>
         </div>
       </ModalComponent>

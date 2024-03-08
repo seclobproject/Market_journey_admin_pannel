@@ -11,6 +11,10 @@ function Alert() {
     const { Check_Validation } = useContext(ContextData);
     const [validated, setValidated] = useState(false);
     const [addAlerts,setAddAlerts]=useState({})
+
+
+
+  
   return (
     <>
     <SlideMotion>

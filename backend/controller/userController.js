@@ -426,7 +426,7 @@ export const viewLevel1User=async(req,res,next)=>{
         {
           path: "childLevel1",
           select:
-            "username ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName",
+            "name ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName",
         },
       ]);
 
@@ -464,7 +464,7 @@ export const viewLevel2User=async(req,res,next)=>{
         {
           path: "childLevel2",
           select:
-            "username ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName",
+            "name ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName",
         },
       ]);
 

@@ -61,13 +61,16 @@ function State() {
 
       if (response.status === 200) {
         setStateList(response?.data?.states);
-        setIsLoading(false)
+        setIsLoading(false);
 
       } else {
         console.error(
           "Error fetching state list. Unexpected status:",
           response.status
+          
         );
+        setIsLoading(false);
+
       }
     } catch (error) {
       console.error("Error fetching state list:", error);

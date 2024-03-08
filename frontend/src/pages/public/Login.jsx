@@ -11,6 +11,8 @@ function Login() {
   const navigate = useNavigate();
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({});
+  const [loginData, setLoginData] = useState({});
+
   const { Check_Validation, setIsLoggedIn, getToken,loginFun,setUser } = useContext(ContextData);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -20,7 +22,7 @@ function Login() {
 
   const Login = async () => {
     try {
-      let res = await ApiCall("post", login_PageURL, formData);
+      let res = await ApiCall("post", login_PageURL, loginData);
       if (res.status === 200) {
         
         setIsLoggedIn(true);
@@ -84,7 +86,7 @@ setValidated(false)
 Username                         
  </label>
                           <input
-                            value={formData?.username}
+                            value={loginData?.username}
                             type="email"
                             required
                             placeholder="Enter Username"
@@ -93,8 +95,8 @@ Username
                             id="exampleInputEmail1"
                             aria-describedby="emailHelp"
                             onChange={(e) =>
-                              setFormData({
-                                ...formData,
+                              setLoginData({
+                                ...loginData,
                                 username: e.target.value,
                               })
                             }
@@ -112,11 +114,11 @@ Username
                               aria-label="Password"
                               aria-describedby="password-addon"
                               required
-                              value={formData?.password}
+                              value={loginData?.password}
                               type={showPassword ? "text" : "password"}
                               onChange={(e) =>
-                                setFormData({
-                                  ...formData,
+                                setLoginData({
+                                  ...loginData,
                                   password: e.target.value,
                                 })
                               }

@@ -114,6 +114,8 @@ function Panchayath() {
           "Error fetching state list. Unexpected status:",
           response.status
         );
+        setIsLoading(false);
+
       }
     } catch (error) {
       console.error("Error fetching state list:", error);
@@ -286,7 +288,7 @@ function Panchayath() {
             setPanchayathModal({ show: false, id: null });
           }}
           title={
-            <h5 style={{ color: "#F7AE15", margin: 0 }}>Add Panchayaat</h5>
+            <h5 style={{ color: "#F7AE15", margin: 0 }}>Add Panchayath</h5>
           }
           centered
           width={"500px"}

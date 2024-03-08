@@ -9,8 +9,10 @@ import {
 import ModalComponent from "../../../Components/ModalComponet";
 import { Show_Toast } from "../../../utils/Toast";
 import Loader from "../../../Components/Loader";
+import { useNavigate } from "react-router-dom";
 
 function Pendingusers() {
+  const navigate=useNavigate();
   const [approveModal, setApproveModal] = useState({ show: false, id: null });
   const [rejectModal, setrejectModal] = useState({ show: false, id: null });
   const [pendingMemberList, setPendingMemberList] = useState([]);
@@ -129,6 +131,9 @@ function Pendingusers() {
                       <h6 className="fs-4 fw-semibold mb-0">Status</h6>
                     </th>
                     <th>
+                      <h6 className="fs-4 fw-semibold mb-0">View Details</h6>
+                    </th>
+                    <th>
                       <h6 className="fs-4 fw-semibold mb-0">Aprrove User</h6>
                     </th>
                     <th>
@@ -163,9 +168,8 @@ function Pendingusers() {
                               <td>
                                 <img
                                   alt="images"
-                                  src={`http://localhost:8000/uploads/${
-                                    members?.screenshot || ""
-                                  }`}
+                                  src={`                                  http://192.168.29.152:8000/uploads/${members?.screenshot}
+                                  `}
                                   style={{
                                     width: "100px",
                                     height: "100px",
@@ -179,13 +183,20 @@ function Pendingusers() {
                               alt="Screenshot"
                             /> */}
                               </td>
+                              
                               <td>
                                 {members?.userStatus === "readyToApprove" && (
                                   <span className="badge bg-danger rounded-3 fw-semibold">
-                                    Pending
+                                    Ready to approve
                                   </span>
                                 )}
                               </td>
+                              <td>
+
+<i className="fas fa-eye"    onClick={() =>   navigate('/user/details', { state: { data: members?._id } })}
+></i>   
+
+</td>
 
                               <td>
                                 {members?.userStatus === "readyToApprove" && (
@@ -217,6 +228,7 @@ function Pendingusers() {
                                   </button>
                                 )}
                               </td>
+  
                             </tr>
                           )
                         )

@@ -5,6 +5,7 @@ import { Show_Toast } from "../../../utils/Toast";
 import { edituserUrl, viewsingleuserUrl } from "../../../utils/Constants";
 import { ApiCall } from "../../../Services/Api";
 import { Button } from "react-bootstrap";
+import Loader from "../../../Components/Loader";
 
 function Viewdetails() {
   const navigate = useNavigate();
@@ -32,10 +33,12 @@ function Viewdetails() {
 
   //-----------------get individaul user data----------------------
   const getUserDetails = async () => {
+    setIsLoading(true);
     try {
       const response = await ApiCall("get", `${viewsingleuserUrl}/${id}`);
       if (response?.status === 200) {
         setDetails(response?.data);
+        setIsLoading(false);
       } else {
         console.error("Failed to fetch user details");
       }
@@ -93,6 +96,10 @@ function Viewdetails() {
   }, [data, id]);
   return (
     <>
+    <div className="mt-5"style={{alignItems:'center'}}>
+        {isLoading ? (
+            <Loader />
+          ) : (
       <SlideMotion>
         <div className="container-fluid">
           <button
@@ -387,6 +394,9 @@ function Viewdetails() {
           </div>
         </div>
       </SlideMotion>
+                  )}
+                              </div>
+
     </>
   );
 }

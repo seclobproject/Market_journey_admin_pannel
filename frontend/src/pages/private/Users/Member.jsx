@@ -394,7 +394,7 @@ useEffect(()=>{
                     </th>
 
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Sponser Name</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">Sponsor Name</h6>
                     </th>
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">Email</h6>

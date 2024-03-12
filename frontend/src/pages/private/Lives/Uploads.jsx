@@ -24,9 +24,9 @@ function Uploads() {
   const [description, setDescription] = useState("");
   const [viewImage, setViewImage] = useState({});
   const [ImageList, setImageList] = useState({});
+  const [errorMessage, setErrorMessage] = useState('');
 
   const [filename, setFileName] = useState({});
-
 
   //-----------list state--------
   const getImageList = async () => {
@@ -82,6 +82,9 @@ function Uploads() {
   };
   //-------Image upload----------
   const addImageFun = async (e) => {
+    if (!filename?.name) {
+      setErrorMessage("Please select an Image")
+    }
     try {
       const formdata = new FormData();
       formdata.append("homeImage", addImage, addImage?.name);
@@ -157,6 +160,7 @@ function Uploads() {
                       setViewImage("");
                       setAddImage("");
                       setDescription("");
+                      setErrorMessage("");
                     }}
                   >
                     Add
@@ -333,8 +337,9 @@ function Uploads() {
                     </span>
                   </>
                 ) : (
-                  <span></span>
-                )}
+                  <span>
+                  {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}                  
+                  </span>                )}
               </span>
             </p>
           </div>

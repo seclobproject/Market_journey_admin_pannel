@@ -64,11 +64,12 @@ function Sidebar() {
 
           // icon: "fas fa-building",
         },
+     
       ],
     },
 
     { title: "Alerts", icon: "fas fa-bell", route: "user/alerts" },
-    { title: "Live News", icon: "fas fa-newspaper", route: "" },
+    { title: "Live News", icon: "fas fa-newspaper", route: "user/news" },
     { title: "Wallets", icon: "fas fa-wallet", route: "" },
     { title: "Withdrawals", icon: "fas fa-money-bill", route: "" },
     { title: "Awards & Rewards", icon: "fas fa-trophy", route: "user/awards" },

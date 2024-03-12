@@ -20,13 +20,11 @@ function Awards() {
   const [addDetails, setAddDetails] = useState({});
   const [addImage, setAddImage] = useState({});
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
-
   const [isLoading, setIsLoading] = useState(false);
   const [filename, setFileName] = useState({});
-
   const [viewImage, setViewImage] = useState({});
-  const [details, setDetails] = useState({});
   const [awardDetails, setAwardDetails] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleVideoChange = (e) => {
     const file = e.target.files[0];
@@ -79,6 +77,9 @@ function Awards() {
   //-------Image upload----------
   const addAwardFun = async (e) => {
     try {
+      if (!filename?.name) {
+        setErrorMessage("Please select an Image")
+      }
       if (addDetails?._id) {
         const formData = new FormData();
         formData.append("memberImage", addImage, addImage?.name);
@@ -179,6 +180,7 @@ function Awards() {
                   setViewImage("");
                   setAddDetails("");
                   setFileName("");
+                  setErrorMessage("")
                 }}
               >
                 Add
@@ -217,62 +219,57 @@ function Awards() {
                   <tbody>
                     {awardDetails?.length ? (
                       <>
-                        {awardDetails.map(
-                          (details, index) => (
-                            (
-                              <tr key={index}>
-                                <td>{index + 1}</td>
+                        {awardDetails.map((details, index) => (
+                          <tr key={index}>
+                            <td>{index + 1}</td>
 
-                                <td>{details?.memberName || "--"}</td>
-                                <td>{details?.achivedDetails || "--"}</td>
+                            <td>{details?.memberName || "--"}</td>
+                            <td>{details?.achivedDetails || "--"}</td>
 
-                                <td>
-                                  <img
-                                    alt="images"
-                                    src={`                                  http://192.168.29.152:8000/uploads/${details?.memberImage}
+                            <td>
+                              <img
+                                alt="images"
+                                src={`                                  http://192.168.29.152:8000/uploads/${details?.memberImage}
                                   `}
-                                    style={{
-                                      width: "100px",
-                                      height: "100px",
-                                      objectFit: "cover",
-                                      borderRadius: "5px",
-                                    }}
-                                  />
-                                </td>
+                                style={{
+                                  width: "100px",
+                                  height: "100px",
+                                  objectFit: "cover",
+                                  borderRadius: "5px",
+                                }}
+                              />
+                            </td>
 
-                                <td>
-                                  <a
-                                    className="dropdown-item d-flex align-items-center gap-3"
-                                    onClick={() => {
-                                      setDeleteModal({ show: true, id: null });
-                                      setAddDetails(details);
-                                    }}
-                                  >
-                                    <i
-                                      className="fs-4 fas fa-trash-alt"
-                                      style={{ color: "red" }}
-                                    />
-                                  </a>{" "}
-                                  <a
-                                    className="dropdown-item d-flex align-items-center gap-3"
-                                    onClick={() => {
-                                      setShowModal({ show: true, id: null });
-                                      setAddDetails(details);
-                                      setAddImage(details);
-                                    }}
-                                  >
-                                    <i
-                                      className="fs-4 fas fa-pencil-alt mt-2"
-                                      style={{ color: "red" }}
-                                    ></i>
-                               
-                                  </a>
-                                </td>
-                                <td></td>
-                              </tr>
-                            )
-                          )
-                        )}
+                            <td>
+                              <a
+                                className="dropdown-item d-flex align-items-center gap-3"
+                                onClick={() => {
+                                  setDeleteModal({ show: true, id: null });
+                                  setAddDetails(details);
+                                }}
+                              >
+                                <i
+                                  className="fs-4 fas fa-trash-alt"
+                                  style={{ color: "red" }}
+                                />
+                              </a>{" "}
+                              <a
+                                className="dropdown-item d-flex align-items-center gap-3"
+                                onClick={() => {
+                                  setShowModal({ show: true, id: null });
+                                  setAddDetails(details);
+                                  setAddImage(details);
+                                }}
+                              >
+                                <i
+                                  className="fs-4 fas fa-pencil-alt mt-2"
+                                  style={{ color: "red" }}
+                                ></i>
+                              </a>
+                            </td>
+                            <td></td>
+                          </tr>
+                        ))}
                       </>
                     ) : (
                       <tr>
@@ -286,7 +283,6 @@ function Awards() {
               </div>
             </div>
           )}
-     
         </div>
         <ModalComponent
           show={showModal.show}
@@ -410,8 +406,9 @@ function Awards() {
                       </span>
                     </>
                   ) : (
-                    <span></span>
-                  )}
+                    <span>
+                    {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}                  
+                    </span>                  )}
                 </span>
               </p>
             </div>

@@ -10,6 +10,7 @@ import ModalComponent from "../../../Components/ModalComponet";
 import { Show_Toast } from "../../../utils/Toast";
 import Loader from "../../../Components/Loader";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 
 function Pendingusers() {
   const navigate=useNavigate();
@@ -124,6 +125,9 @@ function Pendingusers() {
                       <h6 className="fs-4 fw-semibold mb-0">Package Amount</h6>
                     </th>
                     <th>
+                      <h6 className="fs-4 fw-semibold mb-0">Date</h6>
+                    </th>
+                    <th>
                       <h6 className="fs-4 fw-semibold mb-0">Image</h6>
                     </th>
 
@@ -165,6 +169,7 @@ function Pendingusers() {
                               <td>{members?.email || "--"}</td>
                               <td>{members?.phone || "--"}</td>
                               <td>{members?.tempPackageAmount || "0"}</td>
+                              <td>{members?.createdAt ? moment(members.createdAt).format('DD/MM/YYYY') : "--"}</td>
                               <td>
                                 <img
                                   alt="images"

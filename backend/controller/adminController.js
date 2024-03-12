@@ -19,7 +19,7 @@ export const adminLogin = async (req, res, next) => {
     try {
       const validAdmin = await Admin.findOne({ username });
       if (!validAdmin) {
-        return next(errorHandler(401, "User not found"));
+        return next(errorHandler(401, "Admin not found"));
       }
         const validPassword = bcryptjs.compareSync(password, validAdmin.password);
         if (!validPassword) {
@@ -31,7 +31,8 @@ export const adminLogin = async (req, res, next) => {
   
         res.status(200).json({
           id: validAdmin._id,
-          email: validAdmin.username,
+          name: validAdmin.name,
+          email:validAdmin.email,
           token_type: "Bearer",
           access_token: token,
           sts: "01",
@@ -68,7 +69,19 @@ export const adminLogin = async (req, res, next) => {
   };
 
 
+//view admin profile
 
+
+// export const viewAdminProfile=async(req,res,next)=>{
+//   const adminId = req.admin._id;
+
+//   try {
+//     const admin = await Admin.findById(adminId);
+//     if (admin) {
+//   } catch (error) {
+    
+//   }
+// }
 
 
 //view all users by Admin---------------------------------------------------------------------------------------------------------------------
@@ -249,8 +262,9 @@ export const addPanchayath=async(req,res,next)=>{
     if (admin) {
       const {stateName,districtName,zonalName,panchayathName}=req.body;
       const panchayathNameLowercase = panchayathName.toLowerCase();
+      console.log(panchayathNameLowercase);
 
-      const existingPanchayath = await State.findOne({ name: { $regex: new RegExp('^' + panchayathNameLowercase + '$', 'i') } });
+      const existingPanchayath = await Panchayath.findOne({ name: { $regex: new RegExp('^' + panchayathNameLowercase + '$', 'i') } });
       if(existingPanchayath){
         return next(errorHandler(401, "This Panchayath already exist"));
       }
@@ -894,7 +908,7 @@ export const viewUserDetails = async (req, res, next) => {
 };
 
 
-    // edit user profile by admin
+// edit user profile by admin
 
 export const editProfileByAdmin = async (req, res, next) => {
   const adminId = req.admin._id;
@@ -933,3 +947,7 @@ export const editProfileByAdmin = async (req, res, next) => {
     next(error);
   }
 };
+
+
+
+//--------------------------------------------------------------------------------------------------

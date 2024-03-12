@@ -22,6 +22,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage }).fields([
   { name: "screenshot", maxCount: 1 },
+  { name: "homeImage", maxCount: 1 },
+  { name: "videoThambnail", maxCount: 1 },
+  { name: "memberImage", maxCount: 1 },
+
+
 ]);
 
 export default upload;

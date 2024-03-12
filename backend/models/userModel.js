@@ -90,7 +90,6 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
     sponser: {
       type: mongoose.Schema.Types.ObjectId,
@@ -118,8 +117,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     franchiseName: {
-      type: String,
-      unique: true,
+      type: String
     },
         state: {
           type: String,

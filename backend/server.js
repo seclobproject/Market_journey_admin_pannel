@@ -37,16 +37,16 @@ app.use((err, req, res, next) => {
 // Production setup
 if (NODE_ENV === "production") {
     // Serve frontend files
-    app.use(express.static("frontend"));
+    app.use(express.static("frontend/dist"));
 
     // Handle React routing, return all requests to React app
     app.get("*", (req, res) => {
-        res.sendFile("frontend/index.html", { root: "." });
+        res.sendFile("index.html", { root: "./frontend/dist" });
     });
 }
 
 // Starting the server
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 6003;
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });

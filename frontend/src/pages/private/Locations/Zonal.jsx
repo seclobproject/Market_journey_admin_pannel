@@ -168,7 +168,9 @@ function Zonal() {
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">Zonal Name</h6>
                     </th>
-                    
+                    <th>
+                        <h6 className="fs-4 fw-semibold mb-0">Actions</h6>
+                      </th>
                     
                     
                     <th />
@@ -183,7 +185,21 @@ function Zonal() {
                   <td>{zonals?.stateName && zonals.stateName.toUpperCase()||"--"}</td>
                   <td>{zonals?.districtName && zonals.districtName.toUpperCase()||"--"}</td>
                   <td>{zonals?.name && zonals.name.toUpperCase()||"--"}</td>
-
+                  {/* <td>
+                              {" "}
+                              <a
+                                className="dropdown-item d-flex align-items-center gap-3"
+                                onClick={() => {
+                                  setZonalModal({ show: true, id: null });
+                                  setAddZonal(zonals);
+                                }}
+                              >
+                                <i
+                                  className="fs-4 fas fa-pencil-alt"
+                                  style={{ color: "red" }}
+                                ></i>
+                              </a>
+                            </td> */}
 
 
 
@@ -339,8 +355,8 @@ function Zonal() {
              
 
             <div className="col-12 mt-4">
-              <button type="submit" className="btn btn-custom float-end ms-1">
-              Save
+            <button type="submit" className="btn btn-custom float-end ms-1">
+                {addzonal?.id ? "Update" : "Save"}
               </button>
             </div>
           </Form>

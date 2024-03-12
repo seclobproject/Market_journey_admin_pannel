@@ -131,10 +131,10 @@ function District() {
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">District Name</h6>
                     </th>
+                    <th>
+                        <h6 className="fs-4 fw-semibold mb-0">Actions</h6>
+                      </th>
                    
-                    {/* <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Package</h6>
-                    </th> */}
                     <th />
                   </tr>
                 </thead>
@@ -156,10 +156,20 @@ function District() {
                           </td>
                          
                           {/* <td>
-                            {(districts?.packageAmount &&
-                              districts.packageAmount) ||
-                              "--"}
-                          </td> */}
+                              {" "}
+                              <a
+                                className="dropdown-item d-flex align-items-center gap-3"
+                                onClick={() => {
+                                  setDistrictModal({ show: true, id: null });
+                                  setAddDistrict(districts);
+                                }}
+                              >
+                                <i
+                                  className="fs-4 fas fa-pencil-alt"
+                                  style={{ color: "red" }}
+                                ></i>
+                              </a>
+                            </td> */}
                         </tr>
                       ))}
                     </>
@@ -277,8 +287,8 @@ function District() {
             </div> */}
 
             <div className="col-12 mt-4">
-              <button type="submit" className="btn btn-custom float-end ms-1">
-                {addDistrict?._id ? "Update" : "Save"}
+            <button type="submit" className="btn btn-custom float-end ms-1">
+                {addDistrict?.id ? "Update" : "Save"}
               </button>
             </div>
           </Form>

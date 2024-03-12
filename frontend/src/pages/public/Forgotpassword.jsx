@@ -103,7 +103,7 @@ Username                          </label>
                             //   value={formData?.username}
                             type="email"
                             required
-                            placeholder="Enter Username"
+                            placeholder="Enter username"
 
                             className="form-control"
                             id="exampleInputEmail1"
@@ -117,7 +117,7 @@ Username                          </label>
                             }}
                           />
                           <Form.Control.Feedback type="invalid">
-                            Please enter the Username
+                            Please enter username.
                           </Form.Control.Feedback>
                         </div>
                       
@@ -153,7 +153,7 @@ Username                          </label>
                               )}
                             </button>
                             <Form.Control.Feedback type="invalid">
-                              Please enter the password
+                              Please enter password.
                             </Form.Control.Feedback>
                           </div>
                         </div>
@@ -166,7 +166,7 @@ Username                          </label>
                           <div className="input-group auth-pass-inputgroup">
                             <input
                               className="form-control"
-                              placeholder="Enter new password"
+                              placeholder="Confirm your password"
                               aria-label="Password"
                               aria-describedby="password-addon"
                               required
@@ -193,7 +193,7 @@ Username                          </label>
                               )}
                             </button>
                             <Form.Control.Feedback type="invalid">
-                              Please enter the password
+                              Please confirm your password.
                             </Form.Control.Feedback>
                           </div>
                         </div>

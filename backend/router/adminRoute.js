@@ -4,7 +4,7 @@ import {acceptUser, addDistrict, addPanchayath, addState, addZonal, adminLogin, 
 import { protectAdmin } from "../middleware/authMiddleware.js";
 import { addPackage, editPackage, viewPackages } from "../controller/packageController.js";
 import { addUser } from "../controller/userController.js";
-import { deleteSingleAward, deleteSingleImage, deleteSingleVideo, updateAwardData, updateHomeVideo, uploadAwardDetails, uploadHomeImages, uploadHomeVideos, viewAwardDetails, viewHomeImages, viewHomeVideos } from "../controller/uploadController.js";
+import { addAlert, addNews, deleteSingleAlert, deleteSingleAward, deleteSingleImage, deleteSingleNews, deleteSingleVideo, editAlert, editNews, updateAwardData, updateHomeVideo, uploadAwardDetails, uploadHomeImages, uploadHomeVideos, viewAlert, viewAwardDetails, viewHomeImages, viewHomeVideos, viewNews } from "../controller/uploadController.js";
 
 adminRouter.post("/admin-login", adminLogin);
 adminRouter.post("/forgot-password", forgotPassword);
@@ -30,9 +30,13 @@ adminRouter.post("/upload-award-details", protectAdmin,uploadAwardDetails);
 adminRouter.post("/edit-award-details/:id", protectAdmin,updateAwardData);
 adminRouter.post("/delete-award/:id", protectAdmin,deleteSingleAward);
 
+adminRouter.post("/add-alert", protectAdmin,addAlert);
+adminRouter.post("/edit-alert/:id", protectAdmin,editAlert);
+adminRouter.post("/delete-alert/:id", protectAdmin,deleteSingleAlert);
 
-
-
+adminRouter.post("/add-news", protectAdmin,addNews);
+adminRouter.post("/edit-news/:id", protectAdmin,editNews);
+adminRouter.post("/delete-news/:id", protectAdmin,deleteSingleNews);
 
 
 adminRouter.get("/view-states",viewStates);
@@ -53,6 +57,8 @@ adminRouter.get("/view-user-profile/:id", protectAdmin, viewUserDetails);
 adminRouter.get("/view-home-images", viewHomeImages);
 adminRouter.get("/view-home-videos", viewHomeVideos);
 adminRouter.get("/view-award-details", viewAwardDetails);
+adminRouter.get("/view-alert-details", viewAlert);
+adminRouter.get("/view-news-details", viewNews);
 
 
 

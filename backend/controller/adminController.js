@@ -31,7 +31,8 @@ export const adminLogin = async (req, res, next) => {
   
         res.status(200).json({
           id: validAdmin._id,
-          email: validAdmin.username,
+          name: validAdmin.name,
+          email:validAdmin.email,
           token_type: "Bearer",
           access_token: token,
           sts: "01",
@@ -68,7 +69,19 @@ export const adminLogin = async (req, res, next) => {
   };
 
 
+//view admin profile
 
+
+// export const viewAdminProfile=async(req,res,next)=>{
+//   const adminId = req.admin._id;
+
+//   try {
+//     const admin = await Admin.findById(adminId);
+//     if (admin) {
+//   } catch (error) {
+    
+//   }
+// }
 
 
 //view all users by Admin---------------------------------------------------------------------------------------------------------------------

@@ -39,7 +39,6 @@ export const addUser = async (req, res, next) => {
         let isMobileFranchise;
         let districtFranchise;
         let zonalFranchise;
-        console.log(district);
         const existingUser = await User.findOne({ email });
         const existingUserByPhone = await User.findOne({ phone });
         if (existingUser || existingUserByPhone) {
@@ -48,13 +47,18 @@ export const addUser = async (req, res, next) => {
             
 
         if(franchise==="District Franchise") {
+          const districtData=await User.findOne({franchiseName:franchiseName})
+          if(districtData)return next(errorHandler(401, "This District franchise Already taken!!"));
           isDistrictFranchise=true;
           zonal=null;
           panchayath=null;
         }else if(franchise==="Zonal Franchise"){
+          const zonalData=await User.findOne({franchiseName:franchiseName})
+          if(zonalData)return next(errorHandler(401, "This Zonal franchise Already taken!!"));
           isZonalFranchise=true;
           panchayath=null;
         }else{
+          franchiseName=null;
           isMobileFranchise=true;
           const districtData=await User.findOne({franchiseName:district})
           districtFranchise=districtData._id;

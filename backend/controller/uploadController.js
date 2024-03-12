@@ -1,9 +1,11 @@
 import upload from "../config/multifileUpload.js";
 import { errorHandler } from "../middleware/errorHandler.js";
 import Admin from "../models/adminModel.js";
+import Alert from "../models/alertModel.js";
 import Award from "../models/awardModel.js";
 import HomeImage from "../models/homeImageModel.js";
 import homeVideo from "../models/homeVideoModel.js";
+import LiveNews from "../models/liveNewsModel.js";
 import User from "../models/userModel.js";
 
 
@@ -403,3 +405,247 @@ try {
 
 //---------------------------------------------live news updates--------------------------------------------------------------
 
+// add Alert
+export const addNews = async (req, res, next) => {
+  try {
+      
+      const {news } = req.body;
+        const adminId = req.admin._id;
+        const admin = await Admin.findById(adminId);
+
+      if (!admin) {
+        return next(errorHandler(401, "Admin not found"));
+      }
+
+      const newNews = await LiveNews.create({
+        news
+      });
+
+if(newNews){
+  return res.status(201).json({
+    newNews,
+    sts: "01",
+    msg: "News Added Successfully",
+  });
+}
+      
+    
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+  //edit alert
+
+  export const editNews = async (req, res, next) => {
+    try {
+      const adminId = req.admin._id;
+      const { id } = req.params;
+      const { news} = req.body;
+
+      // Find the admin
+      const admin = await Admin.findById(adminId);
+      if (!admin) {
+        return next(errorHandler(401, "Admin not found"));
+      }
+
+      // Find the Alert data to edit
+      let newsData = await LiveNews.findById(id);
+      if (!newsData) {
+        return next(errorHandler(404, "Alert data not found"));
+      }
+
+      // Update the Alert data with the new values if they are provided
+      newsData.news = news || newsData.news;
+
+      // Save the updated SEO data
+      const updatedNews = await newsData.save();
+
+      // Respond with the updated SEO data
+      if(updatedNews){
+        return res.status(200).json({
+          updatedNews,
+            sts: "01",
+            msg: "News data updated successfully",
+          });
+      }
+
+
+    } catch (error) {
+      next(error);
+    }
+  };
+
+    // delete single Video
+    export const deleteSingleNews = async (req, res, next) => {
+      try {
+        const { id } = req.params;
+        const adminId = req.admin._id;
+        const admin = await Admin.findById(adminId);
+      
+        if (admin) {
+          const deletedNews = await LiveNews.findByIdAndDelete(id);
+      
+          if (deletedNews) {
+            res.status(200).json({
+              deletedNews,
+              sts: "01",
+              msg: "News deleted successfully",
+            });
+          } else {
+            next(errorHandler(404,"News Data not found"));
+          }
+        } else {
+          next(errorHandler(401, "Admin not found"));
+        }
+      } catch (error) {
+        next(error);
+      }
+      };
+      
+//view alert data
+
+  export const viewNews=async(req,res,next)=>{
+    try {
+      const newsData=await LiveNews.find()
+      if(newsData){
+        res.status(200).json({
+          newsData,
+          sts: "01",
+          msg: "news data get Success",
+        });
+      }else {
+      next(errorHandler("news not found"));
+    }
+  } catch (error) {
+    next(error);
+  }
+
+  }
+
+
+
+
+//--------------------------------------------------Alert---------------------------------------------------------------------
+
+// add Alert
+export const addAlert = async (req, res, next) => {
+  try {
+      
+      const { title, description } = req.body;
+        const adminId = req.admin._id;
+        const admin = await Admin.findById(adminId);
+
+      if (!admin) {
+        return next(errorHandler(401, "Admin not found"));
+      }
+
+      const alert = await Alert.create({
+        title,
+        description
+      });
+
+if(alert){
+  return res.status(201).json({
+    alert,
+    sts: "01",
+    msg: "Alert Added Successfully",
+  });
+}
+      
+    
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+  //edit alert
+
+  export const editAlert = async (req, res, next) => {
+    try {
+      const adminId = req.admin._id;
+      const { id } = req.params;
+      const { title, description} = req.body;
+
+      // Find the admin
+      const admin = await Admin.findById(adminId);
+      if (!admin) {
+        return next(errorHandler(401, "Admin not found"));
+      }
+
+      // Find the Alert data to edit
+      let alertData = await Alert.findById(id);
+      if (!alertData) {
+        return next(errorHandler(404, "Alert data not found"));
+      }
+
+      // Update the Alert data with the new values if they are provided
+      alertData.title = title || alertData.title;
+      alertData.description = description || alertData.description;
+
+      // Save the updated SEO data
+      const updatedAlert = await alertData.save();
+
+      // Respond with the updated SEO data
+      if(updatedAlert){
+        return res.status(200).json({
+          updatedAlert,
+            sts: "01",
+            msg: "Alert data updated successfully",
+          });
+      }
+
+
+    } catch (error) {
+      next(error);
+    }
+  };
+
+    // delete single Video
+    export const deleteSingleAlert = async (req, res, next) => {
+      try {
+        const { id } = req.params;
+        const adminId = req.admin._id;
+        const admin = await Admin.findById(adminId);
+      
+        if (admin) {
+          const deletedAlert = await Alert.findByIdAndDelete(id);
+      
+          if (deletedAlert) {
+            res.status(200).json({
+              deletedAlert,
+              sts: "01",
+              msg: "Alert deleted successfully",
+            });
+          } else {
+            next(errorHandler(404,"Alert Data not found"));
+          }
+        } else {
+          next(errorHandler(401, "Admin not found"));
+        }
+      } catch (error) {
+        next(error);
+      }
+      };
+      
+//view alert data
+
+  export const viewAlert=async(req,res,next)=>{
+    try {
+      const alertData=await Alert.find()
+      if(alertData){
+        res.status(200).json({
+          alertData,
+          sts: "01",
+          msg: "alert data get Success",
+        });
+      }else {
+      next(errorHandler("alerts not found"));
+    }
+  } catch (error) {
+    next(error);
+  }
+
+  }

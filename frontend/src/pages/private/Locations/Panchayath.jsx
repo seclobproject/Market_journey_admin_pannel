@@ -25,6 +25,7 @@ function Panchayath() {
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
   const [addPanchayath, setAddPanchayath] = useState({});
+  console.log(addPanchayath,"addPanchayath");
   const [stateList, setStateList] = useState([]);
   const [selectedState, setSelectedState] = useState(null);
   const [districtList, setdistrictList] = useState([]);
@@ -202,7 +203,9 @@ function Panchayath() {
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Zonal Name</h6>
                       </th>
-                     
+                      {/* <th>
+                        <h6 className="fs-4 fw-semibold mb-0">Actions</h6>
+                      </th> */}
                       
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">
@@ -241,7 +244,22 @@ function Panchayath() {
                                     panchayaths.name.toUpperCase()) ||
                                     "--"}
                                 </td>
-                              
+                                       
+                          {/* <td>
+                              {" "}
+                              <a
+                                className="dropdown-item d-flex align-items-center gap-3"
+                                onClick={() => {
+                                  setPanchayathModal({ show: true, id: null });
+                                  setAddPanchayath(panchayaths);
+                                }}
+                              >
+                                <i
+                                  className="fs-4 fas fa-pencil-alt"
+                                  style={{ color: "red" }}
+                                ></i>
+                              </a>
+                            </td> */}
                              
                                
                               </tr>
@@ -403,8 +421,8 @@ function Panchayath() {
            
 
             <div className="col-12 mt-4">
-              <button type="submit" className="btn btn-custom float-end ms-1">
-                Save
+            <button type="submit" className="btn btn-custom float-end ms-1">
+                {addPanchayath?._id ? "Update" : "Save"}
               </button>
             </div>
           </Form>

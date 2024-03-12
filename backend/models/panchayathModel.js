@@ -17,7 +17,11 @@ const panchayathSchema = new mongoose.Schema(
       type: String
     },
     count:{
-      type:Number
+      type:Number 
+    },
+    editable:{
+      type:Boolean,
+      default:true
     }
   },
   {

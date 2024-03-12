@@ -7,6 +7,7 @@ import User from "../models/userModel.js";
 import upload from "../config/multifileUpload.js";
 import District from "../models/districtModel.js";
 import Zonal from "../models/zonalModel.js";
+import Panchayath from "../models/panchayathModel.js";
 
 
 
@@ -39,7 +40,6 @@ export const addUser = async (req, res, next) => {
         let isMobileFranchise;
         let districtFranchise;
         let zonalFranchise;
-        console.log(district);
         const existingUser = await User.findOne({ email });
         const existingUserByPhone = await User.findOne({ phone });
         if (existingUser || existingUserByPhone) {
@@ -48,13 +48,18 @@ export const addUser = async (req, res, next) => {
             
 
         if(franchise==="District Franchise") {
+          const districtData=await User.findOne({franchiseName:franchiseName})
+          if(districtData)return next(errorHandler(401, "This District franchise Already taken!!"));
           isDistrictFranchise=true;
           zonal=null;
           panchayath=null;
         }else if(franchise==="Zonal Franchise"){
+          const zonalData=await User.findOne({franchiseName:franchiseName})
+          if(zonalData)return next(errorHandler(401, "This Zonal franchise Already taken!!"));
           isZonalFranchise=true;
           panchayath=null;
         }else{
+          franchiseName=null;
           isMobileFranchise=true;
           const districtData=await User.findOne({franchiseName:district})
           districtFranchise=districtData._id;
@@ -99,12 +104,19 @@ export const addUser = async (req, res, next) => {
         if(isDistrictFranchise){
           const districtTakeData=await District.findOne({name:franchiseName})
           districtTakeData.taken=true;
+          districtTakeData.editable=false;
           await districtTakeData.save();
         }
         if(isZonalFranchise){
           const zonalTakeData=await Zonal.findOne({name:franchiseName})
           zonalTakeData.taken=true;
+          zonalTakeData.editable=false;
           await zonalTakeData.save();
+        }
+        if(isMobileFranchise){
+          const panchayathData=await Panchayath.findOne({name:panchayath})
+          panchayathData.editable=false;
+          await panchayathData.save();
         }
 
         res.status(200).json({
@@ -426,7 +438,7 @@ export const viewLevel1User=async(req,res,next)=>{
         {
           path: "childLevel1",
           select:
-            "username ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName",
+            "name ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName",
         },
       ]);
 
@@ -464,7 +476,7 @@ export const viewLevel2User=async(req,res,next)=>{
         {
           path: "childLevel2",
           select:
-            "username ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName",
+            "name ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName",
         },
       ]);
 

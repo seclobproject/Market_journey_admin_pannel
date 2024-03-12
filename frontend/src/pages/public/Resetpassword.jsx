@@ -153,7 +153,7 @@ Username                          </label>
                               )}
                             </button>
                             <Form.Control.Feedback type="invalid">
-                              Please enter the password
+                              Please enter password
                             </Form.Control.Feedback>
                           </div>
                         </div>
@@ -166,7 +166,7 @@ Username                          </label>
                           <div className="input-group auth-pass-inputgroup">
                             <input
                               className="form-control"
-                              placeholder="Enter new password"
+                              placeholder="Confirm your password"
                               aria-label="Password"
                               aria-describedby="password-addon"
                               required
@@ -193,7 +193,7 @@ Username                          </label>
                               )}
                             </button>
                             <Form.Control.Feedback type="invalid">
-                              Please enter the password
+                              Please confirm password
                             </Form.Control.Feedback>
                           </div>
                         </div>

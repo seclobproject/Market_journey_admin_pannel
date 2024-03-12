@@ -11,6 +11,10 @@ const stateSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "District",
       }],
+      editable:{
+        type:Boolean,
+        default:true
+      }
 
   },
   {

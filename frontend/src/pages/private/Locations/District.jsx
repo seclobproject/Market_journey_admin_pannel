@@ -131,9 +131,9 @@ function District() {
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">District Name</h6>
                     </th>
-                    <th>
+                    {/* <th>
                         <h6 className="fs-4 fw-semibold mb-0">Actions</h6>
-                      </th>
+                      </th> */}
                    
                     <th />
                   </tr>

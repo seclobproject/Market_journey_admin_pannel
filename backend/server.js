@@ -37,11 +37,11 @@ app.use((err, req, res, next) => {
 // Production setup
 if (NODE_ENV === "production") {
     // Serve frontend files
-    app.use(express.static("frontend/dist"));
+    app.use(express.static("frontend"));
 
     // Handle React routing, return all requests to React app
     app.get("*", (req, res) => {
-        res.sendFile("index.html", { root: "./frontend/dist" });
+        res.sendFile("frontend/index.html", { root: "." });
     });
 }
 

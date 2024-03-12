@@ -7,6 +7,7 @@ import User from "../models/userModel.js";
 import upload from "../config/multifileUpload.js";
 import District from "../models/districtModel.js";
 import Zonal from "../models/zonalModel.js";
+import Panchayath from "../models/panchayathModel.js";
 
 
 
@@ -103,12 +104,19 @@ export const addUser = async (req, res, next) => {
         if(isDistrictFranchise){
           const districtTakeData=await District.findOne({name:franchiseName})
           districtTakeData.taken=true;
+          districtTakeData.editable=false;
           await districtTakeData.save();
         }
         if(isZonalFranchise){
           const zonalTakeData=await Zonal.findOne({name:franchiseName})
           zonalTakeData.taken=true;
+          zonalTakeData.editable=false;
           await zonalTakeData.save();
+        }
+        if(isMobileFranchise){
+          const panchayathData=await Panchayath.findOne({name:panchayath})
+          panchayathData.editable=false;
+          await panchayathData.save();
         }
 
         res.status(200).json({

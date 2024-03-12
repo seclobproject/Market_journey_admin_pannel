@@ -20,6 +20,10 @@ const zonalSchema = new mongoose.Schema(
       taken:{
         type:Boolean,
         default:false
+      },
+      editable:{
+        type:Boolean,
+        default:true
       }
 
   },

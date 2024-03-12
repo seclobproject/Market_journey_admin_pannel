@@ -103,7 +103,7 @@ function Home() {
 
 
         <div className="row">
-        <div className="col-6 mb-3 mx-auto">
+        {/* <div className="col-6 mb-3 mx-auto">
   <div className="card w-100">
     <QRCode
       size={200}
@@ -112,9 +112,9 @@ function Home() {
       viewBox={`0 0 256 256`}
     />
   </div>
-</div>
+</div> */}
 
-          <div className="col-lg-6 d-flex align-items-stretch">
+          <div className="col-lg-12 d-flex align-items-stretch">
             <div className="card w-100">
               <div className="card-body p-4">
                 <h5 className="card-title fw-semibold mb-4">

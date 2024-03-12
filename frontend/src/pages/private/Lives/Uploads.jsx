@@ -203,7 +203,7 @@ function Uploads() {
                                 <td>
                                   <img
                                     alt="images"
-                                    src={`                                  http://192.168.29.152:8000/uploads/${image?.homeImage}
+                                    src={`                                  http://192.168.29.152:6003/uploads/${image?.homeImage}
                                   `}
                                     style={{
                                       width: "100px",

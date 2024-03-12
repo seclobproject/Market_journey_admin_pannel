@@ -80,7 +80,7 @@ function Header() {
                           aria-labelledby="drop2"
                         >
                           <div className="message-body">
-                            <Link
+                            {/* <Link
                               to={"/admin/profile"}
                               className="d-flex align-items-center gap-2 dropdown-item"
                             >
@@ -93,7 +93,7 @@ function Header() {
                             >
                               <i className="ti ti-mail fs-6" />
                               <p className="mb-0 fs-3">Change Password</p>
-                            </Link>
+                            </Link> */}
 
                             <a
                               href={undefined}

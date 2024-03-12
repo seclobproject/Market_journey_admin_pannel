@@ -78,7 +78,7 @@ function Sidebar() {
       title: "My Account",
       icon: "fas fa-user",
       sub: [
-        { title: "Profile", route: "admin/profile",  },
+        // { title: "Profile", route: "admin/profile",  },
         { title: "Change password", route: "resetpassword",  },
 
       ],

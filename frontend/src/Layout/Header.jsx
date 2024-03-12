@@ -51,10 +51,10 @@ console.log(user,"user from headre")
       </a>
       <div className="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
         <div className="message-body">
-          <Link to={'/admin/profile'} className="d-flex align-items-center gap-2 dropdown-item">
+          {/* <Link to={'/admin/profile'} className="d-flex align-items-center gap-2 dropdown-item">
             <i className="ti ti-user fs-6" />
             <p className="mb-0 fs-3">My Profile</p>
-          </Link>
+          </Link> */}
           <Link to={'/resetpassword'} className="d-flex align-items-center gap-2 dropdown-item">
             <i className="ti ti-mail fs-6" />
             <p className="mb-0 fs-3">Change Password</p>

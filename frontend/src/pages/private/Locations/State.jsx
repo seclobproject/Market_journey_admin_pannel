@@ -5,26 +5,27 @@ import DeleteConfirmation from "../../../Components/DeleteConfirmation";
 import { ContextData } from "../../../Services/Context";
 import { Form } from "react-bootstrap";
 import { ApiCall } from "../../../Services/Api";
-import { statePageUrl, statelistPageUrl } from "../../../utils/Constants";
+import { editStatepageUrl, statePageUrl, statelistPageUrl } from "../../../utils/Constants";
 import { Show_Toast } from "../../../utils/Toast";
 import Loader from "../../../Components/Loader";
+import { startSession } from "mongoose";
 
 function State() {
-  
   const [stateModal, setStateModal] = useState({ show: false, id: null });
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
   const [addState, setAddState] = useState({});
+  console.log(addState,"addState...........");
   const [stateList, setStateList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   //---------add State---------
   const addStateFun = async () => {
     try {
-      if (addState._id) {
+      if (addState.id) {
         const updateResponse = await ApiCall(
           "put",
-          `${statePageUrl}/${addState._id}`,
+          `${editStatepageUrl}/${addState._id}`,
           addState
         );
         if (updateResponse.status === 200) {
@@ -56,21 +57,18 @@ function State() {
   //-----------list state--------
   const getStateList = async () => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const response = await ApiCall("get", statelistPageUrl);
 
       if (response.status === 200) {
         setStateList(response?.data?.states);
         setIsLoading(false);
-
       } else {
         console.error(
           "Error fetching state list. Unexpected status:",
           response.status
-          
         );
         setIsLoading(false);
-
       }
     } catch (error) {
       console.error("Error fetching state list:", error);
@@ -85,11 +83,13 @@ function State() {
     <>
       <SlideMotion>
         <div className="card position-relative overflow-hidden">
-         
           <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
-          <h5 className="card-title fw-semibold mb-0 lh-sm px-0 mt-3" style={{color: '#F7AE15'}}>
-            States
-          </h5>
+            <h5
+              className="card-title fw-semibold mb-0 lh-sm px-0 mt-3"
+              style={{ color: "#F7AE15" }}
+            >
+              States
+            </h5>
 
             <div>
               <button
@@ -107,41 +107,60 @@ function State() {
           {isLoading ? (
             <Loader />
           ) : (
-          <div className="card-body p-2">
-            <div className="table-container table-responsive rounded-2 mb-4">
-              <table className="table border text-nowrap customize-table mb-0 align-middle">
-                <thead className="text-dark fs-4 table-light">
-                  <tr>
-                    <th>
-                      <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
-                    </th>
-                    <th>
-                      <h6 className="fs-4 fw-semibold mb-0">State Name</h6>
-                    </th>
-                    <th />
-                  </tr>
-                </thead>
-                <tbody>
-                  {stateList?.length ? (
-                    <>
-                      {stateList.map((states, index) => (
-                        <tr key={index}>
-                          <td>{index + 1}</td>
-                          <td>{states?.name && states.name.toUpperCase()}</td>
-                        </tr>
-                      ))}
-                    </>
-                  ) : (
+            <div className="card-body p-2">
+              <div className="table-container table-responsive rounded-2 mb-4">
+                <table className="table border text-nowrap customize-table mb-0 align-middle">
+                  <thead className="text-dark fs-4 table-light">
                     <tr>
-                      <td colSpan={20} style={{ textAlign: "center" }}>
-                        <b>No State Found</b>{" "}
-                      </td>
+                      <th>
+                        <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
+                      </th>
+                      <th>
+                        <h6 className="fs-4 fw-semibold mb-0">State Name</h6>
+                      </th>
+                      {/* <th>
+                        <h6 className="fs-4 fw-semibold mb-0">Actions</h6>
+                      </th> */}
+                      <th />
                     </tr>
-                  )}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {stateList?.length ? (
+                      <>
+                        {stateList.map((states, index) => (
+                          <tr key={index}>
+                            <td>{index + 1}</td>
+                            <td>{states?.name && states.name.toUpperCase()}</td>
+                            <td>
+                              {" "}
+                              {/* {states?.iseditable==="false"} */}
+                              {/* <a
+                                className="dropdown-item d-flex align-items-center gap-3"
+                                onClick={() => {
+                                  setStateModal({ show: true, id: null });
+                                  setAddState(states);
+                                }}
+                              >
+                                <i
+                                  className="fs-4 fas fa-pencil-alt"
+                                  style={{ color: "red" }}
+                                ></i>
+                              </a> */}
+                            </td>
+                          </tr>
+                        ))}
+                      </>
+                    ) : (
+                      <tr>
+                        <td colSpan={20} style={{ textAlign: "center" }}>
+                          <b>No State Found</b>{" "}
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
           )}
           <div className="me-2">
             {/* -------------------------pagination--------------------- */}
@@ -159,11 +178,7 @@ function State() {
           onHide={() => {
             setStateModal({ show: false, id: null });
           }}
-          title={
-            <h5 style={{ color: '#F7AE15', margin: 0}}>
-             Add State
-            </h5>
-          }
+          title={<h5 style={{ color: "#F7AE15", margin: 0 }}>Add State</h5>}
           centered
           width={"500px"}
         >
@@ -193,7 +208,7 @@ function State() {
 
             <div className="col-12 mt-4">
               <button type="submit" className="btn btn-custom float-end ms-1">
-                {addState?._id ? "Update" : "Save"}
+                {addState?.id ? "Update" : "Save"}
               </button>
             </div>
           </Form>

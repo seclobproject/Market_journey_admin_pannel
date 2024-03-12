@@ -5,7 +5,7 @@ export const Show_Toast = (message, type) => {
     if (type) {
       toast.success(message, {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 1000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -17,7 +17,7 @@ export const Show_Toast = (message, type) => {
     } else {
       toast.error(message, {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 1000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

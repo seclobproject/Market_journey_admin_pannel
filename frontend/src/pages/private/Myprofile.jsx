@@ -34,19 +34,19 @@ function Myprofile() {
             <div className="col-lg-4 order-lg-1 order-2">
               <div className="d-flex align-items-center justify-content-around m-4">
                 <div className="text-center">
-                  <i className="ti ti-file-description fs-6 d-block mb-2" />
-                  <h4 className="mb-0 fw-semibold lh-1">938</h4>
-                  <p className="mb-0 fs-4">Posts</p>
+                  {/* <i className="ti ti-file-description fs-6 d-block mb-2" /> */}
+                  {/* <h4 className="mb-0 fw-semibold lh-1">938</h4>
+                  <p className="mb-0 fs-4">Posts</p> */}
                 </div>
                 <div className="text-center">
-                  <i className="ti ti-user-circle fs-6 d-block mb-2" />
-                  <h4 className="mb-0 fw-semibold lh-1">3,586</h4>
-                  <p className="mb-0 fs-4">Followers</p>
+                  {/* <i className="ti ti-user-circle fs-6 d-block mb-2" /> */}
+                  {/* <h4 className="mb-0 fw-semibold lh-1">3,586</h4>
+                  <p className="mb-0 fs-4">Followers</p> */}
                 </div>
                 <div className="text-center">
-                  <i className="ti ti-user-check fs-6 d-block mb-2" />
-                  <h4 className="mb-0 fw-semibold lh-1">2,659</h4>
-                  <p className="mb-0 fs-4">Following</p>
+                  {/* <i className="ti ti-user-check fs-6 d-block mb-2" /> */}
+                  {/* <h4 className="mb-0 fw-semibold lh-1">2,659</h4>
+                  <p className="mb-0 fs-4">Following</p> */}
                 </div>
               </div>
             </div>
@@ -72,8 +72,8 @@ function Myprofile() {
             
             <li className="nav-item" role="presentation">
               <button className="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6" id="pills-gallery-tab" data-bs-toggle="pill" data-bs-target="#pills-gallery" type="button" role="tab" aria-controls="pills-gallery" aria-selected="false">
-                <i className="ti ti-photo-plus me-2 fs-6" />
-                <span className="d-none d-md-block" style={{color:'black'}}>Gallery</span>
+                {/* <i className="ti ti-photo-plus me-2 fs-6" /> */}
+                {/* <span className="d-none d-md-block" style={{color:'black'}}>Gallery</span> */}
               </button>
             </li>
           </ul>
@@ -93,22 +93,22 @@ function Myprofile() {
                 </div>
           
                   <ul className="list-unstyled mb- mt-3">
-                    <li className="d-flex align-items-center gap-3 mb-4">
+                    {/* <li className="d-flex align-items-center gap-3 mb-4">
                       <i className="ti ti-briefcase text-dark fs-6" />
                       <h6 className="fs-4 fw-semibold mb-0">Sir, P P Institute Of Science</h6>
-                    </li>
+                    </li> */}
                     <li className="d-flex align-items-center gap-3 mb-4">
                       <i className="ti ti-mail text-dark fs-6" />
-                      <h6 className="fs-4 fw-semibold mb-0">xyzjonathan@gmail.com</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">admin@gmail.com</h6>
                     </li>
-                    <li className="d-flex align-items-center gap-3 mb-4">
+                    {/* <li className="d-flex align-items-center gap-3 mb-4">
                       <i className="ti ti-device-desktop text-dark fs-6" />
                       <h6 className="fs-4 fw-semibold mb-0">www.xyz.com</h6>
                     </li>
                     <li className="d-flex align-items-center gap-3 mb-2">
                       <i className="ti ti-map-pin text-dark fs-6" />
                       <h6 className="fs-4 fw-semibold mb-0">Newyork, USA - 100001</h6>
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
               </div>

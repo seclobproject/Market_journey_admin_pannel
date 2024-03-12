@@ -25,7 +25,7 @@ function Uploadvideos() {
   const [viewImage, setViewImage] = useState({});
   const [details, setDetails] = useState({});
   const [videoList, setVideoList] = useState({});
-
+  const [errorMessage, setErrorMessage] = useState('');
   
 
   //-----------list  video--------
@@ -81,6 +81,9 @@ function Uploadvideos() {
   //-------Image upload----------
   const addVideoFun = async (e) => {
     try {
+      if (!filename?.name) {
+        setErrorMessage("Please select an Video Thumbnail")
+      }
       if (addVideo?._id) {
         const formData = new FormData();
         formData.append("videoThambnail", addVideo, addVideo?.name);
@@ -105,7 +108,7 @@ function Uploadvideos() {
           getVideoList();
           // getImageList();
           // setDescription("")
-          Show_Toast("Video uploaded successfully", true);
+          Show_Toast("Video updated successfully", true);
         } else {
           Show_Toast("Video update failed", false);
         }
@@ -190,6 +193,7 @@ function Uploadvideos() {
                     setViewImage("");
                     setDetails("");
                     setAddVideo("");
+                    setErrorMessage("")
                   }}
                 >
                   Add
@@ -209,7 +213,7 @@ function Uploadvideos() {
                           <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                         </th>
                         <th>
-                          <h6 className="fs-4 fw-semibold mb-0">Thumbanil</h6>
+                          <h6 className="fs-4 fw-semibold mb-0">Thumbnail</h6>
                         </th>
                         <th>
                           <h6 className="fs-4 fw-semibold mb-0">Title</h6>
@@ -371,7 +375,7 @@ function Uploadvideos() {
           <div className="mb-4">
             <div className="col-6">
               <label htmlFor="fileInput" className="form-label">
-                Upload Thumbanil
+                Upload Thumbnail
               </label>
               <div className="d-flex flex-row align-items-center">
                 <label htmlFor="fileInput" className="upload-btn">
@@ -416,7 +420,7 @@ function Uploadvideos() {
               <span>
                 {filename?.File ? (
                   <>
-                    {filename?.File}
+                    {filename?.File||"Please select Image"}
                     <span
                       style={{
                         marginLeft: "5px",
@@ -430,7 +434,9 @@ function Uploadvideos() {
                     </span>
                   </>
                 ) : (
-                  <span></span>
+                  <span>
+  {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}                  
+  </span>
                 )}
               </span>
             </p>

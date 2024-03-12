@@ -283,7 +283,7 @@ function Zonal() {
               }}
                 
                   
-                placeholder="Select a state"
+                placeholder="Select a district"
                 isSearchable={true}
               />
                 <Form.Control.Feedback type="invalid">

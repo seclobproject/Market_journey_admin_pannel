@@ -105,7 +105,7 @@ function Viewdetails() {
           <button
             className="mt-3"
             onClick={() => {
-              navigate("/member");
+              navigate(-1);
             }}
             style={{
               backgroundColor: "#00335B",
@@ -230,16 +230,21 @@ function Viewdetails() {
                                 </span>
                               </h6>
                             </li>
+{
 
-                            <li className="d-flex align-items-center gap-3 mb-4">
-                              <i className="fas fa-building text-dark fs-6" />
-                              <h6 className="fs-4 fw-semibold mb-0">
-                                Franchise Name:{" "}
-                                <span style={{ color: "rgb(247, 174, 21)" }}>
-                                  {details?.franchiseName || "--"}
-                                </span>
-                              </h6>
-                            </li>
+}
+                            {details?.franchise!== "Mobile Franchise" && (
+  <li className="d-flex align-items-center gap-3 mb-4">
+    <i className="fas fa-building text-dark fs-6" />
+    <h6 className="fs-4 fw-semibold mb-0">
+      Franchise Name:{" "}
+      <span style={{ color: "rgb(247, 174, 21)" }}>
+        {details?.franchiseName || "--"}
+      </span>
+    </h6>
+  </li>
+)}
+
                           </ul>
                         </div>
                       </div>

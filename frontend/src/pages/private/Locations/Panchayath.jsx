@@ -346,7 +346,7 @@ function Panchayath() {
                     districtName: selectedOption?.label,
                   });
                 }}
-                placeholder="Select a state"
+                placeholder="Select a district"
                 isSearchable={true}
               />
               <Form.Control.Feedback type="invalid">
@@ -371,7 +371,7 @@ function Panchayath() {
                     zonalName: selectedOption?.label,
                   });
                 }}
-                placeholder="Select a state"
+                placeholder="Select a zonal"
                 isSearchable={true}
               />
               <Form.Control.Feedback type="invalid">

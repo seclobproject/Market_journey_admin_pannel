@@ -52,6 +52,7 @@ function State() {
 
           Show_Toast("State added successfully", true);
         } else {
+          console.log(error,"error")
           Show_Toast(error, false);
         }
       }

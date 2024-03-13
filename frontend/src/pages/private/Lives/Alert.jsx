@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { Show_Toast } from "../../../utils/Toast";
 import { SlideMotion } from "../../../libs/FramerMotion";
 import Loader from "../../../Components/Loader";
 import { ContextData } from "../../../Services/Context";
@@ -12,7 +13,6 @@ import {
   editalertUrl,
   viewalertsUrl,
 } from "../../../utils/Constants";
-import { Show_Toast } from "../../../utils/Toast";
 
 function Alert() {
   const [alertModal, setAlertModal] = useState({ show: false, id: null });

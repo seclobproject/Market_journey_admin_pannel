@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { Show_Toast } from "../../../utils/Toast";
 import { SlideMotion } from "../../../libs/FramerMotion";
 import Loader from "../../../Components/Loader";
 import ModalComponent from "../../../Components/ModalComponet";
@@ -10,7 +11,6 @@ import {
   editAwardUrl,
   viewAwardUrl,
 } from "../../../utils/Constants";
-import { Show_Toast } from "../../../utils/Toast";
 import { ApiCall } from "../../../Services/Api";
 
 function Awards() {

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { Show_Toast } from "../../../utils/Toast";
 import Loader from "../../../Components/Loader";
 import { ContextData } from "../../../Services/Context";
 import { SlideMotion } from "../../../libs/FramerMotion";
@@ -10,7 +11,6 @@ import {
   uploadimageUrl,
   viewuploadsUrl,
 } from "../../../utils/Constants";
-import { Show_Toast } from "../../../utils/Toast";
 import { ApiCall } from "../../../Services/Api";
 
 function Uploads() {

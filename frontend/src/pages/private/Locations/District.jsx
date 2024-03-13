@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { Show_Toast } from "../../../utils/Toast";
 import { useNavigate } from "react-router-dom";
 import { ContextData } from "../../../Services/Context";
 import { SlideMotion } from "../../../libs/FramerMotion";
@@ -12,7 +13,6 @@ import {
   statelistPageUrl,
 } from "../../../utils/Constants";
 import { ApiCall } from "../../../Services/Api";
-import { Show_Toast } from "../../../utils/Toast";
 import Loader from "../../../Components/Loader";
 
 function District() {

@@ -62,6 +62,10 @@ export const addPackage = async (req, res, next) => {
               return next(errorHandler(401, "This Package already exists"));
           }
       }
+      const packageDetails=await Package.findOne({packageName:packageName})
+      if (packageDetails) {
+        return next(errorHandler(401, "This Package already exists"));
+    }
 
       const newPackageName = franchiseName !== "Mobile Franchise" ? franchiseName : packageName;
 

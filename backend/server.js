@@ -5,7 +5,7 @@ import adminRouter from "./router/adminRoute.js";
 import userRouter from "./router/userRoute.js";
 import dbConnect from "./config/dbConnect.js";
 
-// Importing express
+const NODE_ENV = "production";
 const app = express();
 
 // Database connection
@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Serving static files
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static("/var/www/seclob/marketjourney/uploads"));
 
 // Routes
 app.use("/api/user", userRouter);
@@ -34,8 +34,19 @@ app.use((err, req, res, next) => {
     });
 });
 
+// Production setup
+if (NODE_ENV === "production") {
+    // Serve frontend files
+    app.use(express.static("frontend"));
+
+    // Handle React routing, return all requests to React app
+    app.get("*", (req, res) => {
+        res.sendFile("frontend/index.html", { root: "." });
+    });
+}
+
 // Starting the server
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 6003;
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });

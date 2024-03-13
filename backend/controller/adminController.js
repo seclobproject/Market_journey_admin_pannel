@@ -203,7 +203,7 @@ export const addDistrict=async(req,res,next)=>{
       if(existingDistrict){
         return next(errorHandler(401, "This District already exist"));
       }
-      const stateData=await State.findOne({name:stateName});
+      const stateData=await State.findOne({name:{ $regex: new RegExp('^' + stateName + '$', 'i') }});
       if(stateData){
         const newDistrict = new District({
           name:districtNameLowercase,
@@ -291,7 +291,7 @@ export const addZonal=async(req,res,next)=>{
       if(existingZonal){
         return next(errorHandler(401, "This Zonal already exist"));
       }
-      const districtData=await District.findOne({name:districtName});
+      const districtData=await District.findOne({name:{ $regex: new RegExp('^' + districtName + '$', 'i') }});
       if(!districtData){
         return next(errorHandler(401, "This District Not Found"));
 
@@ -669,7 +669,7 @@ export const viewParamsPanchayaths = async (req, res, next) => {
               res.status(200).json({
                 districts: districtData.map(district => ({
                   id: district._id,
-                  name: district.name,
+                  districtName: district.name,
                   stateName: district.stateName,
                   isEditable:district.editable
                 })),
@@ -698,7 +698,7 @@ export const viewParamsPanchayaths = async (req, res, next) => {
               res.status(200).json({
                 zonals: zonalData.map(zonal => ({
                   id: zonal._id,
-                  name: zonal.name,
+                  zonalName: zonal.name,
                   stateName: zonal.stateName,
                   districtName: zonal.districtName, 
                   isEditable:zonal.editable
@@ -729,7 +729,7 @@ export const viewParamsPanchayaths = async (req, res, next) => {
               res.status(200).json({
                 panchayaths: panchayathData.map(panchayath => ({
                   id: panchayath._id,
-                  name: panchayath.name,
+                  panchayathName: panchayath.name,
                   stateName: panchayath.stateName,
                   zonalName: panchayath.zonalName,
                   districtName: panchayath.districtName, 

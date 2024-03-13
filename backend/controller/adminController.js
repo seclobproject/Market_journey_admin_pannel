@@ -156,7 +156,7 @@ export const editState=async(req,res,next)=>{
     const adminId=req.admin._id;
     const admin=await Admin.findById(adminId)
     const {id}=req.params;
-    const { name} = req.body;
+    const { stateName} = req.body;
 
     if(!admin){
       return next(errorHandler(401, "Admin not found"));
@@ -169,7 +169,7 @@ export const editState=async(req,res,next)=>{
       return next(errorHandler(404, "Already use this State, so can't edit "));
     }
 
-    stateData.name = name || stateData.name;
+    stateData.name = stateName || stateData.name;
     const updatedState = await stateData.save();
 
     if(updatedState){
@@ -641,7 +641,7 @@ export const viewParamsPanchayaths = async (req, res, next) => {
               res.status(200).json({
                 states: stateData.map(state => ({
                   id: state._id,
-                  name: state.name,
+                  stateName: state.name,
                   isEditable:state.editable
                 })),
                 sts: "01",

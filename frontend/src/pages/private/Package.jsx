@@ -153,15 +153,15 @@ function Package() {
                           <td>{index + 1}</td>
                           <td>
                             {(packages?.franchiseName &&
-                              packages.franchiseName.toUpperCase()) ||
-                              "--"}
+                              packages.franchiseName.toUpperCase()) 
+                              }
                           </td>
                           <td>
                             {(packages?.packageName &&
-                              packages.packageName.toUpperCase()) ||
-                              "--"}
+                              packages.packageName.toUpperCase()) 
+                              }
                           </td>
-                          <td>{packages?.packageAmount || "0"}</td>
+                          <td>{packages?.packageAmount}</td>
                           <td>
                             {" "}
                             <a

@@ -73,16 +73,16 @@ function Sidebar() {
     // { title: "Wallets", icon: "fas fa-wallet", route: "" },
     // { title: "Withdrawals", icon: "fas fa-money-bill", route: "" },
     // { title: "Awards & Rewards", icon: "fas fa-trophy", route: "user/awards" },
-    {
-      title: "My Account",
-      icon: "fas fa-user",
-      sub: [
-        // { title: "Profile", route: "admin/profile",  },
-        { title: "Change password", route: "resetpassword",  },
+    // {
+    //   title: "My Account",
+    //   icon: "fas fa-user",
+    //   sub: [
+    //     { title: "Profile", route: "admin/profile",  },
+    //     { title: "Change password", route: "resetpassword",  },
 
-      ],
+    //   ],
       
-    }
+    // }
     
   ];
 

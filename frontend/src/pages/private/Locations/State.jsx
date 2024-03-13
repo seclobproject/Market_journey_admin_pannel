@@ -6,9 +6,9 @@ import { ContextData } from "../../../Services/Context";
 import { Form } from "react-bootstrap";
 import { ApiCall } from "../../../Services/Api";
 import { editStatepageUrl, statePageUrl, statelistPageUrl } from "../../../utils/Constants";
-import { Show_Toast } from "../../../utils/Toast";
 import Loader from "../../../Components/Loader";
 import { startSession } from "mongoose";
+import { Show_Toast } from "../../../utils/Toast";
 
 function State() {
   const [stateModal, setStateModal] = useState({ show: false, id: null });

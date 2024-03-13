@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Show_Toast } from "../../../utils/Toast";
+import { Show_Toast } from "../../../utils/Toastify";
 import { SlideMotion } from "../../../libs/FramerMotion";
 import { ApiCall } from "../../../Services/Api";
 import {

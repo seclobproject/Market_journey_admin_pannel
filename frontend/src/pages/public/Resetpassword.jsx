@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Show_Toast } from '../../utils/Toast';
+import { Show_Toast } from '../../utils/Toastify';
 import { ApiCall } from '../../Services/Api';
 import { update_PasswordURL } from '../../utils/Constants';
 import { Link, useNavigate } from 'react-router-dom';

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { Show_Toast } from "../../../utils/Toast";
 import { SlideMotion } from "../../../libs/FramerMotion";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Show_Toast } from "../../../utils/Toast";
 import { edituserUrl, viewsingleuserUrl } from "../../../utils/Constants";
 import { ApiCall } from "../../../Services/Api";
 import { Button } from "react-bootstrap";

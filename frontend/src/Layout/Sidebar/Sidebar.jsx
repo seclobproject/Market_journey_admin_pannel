@@ -10,24 +10,24 @@ function Sidebar() {
   const menus = [
     { title: "Dashboard", icon: "fas fa-chart-line", route: "dashboard" },
     { title: "Package", icon: "fas fa-box", route: "packages" },
-    // {
-    //   title: "Users",
-    //   icon: "fas fa-users",
-    //   sub: [
-    //     { title: "All Users", route: "member"},
-    //     {
-    //       title: "Pending Users",
-    //       route: "user/pending",
-    //       // icon: "fas fa-user-check",
-    //     },
+    {
+      title: "Users",
+      icon: "fas fa-users",
+      sub: [
+        { title: "All Users", route: "member"},
+        {
+          title: "Pending Users",
+          route: "user/pending",
+          // icon: "fas fa-user-check",
+        },
 
-    //     {
-    //       title: "Franchise Users",
-    //       route: "settings-invoice",
-    //       // icon: "fas fa-building",
-    //     },
-    //   ],
-    // },
+        {
+          title: "Franchise Users",
+          route: "settings-invoice",
+          // icon: "fas fa-building",
+        },
+      ],
+    },
     {
       title: "Locations",
       icon: "fas fa-map-marker-alt",
@@ -47,42 +47,42 @@ function Sidebar() {
       ],
     },
 
-    // {
-    //   title: "Uploads",
-    //   icon: "fas fa-cloud-upload-alt",
-    //   // route: "user/uploads",
-    //   sub: [
-    //     {
-    //       title: "Upload Image",
-    //       route: "user/uploads",
-    //       // icon: "fas fa-user-check",
-    //     },
+    {
+      title: "Uploads",
+      icon: "fas fa-cloud-upload-alt",
+      // route: "user/uploads",
+      sub: [
+        {
+          title: "Upload Image",
+          route: "user/uploads",
+          // icon: "fas fa-user-check",
+        },
 
-    //     {
-    //       title: "Upload Video",
-    //       route: "user/videos",
+        {
+          title: "Upload Video",
+          route: "user/videos",
 
-    //       // icon: "fas fa-building",
-    //     },
+          // icon: "fas fa-building",
+        },
      
-    //   ],
-    // },
+      ],
+    },
 
-    // { title: "Alerts", icon: "fas fa-bell", route: "user/alerts" },
-    // { title: "Live News", icon: "fas fa-newspaper", route: "user/news" },
-    // { title: "Wallets", icon: "fas fa-wallet", route: "" },
-    // { title: "Withdrawals", icon: "fas fa-money-bill", route: "" },
-    // { title: "Awards & Rewards", icon: "fas fa-trophy", route: "user/awards" },
-    // {
-    //   title: "My Account",
-    //   icon: "fas fa-user",
-    //   sub: [
-    //     { title: "Profile", route: "admin/profile",  },
-    //     { title: "Change password", route: "resetpassword",  },
+    { title: "Alerts", icon: "fas fa-bell", route: "user/alerts" },
+    { title: "Live News", icon: "fas fa-newspaper", route: "user/news" },
+    { title: "Wallets", icon: "fas fa-wallet", route: "" },
+    { title: "Withdrawals", icon: "fas fa-money-bill", route: "" },
+    { title: "Awards & Rewards", icon: "fas fa-trophy", route: "user/awards" },
+    {
+      title: "My Account",
+      icon: "fas fa-user",
+      sub: [
+        { title: "Profile", route: "admin/profile",  },
+        { title: "Change password", route: "resetpassword",  },
 
-    //   ],
+      ],
       
-    // }
+    }
     
   ];
 

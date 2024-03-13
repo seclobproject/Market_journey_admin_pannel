@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { Show_Toast } from "../../../utils/Toast";
 import { useNavigate } from "react-router-dom";
 import { ContextData } from "../../../Services/Context";
 import { SlideMotion } from "../../../libs/FramerMotion";
@@ -12,7 +13,6 @@ import {
   statelistPageUrl,
 } from "../../../utils/Constants";
 import { ApiCall } from "../../../Services/Api";
-import { Show_Toast } from "../../../utils/Toast";
 import Loader from "../../../Components/Loader";
 
 function District() {
@@ -21,8 +21,11 @@ function District() {
   const [formData, setFormData] = useState({});
   const { Check_Validation } = useContext(ContextData);
   const [addDistrict, setAddDistrict] = useState({});
+  console.log('addDistrict',addDistrict)
+
   const [districtModal, setDistrictModal] = useState({ show: false, id: null });
   const [stateList, setStateList] = useState([]);
+  console.log('stateList',stateList)
   const [districtList, setDistrictList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedState, setSelectedState] = useState(null);
@@ -154,22 +157,37 @@ function District() {
                               districts.name.toUpperCase()) ||
                               "--"}
                           </td>
-                         
-                          {/* <td>
-                              {" "}
-                              <a
-                                className="dropdown-item d-flex align-items-center gap-3"
-                                onClick={() => {
-                                  setDistrictModal({ show: true, id: null });
-                                  setAddDistrict(districts);
-                                }}
-                              >
-                                <i
-                                  className="fs-4 fas fa-pencil-alt"
-                                  style={{ color: "red" }}
-                                ></i>
-                              </a>
-                            </td> */}
+                          <td>
+                              {districts?.isEditable === true ? (
+                                <a
+                                  className="dropdown-item d-flex align-items-center gap-3"
+                                  onClick={() => {
+                                    setDistrictModal({ show: true, id: null });
+                                    setAddDistrict(districts);
+                                  }}
+                                >
+                                  <i
+                                    className="fs-4 fas fa-pencil-alt"
+                                    style={{ color: "red" }}
+                                  ></i>
+                                </a>
+                              ) : (
+                                <button
+                                  className="dropdown-item d-flex align-items-center gap-3"
+                                  // disabled
+                                  onClick={() =>
+                                    Show_Toast(
+                                      "State in already taken so not able to edit"
+                                    )
+                                  }
+                                >
+                                  <i
+                                    className="fs-4 fas fa-pencil-alt"
+                                    style={{ color: "grey" }}
+                                  ></i>
+                                </button>
+                              )}
+                            </td>
                         </tr>
                       ))}
                     </>
@@ -223,9 +241,11 @@ function District() {
               <Select
                 required
                 options={stateList?.map((state) => ({
-                  value: state?._id,
-                  label: state?.name,
+                  value: state?.id,
+                  label: state?.stateName,
                 }))}
+                
+                
                 value={selectedState?.stateName}
                 onChange={(selectedOption) =>
                   setAddDistrict({
@@ -251,7 +271,7 @@ function District() {
                 className="form-control form-control-lg "
                 rows="4"
                 placeholder="Enter a district name"
-                value={addDistrict?.districtName}
+                value={addDistrict?.name}
                 onChange={(e) =>
                   setAddDistrict({
                     ...addDistrict,

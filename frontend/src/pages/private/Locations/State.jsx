@@ -1,11 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
+import { Show_Toast } from "../../../utils/Toast";
 import { SlideMotion } from "../../../libs/FramerMotion";
 import ModalComponent from "../../../Components/ModalComponet";
 import DeleteConfirmation from "../../../Components/DeleteConfirmation";
 import { ContextData } from "../../../Services/Context";
 import { Form } from "react-bootstrap";
 import { ApiCall } from "../../../Services/Api";
-import { editStatepageUrl, statePageUrl, statelistPageUrl } from "../../../utils/Constants";
+import {
+  editStatepageUrl,
+  statePageUrl,
+  statelistPageUrl,
+} from "../../../utils/Constants";
 import Loader from "../../../Components/Loader";
 import { startSession } from "mongoose";
 import { Show_Toast } from "../../../utils/Toast";
@@ -15,19 +20,21 @@ function State() {
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
   const [addState, setAddState] = useState({});
-  console.log(addState,"addState...........");
+  console.log(addState, "addState...........");
   const [stateList, setStateList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  console.log(stateList, "stateList...........");
 
   //---------add State---------
   const addStateFun = async () => {
     try {
       if (addState.id) {
         const updateResponse = await ApiCall(
-          "put",
-          `${editStatepageUrl}/${addState._id}`,
+          "POST",
+          `${editStatepageUrl}/${addState.id}`,
           addState
         );
+        console.log(updateResponse, "updated state");
         if (updateResponse.status === 200) {
           setStateModal(false);
           setValidated(false);
@@ -37,7 +44,7 @@ function State() {
           Show_Toast("State Update Failed", false);
         }
       } else {
-        const createResponse = await ApiCall("post", statePageUrl, addState);
+        const createResponse = await ApiCall("POST", statePageUrl, addState);
         if (createResponse.status === 200) {
           setStateModal(false);
           setValidated(false);
@@ -118,9 +125,9 @@ function State() {
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">State Name</h6>
                       </th>
-                      {/* <th>
+                      <th>
                         <h6 className="fs-4 fw-semibold mb-0">Actions</h6>
-                      </th> */}
+                      </th>
                       <th />
                     </tr>
                   </thead>
@@ -130,22 +137,40 @@ function State() {
                         {stateList.map((states, index) => (
                           <tr key={index}>
                             <td>{index + 1}</td>
-                            <td>{states?.name && states.name.toUpperCase()}</td>
                             <td>
-                              {" "}
-                              {/* {states?.iseditable==="false"} */}
-                              {/* <a
-                                className="dropdown-item d-flex align-items-center gap-3"
-                                onClick={() => {
-                                  setStateModal({ show: true, id: null });
-                                  setAddState(states);
-                                }}
-                              >
-                                <i
-                                  className="fs-4 fas fa-pencil-alt"
-                                  style={{ color: "red" }}
-                                ></i>
-                              </a> */}
+                              {states?.stateName &&
+                                states.stateName.toUpperCase()}
+                            </td>
+                            <td>
+                              {states?.isEditable === true ? (
+                                <a
+                                  className="dropdown-item d-flex align-items-center gap-3"
+                                  onClick={() => {
+                                    setStateModal({ show: true, id: null });
+                                    setAddState(states);
+                                  }}
+                                >
+                                  <i
+                                    className="fs-4 fas fa-pencil-alt"
+                                    style={{ color: "red" }}
+                                  ></i>
+                                </a>
+                              ) : (
+                                <button
+                                  className="dropdown-item d-flex align-items-center gap-3"
+                                  // disabled
+                                  onClick={() =>
+                                    Show_Toast(
+                                      "State in already taken so not able to edit"
+                                    )
+                                  }
+                                >
+                                  <i
+                                    className="fs-4 fas fa-pencil-alt"
+                                    style={{ color: "grey" }}
+                                  ></i>
+                                </button>
+                              )}
                             </td>
                           </tr>
                         ))}

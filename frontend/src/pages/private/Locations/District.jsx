@@ -145,11 +145,11 @@ function District() {
                                 "--"}
                             </td>
                             <td>
-                              {(districts?.name &&
-                                districts.name.toUpperCase()) ||
+                              {(districts?.districtName &&
+                                districts.districtName.toUpperCase()) ||
                                 "--"}
                             </td>
-                            <td>
+                            {/* <td>
                               {districts?.isEditable === true ? (
                                 <a
                                   className="dropdown-item d-flex align-items-center gap-3"
@@ -175,7 +175,7 @@ function District() {
                                   ></i>
                                 </button>
                               )}
-                            </td>
+                            </td> */}
                           </tr>
                         ))}
                       </>
@@ -225,8 +225,13 @@ function District() {
                   value: state?.id,
                   label: state?.stateName,
                 }))}
-                value={selectedState} // Update this line
-                onChange={(selectedOption) => setSelectedState(selectedOption)}
+                value={selectedState?.stateName}
+                onChange={(selectedOption) =>
+                  setAddDistrict({
+                    ...addDistrict,
+                    stateName: selectedOption?.label,
+                  })
+                }
                 placeholder="Select a state"
                 isSearchable={true}
               />
@@ -243,11 +248,11 @@ function District() {
                 className="form-control form-control-lg "
                 rows="4"
                 placeholder="Enter a district name"
-                value={addDistrict?.name || ""}
+                value={addDistrict?.districtName || ""}
                 onChange={(e) =>
                   setAddDistrict({
                     ...addDistrict,
-                    name: e.target.value,
+                    districtName: e.target.value,
                   })
                 }
               ></input>

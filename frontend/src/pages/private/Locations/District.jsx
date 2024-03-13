@@ -149,7 +149,7 @@ function District() {
                                 districts.name.toUpperCase()) ||
                                 "--"}
                             </td>
-                            <td>
+                            {/* <td>
                               {districts?.isEditable === true ? (
                                 <a
                                   className="dropdown-item d-flex align-items-center gap-3"
@@ -175,7 +175,7 @@ function District() {
                                   ></i>
                                 </button>
                               )}
-                            </td>
+                            </td> */}
                           </tr>
                         ))}
                       </>

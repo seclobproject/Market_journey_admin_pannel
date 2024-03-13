@@ -30,6 +30,7 @@ function District() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedState, setSelectedState] = useState(null);
 
+  console.log('selectedState',selectedState)
 
   //-----------list state--------
   const getDistrict = async () => {
@@ -164,6 +165,7 @@ function District() {
                                   onClick={() => {
                                     setDistrictModal({ show: true, id: null });
                                     setAddDistrict(districts);
+                                    // setSelectedState(districts?.stateName)
                                   }}
                                 >
                                   <i
@@ -177,7 +179,7 @@ function District() {
                                   // disabled
                                   onClick={() =>
                                     Show_Toast(
-                                      "State in already taken so not able to edit"
+                                      "District in already taken so not able to edit"
                                     )
                                   }
                                 >

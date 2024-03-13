@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Show_Toast } from "../utils/Toast";
+import { Show_Toast } from "../utils/Toastify";
 import { Base_url } from "./Base_url";
 
 export const ApiCall = async (

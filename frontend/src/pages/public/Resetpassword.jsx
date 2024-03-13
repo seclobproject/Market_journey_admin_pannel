@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Show_Toast } from '../../utils/Toast';
+import { Show_Toast } from '../../utils/Toastify';
 import { ApiCall } from '../../Services/Api';
 import { update_PasswordURL } from '../../utils/Constants';
 import { Link, useNavigate } from 'react-router-dom';
@@ -84,7 +84,7 @@ function Resetpassword() {
                   <div className="card mb-0">
                     <div className="card-body">
                     <a href={undefined} className="text-nowrap logo-img text-center d-block py-3 w-100">
-                    <img src="public/dist/images/marketlogo.png" alt="Logo" width="130" height="90" />
+                    <img src="/dist/images/marketlogo.png" alt="Logo" width="130" height="90" />
 </a>
 
                       <Form

@@ -11,7 +11,7 @@ adminRouter.post("/forgot-password", forgotPassword);
 adminRouter.post("/add-state", protectAdmin,addState);
 adminRouter.post("/add-district", protectAdmin,addDistrict);
 adminRouter.post("/add-zonal", protectAdmin,addZonal);
-adminRouter.post("/add-panchayath", protectAdmin,addPanchayath);
+adminRouter.post("/add-panchayath", protectAdmin,addPanchayath);  
 adminRouter.post("/add-package", protectAdmin,addPackage);
 adminRouter.post("/edit-package/:id", protectAdmin,editPackage);
 adminRouter.post("/add-user", protectAdmin, addUser);

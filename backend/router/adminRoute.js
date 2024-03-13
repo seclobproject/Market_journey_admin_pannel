@@ -1,6 +1,6 @@
 import express from "express";
 const adminRouter = express.Router();
-import {acceptUser, addDistrict, addPanchayath, addState, addZonal, adminLogin,  editProfileByAdmin,  forgotPassword, getReadyToApproveUsers, rejectUser, viewAllDistricts, viewAllPagePanchayath, viewAllPageUsers, viewAllPageZonal, viewAllPanchayaths, viewAllUsers, viewAllZonals, viewNotTakenDistricts, viewNotTakenZonals, viewParamsDistricts, viewParamsPanchayaths, viewParamsZonals, viewStates, viewUserDetails} from "../controller/adminController.js";
+import {acceptUser, addDistrict, addPanchayath, addState, addZonal, adminLogin,  editDistrict,  editPanchayath,  editProfileByAdmin,  editState,  editZonal,  forgotPassword, getReadyToApproveUsers, rejectUser, viewAllDistricts, viewAllPagePanchayath, viewAllPageUsers, viewAllPageZonal, viewAllPanchayaths, viewAllUsers, viewAllZonals, viewNotTakenDistricts, viewNotTakenZonals, viewParamsDistricts, viewParamsPanchayaths, viewParamsZonals, viewStates, viewUserDetails} from "../controller/adminController.js";
 import { protectAdmin } from "../middleware/authMiddleware.js";
 import { addPackage, editPackage, viewPackages } from "../controller/packageController.js";
 import { addUser } from "../controller/userController.js";
@@ -37,6 +37,13 @@ adminRouter.post("/delete-alert/:id", protectAdmin,deleteSingleAlert);
 adminRouter.post("/add-news", protectAdmin,addNews);
 adminRouter.post("/edit-news/:id", protectAdmin,editNews);
 adminRouter.post("/delete-news/:id", protectAdmin,deleteSingleNews);
+
+adminRouter.post("/edit-district/:id", protectAdmin,editDistrict);
+adminRouter.post("/edit-state/:id", protectAdmin,editState);
+adminRouter.post("/edit-zonal/:id", protectAdmin,editZonal);
+adminRouter.post("/edit-panchayath/:id", protectAdmin,editPanchayath);
+
+
 
 
 adminRouter.get("/view-states",viewStates);

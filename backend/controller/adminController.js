@@ -151,7 +151,39 @@ export const addState=async(req,res,next)=>{
   }
 }
 
+export const editState=async(req,res,next)=>{
+  try {
+    const adminId=req.admin._id;
+    const admin=await Admin.findById(adminId)
+    const {id}=req.params;
+    const { name} = req.body;
 
+    if(!admin){
+      return next(errorHandler(401, "Admin not found"));
+    }
+    let stateData = await State.findById(id);
+    if (!stateData) {
+      return next(errorHandler(404, "state data not found"));
+    }
+    if(stateData.editable===false){
+      return next(errorHandler(404, "Already use this State, so can't edit "));
+    }
+
+    stateData.name = name || stateData.name;
+    const updatedState = await stateData.save();
+
+    if(updatedState){
+      return res.status(200).json({
+        updatedState,
+          sts: "01",
+          msg: "State data updated successfully",
+        });
+    }
+
+  } catch (error) {
+    next(error)
+  }
+}
 
 
 //add District Franchise
@@ -180,7 +212,8 @@ export const addDistrict=async(req,res,next)=>{
         
         const district = await newDistrict.save();
         if(district){
-          stateData.districts.push(district._id)
+          stateData.districts.push(district._id);
+          stateData.editable=false;
           await stateData.save();
           res.status(200).json({
             district,
@@ -201,6 +234,43 @@ export const addDistrict=async(req,res,next)=>{
     } else {
       next(errorHandler(401, "Admin not found"));
     }
+  } catch (error) {
+    next(error)
+  }
+}
+
+//edit District
+
+export const editDistrict=async(req,res,next)=>{
+  try {
+    const adminId=req.admin._id;
+    const admin=await Admin.findById(adminId)
+    const {id}=req.params;
+    const { name} = req.body;
+
+    if(!admin){
+      return next(errorHandler(401, "Admin not found"));
+    }
+    let districtData = await District.findById(id);
+    if (!districtData) {
+      return next(errorHandler(404, "district data not found"));
+    }
+
+    if(districtData.editable===false){
+      return next(errorHandler(404, "Already use this District, so can't edit "));
+    }
+
+    districtData.name = name || districtData.name;
+    const updatedDistrict = await districtData.save();
+
+    if(updatedDistrict){
+      return res.status(200).json({
+        updatedDistrict,
+          sts: "01",
+          msg: "District data updated successfully",
+        });
+    }
+
   } catch (error) {
     next(error)
   }
@@ -235,6 +305,7 @@ export const addZonal=async(req,res,next)=>{
         const zonal = await newZonal.save();
         if(zonal){
           districtData.zonals.push(zonal._id)
+          districtData.editable=false;
           await districtData.save();
           res.status(200).json({
             zonal,
@@ -252,6 +323,42 @@ export const addZonal=async(req,res,next)=>{
   }
 }
 
+//edit Zonal
+
+export const editZonal=async(req,res,next)=>{
+  try {
+    const adminId=req.admin._id;
+    const admin=await Admin.findById(adminId)
+    const {id}=req.params;
+    const { name} = req.body;
+
+    if(!admin){
+      return next(errorHandler(401, "Admin not found"));
+    }
+    let zonalData = await Zonal.findById(id);
+    if (!zonalData) {
+      return next(errorHandler(404, "zoanl data not found"));
+    }
+    if(zonalData.editable===false){
+      return next(errorHandler(404, "Already use this Zonal, so can't edit "));
+    }
+
+    zonalData.name = name || zonalData.name;
+    const updatedzonal = await zonalData.save();
+
+    if(updatedzonal){
+      return res.status(200).json({
+        updatedzonal,
+          sts: "01",
+          msg: "Zonal data updated successfully",
+        });
+    }
+
+  } catch (error) {
+    next(error)
+  }
+}
+
 //add panchayath
 
 export const addPanchayath=async(req,res,next)=>{
@@ -259,7 +366,7 @@ export const addPanchayath=async(req,res,next)=>{
     const adminId = req.admin._id;
     const admin = await Admin.findById(adminId);
 
-    if (admin) {
+    if (admin) {  
       const {stateName,districtName,zonalName,panchayathName}=req.body;
       const panchayathNameLowercase = panchayathName.toLowerCase();
       console.log(panchayathNameLowercase);
@@ -286,6 +393,7 @@ export const addPanchayath=async(req,res,next)=>{
         const panchayath = await newPanchayath.save();
         if(panchayath){
           zonalData.panchayaths.push(panchayath._id)
+          zonalData.editable=false;
           await zonalData.save();
           res.status(200).json({
             panchayath,
@@ -303,6 +411,42 @@ export const addPanchayath=async(req,res,next)=>{
   }
 }
 
+
+//edit Panchayath
+
+export const editPanchayath=async(req,res,next)=>{
+  try {
+    const adminId=req.admin._id;
+    const admin=await Admin.findById(adminId)
+    const {id}=req.params;
+    const { name} = req.body;
+
+    if(!admin){
+      return next(errorHandler(401, "Admin not found"));
+    }
+    let panchayathData = await Panchayath.findById(id);
+    if (!panchayathData) {
+      return next(errorHandler(404, "panchayath data not found"));
+    }
+    if(panchayathData.editable===false){
+      return next(errorHandler(404, "Already use this Panchayath, so can't edit "));
+    }
+
+    panchayathData.name = name || panchayathData.name;
+    const updatedPanchayath = await panchayathData.save();
+
+    if(updatedPanchayath){
+      return res.status(200).json({
+        updatedPanchayath,
+          sts: "01",
+          msg: "Panchayath data updated successfully",
+        });
+    }
+
+  } catch (error) {
+    next(error)
+  }
+}
 
 // view params locations-----------------------------------------------------------------------------------------------
 
@@ -490,14 +634,15 @@ export const viewParamsPanchayaths = async (req, res, next) => {
             // const admin = await Admin.findById(adminId);
             
             // if (admin) {
-              const stateData = await State.find({}, '_id name'); // Projection to get both '_id' and 'name' fields
+              const stateData = await State.find({}, '_id name editable'); // Projection to get both '_id' and 'name' fields
               if (!stateData || stateData.length === 0) {
                 return next(errorHandler(401, "No states exist"));
               }
               res.status(200).json({
                 states: stateData.map(state => ({
                   id: state._id,
-                  name: state.name
+                  name: state.name,
+                  isEditable:state.editable
                 })),
                 sts: "01",
                 msg: "States retrieved successfully",
@@ -517,7 +662,7 @@ export const viewParamsPanchayaths = async (req, res, next) => {
             const admin = await Admin.findById(adminId);
         
             if (admin) {
-              const districtData = await District.find({}, '_id name stateName'); // Projection to get both '_id' and 'name' fields
+              const districtData = await District.find({}, '_id name stateName editable'); // Projection to get both '_id' and 'name' fields
               if (!districtData || districtData.length === 0) {
                 return next(errorHandler(401, "No District exist"));
               }
@@ -526,6 +671,7 @@ export const viewParamsPanchayaths = async (req, res, next) => {
                   id: district._id,
                   name: district.name,
                   stateName: district.stateName,
+                  isEditable:district.editable
                 })),
                 sts: "01",
                 msg: "Districts retrieved successfully",
@@ -545,7 +691,7 @@ export const viewParamsPanchayaths = async (req, res, next) => {
             const admin = await Admin.findById(adminId);
         
             if (admin) {
-              const zonalData = await Zonal.find({}, '_id name districtName stateName '); 
+              const zonalData = await Zonal.find({}, '_id name districtName stateName editable '); 
               if (!zonalData || zonalData.length === 0) {
                 return next(errorHandler(401, "No Zonals exist"));
               }
@@ -555,6 +701,7 @@ export const viewParamsPanchayaths = async (req, res, next) => {
                   name: zonal.name,
                   stateName: zonal.stateName,
                   districtName: zonal.districtName, 
+                  isEditable:zonal.editable
         
                 })),
                 sts: "01",
@@ -575,7 +722,7 @@ export const viewParamsPanchayaths = async (req, res, next) => {
             const admin = await Admin.findById(adminId);
         
             if (admin) {
-              const panchayathData = await Panchayath.find({}, '_id name districtName stateName zonalName '); 
+              const panchayathData = await Panchayath.find({}, '_id name districtName stateName zonalName editable '); 
               if (!panchayathData || panchayathData.length === 0) {
                 return next(errorHandler(401, "No Panchayaths exist"));
               }
@@ -586,7 +733,7 @@ export const viewParamsPanchayaths = async (req, res, next) => {
                   stateName: panchayath.stateName,
                   zonalName: panchayath.zonalName,
                   districtName: panchayath.districtName, 
-        
+                  isEditable:panchayath.editable
                 })),
                 sts: "01",
                 msg: "Panchayaths retrieved successfully",

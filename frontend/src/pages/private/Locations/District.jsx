@@ -102,7 +102,7 @@ function District() {
     }
   };
   useEffect(() => {
-    getStateList();
+    // getStateList();
     getDistrict();
   }, []);
   const editDistrict = (district) => {
@@ -132,6 +132,8 @@ function District() {
                 className="btn btn-custom ms-3 float-end"
                 onClick={() => {
                   setDistrictModal({ show: true, id: null });
+                  getStateList();
+
                   setValidated(false);
                   setDistrictEditModal("");
                   setAddDistrict("");

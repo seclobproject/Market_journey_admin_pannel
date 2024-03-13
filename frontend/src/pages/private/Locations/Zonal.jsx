@@ -125,7 +125,7 @@ function Zonal() {
   
 
   useEffect(() => {
-    getStateList();
+    // getStateList();
     getZonallist();
     if(selectedId){
       getDistrictList();
@@ -144,6 +144,8 @@ function Zonal() {
                 className="btn btn-custom ms-3 float-end"
                 onClick={() => {
                   setZonalModal({ show: true, id: null });
+                      getStateList();
+
                   setValidated(false);
                   setAddZonal("");
                 }}

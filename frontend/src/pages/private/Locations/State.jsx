@@ -66,7 +66,7 @@ function State() {
     try {
       setIsLoading(true);
       const response = await ApiCall("get", statelistPageUrl);
-
+console.log(response,"statelist");
       if (response.status === 200) {
         setStateList(response?.data?.states);
         setIsLoading(false);

@@ -149,7 +149,7 @@ function Panchayath() {
   };
   useEffect(() => {
     getPanchayathList();
-    getStateList();
+    // getStateList();
     if (districtId) {
       getZonallist();
     }
@@ -177,6 +177,8 @@ function Panchayath() {
                 className="btn btn-custom ms-3 float-end"
                 onClick={() => {
                   setPanchayathModal({ show: true, id: null });
+                      getStateList();
+
                   setValidated(false);
                   setAddPanchayath("");
                 }}

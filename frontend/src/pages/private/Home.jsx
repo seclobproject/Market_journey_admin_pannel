@@ -16,10 +16,11 @@ function Home() {
         <h5 className="card-title mb-9 fw-semibold"
          style={{color:"white"}}
          >
-          Yearly Breakup
+      Total 
+package 
         </h5>
         <div className="d-flex align-items-center mb-3">
-        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>$36,358</h4>
+        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>36,358</h4>
 
      
         </div>
@@ -36,10 +37,10 @@ function Home() {
         <h5 className="card-title mb-9 fw-semibold"
          style={{color:"white"}}
          >
-          Yearly Breakup
+          Total users 
         </h5>
         <div className="d-flex align-items-center mb-3">
-        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>$36,358</h4>
+        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>36000</h4>
 
      
         </div>
@@ -56,10 +57,11 @@ function Home() {
         <h5 className="card-title mb-9 fw-semibold"
          style={{color:"white"}}
          >
-          Yearly Breakup
+        Total 
+amount
         </h5>
         <div className="d-flex align-items-center mb-3">
-        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>$36,358</h4>
+        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>36,000</h4>
 
      
         </div>
@@ -76,10 +78,12 @@ function Home() {
         <h5 className="card-title mb-9 fw-semibold"
          style={{color:"white"}}
          >
-          Yearly Breakup
+        
+Pending 
+user 
         </h5>
         <div className="d-flex align-items-center mb-3">
-        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>$36,358</h4>
+        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>1000</h4>
 
      
         </div>
@@ -102,17 +106,8 @@ function Home() {
 
 
 
-        <div className="row">
-        {/* <div className="col-6 mb-3 mx-auto">
-  <div className="card w-100">
-    <QRCode
-      size={200}
-      style={{ height: "auto", maxWidth: "100%", width: "50%" }}
-      value="hai"
-      viewBox={`0 0 256 256`}
-    />
-  </div>
-</div> */}
+        {/* <div className="row">
+    
 
           <div className="col-lg-12 d-flex align-items-stretch">
             <div className="card w-100">
@@ -237,8 +232,8 @@ function Home() {
               </div>
             </div>
           </div>
-        </div>
-        <div className="row mt-3">
+        </div> */}
+        {/* <div className="row mt-3">
     <div class="col-md-6 col-lg-3 mb-4">
     <div class="card " style={{background:"#00335B"}}>
       <div className="row align-items-center  p-4">
@@ -319,7 +314,7 @@ function Home() {
     </div>      
     </div>
     </div>
-  </div>
+  </div> */}
       </div>
     </SlideMotion>
      

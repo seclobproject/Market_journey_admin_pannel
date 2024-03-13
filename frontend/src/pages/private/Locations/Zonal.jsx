@@ -19,6 +19,7 @@ import Stack from "@mui/material/Stack";
 
 function Zonal() {
   const [zonalModal, setZonalModal] = useState({ show: false, id: null });
+  const [zonalEditModal, setZonalEditModal] = useState({ show: false, id: null });
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
   const [stateList, setStateList] = useState([]);
@@ -28,6 +29,8 @@ function Zonal() {
   const [selectedState, setSelectedState] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [addzonal, setAddZonal] = useState({});
+  console.log(addzonal,"add zonal");
+
   const [selectedId, setSelectedId] = useState(null);
   const [params, setParams] = useState({
     page: 1,
@@ -186,21 +189,35 @@ function Zonal() {
                   <td>{zonals?.stateName && zonals.stateName.toUpperCase()||"--"}</td>
                   <td>{zonals?.districtName && zonals.districtName.toUpperCase()||"--"}</td>
                   <td>{zonals?.name && zonals.name.toUpperCase()||"--"}</td>
-                  {/* <td>
-                              {" "}
-                              <a
-                                className="dropdown-item d-flex align-items-center gap-3"
-                                onClick={() => {
-                                  setZonalModal({ show: true, id: null });
-                                  setAddZonal(zonals);
-                                }}
-                              >
-                                <i
-                                  className="fs-4 fas fa-pencil-alt"
-                                  style={{ color: "red" }}
-                                ></i>
-                              </a>
-                            </td> */}
+                  <td>
+                              {zonals?.editable === true ? (
+                                <a
+                                  className="dropdown-item d-flex align-items-center gap-3"
+                                  onClick={() => {
+                                    setZonalEditModal({ show: true, id: null });
+                                    setAddZonal(zonals);
+                                  }}                                >
+                                  <i
+                                    className="fs-4 fas fa-pencil-alt"
+                                    style={{ color: "red" }}
+                                  ></i>
+                                </a>
+                              ) : (
+                                <button
+                                  className="dropdown-item d-flex align-items-center gap-3"
+                                  onClick={() =>
+                                    Show_Toast(
+                                      "District in already taken so not able to edit"
+                                    )
+                                  }
+                                >
+                                  <i
+                                    className="fs-4 fas fa-pencil-alt"
+                                    style={{ color: "grey" }}
+                                  ></i>
+                                </button>
+                              )}
+                            </td>
 
 
 
@@ -231,7 +248,7 @@ function Zonal() {
             </Stack>
           </div>
         </div>
-
+{/* add modal */}
         <ModalComponent
           show={zonalModal.show}
           onHide={() => {
@@ -307,6 +324,145 @@ function Zonal() {
                   Please provide a package Amount.
                 </Form.Control.Feedback>
                 </div>
+
+                <div className="mb-4">
+                <label htmlFor="exampleInputEmail1" className="form-label">
+                  Zonal Name
+                </label>
+                <input
+                  required
+                  className="form-control form-control-lg "
+                  rows="4"
+                  type="text"
+                  placeholder="Enter a zonal name"
+                  value={addzonal?.zonalName}
+                  onChange={(e) =>
+                    setAddZonal({
+                      ...addzonal,
+                      zonalName: e.target.value,
+                    })
+                  }
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please provide a zonal name.
+                </Form.Control.Feedback>
+              </div>
+          {/* <div className="mb-4">
+                <label htmlFor="exampleInputEmail1" className="form-label">
+                  Package Amount
+                </label>
+                <input
+                  required
+                  className="form-control form-control-lg "
+                  rows="4"
+                  type="number"
+                  placeholder="Enter a package amount"
+                  value={addzonal?.packageAmount}
+                  onChange={(e) =>
+                    setAddZonal({
+                      ...addzonal,
+                      packageAmount: e.target.value,
+                    })
+                  }
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please provide a package Amount.
+                </Form.Control.Feedback>
+              </div> */}
+
+             
+
+            <div className="col-12 mt-4">
+            <button type="submit" className="btn btn-custom float-end ms-1">
+                {addzonal?.id ? "Update" : "Save"}
+              </button>
+            </div>
+          </Form>
+          <button
+            className="btn btn-cancel float-end me-1"
+            onClick={() => {
+              setZonalModal({ show: false, id: null });
+            }}
+          >
+            cancel
+          </button>
+        </ModalComponent>
+        {/* edit modal */}
+        <ModalComponent
+          show={zonalEditModal.show}
+          onHide={() => {
+            setZonalEditModal({ show: false, id: null });
+          }}
+          title={
+            <h5 style={{ color: '#F7AE15', margin: 0}}>
+            Edit Zonal
+            </h5>
+          }
+          centered
+          width={"500px"}
+          
+        >
+          
+          <Form
+            noValidate
+            validated={validated}
+            onSubmit={(e) => Check_Validation(e, addZonalFun, setValidated)}
+          >
+            {/* <div className="mb-4">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                State
+              </label>
+
+              <Select
+                required
+                options={stateList?.map((state) => ({
+                  value: state?.id,
+                  label: state?. stateName,
+                }))}
+                value={selectedState?.stateName}
+                onChange={(selectedOption) => {
+                setSelectedId(selectedOption?.value)
+                    setAddZonal({
+                      ...addzonal,
+                      stateName: selectedOption?.label,
+                    });
+                  }}
+                  
+                placeholder="Select a state"
+                isSearchable={true}
+              />
+
+              <Form.Control.Feedback type="invalid">
+                Please select a state.
+              </Form.Control.Feedback>
+            </div> */}
+            {/* <div className="mb-4">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                District
+              </label>
+              <Select
+                required
+                options={districtList?.map((districts) => ({
+                  value: districts?.id,
+                  label: districts?.name,
+                }))
+            }
+            value={selectedState?.stateName}
+            onChange={(selectedOption) => {
+                setAddZonal({
+                  ...addzonal,
+                  districtName: selectedOption?.label,
+                });
+              }}
+                
+                  
+                placeholder="Select a district"
+                isSearchable={true}
+              />
+                <Form.Control.Feedback type="invalid">
+                  Please provide a package Amount.
+                </Form.Control.Feedback>
+                </div> */}
 
                 <div className="mb-4">
                 <label htmlFor="exampleInputEmail1" className="form-label">

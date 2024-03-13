@@ -710,7 +710,7 @@ useEffect(()=>{
                       required
                       options={stateList?.map((states) => ({
                         value: states?.id,
-                        label: states?.name,
+                        label: states?.stateName,
                       }))}
                       value={selectedState?.state}
                       onChange={(selectedOption) => {
@@ -769,7 +769,7 @@ if(selectedStateId){
                     required
                     options={stateList?.map((states) => ({
                       value: states?.id,
-                      label: states?.name,
+                      label: states?.stateName,
                     }))}
                     value={selectedState?.state}
                     onChange={(selectedOption) => {
@@ -860,7 +860,7 @@ addMember?.franchise === "Algo course"
                     required
                     options={stateList?.map((states) => ({
                       value: states?.id,
-                      label: states?.name,
+                      label: states?.stateName,
                     }))}
                     value={selectedState?.state}
                     onChange={(selectedOption) => {

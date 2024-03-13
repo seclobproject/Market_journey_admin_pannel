@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Show_Toast } from "../../../utils/Toastify";
 import { SlideMotion } from "../../../libs/FramerMotion";
 import { ContextData } from "../../../Services/Context";
 import ModalComponent from "../../../Components/ModalComponet";
@@ -17,6 +16,7 @@ import Select from "react-select";
 import Loader from "../../../Components/Loader";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import { Show_Toast } from "../../../utils/Toastify";
 function Panchayath() {
   const [PanchayathModal, setPanchayathModal] = useState({
     show: false,
@@ -327,7 +327,7 @@ function Panchayath() {
                 required
                 options={stateList?.map((state) => ({
                   value: state?.id,
-                  label: state?.name,
+                  label: state?.stateName,
                 }))}
                 value={selectedState?.stateName}
                 onChange={(selectedOption) => {

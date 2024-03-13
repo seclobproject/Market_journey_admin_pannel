@@ -22,6 +22,7 @@ function Zonal() {
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
   const [stateList, setStateList] = useState([]);
+  console.log(stateList,"stateList");
   const [districtList, setdistrictList] = useState([]);
   const [zonalList, setZonalList] = useState([]);
   const [selectedState, setSelectedState] = useState(null);
@@ -260,7 +261,7 @@ function Zonal() {
                 required
                 options={stateList?.map((state) => ({
                   value: state?.id,
-                  label: state?.name,
+                  label: state?. stateName,
                 }))}
                 value={selectedState?.stateName}
                 onChange={(selectedOption) => {

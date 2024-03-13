@@ -1,13 +1,14 @@
 {
   "name": "market-journey",
   "version": "1.0.0",
-  "description": "",
+  "description": "Market journey- The Marketing Application",
   "type": "module",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon backend/server.js",
     "start": "node backend/server.js",
-    "data:import": "node backend/seeder.js"
+    "data:import": "node backend/seeder.js",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "keywords": [],
   "author": "",

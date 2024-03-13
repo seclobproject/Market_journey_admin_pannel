@@ -37,6 +37,7 @@ function Header() {
         <i className="ti ti-dots fs-7" />
       </span>
     </button> */}
+
     <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
       <div className="d-flex align-items-center justify-content-between">
         <a href={undefined} className="nav-link d-flex d-lg-none align-items-center justify-content-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobilenavbar" aria-controls="offcanvasWithBothOptions">
@@ -70,6 +71,7 @@ function Header() {
     </li>
   </ul>
 </div>
+
 
           </li>
         </ul>

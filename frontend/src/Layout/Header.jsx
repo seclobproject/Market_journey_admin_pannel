@@ -52,7 +52,7 @@ function Header() {
   <ul className="navbar-nav flex-row ms-auto align-items-center justify-content-end">
     <li className="nav-item dropdown">
       <a className="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="false">
-      <img src="../../dist/images/profile/user-1.jpg" className="rounded-circle" width={35} height={35} alt />
+      <img src="/dist/images/profile/user-1.jpg" className="rounded-circle" width={35} height={35} alt />
       </a>
       <div className="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
         <div className="message-body">

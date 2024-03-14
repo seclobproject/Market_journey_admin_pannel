@@ -60,6 +60,7 @@ function Member() {
 
   const [selectedState, setSelectedState] = useState(null);
   const [allUser, setAllUser] = useState([]);
+  console.log(allUser,"all....45444535.")
   const [isLoading, setIsLoading] = useState(false);
 
   const [params, setParams] = useState({
@@ -237,7 +238,7 @@ function Member() {
     try {
       const response = await ApiCall("get", viewalluserUrl, {}, params);
       if (response.status === 200) {
-        console.log("all userssss",response)
+        console.log("all userssss......",response)
         setAllUser(response?.data?.userData?.results);
         setFilteredData(response?.data?.userData?.results)
         setTotalPages(response?.data?.userData?.totalPages);

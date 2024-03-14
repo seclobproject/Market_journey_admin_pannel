@@ -6,6 +6,7 @@ import ModalComponent from "../../../Components/ModalComponet";
 import { Form } from "react-bootstrap";
 import {
   districtlistinZonalUrl,
+  editZonalPageUrl,
   paginatedZonals,
   statelistPageUrl,
   zonalPageUrl,
@@ -82,8 +83,8 @@ function Zonal() {
       const response = await ApiCall("get",paginatedZonals,{},params);
       console.log(response,"......")
       if (response.status === 200) {
-        setZonalList(response?.data?.zonalData?.results);
-        setTotalPages(response?.data?.zonalData?.totalPages);
+        setZonalList(response?.data?.zonals);
+        setTotalPages(response?.data?.totalPages);
 
         setIsLoading(false)
 
@@ -100,22 +101,56 @@ function Zonal() {
     }
   };
  //-----------Zonal---------
- const addZonalFun = async () => {
+//  const addZonalFun = async () => {
 
+//     try {
+//       const response = await ApiCall("post", zonalPageUrl, addzonal);
+//       if (response.status === 200) {
+//         setZonalModal(false);
+//         setValidated(false);
+//         setAddZonal("");
+//         getZonallist();
+//         Show_Toast("Zonal added successfully", true);
+//       } 
+//     } catch (error) {
+//       Show_Toast(error, false);
+//     }
+//   };
+  const addZonalFun = async () => {
     try {
-      const response = await ApiCall("post", zonalPageUrl, addzonal);
-      if (response.status === 200) {
-        setZonalModal(false);
-        setValidated(false);
-        setAddZonal("");
-        getZonallist();
-        Show_Toast("Zonal added successfully", true);
-      } 
+      if (addzonal?.id) {
+        const updateResponse = await ApiCall(
+          "POST",
+          `${editZonalPageUrl}/${addzonal.id}`,
+          addzonal
+        );
+        console.log(updateResponse, "updated zonal");
+        if (updateResponse.status === 200) {
+          setZonalEditModal(false);
+          setValidated(false);
+          getZonallist();
+          Show_Toast("zonal updated successfully", true);
+        } else {
+          Show_Toast("zonal Update Failed", false);
+        }
+      } else {
+        const createResponse = await ApiCall("POST", zonalPageUrl, addzonal);
+        if (createResponse.status === 200) {
+          setZonalModal(false);
+          setValidated(false);
+          setAddZonal("");
+          getZonallist();
+
+          Show_Toast("zonal added successfully", true);
+        } else {
+          console.log(error,"error")
+          Show_Toast(error, false);
+        }
+      }
     } catch (error) {
       Show_Toast(error, false);
     }
   };
-
   const handlePageChange = (event, newPage) => {
     setParams((prevParams) => ({
       ...prevParams,
@@ -190,9 +225,9 @@ function Zonal() {
                   <td>{index + 1}</td>
                   <td>{zonals?.stateName && zonals.stateName.toUpperCase()||"--"}</td>
                   <td>{zonals?.districtName && zonals.districtName.toUpperCase()||"--"}</td>
-                  <td>{zonals?.name && zonals.name.toUpperCase()||"--"}</td>
+                  <td>{zonals?.zonalName && zonals.zonalName.toUpperCase()||"--"}</td>
                   <td>
-                              {zonals?.editable === true ? (
+                              {zonals?.isEditable === true ? (
                                 <a
                                   className="dropdown-item d-flex align-items-center gap-3"
                                   onClick={() => {

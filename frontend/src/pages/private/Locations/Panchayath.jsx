@@ -5,6 +5,7 @@ import ModalComponent from "../../../Components/ModalComponet";
 import { Form } from "react-bootstrap";
 import {
   districtlistinZonalUrl,
+  editPanchayathUrl,
   paginatedPanchayathUrl,
   panchayathPageUrl,
   panchayathlistPageUrl,
@@ -107,9 +108,8 @@ function Panchayath() {
       const response = await ApiCall("get", paginatedPanchayathUrl,{},params);
      console.log(response,"response")
       if (response.status === 200) {
-        setPanchayathList(response?.data?.
-          panchayathData?.results);
-          setTotalPages(response?.data?.panchayathData?.totalPages);
+        setPanchayathList(response?.data?.panchayaths);
+          setTotalPages(response?.data?.totalPages);
 
         setIsLoading(false);
       } else {
@@ -125,18 +125,55 @@ function Panchayath() {
     }
   };
   //---------Add--panchayath---------
-  const addPanchayathFun = async () => {
+  // const addPanchayathFun = async () => {
 
+  //   try {
+  //     const response = await ApiCall("post", panchayathPageUrl, addPanchayath);
+  //     if (response.status === 200) {
+  //       setPanchayathModal(false);
+  //       setValidated(false);
+  //       setAddPanchayath("");
+  //       getPanchayathList();
+  //       // ();
+  //       Show_Toast("Panchayath added successfully", true);
+  //     } 
+  //   } catch (error) {
+  //     Show_Toast(error, false);
+  //   }
+  // };
+
+
+  const addPanchayathFun = async () => {
     try {
-      const response = await ApiCall("post", panchayathPageUrl, addPanchayath);
-      if (response.status === 200) {
-        setPanchayathModal(false);
-        setValidated(false);
-        setAddPanchayath("");
-        getPanchayathList();
-        // ();
-        Show_Toast("Panchayath added successfully", true);
-      } 
+      if (addPanchayath?.id) {
+        const updateResponse = await ApiCall(
+          "POST",
+          `${editPanchayathUrl}/${addPanchayath.id}`,
+          addPanchayath
+        );
+        console.log(updateResponse, "updated panchyah");
+        if (updateResponse.status === 200) {
+          setPanchayathEditModal(false);
+          setValidated(false);
+          getPanchayathList();
+          Show_Toast("panchayath updated successfully", true);
+        } else {
+          Show_Toast("panchayath Update Failed", false);
+        }
+      } else {
+        const createResponse = await ApiCall("POST", panchayathPageUrl, addPanchayath);
+        if (createResponse.status === 200) {
+          setPanchayathModal(false);
+          setValidated(false);
+          setAddPanchayath("");
+          getPanchayathList();
+
+          Show_Toast("panchayath added successfully", true);
+        } else {
+          console.log(error,"error")
+          Show_Toast(error, false);
+        }
+      }
     } catch (error) {
       Show_Toast(error, false);
     }
@@ -244,13 +281,13 @@ function Panchayath() {
                                 </td>
 
                                 <td>
-                                  {(panchayaths?.name &&
-                                    panchayaths.name.toUpperCase()) ||
+                                  {(panchayaths?.panchayathName &&
+                                    panchayaths.panchayathName.toUpperCase()) ||
                                     "--"}
                                 </td>
                                        
                                 <td>
-                              {panchayaths?.editable === true ? (
+                              {panchayaths?.isEditable === true ? (
                                 <a
                                   className="dropdown-item d-flex align-items-center gap-3"
                                   onClick={() => {

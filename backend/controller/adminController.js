@@ -174,7 +174,9 @@ export const editState=async(req,res,next)=>{
 
     if(updatedState){
       return res.status(200).json({
-        updatedState,
+        id: updatedState._id,
+        stateName: updatedState.name,
+        isEditable:updatedState.editable,
           sts: "01",
           msg: "State data updated successfully",
         });
@@ -246,7 +248,7 @@ export const editDistrict=async(req,res,next)=>{
     const adminId=req.admin._id;
     const admin=await Admin.findById(adminId)
     const {id}=req.params;
-    const { name} = req.body;
+    const { districtName} = req.body;
 
     if(!admin){
       return next(errorHandler(401, "Admin not found"));
@@ -260,12 +262,15 @@ export const editDistrict=async(req,res,next)=>{
       return next(errorHandler(404, "Already use this District, so can't edit "));
     }
 
-    districtData.name = name || districtData.name;
+    districtData.name = districtName || districtData.name;
     const updatedDistrict = await districtData.save();
 
     if(updatedDistrict){
       return res.status(200).json({
-        updatedDistrict,
+        id: updatedDistrict._id,
+                  districtName: updatedDistrict.name,
+                  stateName: updatedDistrict.stateName,
+                  isEditable:updatedDistrict.editable,
           sts: "01",
           msg: "District data updated successfully",
         });
@@ -330,7 +335,7 @@ export const editZonal=async(req,res,next)=>{
     const adminId=req.admin._id;
     const admin=await Admin.findById(adminId)
     const {id}=req.params;
-    const { name} = req.body;
+    const { zonalName} = req.body;
 
     if(!admin){
       return next(errorHandler(401, "Admin not found"));
@@ -343,12 +348,16 @@ export const editZonal=async(req,res,next)=>{
       return next(errorHandler(404, "Already use this Zonal, so can't edit "));
     }
 
-    zonalData.name = name || zonalData.name;
+    zonalData.name = zonalName || zonalData.name;
     const updatedzonal = await zonalData.save();
 
     if(updatedzonal){
       return res.status(200).json({
-        updatedzonal,
+        id: updatedzonal._id,
+        zonalName: updatedzonal.name,
+        stateName: updatedzonal.stateName,
+        districtName: updatedzonal.districtName, 
+        isEditable:updatedzonal.editable,
           sts: "01",
           msg: "Zonal data updated successfully",
         });
@@ -419,7 +428,7 @@ export const editPanchayath=async(req,res,next)=>{
     const adminId=req.admin._id;
     const admin=await Admin.findById(adminId)
     const {id}=req.params;
-    const { name} = req.body;
+    const { panchayathName} = req.body;
 
     if(!admin){
       return next(errorHandler(401, "Admin not found"));
@@ -432,12 +441,17 @@ export const editPanchayath=async(req,res,next)=>{
       return next(errorHandler(404, "Already use this Panchayath, so can't edit "));
     }
 
-    panchayathData.name = name || panchayathData.name;
+    panchayathData.name = panchayathName || panchayathData.name;
     const updatedPanchayath = await panchayathData.save();
 
     if(updatedPanchayath){
       return res.status(200).json({
-        updatedPanchayath,
+        id: updatedPanchayath._id,
+        panchayathName: updatedPanchayath.name,
+        stateName: updatedPanchayath.stateName,
+        zonalName: updatedPanchayath.zonalName,
+        districtName: updatedPanchayath.districtName, 
+        isEditable:updatedPanchayath.editable,
           sts: "01",
           msg: "Panchayath data updated successfully",
         });
@@ -944,7 +958,17 @@ export const rejectUser = async (req, res, next) => {
               const zonalData = await zonalpaginate(Zonal, {}, page, pageSize);
     
               return res.status(200).json({
-                zonalData,
+                zonals: zonalData.results.map(zonal => ({
+                  id: zonal._id,
+                  zonalName: zonal.name,
+                  stateName: zonal.stateName,
+                  districtName: zonal.districtName, 
+                  isEditable:zonal.editable
+                })),
+                page:zonalData.page,
+                pageSize:zonalData.pageSize,
+                totalPages:zonalData.totalPages,
+                totalDocs:zonalData.totalDocs,
                   sts: "01",
                   msg: "Successfully Get all users",
               });
@@ -991,7 +1015,18 @@ export const rejectUser = async (req, res, next) => {
               const panchayathData = await panchayathpaginate(Panchayath, {}, page, pageSize);
     
               return res.status(200).json({
-                panchayathData,
+                panchayaths: panchayathData.results.map(panchayath => ({
+                  id: panchayath._id,
+                  panchayathName: panchayath.name,
+                  stateName: panchayath.stateName,
+                  zonalName: panchayath.zonalName,
+                  districtName: panchayath.districtName, 
+                  isEditable:panchayath.editable
+                })),
+                page:panchayathData.page,
+                pageSize:panchayathData.pageSize,
+                totalPages:panchayathData.totalPages,
+                totalDocs:panchayathData.totalDocs,
                   sts: "01",
                   msg: "Successfully Get all users",
               });

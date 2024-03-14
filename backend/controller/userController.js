@@ -27,7 +27,7 @@ export const addUser = async (req, res, next) => {
       const sponser = req.admin ? req.admin._id : (req.user ? req.user._id : null);
         let { name, email, phone,packageAmount,franchise,franchiseName, address,state,district,zonal,panchayath, transactionPassword, password } =
           req.body;
-        console.log(state);
+        console.log(zonal);
           const sponserData = (await User.findById(sponser)) || (await Admin.findById(sponser));
         const sponserName = sponserData.name;
      
@@ -64,6 +64,7 @@ export const addUser = async (req, res, next) => {
           const districtData=await User.findOne({franchiseName:district})
           districtFranchise=districtData._id;
           const zonalData=await User.findOne({franchiseName:zonal})
+          console.log(zonalData);
           zonalFranchise=zonalData._id;
         } 
       const hashedPassword = bcryptjs.hashSync(password, 10);
@@ -273,6 +274,7 @@ export const viewUserProfile = async (req, res, next) => {
         aadhaar: userData.aadhaar,
         screenshot: userData.screenshot,
         packageAmount: userData.packageAmount,
+        tempPackageAmount:userData.tempPackageAmount,
         myDownline: countFirstChild,
         directIncome: directIncome,
         inDirectIncome: inDirectIncome,

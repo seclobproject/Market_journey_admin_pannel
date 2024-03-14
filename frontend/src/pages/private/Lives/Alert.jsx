@@ -229,6 +229,7 @@ function Alert() {
           validated={validated}
           onSubmit={(e) => Check_Validation(e, addAlertsFun, setValidated)}
         >
+          
           <div className="mb-4">
             <label htmlFor="exampleInputEmail1" className="form-label">
               Alert Content

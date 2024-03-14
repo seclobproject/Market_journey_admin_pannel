@@ -244,14 +244,15 @@ function Panchayath() {
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Zonal Name</h6>
                       </th>
-                      {/* <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Actions</h6>
-                      </th> */}
+                    
                       
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">
                           Panchayath Name
                         </h6>
+                      </th>
+                      <th>
+                        <h6 className="fs-4 fw-semibold mb-0">Actions</h6>
                       </th>
                       <th />
                     </tr>

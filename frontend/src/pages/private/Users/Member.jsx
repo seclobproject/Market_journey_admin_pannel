@@ -28,50 +28,35 @@ function Member() {
   const [memberModal, setMemberModal] = useState({ show: false, id: null });
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
-  const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
+  const [bonusModal, setBonusModal] = useState({ show: false, id: null });
   const [addMember, setAddMember] = useState({});
-  console.log(addMember,"addMmber...44.............................")
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [zonalList, setZonalList] = useState([]);
-  console.log(zonalList,"all...........Zonal................................")
-
   const [notTakenZonal, setNotTakenZonal] = useState([]);
-  console.log(notTakenZonal,"not...Taken........Zonal................................")
-
   const [panchayathList, setPanchayathList] = useState([]);
-  console.log(panchayathList,"panchayathList.............")
-
+  const [addBonnus, setAddBonnus] = useState([]);
   const [packageList, setPackageList] = useState([]);
-  console.log(packageList,"packageList................................")
   const [notTakenDistrict, setnotTakenDistrict] = useState([]);
-  console.log(notTakenDistrict,"notTakenDistrict................................")
-
   const [packageAmount, setPackageAmount] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showTransPassword, setShowTransPassword] = useState(false);
   const [selectedStateId, setSelectedStateId] = useState(null);
-  // console.log(selectedStateId, "selectedStateId......");
   const [selectedDistrictId, setSelectedDistrictId] = useState(null);
-  // console.log(selectedDistrictId, "selectedDistrictId......");
-
   const [selectedZonalId, setSelectedZonalId] = useState(null);
-  console.log(selectedZonalId, "selectedZonalId......");
-
   const [selectedState, setSelectedState] = useState(null);
   const [allUser, setAllUser] = useState([]);
-  console.log(allUser,"all....45444535.")
   const [isLoading, setIsLoading] = useState(false);
-
   const [params, setParams] = useState({
     page: 1,
     pageSize: 10,
   });
   const [totalPages, setTotalPages] = useState(1);
-  const [filteredData, setFilteredData] = useState([]); // Data after filtering
-  console.log(filteredData,"filteredData")
+  const [filteredData, setFilteredData] = useState([]); 
+  const [filteredDataStatus, setFilteredDataStatus] = useState([]); 
   const [filter, setFilter] = useState();
-  console.log(filter,"filter.................")
+  const [statusfilter, setStatusFilter] = useState();
+
 
   const navigate = useNavigate();
 
@@ -323,6 +308,19 @@ useEffect(()=>{
   setFilteredData(newFilteredData)
 };
 
+const handleFilterAndSetFilterStatus = (e) => {
+  const filterStatus = e.target.value
+
+setFilter(filterStatus);
+const newFilteredData =allUser.filter((item)=>{
+  console.log(item,"iteamssssss///")
+  return filterStatus? item?.userStatus===filterStatus : true
+})
+console.log(newFilteredData,"")
+setFilteredData(newFilteredData)
+};
+
+
   
   
   const packageOptions = packageList.map((pack) => ({
@@ -331,7 +329,6 @@ useEffect(()=>{
     packageAmount: pack?.packageAmount,
   }));
 
-  console.log(packageOptions,"options")
   return (
     <>
       <SlideMotion>
@@ -347,7 +344,6 @@ useEffect(()=>{
    
       
 
-{/* <button onClick={handleFilter}>Filter</button> */}
 
 
             <div>
@@ -363,22 +359,41 @@ useEffect(()=>{
               </button>
             </div>
           </div>
-          <div className="row p-2">
-            <div className="col-3">
-            <select
-    value={filter}
-    onChange={(e) => handleFilterAndSetFilter(e)}
-    className="form-control"
-  >
-    <option value="View_all">View All</option>
-    <option value="District Franchise">District Franchise</option>
-    <option value="Zonal Franchise">Zonal Franchise</option>
-    <option value="Mobile Franchise">Mobile Franchise</option>
-    {/* Add more filter options as needed */}
-  </select>
-            </div>
-      
+          <div className="row ms-2 me-2">
+  <div className="col-md-3 mt-3 sm-2">
+    <select
+      value={filter}
+      onChange={(e) => handleFilterAndSetFilter(e)}
+      className="form-control"
+    >
+            <option selected disabled>Search by franchise type...</option>
+
+      <option value="View_all">View All</option>
+      <option value="District Franchise">District Franchise</option>
+      <option value="Zonal Franchise">Zonal Franchise</option>
+      <option value="Mobile Franchise">Mobile Franchise</option>
+      {/* Add more filter options as needed */}
+    </select>
+  </div>
+  <div className="col-md-3 mt-3">
+    <select
+      value={statusfilter}
+      onChange={(e) => handleFilterAndSetFilterStatus(e)}
+      className="form-control"
+    >
+                  <option selected disabled>Search by status...</option>
+
+      <option value="View_all">View All</option>
+      <option value="readyToApprove">Ready to Approve</option>
+      <option value="pending">pending</option>
+      <option value="approved">Approved</option>
+      {/* Add more filter options as needed */}
+    </select>
+  </div>
 </div>
+
+         
+    
           {isLoading ? (
             <Loader />
           ) : (
@@ -417,6 +432,9 @@ useEffect(()=>{
                     </th>
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">Status</h6>
+                    </th>
+                    <th>
+                      <h6 className="fs-4 fw-semibold mb-0">Add bonus</h6>
                     </th>
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">View Details</h6>
@@ -465,6 +483,14 @@ useEffect(()=>{
                               </span>
                             )}
                           </td>
+                          <td>   <button className="btn btn-custom"   onClick={() => {
+                  setBonusModal({ show: true, id: null });
+                  // setAddMember("");
+                  setValidated(false);
+                }}>
+  <i className="fas fa-plus" ></i> Add Bonus
+</button>
+</td>
                           <td>
 
                           <i className="fas fa-eye"    onClick={() =>   navigate('/user/details', { state: { data: users?._id } })}
@@ -975,7 +1001,64 @@ addMember?.franchise === "Algo course"
               selectedZonalId("")
             }}
           >
-            cancel
+            Cancel
+          </button>
+        </ModalComponent>
+
+
+        <ModalComponent
+          show={bonusModal.show}
+          onHide={() => {
+            setBonusModal({ show: false, id: null });
+          }}
+          title={<h5 style={{ color: "#F7AE15", margin: 0 }}>Add Bonus</h5>}
+          width={"500px"}
+        >
+          <Form
+            noValidate
+            validated={validated}
+            onSubmit={(e) => Check_Validation(e, addMemberFun, setValidated)}
+          >
+           
+           <div className="mb-4">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+              Amount
+              </label>
+              <input
+  required
+  className="form-control form-control-lg"
+  type="number"
+  pattern="[0-9]*"
+  placeholder="Enter an amount"
+  value={addBonnus?.amount}
+  onChange={(e) =>
+    setAddBonnus({
+      ...addBonnus,
+      amount: e.target.value,
+    })
+  }
+/>
+
+              <Form.Control.Feedback type="invalid">
+                Please provide a amount.
+              </Form.Control.Feedback>
+            </div>
+            <div className="col-12 mt-5">
+              <button type="submit" className="btn btn-custom float-end">
+                {/* {addLocation?._id ? 'Update' : 'Save'}  */}Send
+              </button>
+            </div>
+          </Form>
+          <button
+            className="btn btn-cancel float-end me-1"
+            onClick={() => {
+              setMemberModal({ show: false, id: null });
+              setSelectedStateId("")
+              selectedDistrictId("")
+              selectedZonalId("")
+            }}
+          >
+            Cancel
           </button>
         </ModalComponent>
 

@@ -17,6 +17,7 @@ import { get } from "mongoose";
 function Livenew() {
   const [newsModal, setNewsModal] = useState({ show: false, id: null });
   const [addNews, setAddNews] = useState({});
+  console.log(addNews)
   const [newsList, setNewsList] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -134,11 +135,15 @@ function Livenew() {
                         <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                       </th>
                       <th>
+                        <h6 className="fs-4 fw-semibold mb-0">title</h6>
+                      </th>
+                      <th>
                         <h6 className="fs-4 fw-semibold mb-0">News</h6>
                       </th>
 
-                      <th>Actions</th>
-
+                      <th>
+                        <h6 className="fs-4 fw-semibold mb-0">Actions</h6>
+                      </th>
                       <th />
                     </tr>
                   </thead>
@@ -148,8 +153,9 @@ function Livenew() {
                         {newsList.map((news, index) => (
                           <tr key={index}>
                             <td>{index + 1}</td>
+                            <td>{news?.title}</td>
 
-                            <td>{news?.news || "--"}</td>
+                            <td style={{ width: "500px", height: '10px', overflow: "hidden" }}>{news?.news}</td>
                             <td>
                               {" "}
                               <a
@@ -212,6 +218,26 @@ function Livenew() {
           validated={validated}
           onSubmit={(e) => Check_Validation(e, addnewsFun, setValidated)}
         >
+            <div className="mb-4">
+            <label htmlFor="exampleInputEmail1" className="form-label">
+              Title
+            </label>
+            <input
+              required
+              className="form-control form-control-lg "
+              placeholder="Enter a title"
+              value={addNews?.title}
+              onChange={(e) =>
+                setAddNews({
+                  ...addNews,
+                  title: e.target.value,
+                })
+              }
+            ></input>
+            <Form.Control.Feedback type="invalid">
+              Please provide a title.
+            </Form.Control.Feedback>
+          </div>
           <div className="mb-4">
             <label htmlFor="exampleInputEmail1" className="form-label">
               News{" "}

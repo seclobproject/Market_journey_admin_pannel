@@ -9,6 +9,7 @@ import Select from "react-select";
 import {
   districtPageUrl,
   districtlistPageUrl,
+  editdistrictUrl,
   statelistPageUrl,
 } from "../../../utils/Constants";
 import { ApiCall } from "../../../Services/Api";
@@ -20,11 +21,15 @@ function District() {
   const [formData, setFormData] = useState({});
   const { Check_Validation } = useContext(ContextData);
   const [addDistrict, setAddDistrict] = useState({});
+  console.log(addDistrict,"district")
   const [districtModal, setDistrictModal] = useState({ show: false, id: null });
+  const [districtEditModal, setDistrictEditModal] = useState({ show: false, id: null });
+
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedState, setSelectedState] = useState(null);
+  //get district list
   const getDistrict = async () => {
     try {
       setIsLoading(true);
@@ -43,15 +48,39 @@ function District() {
       console.error("Error fetching state list:", error);
     }
   };
+
+//add district 
   const addDisrtictFun = async () => {
     try {
-      const response = await ApiCall("post", districtPageUrl, addDistrict);
-      if (response.status === 200) {
-        setDistrictModal(false);
-        setValidated(false);
-        setAddDistrict("");
-        getDistrict();
-        Show_Toast("District added successfully", true);
+      if (addDistrict.id) {
+        const updateResponse = await ApiCall(
+          "POST",
+          `${editdistrictUrl}/${addDistrict.id}`,
+          addDistrict
+        );
+        console.log(updateResponse, "updated dist");
+        if (updateResponse.status === 200) {
+          setDistrictEditModal(false);
+          setValidated(false);
+          getDistrict();
+          Show_Toast("District updated successfully", true);
+        } else {
+          Show_Toast("District Update Failed", false);
+        }
+      } else {
+        const createResponse = await ApiCall("POST", districtPageUrl, addDistrict);
+        console.log(createResponse,"response");
+        if (createResponse.status === 200) {
+          setDistrictModal(false);
+          setValidated(false);
+          setAddDistrict("");
+          getDistrict();
+
+          Show_Toast("District added successfully", true);
+        } else {
+          console.log(error,"error")
+          Show_Toast(error, false);
+        }
       }
     } catch (error) {
       Show_Toast(error, false);
@@ -73,7 +102,7 @@ function District() {
     }
   };
   useEffect(() => {
-    getStateList();
+    // getStateList();
     getDistrict();
   }, []);
   const editDistrict = (district) => {
@@ -103,7 +132,11 @@ function District() {
                 className="btn btn-custom ms-3 float-end"
                 onClick={() => {
                   setDistrictModal({ show: true, id: null });
+                  getStateList();
+
                   setValidated(false);
+                  setDistrictEditModal("");
+                  setAddDistrict("");
                 }}
               >
                 Add
@@ -149,12 +182,14 @@ function District() {
                                 districts.districtName.toUpperCase()) ||
                                 "--"}
                             </td>
-                            {/* <td>
+                            <td>
                               {districts?.isEditable === true ? (
                                 <a
                                   className="dropdown-item d-flex align-items-center gap-3"
-                                  onClick={() => editDistrict(districts)}
-                                >
+                                  onClick={() => {
+                                    setDistrictEditModal({ show: true, id: null });
+                                    setAddDistrict(districts);
+                                  }}                                >
                                   <i
                                     className="fs-4 fas fa-pencil-alt"
                                     style={{ color: "red" }}
@@ -175,7 +210,7 @@ function District() {
                                   ></i>
                                 </button>
                               )}
-                            </td> */}
+                            </td>
                           </tr>
                         ))}
                       </>
@@ -239,6 +274,82 @@ function District() {
                 Please select a state.
               </Form.Control.Feedback>
             </div>
+            <div className="mb-4">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                District Name
+              </label>
+              <input
+                required
+                className="form-control form-control-lg "
+                rows="4"
+                placeholder="Enter a district name"
+                value={addDistrict?.districtName || ""}
+                onChange={(e) =>
+                  setAddDistrict({
+                    ...addDistrict,
+                    districtName: e.target.value,
+                  })
+                }
+              ></input>
+              <Form.Control.Feedback type="invalid">
+                Please provide a district Name.
+              </Form.Control.Feedback>
+            </div>
+            <div className="col-12 mt-4">
+              <button type="submit" className="btn btn-custom float-end ms-1">
+                {addDistrict?.id ? "Update" : "Save"}
+              </button>
+            </div>
+          </Form>
+          <button
+            className="btn btn-cancel float-end me-1"
+            onClick={() => {
+              setDistrictModal({ show: false, id: null });
+            }}
+          >
+            cancel
+          </button>
+        </ModalComponent>
+
+        {/* edit  modal */}
+        <ModalComponent
+          show={districtEditModal.show}
+          onHide={() => {
+            setDistrictEditModal({ show: false, id: null });
+          }}
+          title={<h5 style={{ color: "#F7AE15", margin: 0 }}>Edit District</h5>}
+          centered
+          width={"500px"}
+        >
+          <Form
+            noValidate
+            validated={validated}
+            onSubmit={(e) => Check_Validation(e, addDisrtictFun, setValidated)}
+          >
+            {/* <div className="mb-4">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                State
+              </label>
+              <Select
+                required
+                options={stateList?.map((state) => ({
+                  value: state?.id,
+                  label: state?.stateName,
+                }))}
+                value={selectedState?.stateName}
+                onChange={(selectedOption) =>
+                  setAddDistrict({
+                    ...addDistrict,
+                    stateName: selectedOption?.label,
+                  })
+                }
+                placeholder="Select a state"
+                isSearchable={true}
+              />
+              <Form.Control.Feedback type="invalid">
+                Please select a state.
+              </Form.Control.Feedback>
+            </div> */}
             <div className="mb-4">
               <label htmlFor="exampleInputEmail1" className="form-label">
                 District Name

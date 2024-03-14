@@ -70,8 +70,17 @@ function Sidebar() {
 
     { title: "Alerts", icon: "fas fa-bell", route: "user/alerts" },
     { title: "Live News", icon: "fas fa-newspaper", route: "user/news" },
-    { title: "Wallets", icon: "fas fa-wallet", route: "" },
-    { title: "Withdrawals", icon: "fas fa-money-bill", route: "" },
+
+    {
+      title: "Withdrawals",
+      icon: "fas fa-money-bill",
+      sub: [
+        { title: "Withdraw History", route: "withraw/history",  },
+        { title: "Pending withrawals", route: "pending/withraw",  },
+
+      ],
+      
+    } ,  
     { title: "Awards & Rewards", icon: "fas fa-trophy", route: "user/awards" },
     {
       title: "My Account",

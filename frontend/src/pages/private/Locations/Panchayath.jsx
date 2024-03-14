@@ -5,6 +5,7 @@ import ModalComponent from "../../../Components/ModalComponet";
 import { Form } from "react-bootstrap";
 import {
   districtlistinZonalUrl,
+  editPanchayathUrl,
   paginatedPanchayathUrl,
   panchayathPageUrl,
   panchayathlistPageUrl,
@@ -22,6 +23,8 @@ function Panchayath() {
     show: false,
     id: null,
   });
+  const [panchayathEditModal, setPanchayathEditModal] = useState({ show: false, id: null });
+
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
   const [addPanchayath, setAddPanchayath] = useState({});
@@ -105,9 +108,8 @@ function Panchayath() {
       const response = await ApiCall("get", paginatedPanchayathUrl,{},params);
      console.log(response,"response")
       if (response.status === 200) {
-        setPanchayathList(response?.data?.
-          panchayathData?.results);
-          setTotalPages(response?.data?.panchayathData?.totalPages);
+        setPanchayathList(response?.data?.panchayaths);
+          setTotalPages(response?.data?.totalPages);
 
         setIsLoading(false);
       } else {
@@ -123,18 +125,55 @@ function Panchayath() {
     }
   };
   //---------Add--panchayath---------
-  const addPanchayathFun = async () => {
+  // const addPanchayathFun = async () => {
 
+  //   try {
+  //     const response = await ApiCall("post", panchayathPageUrl, addPanchayath);
+  //     if (response.status === 200) {
+  //       setPanchayathModal(false);
+  //       setValidated(false);
+  //       setAddPanchayath("");
+  //       getPanchayathList();
+  //       // ();
+  //       Show_Toast("Panchayath added successfully", true);
+  //     } 
+  //   } catch (error) {
+  //     Show_Toast(error, false);
+  //   }
+  // };
+
+
+  const addPanchayathFun = async () => {
     try {
-      const response = await ApiCall("post", panchayathPageUrl, addPanchayath);
-      if (response.status === 200) {
-        setPanchayathModal(false);
-        setValidated(false);
-        setAddPanchayath("");
-        getPanchayathList();
-        // ();
-        Show_Toast("Panchayath added successfully", true);
-      } 
+      if (addPanchayath?.id) {
+        const updateResponse = await ApiCall(
+          "POST",
+          `${editPanchayathUrl}/${addPanchayath.id}`,
+          addPanchayath
+        );
+        console.log(updateResponse, "updated panchyah");
+        if (updateResponse.status === 200) {
+          setPanchayathEditModal(false);
+          setValidated(false);
+          getPanchayathList();
+          Show_Toast("panchayath updated successfully", true);
+        } else {
+          Show_Toast("panchayath Update Failed", false);
+        }
+      } else {
+        const createResponse = await ApiCall("POST", panchayathPageUrl, addPanchayath);
+        if (createResponse.status === 200) {
+          setPanchayathModal(false);
+          setValidated(false);
+          setAddPanchayath("");
+          getPanchayathList();
+
+          Show_Toast("panchayath added successfully", true);
+        } else {
+          console.log(error,"error")
+          Show_Toast(error, false);
+        }
+      }
     } catch (error) {
       Show_Toast(error, false);
     }
@@ -147,7 +186,7 @@ function Panchayath() {
   };
   useEffect(() => {
     getPanchayathList();
-    getStateList();
+    // getStateList();
     if (districtId) {
       getZonallist();
     }
@@ -175,6 +214,8 @@ function Panchayath() {
                 className="btn btn-custom ms-3 float-end"
                 onClick={() => {
                   setPanchayathModal({ show: true, id: null });
+                      getStateList();
+
                   setValidated(false);
                   setAddPanchayath("");
                 }}
@@ -240,26 +281,40 @@ function Panchayath() {
                                 </td>
 
                                 <td>
-                                  {(panchayaths?.name &&
-                                    panchayaths.name.toUpperCase()) ||
+                                  {(panchayaths?.panchayathName &&
+                                    panchayaths.panchayathName.toUpperCase()) ||
                                     "--"}
                                 </td>
                                        
-                          {/* <td>
-                              {" "}
-                              <a
-                                className="dropdown-item d-flex align-items-center gap-3"
-                                onClick={() => {
-                                  setPanchayathModal({ show: true, id: null });
-                                  setAddPanchayath(panchayaths);
-                                }}
-                              >
-                                <i
-                                  className="fs-4 fas fa-pencil-alt"
-                                  style={{ color: "red" }}
-                                ></i>
-                              </a>
-                            </td> */}
+                                <td>
+                              {panchayaths?.isEditable === true ? (
+                                <a
+                                  className="dropdown-item d-flex align-items-center gap-3"
+                                  onClick={() => {
+                                    setPanchayathEditModal({ show: true, id: null });
+                                    setAddPanchayath(panchayaths);
+                                  }}                                >
+                                  <i
+                                    className="fs-4 fas fa-pencil-alt"
+                                    style={{ color: "red" }}
+                                  ></i>
+                                </a>
+                              ) : (
+                                <button
+                                  className="dropdown-item d-flex align-items-center gap-3"
+                                  onClick={() =>
+                                    Show_Toast(
+                                      "Panchayath in already taken so not able to edit"
+                                    )
+                                  }
+                                >
+                                  <i
+                                    className="fs-4 fas fa-pencil-alt"
+                                    style={{ color: "grey" }}
+                                  ></i>
+                                </button>
+                              )}
+                            </td>
                              
                                
                               </tr>
@@ -299,7 +354,7 @@ function Panchayath() {
             {/* -------------------------pagination--------------------- */}
           </div>
         </div>
-
+{/* add modal */}
         <ModalComponent
           show={PanchayathModal.show}
           onHide={() => {
@@ -396,6 +451,142 @@ function Panchayath() {
                 Please provide a zonal
               </Form.Control.Feedback>
             </div>
+            <div className="mb-4">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                Panchayath
+              </label>
+              <input
+                required
+                className="form-control form-control-lg "
+                rows="4"
+                type="text"
+                placeholder="Enter panchayath name"
+                value={addPanchayath?.panchayathName}
+                onChange={(e) =>
+                  setAddPanchayath({
+                    ...addPanchayath,
+                    panchayathName: e.target.value,
+                  })
+                }
+              />
+              <Form.Control.Feedback type="invalid">
+                Please provide a panchayath name.
+              </Form.Control.Feedback>
+            </div>
+           
+
+            <div className="col-12 mt-4">
+            <button type="submit" className="btn btn-custom float-end ms-1">
+                {addPanchayath?._id ? "Update" : "Save"}
+              </button>
+            </div>
+          </Form>
+          <button
+            className="btn btn-cancel float-end me-1"
+            onClick={() => {
+              setPanchayathModal({ show: false, id: null });
+            }}
+          >
+            cancel
+          </button>
+        </ModalComponent>
+        {/* edit modal */}
+        <ModalComponent
+          show={panchayathEditModal.show}
+          onHide={() => {
+            setPanchayathEditModal({ show: false, id: null });
+          }}
+          title={
+            <h5 style={{ color: "#F7AE15", margin: 0 }}>Edit Panchayath</h5>
+          }
+          centered
+          width={"500px"}
+        >
+          <Form
+            noValidate
+            validated={validated}
+            onSubmit={(e) =>
+              Check_Validation(e, addPanchayathFun, setValidated)
+            }
+          >
+            {/* <div className="mb-4">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                State
+              </label>
+
+              <Select
+                required
+                options={stateList?.map((state) => ({
+                  value: state?.id,
+                  label: state?.stateName,
+                }))}
+                value={selectedState?.stateName}
+                onChange={(selectedOption) => {
+                  setSelectedId(selectedOption?.value);
+                  setAddPanchayath({
+                    ...addPanchayath,
+                    stateName: selectedOption?.label,
+                  });
+                }}
+                placeholder="Select a state"
+                isSearchable={true}
+              />
+
+              <Form.Control.Feedback type="invalid">
+                Please select a state.
+              </Form.Control.Feedback>
+            </div>
+            <div className="mb-4">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                District
+              </label>
+              <Select
+                required
+                options={districtList?.map((districts) => ({
+                  value: districts?.id,
+                  label: districts?.name,
+                }))}
+                value={selectedState?.stateName}
+                onChange={(selectedOption) => {
+                  setDistrictId(selectedOption?.value);
+
+                  setAddPanchayath({
+                    ...addPanchayath,
+                    districtName: selectedOption?.label,
+                  });
+                }}
+                placeholder="Select a district"
+                isSearchable={true}
+              />
+              <Form.Control.Feedback type="invalid">
+                Please provide a package Amount.
+              </Form.Control.Feedback>
+            </div>
+            <div className="mb-4">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                Zonal
+              </label>
+              <Select
+                required
+                options={zonalList?.map((zonal) => ({
+                  value: zonal?.id,
+                  label: zonal?.name,
+                }))}
+                value={selectedState?.zonalName}
+                onChange={(selectedOption) => {
+
+                  setAddPanchayath({
+                    ...addPanchayath,
+                    zonalName: selectedOption?.label,
+                  });
+                }}
+                placeholder="Select a zonal"
+                isSearchable={true}
+              />
+              <Form.Control.Feedback type="invalid">
+                Please provide a zonal
+              </Form.Control.Feedback>
+            </div> */}
             <div className="mb-4">
               <label htmlFor="exampleInputEmail1" className="form-label">
                 Panchayath

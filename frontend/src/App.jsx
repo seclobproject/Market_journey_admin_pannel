@@ -22,6 +22,7 @@ import Uploadvideos from "./pages/private/Lives/Uploadvideos";
 import Livenew from "./pages/private/Lives/Livenew";
 import Withrawhistroy from "./pages/private/Withrawals/Withrawhistroy";
 import Pendingwithraw from "./pages/private/Withrawals/Pendingwithraw";
+import Viewtree from "./pages/private/Users/Viewtree";
 
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
           <Route path="/user/news" element={<Livenew />}/>
           <Route path="/withraw/history" element={<Withrawhistroy />}/>
           <Route path="/pending/withraw" element={<Pendingwithraw />}/>
+          <Route path="/user/downline" element={<Viewtree />}/>
 
 
 

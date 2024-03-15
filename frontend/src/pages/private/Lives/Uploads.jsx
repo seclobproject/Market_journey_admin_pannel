@@ -16,7 +16,6 @@ import { ApiCall } from "../../../Services/Api";
 function Uploads() {
   const [imageModal, setImageModal] = useState({ show: false, id: null });
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
-
   const [isLoading, setIsLoading] = useState(false);
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
@@ -25,7 +24,6 @@ function Uploads() {
   const [viewImage, setViewImage] = useState({});
   const [ImageList, setImageList] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
-
   const [filename, setFileName] = useState({});
 
   //-----------list state--------

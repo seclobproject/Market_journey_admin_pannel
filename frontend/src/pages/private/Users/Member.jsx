@@ -427,11 +427,12 @@ function Member() {
                         <h6 className="fs-4 fw-semibold mb-0">Status</h6>
                       </th>
                       <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Add bonus</h6>
-                      </th>
-                      <th>
                         <h6 className="fs-4 fw-semibold mb-0">View Details</h6>
                       </th>
+                      <th>
+                        <h6 className="fs-4 fw-semibold mb-0">Add bonus</h6>
+                      </th>
+                     
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">View Tree</h6>
                       </th>
@@ -481,6 +482,16 @@ function Member() {
                               )}
                             </td>
                             <td>
+                              <i
+                                className="fas fa-eye"
+                                onClick={() =>
+                                  navigate("/user/details", {
+                                    state: { data: users?._id },
+                                  })
+                                }
+                              ></i>
+                            </td>
+                            <td>
                               {" "}
                               <button
                                 className="btn btn-custom"
@@ -493,16 +504,7 @@ function Member() {
                                 <i className="fas fa-plus"></i> Add Bonus
                               </button>
                             </td>
-                            <td>
-                              <i
-                                className="fas fa-eye"
-                                onClick={() =>
-                                  navigate("/user/details", {
-                                    state: { data: users?._id },
-                                  })
-                                }
-                              ></i>
-                            </td>
+                          
                             <td>
                               <button className="btn btn-custom "
                               onClick={() =>

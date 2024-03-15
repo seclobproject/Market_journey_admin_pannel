@@ -155,37 +155,10 @@ function Livenew() {
                             <td>{index + 1}</td>
                             <td>{news?.title}</td>
 
-                            <td style={{ width: "500px", height: '10px', overflow: "hidden" }}>{news?.news}</td>
-                            <td>
-                              {" "}
-                              <a
-                                className="dropdown-item d-flex align-items-center gap-3"
-                                onClick={() => {
-                                  setDeleteModal({
-                                    show: true,
-                                    id: null,
-                                  });
-                                  setAddNews(news);
-                                }}
-                              >
-                                <i
-                                  className="fs-4 fas fa-trash-alt"
-                                  style={{ color: "red" }}
-                                />
-                              </a>
-                              <a
-                                className="dropdown-item d-flex align-items-center gap-3 mt-3"
-                                onClick={() => {
-                                  setNewsModal({ show: true, id: null });
-                                  setAddNews(news);
-                                }}
-                              >
-                                <i
-                                  className="fs-4 fas fa-pencil-alt"
-                                  style={{ color: "red" }}
-                                ></i>{" "}
-                              </a>
-                            </td>
+                            <td style={{ width: "100px", height: "100px", overflow: "hidden", whiteSpace: "pre-wrap" }}>
+  <p style={{ margin: 0 }}>{news?.news}</p>
+</td>
+
                             <td></td>
                           </tr>
                         ))}

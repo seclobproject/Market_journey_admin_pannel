@@ -249,7 +249,7 @@ function Uploadvideos() {
                                       }}
                                     />
                                   </td>
-                                  <td>{video?.videoTitle || "--"}</td>
+                                  <td style={{ width: "300px", height: "150px", overflow: "hidden", whiteSpace: "pre-wrap" }}>{video?.videoTitle || "--"}</td>
                                   <td>
                                     {video?.videoLink ? (
                                       <a

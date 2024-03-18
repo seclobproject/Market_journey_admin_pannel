@@ -155,7 +155,7 @@ function Livenew() {
                             <td>{index + 1}</td>
                             <td>{news?.title}</td>
 
-                            <td style={{ width: "150px", height: "150px", overflow: "hidden", whiteSpace: "pre-wrap" }}>
+                            <td style={{ width: "300px", height: "150px", overflow: "hidden", whiteSpace: "pre-wrap" }}>
   <p style={{ margin: 0 }}>{news?.news}</p>
 </td>
 

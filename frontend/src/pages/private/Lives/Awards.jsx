@@ -224,7 +224,7 @@ function Awards() {
                             <td>{index + 1}</td>
 
                             <td>{details?.memberName || "--"}</td>
-                            <td>{details?.achivedDetails || "--"}</td>
+                            <td style={{ width: "300px", height: "150px", overflow: "hidden", whiteSpace: "pre-wrap" }}>{details?.achivedDetails || "--"}</td>
 
                             <td>
                               <img

@@ -211,7 +211,7 @@ function Uploads() {
                                     }}
                                   />
                                 </td>
-                                <td>{image?.description}</td>
+                                <td style={{ width: "300px", height: "150px", overflow: "hidden", whiteSpace: "pre-wrap" }}>{image?.description}</td>
                                 <td>
                                   {" "}
                                   <a

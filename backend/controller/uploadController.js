@@ -409,7 +409,7 @@ try {
 export const addNews = async (req, res, next) => {
   try {
       
-      const {news } = req.body;
+      const {news,title } = req.body;
         const adminId = req.admin._id;
         const admin = await Admin.findById(adminId);
 
@@ -418,7 +418,8 @@ export const addNews = async (req, res, next) => {
       }
 
       const newNews = await LiveNews.create({
-        news
+        news,
+        title
       });
 
 if(newNews){
@@ -442,7 +443,7 @@ if(newNews){
     try {
       const adminId = req.admin._id;
       const { id } = req.params;
-      const { news} = req.body;
+      const { news,title} = req.body;
 
       // Find the admin
       const admin = await Admin.findById(adminId);
@@ -458,6 +459,7 @@ if(newNews){
 
       // Update the Alert data with the new values if they are provided
       newsData.news = news || newsData.news;
+      newsData.news = title || newsData.title;
 
       // Save the updated SEO data
       const updatedNews = await newsData.save();
@@ -649,3 +651,41 @@ if(alert){
   }
 
   }
+
+
+
+
+  //----------------------------Add Bank account-------------------------
+
+
+   export const addUserBankAccount = async (req, res, next) => {
+    try {
+      const userId = req.user._id;
+      const {holderName,accountNum,ifscCode,bankName} = req.body;
+
+      const userData = await User.findById(userId);
+      if (!userData) {
+        return next(errorHandler(401, "User not found"));
+      }
+
+      userData.bankDetails.bankName = bankName|| userData.bankDetails.bankName;
+      userData.bankDetails.holderName = holderName|| userData.bankDetails.holderName;
+      userData.bankDetails.accountNum = accountNum|| userData.bankDetails.accountNum;
+      userData.bankDetails.ifscCode = ifscCode|| userData.bankDetails.ifscCode;
+
+
+      const updatedUser = await userData.save();
+
+      if(updatedUser){
+        return res.status(200).json({
+          updatedUser,
+            sts: "01",
+            msg: "Bank data updated successfully",
+          });
+      }
+
+
+    } catch (error) {
+      next(error);
+    }
+  };

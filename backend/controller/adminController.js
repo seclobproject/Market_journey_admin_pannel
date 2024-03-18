@@ -1032,7 +1032,7 @@ export const acceptUser = async (req, res, next) => {
             await sponserUser1.save();
           }
 
-          // const referalIncome=generateReferalIncome(sponserUser1,sponserUser2,updatedUser)
+          const referalIncome=generateReferalIncome(sponserUser1,sponserUser2,updatedUser)
           res
             .status(200)
             .json({ updatedUser, msg: "User verification Accepted!" });

@@ -135,10 +135,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // transactionPassword: {
-    //   type: String,
-    //   required: true,
-    // },
+    bankDetails: {
+      holderName: String,
+      accountNum: String,
+      ifscCode: String,
+      bankName: String,
+    },
     transactionNumber: {
       type: String,
     },

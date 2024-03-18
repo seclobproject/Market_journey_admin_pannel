@@ -110,7 +110,7 @@ export const viewAllUsers = async (req, res, next) => {
 
 
 
-
+// ADD, EDIT , DELETE State----------------------------------------------------------------------------------------------------------
 
 //add State Franchise
 
@@ -187,6 +187,43 @@ export const editState=async(req,res,next)=>{
   }
 }
 
+
+//delete State
+
+export const deleteState=async(req,res,next)=>{
+  try {
+    const adminId=req.admin._id;
+    const admin=await Admin.findById(adminId)
+    const {id}=req.params;
+
+    if(!admin){
+      return next(errorHandler(401, "Admin not found"));
+    }
+    let stateData = await State.findById(id);
+    if (!stateData) {
+      return next(errorHandler(404, "state data not found"));
+    }
+    if(stateData.editable===false){
+      return next(errorHandler(404, "Already use this State, so can't Delete "));
+    }
+
+    const deletedState=await State.findByIdAndDelete(id);
+
+    if(deletedState){
+      return res.status(200).json({
+        deletedState,
+          sts: "01",
+          msg: "State  deleted successfully",
+        });
+    }
+
+  } catch (error) {
+    next(error)
+  }
+}
+
+
+// ADD, EDIT , DELETE Districts------------------------------------------------------------------------------------------------------------
 
 //add District Franchise
 
@@ -272,7 +309,7 @@ export const editDistrict=async(req,res,next)=>{
                   stateName: updatedDistrict.stateName,
                   isEditable:updatedDistrict.editable,
           sts: "01",
-          msg: "District data updated successfully",
+          msg: "District  updated successfully",
         });
     }
 
@@ -281,6 +318,66 @@ export const editDistrict=async(req,res,next)=>{
   }
 }
 
+
+//delete District
+
+export const deleteDistrict = async (req, res, next) => {
+  try {
+    const adminId = req.admin._id;
+    const admin = await Admin.findById(adminId);
+    const { id } = req.params;
+
+    if (!admin) {
+      return next(errorHandler(401, "Admin not found"));
+    }
+
+    let districtData = await District.findById(id);
+    if (!districtData) {
+      return next(errorHandler(404, "District data not found"));
+    }
+
+    if (!districtData.editable) {
+      return next(errorHandler(404, "This district is already in use and cannot be deleted"));
+    }
+
+    const stateName = districtData.stateName;
+    const stateData = await State.findOne({ name: stateName });
+
+    if (!stateData) {
+      return next(errorHandler(404, "State data not found"));
+    }
+
+    // Delete the district from the District model
+    const deletedDistrict = await District.findByIdAndDelete(id);
+
+    // Remove the deleted district from the districts array in the State model
+    if (deletedDistrict) {
+      const upState=await State.findByIdAndUpdate(
+        stateData._id,
+        { $pull: { districts: deletedDistrict._id } },
+        { new: true }
+      );
+
+
+      // If there are no more districts in the state, set editable to true
+      if (upState.districts.length === 0) {
+        upState.editable = true;
+        await upState.save();
+      }
+      return res.status(200).json({
+        deletedDistrict,
+        sts: "01",
+        msg: "District deleted successfully",
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+// ADD, EDIT , DELETE Zonals------------------------------------------------------------------------------------------------------------
 //add Zonal
 
 export const addZonal=async(req,res,next)=>{
@@ -359,7 +456,7 @@ export const editZonal=async(req,res,next)=>{
         districtName: updatedzonal.districtName, 
         isEditable:updatedzonal.editable,
           sts: "01",
-          msg: "Zonal data updated successfully",
+          msg: "Zonal  updated successfully",
         });
     }
 
@@ -367,6 +464,59 @@ export const editZonal=async(req,res,next)=>{
     next(error)
   }
 }
+
+
+//delete zonal
+
+
+
+export const deleteZonal=async(req,res,next)=>{
+  try {
+    const adminId=req.admin._id;
+    const admin=await Admin.findById(adminId)
+    const {id}=req.params;
+
+    if(!admin){
+      return next(errorHandler(401, "Admin not found"));
+    }
+    let zonalData = await Zonal.findById(id);
+    if (!zonalData) {
+      return next(errorHandler(404, "zonal data not found"));
+    }
+    if(zonalData.editable===false){
+      return next(errorHandler(404, "Already use this Zonal, so can't delete "));
+    }
+    const districtName=zonalData.districtName;
+    const districtData=await District.findOne({name:districtName})
+    
+    const deletedZonal=await Zonal.findByIdAndDelete(id);
+
+    
+
+    if(deletedZonal){
+      const upDistrict=await District.findByIdAndUpdate(
+        districtData._id,
+        { $pull: { zonals: deletedZonal._id } },
+        { new: true }
+      );
+
+      if(upDistrict.zonals.length==0){
+        upDistrict.editable=true
+        await upDistrict.save()
+      }
+      return res.status(200).json({
+        deletedZonal,
+          sts: "01",
+          msg: "Zonal  deleted successfully",
+        });
+    }
+
+  } catch (error) {
+    next(error)
+  }
+}
+
+// ADD, EDIT , DELETE Panchayath------------------------------------------------------------------------------------------------------------
 
 //add panchayath
 
@@ -461,6 +611,58 @@ export const editPanchayath=async(req,res,next)=>{
     next(error)
   }
 }
+
+
+//delete panchayath
+
+
+
+export const deletePanchayath=async(req,res,next)=>{
+  try {
+    const adminId=req.admin._id;
+    const admin=await Admin.findById(adminId)
+    const {id}=req.params;
+
+    if(!admin){
+      return next(errorHandler(401, "Admin not found"));
+    }
+    let panchayathData = await Panchayath.findById(id);
+    if (!panchayathData) {
+      return next(errorHandler(404, "panchayath data not found"));
+    }
+    if(panchayathData.editable===false){
+      return next(errorHandler(404, "Already use this Panchayath, so can't delete "));
+    }
+    const zonalName=panchayathData.zonalName;
+    const zonalData=await Zonal.findOne({name:zonalName})
+    console.log(zonalData);
+    const deletedPanchayath=await Panchayath.findByIdAndDelete(id);
+
+    
+
+    if(deletedPanchayath){
+      const upZonal=await Zonal.findByIdAndUpdate(
+        zonalData._id,
+        { $pull: { zonals: deletedPanchayath._id } },
+        { new: true }
+      );
+      if(upZonal.panchayaths.length==0){
+        upZonal.editable=true
+        await zonalData.save()
+      }
+      return res.status(200).json({
+        deletedPanchayath,
+          sts: "01",
+          msg: "Panchayath deleted successfully",
+        });
+    }
+
+  } catch (error) {
+    next(error)
+  }
+}
+
+
 
 // view params locations-----------------------------------------------------------------------------------------------
 
@@ -829,6 +1031,7 @@ export const acceptUser = async (req, res, next) => {
             sponserUser1.childLevel1.push(updatedUser._id);
             await sponserUser1.save();
           }
+
           // const referalIncome=generateReferalIncome(sponserUser1,sponserUser2,updatedUser)
           res
             .status(200)
@@ -1100,7 +1303,7 @@ export const editProfileByAdmin = async (req, res, next) => {
     if (adminData) {
       const userData = await User.findById(id);
       if (userData) {
-        const { name, password, address } =
+        const { name,email, password, address } =
           req.body;
         userData.name = name || userData.name;
         userData.address = address || userData.address;
@@ -1132,4 +1335,7 @@ export const editProfileByAdmin = async (req, res, next) => {
 
 
 
-//--------------------------------------------------------------------------------------------------
+//---------------------------------------------------Add bank Account-----------------------------------------------
+
+
+

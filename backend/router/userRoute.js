@@ -4,6 +4,7 @@ import {
   addUser, changePassword, editProfile, userLogin, verifyUser, viewLevel1User, viewLevel2User, viewUserProfile,
 } from "../controller/userController.js";
 import { protectUser } from "../middleware/authMiddleware.js";
+import { addUserBankAccount } from "../controller/uploadController.js";
 
 const router = express.Router();
 
@@ -13,6 +14,7 @@ router.post("/user-login", userLogin);
 router.post("/user-verification", protectUser,verifyUser);
 router.post("/change-password", protectUser,changePassword);
 router.post("/edit-profile", protectUser,editProfile);
+router.post("/add-bank-account", protectUser,addUserBankAccount);
 router.post("/add-referal-user",addReferalUser);
 
 

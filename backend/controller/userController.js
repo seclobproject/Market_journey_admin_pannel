@@ -280,6 +280,7 @@ export const viewUserProfile = async (req, res, next) => {
         inDirectIncome: inDirectIncome,
         walletAmount: wallet,
         totalLevelIncome:totalLevelIncome,
+        bankDetails:userData.bankDetails,
         sts: "01",
         msg: "get user profile Success",
       });
@@ -291,6 +292,8 @@ export const viewUserProfile = async (req, res, next) => {
   }
 };
 
+
+//
 
    // edit user profile by user
 
@@ -443,7 +446,7 @@ export const viewLevel1User=async(req,res,next)=>{
             "name ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName",
         },
       ]);
-
+console.log(user);
     // If user document is not found, return an error
     if (!user) {
       return next(errorHandler("User not found"));

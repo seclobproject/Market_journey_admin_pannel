@@ -7,22 +7,21 @@ import { ContextData } from "../../../Services/Context";
 import { Form } from "react-bootstrap";
 import { ApiCall } from "../../../Services/Api";
 import {
+  deletestateUrl,
   editStatepageUrl,
   statePageUrl,
   statelistPageUrl,
 } from "../../../utils/Constants";
 import Loader from "../../../Components/Loader";
-import { startSession } from "mongoose";
 
 function State() {
   const [stateModal, setStateModal] = useState({ show: false, id: null });
+  const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
   const [addState, setAddState] = useState({});
-  console.log(addState, "addState...........");
   const [stateList, setStateList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  console.log(stateList, "stateList...........");
 
   //---------add State---------
   const addStateFun = async () => {
@@ -33,7 +32,6 @@ function State() {
           `${editStatepageUrl}/${addState.id}`,
           addState
         );
-        console.log(updateResponse, "updated state");
         if (updateResponse.status === 200) {
           setStateModal(false);
           setValidated(false);
@@ -52,7 +50,7 @@ function State() {
 
           Show_Toast("State added successfully", true);
         } else {
-          console.log(error,"error")
+          console.log(error, "error");
           Show_Toast(error, false);
         }
       }
@@ -66,7 +64,6 @@ function State() {
     try {
       setIsLoading(true);
       const response = await ApiCall("get", statelistPageUrl);
-console.log(response,"statelist");
       if (response.status === 200) {
         setStateList(response?.data?.states);
         setIsLoading(false);
@@ -79,6 +76,26 @@ console.log(response,"statelist");
       }
     } catch (error) {
       console.error("Error fetching state list:", error);
+    }
+  };
+
+  //----------delete state----------
+  const deleteState = async () => {
+    try {
+      const response = await ApiCall(
+        "post",
+        `${deletestateUrl}/${addState.id}`
+      );
+      if (response?.status === 200) {
+        Show_Toast(response?.data?.msg, true);
+        setDeleteModal(false);
+        getStateList();
+      } else {
+        Show_Toast("Failed to delete", false);
+      }
+    } catch (error) {
+      console.error("Error deleting:", error);
+      Show_Toast("Failed to delete. Please try again.", false);
     }
   };
 
@@ -144,7 +161,7 @@ console.log(response,"statelist");
                             <td>
                               {states?.isEditable === true ? (
                                 <a
-                                  className="dropdown-item d-flex align-items-center gap-3"
+                                  className="dropdown-item d-flex align-items-center gap-3 mt-2"
                                   onClick={() => {
                                     setStateModal({ show: true, id: null });
                                     setAddState(states);
@@ -157,16 +174,43 @@ console.log(response,"statelist");
                                 </a>
                               ) : (
                                 <button
-                                  className="dropdown-item d-flex align-items-center gap-3"
-                                  // disabled
+                                  className="dropdown-item d-flex align-items-center gap-3 mt-2"
                                   onClick={() =>
                                     Show_Toast(
-                                      "State in already taken so not able to edit"
+                                      "State is already taken so not able to edit"
                                     )
                                   }
                                 >
                                   <i
                                     className="fs-4 fas fa-pencil-alt"
+                                    style={{ color: "grey" }}
+                                  ></i>
+                                </button>
+                              )}
+                              {states?.isEditable === true ? (
+                                <a
+                                  className="dropdown-item d-flex align-items-center gap-3 mt-2"
+                                  onClick={() => {
+                                    setDeleteModal({ show: true, id: null });
+                                    setAddState(states);
+                                  }}
+                                >
+                                  <i
+                                    className="fs-4 fas fa-trash-alt"
+                                    style={{ color: "red" }}
+                                  ></i>
+                                </a>
+                              ) : (
+                                <button
+                                  className="dropdown-item d-flex align-items-center gap-3 mt-2"
+                                  onClick={() =>
+                                    Show_Toast(
+                                      "State is already taken so not able to delete"
+                                    )
+                                  }
+                                >
+                                  <i
+                                    className="fs-4 fas fa-trash-alt"
                                     style={{ color: "grey" }}
                                   ></i>
                                 </button>
@@ -187,17 +231,8 @@ console.log(response,"statelist");
               </div>
             </div>
           )}
-          <div className="me-2">
-            {/* -------------------------pagination--------------------- */}
-            {/* <Pagination
-        pagination={pagination}
-        params={params}
-        setParams={setParams}
-      /> */}
-            {/* -------------------------pagination--------------------- */}
-          </div>
         </div>
-
+        {/* add modal */}
         <ModalComponent
           show={stateModal.show}
           onHide={() => {
@@ -245,6 +280,64 @@ console.log(response,"statelist");
           >
             cancel
           </button>
+        </ModalComponent>
+
+        {/* delete modal */}
+
+        <ModalComponent
+          show={deleteModal.show}
+          onHide={() => {
+            setDeleteModal({ show: false, id: null });
+          }}
+          centered
+          width={"500px"}
+        >
+          <div className="modal-body">
+            <div className="row mb-4">
+              <div className="col d-flex justify-content-center">
+                <i
+                  style={{ fontSize: "50px", color: "#fe9423" }}
+                  className="fa fa-exclamation-triangle "
+                  aria-hidden="true"
+                ></i>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col d-flex justify-content-center ">
+                <h5 className="">
+                  Are you sure you want to reject this State{""} ?
+                </h5>
+              </div>
+            </div>
+          </div>
+
+          <div className="modal-footer">
+            <div className="col gap-3 d-flex justify-content-center">
+              <button
+                onClick={() => {
+                  setDeleteModal({ show: false, id: null });
+                }}
+                type="button"
+                className="btn btn-cancel"
+                data-bs-dismiss="modal"
+              >
+                No, keep it
+              </button>
+              <button
+                type="button"
+                className="btn btn-custom text-white"
+                onClick={() => {
+                  deleteState();
+                }}
+              >
+                <i
+                  className="fs-4 fas fa-trash-alt me-2"
+                  style={{ color: "white" }}
+                />{" "}
+                Yes, Delete it
+              </button>
+            </div>
+          </div>
         </ModalComponent>
       </SlideMotion>
     </>

@@ -7,6 +7,7 @@ import DeleteConfirmation from "../../../Components/DeleteConfirmation";
 import { Form } from "react-bootstrap";
 import Select from "react-select";
 import {
+  deletedistrictPageUrl,
   districtPageUrl,
   districtlistPageUrl,
   editdistrictUrl,
@@ -16,19 +17,19 @@ import { ApiCall } from "../../../Services/Api";
 import Loader from "../../../Components/Loader";
 import { Show_Toast } from "../../../utils/Toastify";
 function District() {
-  const navigate = useNavigate();
+  const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
+  const [districtModal, setDistrictModal] = useState({ show: false, id: null });
+  const [districtEditModal, setDistrictEditModal] = useState({
+    show: false,
+    id: null,
+  });
   const [validated, setValidated] = useState(false);
-  const [formData, setFormData] = useState({});
   const { Check_Validation } = useContext(ContextData);
   const [addDistrict, setAddDistrict] = useState({});
-  console.log(addDistrict,"district")
-  const [districtModal, setDistrictModal] = useState({ show: false, id: null });
-  const [districtEditModal, setDistrictEditModal] = useState({ show: false, id: null });
-
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedState, setSelectedState] = useState(null);
+
   //get district list
   const getDistrict = async () => {
     try {
@@ -49,7 +50,7 @@ function District() {
     }
   };
 
-//add district 
+  //add district
   const addDisrtictFun = async () => {
     try {
       if (addDistrict.id) {
@@ -58,7 +59,6 @@ function District() {
           `${editdistrictUrl}/${addDistrict.id}`,
           addDistrict
         );
-        console.log(updateResponse, "updated dist");
         if (updateResponse.status === 200) {
           setDistrictEditModal(false);
           setValidated(false);
@@ -68,8 +68,11 @@ function District() {
           Show_Toast("District Update Failed", false);
         }
       } else {
-        const createResponse = await ApiCall("POST", districtPageUrl, addDistrict);
-        console.log(createResponse,"response");
+        const createResponse = await ApiCall(
+          "POST",
+          districtPageUrl,
+          addDistrict
+        );
         if (createResponse.status === 200) {
           setDistrictModal(false);
           setValidated(false);
@@ -78,7 +81,7 @@ function District() {
 
           Show_Toast("District added successfully", true);
         } else {
-          console.log(error,"error")
+          console.log(error, "error");
           Show_Toast(error, false);
         }
       }
@@ -101,21 +104,31 @@ function District() {
       console.error("Error fetching state list:", error);
     }
   };
+
+  //----------delete Disrict----------
+  const deleteDistrict = async () => {
+    try {
+      const response = await ApiCall(
+        "post",
+        `${deletedistrictPageUrl}/${addDistrict.id}`
+      );
+      if (response?.status === 200) {
+        Show_Toast(response?.data?.msg, true);
+        setDeleteModal(false);
+        getDistrict();
+      } else {
+        Show_Toast("Failed to delete ", false);
+      }
+    } catch (error) {
+      console.error("Error deleting :", error);
+      Show_Toast("Failed to delete. Please try again.", false);
+    }
+  };
   useEffect(() => {
     // getStateList();
     getDistrict();
   }, []);
-  const editDistrict = (district) => {
-    setDistrictModal({ show: true, id: null });
-    setAddDistrict(district);
-    const selectedState = stateList.find(
-      (state) => state.id === district.stateId
-    );
-    setSelectedState({
-      value: selectedState.id,
-      label: selectedState.stateName,
-    });
-  };
+
   return (
     <>
       <SlideMotion>
@@ -190,9 +203,13 @@ function District() {
                                 <a
                                   className="dropdown-item d-flex align-items-center gap-3"
                                   onClick={() => {
-                                    setDistrictEditModal({ show: true, id: null });
+                                    setDistrictEditModal({
+                                      show: true,
+                                      id: null,
+                                    });
                                     setAddDistrict(districts);
-                                  }}                                >
+                                  }}
+                                >
                                   <i
                                     className="fs-4 fas fa-pencil-alt"
                                     style={{ color: "red" }}
@@ -203,12 +220,41 @@ function District() {
                                   className="dropdown-item d-flex align-items-center gap-3"
                                   onClick={() =>
                                     Show_Toast(
-                                      "District in already taken so not able to edit"
+                                      "District is already taken so not able to edit"
                                     )
                                   }
                                 >
                                   <i
                                     className="fs-4 fas fa-pencil-alt"
+                                    style={{ color: "grey" }}
+                                  ></i>
+                                </button>
+                              )}
+                              {districts?.isEditable === true ? (
+                                <a
+                                  className="dropdown-item d-flex align-items-center gap-3 mt-2"
+                                  onClick={() => {
+                                    setDeleteModal({ show: true, id: null });
+                                    setAddDistrict(districts);
+                                  }}
+                                >
+                                  <i
+                                    className="fs-4 fas fa-trash-alt"
+                                    style={{ color: "red" }}
+                                  ></i>
+                                </a>
+                              ) : (
+                                <button
+                                  className="dropdown-item d-flex align-items-center gap-3 mt-2"
+                                  // disabled
+                                  onClick={() =>
+                                    Show_Toast(
+                                      "District is already taken so not able to delete"
+                                    )
+                                  }
+                                >
+                                  <i
+                                    className="fs-4 fas fa-trash-alt"
                                     style={{ color: "grey" }}
                                   ></i>
                                 </button>
@@ -388,6 +434,64 @@ function District() {
           >
             cancel
           </button>
+        </ModalComponent>
+
+        {/* delete modal */}
+
+        <ModalComponent
+          show={deleteModal.show}
+          onHide={() => {
+            setDeleteModal({ show: false, id: null });
+          }}
+          centered
+          width={"500px"}
+        >
+          <div className="modal-body">
+            <div className="row mb-4">
+              <div className="col d-flex justify-content-center">
+                <i
+                  style={{ fontSize: "50px", color: "#fe9423" }}
+                  className="fa fa-exclamation-triangle "
+                  aria-hidden="true"
+                ></i>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col d-flex justify-content-center ">
+                <h5 className="">
+                  Are you sure you want to reject this State{""} ?
+                </h5>
+              </div>
+            </div>
+          </div>
+
+          <div className="modal-footer">
+            <div className="col gap-3 d-flex justify-content-center">
+              <button
+                onClick={() => {
+                  setDeleteModal({ show: false, id: null });
+                }}
+                type="button"
+                className="btn btn-cancel"
+                data-bs-dismiss="modal"
+              >
+                No, keep it
+              </button>
+              <button
+                type="button"
+                className="btn btn-custom text-white"
+                onClick={() => {
+                  deleteDistrict();
+                }}
+              >
+                <i
+                  className="fs-4 fas fa-trash-alt me-2"
+                  style={{ color: "white" }}
+                />{" "}
+                Yes, Delete it
+              </button>
+            </div>
+          </div>
         </ModalComponent>
       </SlideMotion>
     </>

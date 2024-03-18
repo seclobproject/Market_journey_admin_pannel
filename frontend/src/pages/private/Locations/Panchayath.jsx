@@ -4,6 +4,7 @@ import { ContextData } from "../../../Services/Context";
 import ModalComponent from "../../../Components/ModalComponet";
 import { Form } from "react-bootstrap";
 import {
+  deletepanchayathUrl,
   districtlistinZonalUrl,
   editPanchayathUrl,
   paginatedPanchayathUrl,
@@ -23,12 +24,14 @@ function Panchayath() {
     show: false,
     id: null,
   });
-  const [panchayathEditModal, setPanchayathEditModal] = useState({ show: false, id: null });
-
+  const [panchayathEditModal, setPanchayathEditModal] = useState({
+    show: false,
+    id: null,
+  });
+  const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
   const [addPanchayath, setAddPanchayath] = useState({});
-  console.log(addPanchayath,"addPanchayath");
   const [stateList, setStateList] = useState([]);
   const [selectedState, setSelectedState] = useState(null);
   const [districtList, setdistrictList] = useState([]);
@@ -37,7 +40,6 @@ function Panchayath() {
   const [districtId, setDistrictId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [panchyathList, setPanchayathList] = useState([]);
-
   const [params, setParams] = useState({
     page: 1,
     pageSize: 10,
@@ -105,11 +107,10 @@ function Panchayath() {
     try {
       setIsLoading(true);
 
-      const response = await ApiCall("get", paginatedPanchayathUrl,{},params);
-     console.log(response,"response")
+      const response = await ApiCall("get", paginatedPanchayathUrl, {}, params);
       if (response.status === 200) {
         setPanchayathList(response?.data?.panchayaths);
-          setTotalPages(response?.data?.totalPages);
+        setTotalPages(response?.data?.totalPages);
 
         setIsLoading(false);
       } else {
@@ -118,7 +119,6 @@ function Panchayath() {
           response.status
         );
         setIsLoading(false);
-
       }
     } catch (error) {
       console.error("Error fetching state list:", error);
@@ -136,12 +136,11 @@ function Panchayath() {
   //       getPanchayathList();
   //       // ();
   //       Show_Toast("Panchayath added successfully", true);
-  //     } 
+  //     }
   //   } catch (error) {
   //     Show_Toast(error, false);
   //   }
   // };
-
 
   const addPanchayathFun = async () => {
     try {
@@ -151,7 +150,6 @@ function Panchayath() {
           `${editPanchayathUrl}/${addPanchayath.id}`,
           addPanchayath
         );
-        console.log(updateResponse, "updated panchyah");
         if (updateResponse.status === 200) {
           setPanchayathEditModal(false);
           setValidated(false);
@@ -161,7 +159,11 @@ function Panchayath() {
           Show_Toast("panchayath Update Failed", false);
         }
       } else {
-        const createResponse = await ApiCall("POST", panchayathPageUrl, addPanchayath);
+        const createResponse = await ApiCall(
+          "POST",
+          panchayathPageUrl,
+          addPanchayath
+        );
         if (createResponse.status === 200) {
           setPanchayathModal(false);
           setValidated(false);
@@ -170,7 +172,7 @@ function Panchayath() {
 
           Show_Toast("panchayath added successfully", true);
         } else {
-          console.log(error,"error")
+          console.log(error, "error");
           Show_Toast(error, false);
         }
       }
@@ -184,13 +186,33 @@ function Panchayath() {
       page: newPage,
     }));
   };
+
+  //----------delete Disrict----------
+  const deletepanchayath = async () => {
+    try {
+      const response = await ApiCall(
+        "post",
+        `${deletepanchayathUrl}/${addPanchayath.id}`
+      );
+      if (response?.status === 200) {
+        Show_Toast(response?.data?.msg, true);
+        setDeleteModal(false);
+        getPanchayathList();
+      } else {
+        Show_Toast("Failed to delete ", false);
+      }
+    } catch (error) {
+      console.error("Error deleting :", error);
+      Show_Toast("Failed to delete. Please try again.", false);
+    }
+  };
   useEffect(() => {
     getPanchayathList();
     // getStateList();
     if (districtId) {
       getZonallist();
     }
-  }, [districtId,params]);
+  }, [districtId, params]);
   useEffect(() => {
     if (selectedId) {
       getDistrictList();
@@ -200,21 +222,20 @@ function Panchayath() {
     <>
       <SlideMotion>
         <div className="card w-100 position-relative overflow-hidden">
-         
           <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
-          <h5
-            className="card-title fw-semibold mb-0 lh-sm px-0 mt-3"
-            style={{ color: "#F7AE15" }}
-          >
-            Panchayath
-          </h5>
+            <h5
+              className="card-title fw-semibold mb-0 lh-sm px-0 mt-3"
+              style={{ color: "#F7AE15" }}
+            >
+              Panchayath
+            </h5>
 
             <div>
               <button
                 className="btn btn-custom ms-3 float-end"
                 onClick={() => {
                   setPanchayathModal({ show: true, id: null });
-                      getStateList();
+                  getStateList();
 
                   setValidated(false);
                   setAddPanchayath("");
@@ -244,8 +265,7 @@ function Panchayath() {
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Zonal Name</h6>
                       </th>
-                    
-                      
+
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">
                           Panchayath Name
@@ -260,41 +280,43 @@ function Panchayath() {
                   <tbody>
                     {panchyathList?.length ? (
                       <>
-                        {panchyathList.map(
-                          (panchayaths, index) => (
-                            (
-                              <tr key={index}>
-                                <td>{index + 1}</td>
-                                <td>
-                                  {(panchayaths?.stateName &&
-                                    panchayaths.stateName.toUpperCase()) ||
-                                    "--"}
-                                </td>
-                                <td>
-                                  {(panchayaths?.districtName &&
-                                    panchayaths.districtName.toUpperCase()) ||
-                                    "--"}
-                                </td>
-                                <td>
-                                  {(panchayaths?.zonalName &&
-                                    panchayaths.zonalName.toUpperCase()) ||
-                                    "--"}
-                                </td>
+                        {panchyathList.map((panchayaths, index) => (
+                          <tr key={index}>
+                            <td>{index + 1}</td>
+                            <td>
+                              {(panchayaths?.stateName &&
+                                panchayaths.stateName.toUpperCase()) ||
+                                "--"}
+                            </td>
+                            <td>
+                              {(panchayaths?.districtName &&
+                                panchayaths.districtName.toUpperCase()) ||
+                                "--"}
+                            </td>
+                            <td>
+                              {(panchayaths?.zonalName &&
+                                panchayaths.zonalName.toUpperCase()) ||
+                                "--"}
+                            </td>
 
-                                <td>
-                                  {(panchayaths?.panchayathName &&
-                                    panchayaths.panchayathName.toUpperCase()) ||
-                                    "--"}
-                                </td>
-                                       
-                                <td>
+                            <td>
+                              {(panchayaths?.panchayathName &&
+                                panchayaths.panchayathName.toUpperCase()) ||
+                                "--"}
+                            </td>
+
+                            <td>
                               {panchayaths?.isEditable === true ? (
                                 <a
                                   className="dropdown-item d-flex align-items-center gap-3"
                                   onClick={() => {
-                                    setPanchayathEditModal({ show: true, id: null });
+                                    setPanchayathEditModal({
+                                      show: true,
+                                      id: null,
+                                    });
                                     setAddPanchayath(panchayaths);
-                                  }}                                >
+                                  }}
+                                >
                                   <i
                                     className="fs-4 fas fa-pencil-alt"
                                     style={{ color: "red" }}
@@ -305,7 +327,7 @@ function Panchayath() {
                                   className="dropdown-item d-flex align-items-center gap-3"
                                   onClick={() =>
                                     Show_Toast(
-                                      "Panchayath in already taken so not able to edit"
+                                      "Panchayath is already taken so not able to edit"
                                     )
                                   }
                                 >
@@ -315,13 +337,38 @@ function Panchayath() {
                                   ></i>
                                 </button>
                               )}
+                              {panchayaths?.isEditable === true ? (
+                                <a
+                                  className="dropdown-item d-flex align-items-center gap-3 mt-2"
+                                  onClick={() => {
+                                    setDeleteModal({ show: true, id: null });
+                                    setAddPanchayath(panchayaths);
+                                  }}
+                                >
+                                  <i
+                                    className="fs-4 fas fa-trash-alt"
+                                    style={{ color: "red" }}
+                                  ></i>
+                                </a>
+                              ) : (
+                                <button
+                                  className="dropdown-item d-flex align-items-center gap-3 mt-2"
+                                  // disabled
+                                  onClick={() =>
+                                    Show_Toast(
+                                      "Panchayath is already taken so not able to delete"
+                                    )
+                                  }
+                                >
+                                  <i
+                                    className="fs-4 fas fa-trash-alt"
+                                    style={{ color: "grey" }}
+                                  ></i>
+                                </button>
+                              )}
                             </td>
-                             
-                               
-                              </tr>
-                            )
-                          )
-                        )}
+                          </tr>
+                        ))}
                       </>
                     ) : (
                       <tr>
@@ -335,8 +382,8 @@ function Panchayath() {
               </div>
             </div>
           )}
-            {/* -------------------------pagination--------------------- */}
-            <div className="me-2 mb-3 d-flex ms-auto">
+          {/* -------------------------pagination--------------------- */}
+          <div className="me-2 mb-3 d-flex ms-auto">
             <Stack spacing={2}>
               <Pagination
                 count={totalPages}
@@ -345,7 +392,8 @@ function Panchayath() {
                 color="primary"
               />
             </Stack>
-          </div><div className="me-2">
+          </div>
+          <div className="me-2">
             {/* -------------------------pagination--------------------- */}
             {/* <Pagination
           pagination={pagination}
@@ -355,7 +403,7 @@ function Panchayath() {
             {/* -------------------------pagination--------------------- */}
           </div>
         </div>
-{/* add modal */}
+        {/* add modal */}
         <ModalComponent
           show={PanchayathModal.show}
           onHide={() => {
@@ -439,7 +487,6 @@ function Panchayath() {
                 }))}
                 value={selectedState?.zonalName}
                 onChange={(selectedOption) => {
-
                   setAddPanchayath({
                     ...addPanchayath,
                     zonalName: selectedOption?.label,
@@ -474,10 +521,9 @@ function Panchayath() {
                 Please provide a panchayath name.
               </Form.Control.Feedback>
             </div>
-           
 
             <div className="col-12 mt-4">
-            <button type="submit" className="btn btn-custom float-end ms-1">
+              <button type="submit" className="btn btn-custom float-end ms-1">
                 {addPanchayath?._id ? "Update" : "Save"}
               </button>
             </div>
@@ -610,10 +656,9 @@ function Panchayath() {
                 Please provide a panchayath name.
               </Form.Control.Feedback>
             </div>
-           
 
             <div className="col-12 mt-4">
-            <button type="submit" className="btn btn-custom float-end ms-1">
+              <button type="submit" className="btn btn-custom float-end ms-1">
                 {addPanchayath?._id ? "Update" : "Save"}
               </button>
             </div>
@@ -626,6 +671,64 @@ function Panchayath() {
           >
             cancel
           </button>
+        </ModalComponent>
+
+        {/* delete modal */}
+
+        <ModalComponent
+          show={deleteModal.show}
+          onHide={() => {
+            setDeleteModal({ show: false, id: null });
+          }}
+          centered
+          width={"500px"}
+        >
+          <div className="modal-body">
+            <div className="row mb-4">
+              <div className="col d-flex justify-content-center">
+                <i
+                  style={{ fontSize: "50px", color: "#fe9423" }}
+                  className="fa fa-exclamation-triangle "
+                  aria-hidden="true"
+                ></i>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col d-flex justify-content-center ">
+                <h5 className="">
+                  Are you sure you want to reject this State{""} ?
+                </h5>
+              </div>
+            </div>
+          </div>
+
+          <div className="modal-footer">
+            <div className="col gap-3 d-flex justify-content-center">
+              <button
+                onClick={() => {
+                  setDeleteModal({ show: false, id: null });
+                }}
+                type="button"
+                className="btn btn-cancel"
+                data-bs-dismiss="modal"
+              >
+                No, keep it
+              </button>
+              <button
+                type="button"
+                className="btn btn-custom text-white"
+                onClick={() => {
+                  deletepanchayath();
+                }}
+              >
+                <i
+                  className="fs-4 fas fa-trash-alt me-2"
+                  style={{ color: "white" }}
+                />{" "}
+                Yes, Delete it
+              </button>
+            </div>
+          </div>
         </ModalComponent>
       </SlideMotion>
     </>

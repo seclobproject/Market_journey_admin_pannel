@@ -241,19 +241,7 @@ function Awards() {
                             </td>
 
                             <td>
-                              <a
-                                className="dropdown-item d-flex align-items-center gap-3"
-                                onClick={() => {
-                                  setDeleteModal({ show: true, id: null });
-                                  setAddDetails(details);
-                                }}
-                              >
-                                <i
-                                  className="fs-4 fas fa-trash-alt"
-                                  style={{ color: "red" }}
-                                />
-                              </a>{" "}
-                              <a
+                            <a
                                 className="dropdown-item d-flex align-items-center gap-3"
                                 onClick={() => {
                                   setShowModal({ show: true, id: null });
@@ -266,6 +254,19 @@ function Awards() {
                                   style={{ color: "red" }}
                                 ></i>
                               </a>
+                              <a
+                                className="dropdown-item d-flex align-items-center gap-3 mt-2"
+                                onClick={() => {
+                                  setDeleteModal({ show: true, id: null });
+                                  setAddDetails(details);
+                                }}
+                              >
+                                <i
+                                  className="fs-4 fas fa-trash-alt"
+                                  style={{ color: "red" }}
+                                />
+                              </a>{" "}
+                            
                             </td>
                             <td></td>
                           </tr>

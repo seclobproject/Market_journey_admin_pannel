@@ -381,7 +381,7 @@ function Uploads() {
           <div className="row">
             <div className="col d-flex justify-content-center ">
               <h5 className="">
-                Are you sure you want to reject this image{""} ?
+                Are you sure you want to delete this image{""} ?
               </h5>
             </div>
           </div>

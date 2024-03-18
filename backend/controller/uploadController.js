@@ -459,7 +459,7 @@ if(newNews){
 
       // Update the Alert data with the new values if they are provided
       newsData.news = news || newsData.news;
-      newsData.news = title || newsData.title;
+      newsData.title = title || newsData.title;
 
       // Save the updated SEO data
       const updatedNews = await newsData.save();

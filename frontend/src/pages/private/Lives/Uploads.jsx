@@ -211,7 +211,7 @@ function Uploads() {
                                     }}
                                   />
                                 </td>
-                                <td>{image?.description}</td>
+                                <td style={{ width: "300px", height: "150px", overflow: "hidden", whiteSpace: "pre-wrap" }}>{image?.description}</td>
                                 <td>
                                   {" "}
                                   <a
@@ -381,7 +381,7 @@ function Uploads() {
           <div className="row">
             <div className="col d-flex justify-content-center ">
               <h5 className="">
-                Are you sure you want to reject this image{""} ?
+                Are you sure you want to delete this image{""} ?
               </h5>
             </div>
           </div>

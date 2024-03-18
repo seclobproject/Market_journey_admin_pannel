@@ -249,7 +249,7 @@ function Uploadvideos() {
                                       }}
                                     />
                                   </td>
-                                  <td>{video?.videoTitle || "--"}</td>
+                                  <td style={{ width: "300px", height: "150px", overflow: "hidden", whiteSpace: "pre-wrap" }}>{video?.videoTitle || "--"}</td>
                                   <td>
                                     {video?.videoLink ? (
                                       <a
@@ -266,7 +266,20 @@ function Uploadvideos() {
                                   <td>
                                     {" "}
                                     <a
-                                      className="dropdown-item d-flex align-items-center gap-3"
+                                      className="dropdown-item d-flex align-items-center gap-3 mt-2"
+                                      onClick={() => {
+                                        setVideoModal({ show: true, id: null });
+                                        setAddVideo(video);
+                                        setDetails(video);
+                                      }}
+                                    >
+                                      <i
+                                        className="fs-4 fas fa-pencil-alt"
+                                        style={{ color: "red" }}
+                                      ></i>
+                                    </a>
+                                    <a
+                                      className="dropdown-item d-flex align-items-center gap-3 mt-2"
                                       onClick={() => {
                                         setDeleteModal({
                                           show: true,
@@ -280,19 +293,7 @@ function Uploadvideos() {
                                         style={{ color: "red" }}
                                       />
                                     </a>
-                                    <a
-                                      className="dropdown-item d-flex align-items-center gap-3 mt-2"
-                                      onClick={() => {
-                                        setVideoModal({ show: true, id: null });
-                                        setAddVideo(video);
-                                        setDetails(video);
-                                      }}
-                                    >
-                                      <i
-                                        className="fs-4 fas fa-pencil-alt"
-                                        style={{ color: "red" }}
-                                      ></i>
-                                    </a>
+                                   
                                   </td>{" "}
                                 </tr>
                               )
@@ -481,7 +482,7 @@ function Uploadvideos() {
           <div className="row">
             <div className="col d-flex justify-content-center ">
               <h5 className="">
-                Are you sure you want to reject this image{""} ?
+                Are you sure you want to delete this image{""} ?
               </h5>
             </div>
           </div>

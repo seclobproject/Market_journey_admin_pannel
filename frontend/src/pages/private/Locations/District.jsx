@@ -29,6 +29,7 @@ function District() {
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedState, setSelectedState] = useState(null);
 
   //get district list
   const getDistrict = async () => {

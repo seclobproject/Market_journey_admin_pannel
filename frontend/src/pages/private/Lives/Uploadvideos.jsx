@@ -239,8 +239,7 @@ function Uploadvideos() {
                                   <td>
                                     <img
                                       alt="images"
-                                      src={`                                  http://192.168.29.152:8000/uploads/${video?.videoThambnail}
-                                  `}
+                                      src={`http://192.168.29.152:6003/uploads/${video?.videoThambnail}`}
                                       style={{
                                         width: "100px",
                                         height: "100px",

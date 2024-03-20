@@ -27,7 +27,6 @@ export const addUser = async (req, res, next) => {
       const sponser = req.admin ? req.admin._id : (req.user ? req.user._id : null);
         let { name, email, phone,packageAmount,franchise,franchiseName, address,state,district,zonal,panchayath, transactionPassword, password } =
           req.body;
-        console.log(zonal);
           const sponserData = (await User.findById(sponser)) || (await Admin.findById(sponser));
         const sponserName = sponserData.name;
      
@@ -54,7 +53,10 @@ export const addUser = async (req, res, next) => {
           zonal=null;
           panchayath=null;
         }else if(franchise==="Zonal Franchise"){
+          console.log(franchiseName);
+
           const zonalData=await User.findOne({franchiseName:franchiseName})
+          console.log(zonalData);
           if(zonalData)return next(errorHandler(401, "This Zonal franchise Already taken!!"));
           isZonalFranchise=true;
           panchayath=null;
@@ -62,14 +64,14 @@ export const addUser = async (req, res, next) => {
           franchiseName=null;
           isMobileFranchise=true;
           const districtData=await User.findOne({franchiseName:district})
+         if(!districtData)return next(errorHandler(401, "No one has taken this District franchise yet!!"));
           districtFranchise=districtData._id;
           const zonalData=await User.findOne({franchiseName:zonal})
-          console.log(zonalData);
+         if(!zonalData)return next(errorHandler(401, "No one has taken this Zonal franchise yet!!"));
           zonalFranchise=zonalData._id;
         } 
       const hashedPassword = bcryptjs.hashSync(password, 10);
       // const hashedTxnPassword = bcryptjs.hashSync(transactionPassword, 10);
-      console.log(franchiseName);
       const user = await User.create({
         sponser,
         sponserName,

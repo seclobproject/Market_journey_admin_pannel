@@ -178,6 +178,8 @@ const userSchema = new mongoose.Schema(
     },
     directReferalHistory: [ReferalAmountSchema],
     inDirectReferalHistory: [ReferalAmountSchema],
+    levelIncomeHistory: [ReferalAmountSchema],
+
     isDistrictFranchise: {
       type: Boolean,
       default: false,

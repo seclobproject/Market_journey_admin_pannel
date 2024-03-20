@@ -643,12 +643,12 @@ export const deletePanchayath=async(req,res,next)=>{
     if(deletedPanchayath){
       const upZonal=await Zonal.findByIdAndUpdate(
         zonalData._id,
-        { $pull: { zonals: deletedPanchayath._id } },
+        { $pull: { panchayaths: deletedPanchayath._id } },
         { new: true }
       );
       if(upZonal.panchayaths.length==0){
         upZonal.editable=true
-        await zonalData.save()
+        await upZonal.save()
       }
       return res.status(200).json({
         deletedPanchayath,
@@ -851,9 +851,9 @@ export const viewParamsPanchayaths = async (req, res, next) => {
             
             // if (admin) {
               const stateData = await State.find({}, '_id name editable'); // Projection to get both '_id' and 'name' fields
-              if (!stateData || stateData.length === 0) {
-                return next(errorHandler(401, "No states exist"));
-              }
+              // if (!stateData || stateData.length === 0) {
+              //   return next(errorHandler(401, "No states exist"));
+              // }
               res.status(200).json({
                 states: stateData.map(state => ({
                   id: state._id,
@@ -879,9 +879,9 @@ export const viewParamsPanchayaths = async (req, res, next) => {
         
             if (admin) {
               const districtData = await District.find({}, '_id name stateName editable'); // Projection to get both '_id' and 'name' fields
-              if (!districtData || districtData.length === 0) {
-                return next(errorHandler(401, "No District exist"));
-              }
+              // if (!districtData || districtData.length === 0) {
+              //   return next(errorHandler(401, "No District exist"));
+              // }
               res.status(200).json({
                 districts: districtData.map(district => ({
                   id: district._id,

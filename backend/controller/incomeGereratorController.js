@@ -76,7 +76,7 @@ export const generateReferalIncome = async (
 
   const levelIncomeGenerator=(userData,amount)=>{
     while(amount>=10){
-        
+      console.log(userData);
     }
 
   }

@@ -12,7 +12,6 @@ export const generateReferalIncome = async (
   ) => {
         const directReferalIncome = updatedUser.packageAmount * 0.10;
       const inDirectReferalIncome =updatedUser.packageAmount * 0.05;
-      const districtIncome = updatedUser.packageAmount * 0.8;
       if (sponser1) {
         const totalDirectRaferal = sponser1.directReferalIncome + directReferalIncome;
         sponser1.directReferalIncome = totalDirectRaferal;
@@ -27,9 +26,9 @@ export const generateReferalIncome = async (
           status: "Approved",
         });
         const updatedSponser1=await sponser1.save()
-        if(updatedSponser1){
+        if(updatedSponser1.isMobileFranchise){
           levelIncomeGenerator(sponser1,directReferalIncome)
-          franchiseIncomeGenerator(sponser1,districtIncome,inDirectReferalIncome)
+          franchiseIncomeGenerator(sponser1,sponser1.packageAmount)
         }
       }
       if(sponser2){
@@ -47,8 +46,10 @@ export const generateReferalIncome = async (
         });
 
         const updatedSponser2=await sponser2.save()
-        if(updatedSponser2)levelIncomeGenerator(sponser2,inDirectReferalIncome)
-  
+        if(updatedSponser2.isMobileFranchise){
+          levelIncomeGenerator(sponser2,sponser2.packageAmount)
+          franchiseIncomeGenerator(sponser2,sponser2.packageAmount)
+        }
       }
   
       
@@ -72,9 +73,9 @@ export const generateReferalIncome = async (
           amountCredited: levelIncome,
           status: "Approved",
         });
-
         const updatedSponser=await sponser.save();
         if(updatedSponser){
+          franchiseIncomeGenerator(updatedSponser,levelIncome)
           userData=updatedSponser;
           amount=levelIncome;
         }
@@ -84,23 +85,38 @@ export const generateReferalIncome = async (
 
 
 
-  const franchiseIncomeGenerator=async(userData,districtIncome,zonalIncome)=>{
+  const franchiseIncomeGenerator=async(userData,amount)=>{
+    const districtIncome=amount*0.05;
+    const zonalIncome=amount*0.08;
+
     const districtId=userData.districtFranchise;
     const zonalId=userData.zonalFranchise;
 
     const districtData=await User.findById(districtId);
     const zonalData=await User.findById(zonalId);
-
-    districtData.directReferalHistory.push({
-      reportName: "DirectIncome for Franchise",
-      userID: updatedUser.ownSponserId,
-      franchise:updatedUser.franchise,
-      name: updatedUser.name,
-      percentageCredited:"10%",
-      amountCredited: directReferalIncome,
+    districtData.totalLevelIncome = districtData.totalLevelIncome+districtIncome;
+    districtData.walletAmount = districtData.walletAmount + districtIncome;
+    districtData.levelIncomeHistory.push({
+      reportName: "District Income",
+      userID: userData.ownSponserId,
+      Amount:amount,
+      name: userData.name,
+      percentageCredited:"5%",
+      amountCredited: districtIncome,
       status: "Approved",
     });
 
+    zonalData.totalLevelIncome = zonalData.totalLevelIncome+zonalIncome;
+    zonalData.walletAmount = zonalData.walletAmount + zonalIncome;
+    zonalData.levelIncomeHistory.push({
+      reportName: "Zonal Income",
+      userID: userData.ownSponserId,
+      Amount:amount,
+      name: userData.name,
+      percentageCredited:"8%",
+      amountCredited: zonalIncome,
+      status: "Approved",
+    });
 
 
   }

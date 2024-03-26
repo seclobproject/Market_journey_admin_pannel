@@ -2,16 +2,16 @@ import mongoose from "mongoose";
 
 const packageSchema = new mongoose.Schema(
   {
-    franchiseName: {
-      type: String,
-      required: true,
-    },
     packageName:{
       type: String
     },
     packageAmount: {
       type: String,
       required: true,
+    },
+    renewalAmount:{
+      type:Number,
+      required:true
     },
     packageUsers: {
       type: mongoose.Schema.Types.ObjectId,

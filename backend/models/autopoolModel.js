@@ -5,6 +5,8 @@ const autoPoolSchema = new mongoose.Schema({
   poolB: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   poolC: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   poolD: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  poolE: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+
 
 },  {
     timestamps: true,

@@ -227,9 +227,18 @@ const userSchema = new mongoose.Schema(
     walletWithdrawUrl: {
       type: String,
     },
+    isAdmin:{
+      type: Boolean,
+        default: false,
+    },
     userStatus: {
       type: String,
       enum: ["pending", "readyToApprove", "approved"],
+    },
+    autoPoolStatus: {
+      type: String,
+      enum: ["noPool", "poolA", "poolB","poolC","poolD","poolE"],
+      default: "noPool",
     },
     allTransactions: [allTransactionSchema],
     districtFranchise:{ type: mongoose.Schema.Types.ObjectId, ref: "User" },

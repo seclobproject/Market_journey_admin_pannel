@@ -7,7 +7,7 @@ import District from "../models/districtModel.js";
 import Zonal from "../models/zonalModel.js";
 import Panchayath from "../models/panchayathModel.js";
 import User from "../models/userModel.js";
-import { generateReferalIncome } from "./incomeGereratorController.js";
+import { addToAutoPoolWallet, generateReferalIncome, setAutoPool } from "./incomeGereratorController.js";
 
 
 
@@ -1011,7 +1011,6 @@ export const acceptUser = async (req, res, next) => {
     const adminData = await Admin.findById(adminId);
     if (adminData) {
       const userData = await User.findById(id);
-      console.log(userData);
       if (userData) {
         const sponserId1=userData.sponser;
         const sponserUser1= (await User.findById(sponserId1)) || (await Admin.findById(sponserId1));
@@ -1033,6 +1032,12 @@ export const acceptUser = async (req, res, next) => {
           }
 
           const referalIncome=generateReferalIncome(sponserUser1,sponserUser2,updatedUser)
+          if(!(updatedUser.isDistrictFranchise)&& !(updatedUser.isZonalFranchise)&&updatedUser.packageAmount >= 5000 ){
+            addToAutoPoolWallet(updatedUser)
+          }
+          setAutoPool(sponserUser1,updatedUser)
+
+
           res
             .status(200)
             .json({ updatedUser, msg: "User verification Accepted!" });

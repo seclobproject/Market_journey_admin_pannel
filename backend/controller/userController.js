@@ -23,12 +23,10 @@ export const generateRandomString = () => {
 
 export const addUser = async (req, res, next) => {
     try {
-      console.log("Reached here");
       const sponser = req.admin ? req.admin._id : (req.user ? req.user._id : null);
         let { name, email, phone,packageAmount,franchise,franchiseName, address,state,district,zonal,panchayath, transactionPassword, password } =
           req.body;
           const sponserData = (await User.findById(sponser)) || (await Admin.findById(sponser));
-        const sponserName = sponserData.name;
      
 
       const userStatus = "pending";
@@ -53,14 +51,12 @@ export const addUser = async (req, res, next) => {
           zonal=null;
           panchayath=null;
         }else if(franchise==="Zonal Franchise"){
-          console.log(franchiseName);
 
           const zonalData=await User.findOne({franchiseName:franchiseName})
-          console.log(zonalData);
           if(zonalData)return next(errorHandler(401, "This Zonal franchise Already taken!!"));
           isZonalFranchise=true;
           panchayath=null;
-        }else{
+        }else if(franchise==="Mobile Franchise"){
           franchiseName=null;
           isMobileFranchise=true;
           const districtData=await User.findOne({franchiseName:district})
@@ -69,12 +65,21 @@ export const addUser = async (req, res, next) => {
           const zonalData=await User.findOne({franchiseName:zonal})
          if(!zonalData)return next(errorHandler(401, "No one has taken this Zonal franchise yet!!"));
           zonalFranchise=zonalData._id;
-        } 
+        }else{
+          franchiseName=null;
+          is=true;
+          const districtData=await User.findOne({franchiseName:district})
+         if(!districtData)return next(errorHandler(401, "No one has taken this District franchise yet!!"));
+          districtFranchise=districtData._id;
+          const zonalData=await User.findOne({franchiseName:zonal})
+         if(!zonalData)return next(errorHandler(401, "No one has taken this Zonal franchise yet!!"));
+          zonalFranchise=zonalData._id;
+        }
       const hashedPassword = bcryptjs.hashSync(password, 10);
       // const hashedTxnPassword = bcryptjs.hashSync(transactionPassword, 10);
       const user = await User.create({
         sponser,
-        sponserName,
+        sponserName:sponserData.name,
         name,
         email,
         phone,
@@ -320,9 +325,10 @@ export const viewUserProfile = async (req, res, next) => {
           // }
   
           const updatedUser = await userData.save();
-          res
-            .status(200)
-            .json({ updatedUser, sts: "01", msg: "Successfully Updated" });
+           // Update sponserName for users with this user as their sponser
+      await User.updateMany({ sponser: id }, { $set: { sponserName: userData.name } });
+
+      res.status(200).json({ updatedUser, sts: "01", msg: "Successfully Updated" });
         } else {
           next(errorHandler("User not found, Please Login first"));
         }
@@ -508,3 +514,5 @@ export const viewLevel2User=async(req,res,next)=>{
     next(error)
   }
 }
+
+

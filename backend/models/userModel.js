@@ -14,56 +14,28 @@ const allTransactionSchema = new mongoose.Schema(
   }
 );
 
-const levelROISchema = new mongoose.Schema(
+const creditBounusSchema = new mongoose.Schema(
   {
     reportName: String,
-    userID: String,
-    name: String,
-    dayROI: Number,
-    capitalAmount: Number,
-    LevelAmountCredited: Number,
-    percentage: Number,
-  },
-  {
-    timestamps: true,
-  }
-);
-
-const dailyROISchema = new mongoose.Schema(
-  {
-    reportName: String,
-    name: String,
-    capitalAmount: Number,
-    percentage: Number,
-    creditedAmount: Number,
-  },
-  {
-    timestamps: true,
-  }
-);
-
-const addFundSchema = new mongoose.Schema(
-  {
-    name: String,
-    topUpAmount: Number,
-    transactionCode: String,
-    addFundUrl: String,
+    bonusAmount:Number,
+    transactionId:String,
     status: String,
   },
   {
     timestamps: true,
   }
 );
+
 const withdrawSchema = new mongoose.Schema(
   {
     name: String,
     reportName: String,
     ownID: String,
-    packageName: String,
-    tnxID: String,
-    withdrawAmount: Number,
-    transactionCode: String,
-    walletUrl: String,
+    franchise: String,
+    requestedAmount: Number,
+    TDS: String,
+    releasedAmount: Number,
+    newWalletAmount: Number,
     status: String,
   },
   {
@@ -72,10 +44,12 @@ const withdrawSchema = new mongoose.Schema(
 );
 const ReferalAmountSchema = new mongoose.Schema(
   {
+    newMember:String,
     reportName: String,
     userID: String,
     franchise:String,
     name: String,
+    Amount:Number,
     percentageCredited:String,
     amountCredited: Number,
     status: String,
@@ -111,6 +85,10 @@ const userSchema = new mongoose.Schema(
     address: {
       type: String,
       required: true,
+    },
+    dateOfBirth:{
+      type: Date,
+     
     },
     franchise: {
       type: String,
@@ -178,6 +156,8 @@ const userSchema = new mongoose.Schema(
     },
     directReferalHistory: [ReferalAmountSchema],
     inDirectReferalHistory: [ReferalAmountSchema],
+    levelIncomeHistory: [ReferalAmountSchema],
+
     isDistrictFranchise: {
       type: Boolean,
       default: false,
@@ -195,6 +175,10 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     walletAmount: {
+      type: Number,
+      default: 0,
+    },
+    tdsAmount: {
       type: Number,
       default: 0,
     },
@@ -217,17 +201,26 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-
-    addFundHistory: [addFundSchema],
     transactionCode: {
       type: String,
     },
-    walletWithdrawUrl: {
-      type: String,
+    totalBonusAmount:{
+      type:Number,
+      default:0
+    },
+    bonusHistory: [creditBounusSchema],
+    isAdmin:{
+      type: Boolean,
+        default: false,
     },
     userStatus: {
       type: String,
       enum: ["pending", "readyToApprove", "approved"],
+    },
+    autoPoolStatus: {
+      type: String,
+      enum: ["noPool", "poolA", "poolB","poolC","poolD","poolE"],
+      default: "noPool",
     },
     allTransactions: [allTransactionSchema],
     districtFranchise:{ type: mongoose.Schema.Types.ObjectId, ref: "User" },

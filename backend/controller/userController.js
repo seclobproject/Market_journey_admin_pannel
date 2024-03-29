@@ -13,7 +13,7 @@ import Panchayath from "../models/panchayathModel.js";
 
 //generate sponser random code
 export const generateRandomString = () => {
-    const baseString = "OCV";
+    const baseString = "MJ";
     const randomDigits = Math.floor(Math.random() * 999999);
     return baseString + randomDigits.toString();
   };
@@ -23,13 +23,10 @@ export const generateRandomString = () => {
 
 export const addUser = async (req, res, next) => {
     try {
-      console.log("Reached here");
       const sponser = req.admin ? req.admin._id : (req.user ? req.user._id : null);
-        let { name, email, phone,packageAmount,franchise,franchiseName, address,state,district,zonal,panchayath, transactionPassword, password } =
+        let { name, email, phone,packageAmount,franchise,franchiseName, address,dateOfBirth,state,district,zonal,panchayath, transactionPassword, password } =
           req.body;
-        console.log(zonal);
           const sponserData = (await User.findById(sponser)) || (await Admin.findById(sponser));
-        const sponserName = sponserData.name;
      
 
       const userStatus = "pending";
@@ -54,28 +51,39 @@ export const addUser = async (req, res, next) => {
           zonal=null;
           panchayath=null;
         }else if(franchise==="Zonal Franchise"){
+
           const zonalData=await User.findOne({franchiseName:franchiseName})
           if(zonalData)return next(errorHandler(401, "This Zonal franchise Already taken!!"));
           isZonalFranchise=true;
           panchayath=null;
-        }else{
+        }else if(franchise==="Mobile Franchise"){
           franchiseName=null;
           isMobileFranchise=true;
           const districtData=await User.findOne({franchiseName:district})
+         if(!districtData)return next(errorHandler(401, "No one has taken this District franchise yet!!"));
           districtFranchise=districtData._id;
           const zonalData=await User.findOne({franchiseName:zonal})
-          console.log(zonalData);
+         if(!zonalData)return next(errorHandler(401, "No one has taken this Zonal franchise yet!!"));
           zonalFranchise=zonalData._id;
-        } 
+        }else{
+          franchiseName=null;
+          is=true;
+          const districtData=await User.findOne({franchiseName:district})
+         if(!districtData)return next(errorHandler(401, "No one has taken this District franchise yet!!"));
+          districtFranchise=districtData._id;
+          const zonalData=await User.findOne({franchiseName:zonal})
+         if(!zonalData)return next(errorHandler(401, "No one has taken this Zonal franchise yet!!"));
+          zonalFranchise=zonalData._id;
+        }
       const hashedPassword = bcryptjs.hashSync(password, 10);
       // const hashedTxnPassword = bcryptjs.hashSync(transactionPassword, 10);
-      console.log(franchiseName);
       const user = await User.create({
         sponser,
-        sponserName,
+        sponserName:sponserData.name,
         name,
         email,
         phone,
+        dateOfBirth,
         address,
         franchise,
         franchiseName,
@@ -271,6 +279,7 @@ export const viewUserProfile = async (req, res, next) => {
         email: userData.email,
         phone: userData.phone,
         address: userData.address,
+        dateOfBirth: userData.dateOfBirth,
         aadhaar: userData.aadhaar,
         screenshot: userData.screenshot,
         packageAmount: userData.packageAmount,
@@ -302,11 +311,14 @@ export const viewUserProfile = async (req, res, next) => {
     try {
         const userData = await User.findById(id);
         if (userData) {
-          const { name, password, address } =
+          const { name,email, password, address,dateOfBirth } =
             req.body;
           userData.name = name || userData.name;
+          userData.email = email || userData.email;
           userData.address = address || userData.address;
+          userData.dateOfBirth = dateOfBirth || userData.dateOfBirth;
   
+
           if (password) {
             const hashedPassword = bcryptjs.hashSync(password, 10);
             userData.password = hashedPassword;
@@ -318,9 +330,15 @@ export const viewUserProfile = async (req, res, next) => {
           // }
   
           const updatedUser = await userData.save();
-          res
-            .status(200)
-            .json({ updatedUser, sts: "01", msg: "Successfully Updated" });
+           // Update sponserName for users with this user as their sponser
+      await User.updateMany({ sponser: id }, { $set: { sponserName: userData.name } });
+          if(email) {
+            await sendMail(
+              userData.email,
+              userData.name,
+              userData.ownSponserId,
+          );}
+      res.status(200).json({ updatedUser, sts: "01", msg: "Successfully Updated" });
         } else {
           next(errorHandler("User not found, Please Login first"));
         }
@@ -430,79 +448,236 @@ export const addReferalUser = async (req, res, next) => {
   }
 };
 
+// view level 1 and leve 2 users------------------------------------------------------------------------------------------------------
+
+// export const viewLevel1User=async(req,res,next)=>{
+//   try {
+//     const userId = req.query.id || req.user._id;
+
+//     // Fetch the user document by its ID and populate its child documents
+//     const user = await User.findById(userId)
+//       .select("childLevel1 ownSponserId userStatus")
+//       .populate([
+//         {
+//           path: "childLevel1",
+//           select:
+//             "name ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName",
+//         },
+//       ]);
+// console.log(user);
+//     // If user document is not found, return an error
+//     if (!user) {
+//       return next(errorHandler("User not found"));
+//     }
+
+//     // Destructure relevant fields from the user document
+//     const { childLevel1, ownSponserId, userStatus } =
+//       user;
+
+//     // Send the response with child documents and other relevant information
+//     res.status(200).json({
+//       child1: childLevel1,
+//       ownSponserId,
+//       userStatus,
+//       sts: "01",
+//       msg: "Success",
+//     });
+//   } catch (error) {
+//     next(error)
+//   }
+// }
 
 
-export const viewLevel1User=async(req,res,next)=>{
+const paginateArray = (array, page = 1, pageSize = 10) => {
   try {
-    const userId = req.query.id || req.user._id;
+      const totalDocs = array.length;
+      const totalPages = Math.ceil(totalDocs / pageSize);
 
-    // Fetch the user document by its ID and populate its child documents
-    const user = await User.findById(userId)
-      .select("childLevel1 ownSponserId userStatus")
-      .populate([
-        {
-          path: "childLevel1",
-          select:
-            "name ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName",
-        },
-      ]);
-console.log(user);
-    // If user document is not found, return an error
+      const offset = pageSize * (page - 1);
+      const results = array.slice(offset, offset + pageSize);
+
+      return {
+          results,
+          page,
+          pageSize,
+          totalPages,
+          totalDocs
+      };
+  } catch (error) {
+      throw new Error(`Pagination error: ${error.message}`);
+  }
+};
+
+export const viewLevel1User = async (req, res, next) => {
+  try {
+      const userId = req.query.id || req.user._id;
+
+      // Fetch the user document by its ID and populate its child documents
+      const user = await User.findById(userId)
+          .select("childLevel1 ownSponserId userStatus")
+          .populate([
+              {
+                  path: "childLevel1",
+                  select: "name ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName",
+              },
+          ]);
+
+      // If user document is not found, return an error
+      if (!user) {
+          return next(errorHandler("User not found"));
+      }
+
+      // Destructure relevant fields from the user document
+      const { childLevel1, ownSponserId, userStatus } = user;
+
+      // Paginate childLevel1 array
+      const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+      const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+      const paginatedChildLevel1 = paginateArray(childLevel1, page, pageSize);
+
+      // Send the response with paginated child documents and other relevant information
+      res.status(200).json({
+          child1: paginatedChildLevel1.results,
+          ownSponserId,
+          userStatus,
+          pagination: {
+              page: paginatedChildLevel1.page,
+              pageSize: paginatedChildLevel1.pageSize,
+              totalPages: paginatedChildLevel1.totalPages,
+              totalDocs: paginatedChildLevel1.totalDocs
+          },
+          sts: "01",
+          msg: "Success",
+      });
+  } catch (error) {
+      next(error)
+  }
+};
+
+
+
+// export const viewLevel2User=async(req,res,next)=>{
+//   try {
+//     const userId = req.query.id || req.user._id;
+
+//     // Fetch the user document by its ID and populate its child documents
+//     const user = await User.findById(userId)
+//       .select("childLevel2 ownSponserId userStatus")
+//       .populate([
+//         {
+//           path: "childLevel2",
+//           select:
+//             "name ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName",
+//         },
+//       ]);
+
+//     // If user document is not found, return an error
+//     if (!user) {
+//       return next(errorHandler("User not found"));
+//     }
+
+//     // Destructure relevant fields from the user document
+//     const { childLevel2, ownSponserId, userStatus } =
+//       user;
+
+//     // Send the response with child documents and other relevant information
+//     res.status(200).json({
+//       child2: childLevel2,
+//       ownSponserId,
+//       userStatus,
+//       sts: "01",
+//       msg: "Success",
+//     });
+//   } catch (error) {
+//     next(error)
+//   }
+// }
+
+export const viewLevel2User = async (req, res, next) => {
+  try {
+      const userId = req.query.id || req.user._id;
+
+      // Fetch the user document by its ID and populate its child documents
+      const user = await User.findById(userId)
+          .select("childLevel2 ownSponserId userStatus")
+          .populate([
+              {
+                  path: "childLevel2",
+                  select: "name ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName",
+              },
+          ]);
+
+      // If user document is not found, return an error
+      if (!user) {
+          return next(errorHandler("User not found"));
+      }
+
+      // Destructure relevant fields from the user document
+      const { childLevel2, ownSponserId, userStatus } = user;
+
+      // Paginate childLevel1 array
+      const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+      const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+      const paginatedChildLevel2 = paginateArray(childLevel2, page, pageSize);
+
+      // Send the response with paginated child documents and other relevant information
+      res.status(200).json({
+          child2: paginatedChildLevel2.results,
+          ownSponserId,
+          userStatus,
+          pagination: {
+              page: paginatedChildLevel2.page,
+              pageSize: paginatedChildLevel2.pageSize,
+              totalPages: paginatedChildLevel2.totalPages,
+              totalDocs: paginatedChildLevel2.totalDocs
+          },
+          sts: "01",
+          msg: "Success",
+      });
+  } catch (error) {
+      next(error)
+  }
+};
+
+
+
+//request for wallet withdrawal
+
+export const walletWithdrawRequest = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const { withdrawAmount } = req.body;
+
+    // Calculate TDS amount
+    const tdsAmount = withdrawAmount * 0.90;
+
+    // Fetch user data
+    const user = await User.findById(userId);
+
     if (!user) {
-      return next(errorHandler("User not found"));
+      return next(errorHandler(401, "User not found. Please login first."));
     }
 
-    // Destructure relevant fields from the user document
-    const { childLevel1, ownSponserId, userStatus } =
-      user;
-
-    // Send the response with child documents and other relevant information
-    res.status(200).json({
-      child1: childLevel1,
-      ownSponserId,
-      userStatus,
-      sts: "01",
-      msg: "Success",
-    });
-  } catch (error) {
-    next(error)
-  }
-}
-
-
-export const viewLevel2User=async(req,res,next)=>{
-  try {
-    const userId = req.query.id || req.user._id;
-
-    // Fetch the user document by its ID and populate its child documents
-    const user = await User.findById(userId)
-      .select("childLevel2 ownSponserId userStatus")
-      .populate([
-        {
-          path: "childLevel2",
-          select:
-            "name ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName",
-        },
-      ]);
-
-    // If user document is not found, return an error
-    if (!user) {
-      return next(errorHandler("User not found"));
+    // Check if wallet amount is sufficient
+    if (user.walletAmount < withdrawAmount) {
+      return next(errorHandler(401, "Insufficient funds. Amount should be less than Wallet Amount."));
     }
 
-    // Destructure relevant fields from the user document
-    const { childLevel2, ownSponserId, userStatus } =
-      user;
+    // Update user's wallet withdraw status
+    user.walletWithdrawStatus = "pending";
+    user.walletWithdrawAmount = withdrawAmount;
+    user.tdsAmount = tdsAmount;
 
-    // Send the response with child documents and other relevant information
+    // Save updated user data
+    const updatedUser = await user.save();
+
+    // Respond with updated user data
     res.status(200).json({
-      child2: childLevel2,
-      ownSponserId,
-      userStatus,
-      sts: "01",
-      msg: "Success",
+      updatedUser,
+      msg: "User wallet withdraw request sent to admin.",
     });
+
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};

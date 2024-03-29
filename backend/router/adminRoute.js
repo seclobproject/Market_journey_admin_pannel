@@ -1,10 +1,11 @@
 import express from "express";
 const adminRouter = express.Router();
-import {acceptUser, addDistrict, addPanchayath, addState, addZonal, adminLogin,  deleteDistrict,  deletePanchayath,  deleteState,  deleteZonal,  editDistrict,  editPanchayath,  editProfileByAdmin,  editState,  editZonal,  forgotPassword, getReadyToApproveUsers, rejectUser, viewAllDistricts, viewAllPagePanchayath, viewAllPageUsers, viewAllPageZonal, viewAllPanchayaths, viewAllUsers, viewAllZonals, viewNotTakenDistricts, viewNotTakenZonals, viewParamsDistricts, viewParamsPanchayaths, viewParamsZonals, viewStates, viewUserDetails} from "../controller/adminController.js";
+import {acceptUser, addDistrict, addPanchayath, addState, addZonal, adminLogin,  deleteDistrict,  deletePanchayath,  deleteState,  deleteZonal,  editDistrict,  editPanchayath,  editProfileByAdmin,  editState,  editZonal,  forgotPassword, getReadyToApproveUsers, processWalletWithdrawal, rejectUser,viewAllDistricts, viewAllPagePanchayath, viewAllPageUsers, viewAllPageZonal, viewAllPanchayaths, viewAllUsers, viewAllZonals, viewNotTakenDistricts, viewNotTakenZonals, viewParamsDistricts, viewParamsPanchayaths, viewParamsZonals, viewStates, viewUserDetails, viewWithdrawPendingPaginated} from "../controller/adminController.js";
 import { protectAdmin } from "../middleware/authMiddleware.js";
 import { addPackage, editPackage, viewPackages } from "../controller/packageController.js";
 import { addUser } from "../controller/userController.js";
 import { addAlert, addNews, deleteSingleAlert, deleteSingleAward, deleteSingleImage, deleteSingleNews, deleteSingleVideo, editAlert, editNews, updateAwardData, updateHomeVideo, uploadAwardDetails, uploadHomeImages, uploadHomeVideos, viewAlert, viewAwardDetails, viewHomeImages, viewHomeVideos, viewNews } from "../controller/uploadController.js";
+import { totalWalletWithdrawHistory } from "../controller/reportController.js";
 
 adminRouter.post("/admin-login", adminLogin);
 adminRouter.post("/forgot-password", forgotPassword);
@@ -49,6 +50,12 @@ adminRouter.post("/delete-state/:id", protectAdmin,deleteState);
 adminRouter.post("/delete-zonal/:id", protectAdmin,deleteZonal);
 adminRouter.post("/delete-panchayath/:id", protectAdmin,deletePanchayath);
 
+// approve and reject wallet withdrawal
+
+adminRouter.post("/process-wallet-withdrawal/:id", protectAdmin,processWalletWithdrawal);
+
+
+
 
 adminRouter.get("/view-states",viewStates);
 adminRouter.get("/view-all-districts", protectAdmin,viewAllDistricts);
@@ -70,6 +77,12 @@ adminRouter.get("/view-home-videos", viewHomeVideos);
 adminRouter.get("/view-award-details", viewAwardDetails);
 adminRouter.get("/view-alert-details", viewAlert);
 adminRouter.get("/view-news-details", viewNews);
+
+//view withdraw request
+
+adminRouter.get("/view-withdraw-request", protectAdmin,viewWithdrawPendingPaginated);
+adminRouter.get("/all-withdraw-history", protectAdmin,totalWalletWithdrawHistory);
+
 
 
 

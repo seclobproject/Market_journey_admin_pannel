@@ -46,6 +46,7 @@ function Sidebar() {
         },
       ],
     },
+    { title: "Bonnus History", icon: "fas fa-clock", route: "user/bonnushistory" },
 
     {
       title: "Uploads",
@@ -75,8 +76,8 @@ function Sidebar() {
       title: "Withdrawals",
       icon: "fas fa-money-bill",
       sub: [
-        { title: "Withdraw History", route: "withraw/history",  },
         { title: "Pending withrawals", route: "pending/withraw",  },
+        { title: "Withdraw History", route: "withraw/history",  },
 
       ],
       

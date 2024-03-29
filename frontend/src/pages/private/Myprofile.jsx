@@ -1,27 +1,28 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 function Myprofile() {
   return (
     <>
   
-    <div className="container-fluid">
-      
-      <div className="card overflow-hidden">
+  <div className="container-fluid">
+      <div className="row">
+      <div className="col-lg-6 mt-3 mt-lg-0">
+          <Card sx={{ maxWidth: 545 }}>
+            <CardContent>
+              <div className="card-body p-0">
+              <div className="card overflow-hidden">
         <div className="card-body p-0">
         <div className="card bg-info-subtle shadow-none position-relative overflow-hidden mb-4">
         <div className="card-body px-4 py-3">
           <div className="row align-items-center">
             <div className="col-9">
-              <h4 className="fw-semibold mb-8" style={{color:'white'}} >Admin Profile</h4>
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <a className="text text-decoration-none" style={{color:'white'}} href={undefined}>My account</a>
-                  </li>
-                  <li className="breadcrumb-item" style={{color:'white'}}aria-current="page">Profile</li>
-                </ol>
-              </nav>
+             
             </div>
             {/* <div className="col-3">
               <div className="text-center mb-n5">
@@ -31,25 +32,7 @@ function Myprofile() {
           </div>
         </div>
       </div>          <div className="row align-items-center">
-            <div className="col-lg-4 order-lg-1 order-2">
-              <div className="d-flex align-items-center justify-content-around m-4">
-                <div className="text-center">
-                  {/* <i className="ti ti-file-description fs-6 d-block mb-2" /> */}
-                  {/* <h4 className="mb-0 fw-semibold lh-1">938</h4>
-                  <p className="mb-0 fs-4">Posts</p> */}
-                </div>
-                <div className="text-center">
-                  {/* <i className="ti ti-user-circle fs-6 d-block mb-2" /> */}
-                  {/* <h4 className="mb-0 fw-semibold lh-1">3,586</h4>
-                  <p className="mb-0 fs-4">Followers</p> */}
-                </div>
-                <div className="text-center">
-                  {/* <i className="ti ti-user-check fs-6 d-block mb-2" /> */}
-                  {/* <h4 className="mb-0 fw-semibold lh-1">2,659</h4>
-                  <p className="mb-0 fs-4">Following</p> */}
-                </div>
-              </div>
-            </div>
+            
             <div className="col-lg-4 mt-n3 order-lg-2 order-1">
               <div className="mt-n5">
                 <div className="d-flex align-items-center justify-content-center mb-2">
@@ -78,50 +61,54 @@ function Myprofile() {
             </li>
           </ul>
         </div>
-      </div>
-      <div className="tab-content" id="pills-tabContent">
-        <div className="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabIndex={0}>
-          <div className="row">
-            <div className="col-lg-4">
-              <div className="card shadow-none border">
-                <div className="card-body">
-                  <a className="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="false">
-      <img src="../../dist/images/profile/user-1.jpg" className="rounded-circle" width={100} height={100} alt />
-      </a>
-      <div className=" mt-4">
+      </div>              </div>
+      <Typography gutterBottom variant="h5" component="div">
+  <h5 className="card-title fw-semibold mb-4">
+          Autopool Wallet Amount
+          </h5>        </Typography>
+  <Typography variant="body2" color="text.secondary">
+  <h5 className="card-title fw-semibold mb-4">
+          6000
+          </h5> 
+  </Typography>
+            </CardContent>
+            <CardActions>
+            <button className="btn btn-custom">
+    <i className="fas fa-hand-holding-usd"></i> Distribute Amount
+</button>
+<button className="btn btn-custom">
+    <i className="fas fa-history"></i> History
+</button>
+            </CardActions>
+          </Card>
+        </div>
+        <div className="col-lg-6 mt-3 mt-lg-0">
+          <Card sx={{ maxWidth: 545 }}>
+            <CardContent>
+              <div className="card-body">
+                <a className="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="false">
+                  <img src="../../dist/images/profile/user-1.jpg" className="rounded-circle" width={100} height={100} alt="" />
+                </a>
+                <div className="mt-4">
                   <h5 className="fs-5 mb-0 fw-semibold">Admin</h5>
                 </div>
-          
-                  <ul className="list-unstyled mb- mt-3">
-                    {/* <li className="d-flex align-items-center gap-3 mb-4">
-                      <i className="ti ti-briefcase text-dark fs-6" />
-                      <h6 className="fs-4 fw-semibold mb-0">Sir, P P Institute Of Science</h6>
-                    </li> */}
-                    <li className="d-flex align-items-center gap-3 mb-4">
-                      <i className="ti ti-mail text-dark fs-6" />
-                      <h6 className="fs-4 fw-semibold mb-0">admin@gmail.com</h6>
-                    </li>
-                    {/* <li className="d-flex align-items-center gap-3 mb-4">
-                      <i className="ti ti-device-desktop text-dark fs-6" />
-                      <h6 className="fs-4 fw-semibold mb-0">www.xyz.com</h6>
-                    </li>
-                    <li className="d-flex align-items-center gap-3 mb-2">
-                      <i className="ti ti-map-pin text-dark fs-6" />
-                      <h6 className="fs-4 fw-semibold mb-0">Newyork, USA - 100001</h6>
-                    </li> */}
-                  </ul>
-                </div>
+                <ul className="list-unstyled mb- mt-3">
+                  <li className="d-flex align-items-center gap-3 mb-4">
+                    <i className="ti ti-mail text-dark fs-6" />
+                    <h6 className="fs-4 fw-semibold mb-0">admin@gmail.com</h6>
+                  </li>
+                </ul>
               </div>
-           
-            </div>
-         
-          </div>
+            </CardContent>
+            <CardActions>
+              <Button size="small">Share</Button>
+              <Button size="small">Learn More</Button>
+            </CardActions>
+          </Card>
         </div>
-   
+     
       </div>
-      
-  
- </div>
+    </div>
  
 
 

@@ -30,6 +30,7 @@ function Member() {
   const [validated, setValidated] = useState(false);
   const [bonusModal, setBonusModal] = useState({ show: false, id: null });
   const [addMember, setAddMember] = useState({});
+  console.log(addMember,"memberAdded");
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [zonalList, setZonalList] = useState([]);
@@ -39,6 +40,10 @@ function Member() {
   const [packageList, setPackageList] = useState([]);
   const [notTakenDistrict, setnotTakenDistrict] = useState([]);
   const [packageAmount, setPackageAmount] = useState({});
+  console.log(packageAmount,"packageAmoun..t");
+ 
+  const [totalgstAmount, setTotalGstAmount] = useState("");
+console.log(totalgstAmount," totalgstAmounts sum");
   const [showPassword, setShowPassword] = useState(false);
   const [showTransPassword, setShowTransPassword] = useState(false);
   const [selectedStateId, setSelectedStateId] = useState(null);
@@ -252,6 +257,20 @@ function Member() {
   useEffect(() => {
     getallUsers();
     getPackagesList();
+   
+    // if (packageAmount?.packageAmount) {
+    //   const partAmount = Number(packageAmount.packageAmount) ; 
+    //   console.log(`partAmount: ${typeof(partAmount)}%`);
+      
+    //   const percentage = partAmount * 0.18;
+    //   console.log(`percentage: ${typeof (percentage)}%`);
+  
+  
+    //   const sum = partAmount + percentage;
+    //   console.log(`Sum: ${sum}`);
+
+    //   setTotalGstAmount(sum)
+    // }
   }, [params]);
 
   // useEffect(() => {
@@ -263,6 +282,8 @@ function Member() {
   //     getPanchayathList();
   //   }
   // }, [selectedDistrictId, selectedZonalId]);
+
+
 
   useEffect(() => {
     if (filter === "View_all") {
@@ -319,6 +340,27 @@ function Member() {
     packageAmount: pack?.packageAmount,
   }));
 
+  const calculateTotalGstAmount = () => {
+    if (addMember?.packageAmount) {
+      console.log('working..........');
+
+      const partAmount = Number(addMember?.packageAmount);
+      console.log(`partAmount: ${typeof(partAmount)}`);
+  
+      const percentage = partAmount * 0.18;
+      console.log(`percentage: ${typeof(percentage)}`);
+  
+      const sum = partAmount + percentage;
+      console.log(`Sum: ${sum}`);
+      setTotalGstAmount(sum)
+  
+    }
+  };
+console.log(packageOptions?.packageAmount,"packageOptions")
+
+useEffect(()=>{
+  calculateTotalGstAmount()
+},[addMember?.packageAmount]);
   return (
     <>
       <SlideMotion>
@@ -399,12 +441,12 @@ function Member() {
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Sponsor Name</h6>
                       </th>
-                      <th>
+                      {/* <th>
                         <h6 className="fs-4 fw-semibold mb-0">Email</h6>
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Phone</h6>
-                      </th>
+                      </th> */}
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Date</h6>
                       </th>
@@ -456,8 +498,8 @@ function Member() {
                                 "--"}
                             </td>
 
-                            <td>{users?.email || "--"}</td>
-                            <td>{users?.phone || "--"}</td>
+                            {/* <td>{users?.email || "--"}</td>
+                            <td>{users?.phone || "--"}</td> */}
                             <td>
                               {users?.createdAt
                                 ? moment(users.createdAt).format("DD/MM/YYYY")
@@ -649,6 +691,35 @@ function Member() {
               </div>
               <div className="col-md-6">
                 <div className="row">
+                <div className="col-9">
+                    <label htmlFor="transactionPassword" className="form-label">
+                      Date Of Birth
+                    </label>
+                    <label
+                      htmlFor="transactionPassword"
+                      className="form-label"
+                    >
+                    
+                    </label>
+                  </div>
+                <div className="input-group mb-2">
+                  <input
+                    required
+                 type="date"
+                    className="form-control form-control-lg"
+                    placeholder="Enter your password"
+                    value={addMember?.dateOfBirth}
+                    onChange={(e) =>
+                      setAddMember({
+                        ...addMember,
+                        dateOfBirth: e.target.value,
+                      })
+                    }
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Please provide a Date.
+                  </Form.Control.Feedback>
+                </div>
                   <div className="col-9">
                     <label htmlFor="transactionPassword" className="form-label">
                       Password
@@ -665,6 +736,7 @@ function Member() {
                       )}{" "}
                     </label>
                   </div>
+                 
                 </div>
 
                 <div className="input-group">
@@ -686,6 +758,15 @@ function Member() {
                   </Form.Control.Feedback>
                 </div>
               </div>
+              <div className="col-md-6">
+                <div className="row">
+             
+             
+                </div>
+
+               
+              </div>
+           
             </div>
 
             <div className="mb-4 row"></div>
@@ -694,7 +775,7 @@ function Member() {
               style={{ border: "1px solid ", height: "1px", color: "#F7AE15" }}
             ></div>
             <div className="mb-4 row mt-2">
-              <div className="col-md-6">
+              <div className="col-md-4">
                 <label htmlFor="franchiseType" className="form-label">
                   Franchise Type
                 </label>
@@ -711,7 +792,8 @@ function Member() {
                       franchise: selectedOption.value,
                       packageAmount: selectedOption.packageAmount,
                     });
-                    getStateList();
+                
+                      getStateList();
                   }}
                   placeholder="Select a franchise type" // Set the placeholder here
                   isSearchable={true}
@@ -722,7 +804,7 @@ function Member() {
                   Please select a franchise type.
                 </Form.Control.Feedback>
               </div>
-              <div className="col-md-6">
+              <div className="col-md-4">
                 <label htmlFor="readOnlyInput" className="form-label">
                   Package Amount
                 </label>
@@ -732,6 +814,18 @@ function Member() {
                   readOnly
                   value={addMember?.packageAmount}
                 />
+              </div>
+              <div className="col-md-4">
+                <label htmlFor="readOnlyInput" className="form-label">
+                  Package Amount Included GST
+                </label>
+                <input
+                  type="text"
+                  className="form-control form-control-lg"
+                  readOnly
+                  value={totalgstAmount}
+                />
+<span style={{ color: 'red' }}>Included 18% of GST</span>
               </div>
 
               {addMember?.franchise === "District Franchise" && (

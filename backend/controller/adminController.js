@@ -982,7 +982,7 @@ export const getReadyToApproveUsers = async (req, res, next) => {
       const userData = await User.find({
         userStatus: { $eq: "readyToApprove" },
       }).select(
-        "name email phone userStatus screenshot tempPackageAmount sponserName createdAt"
+        "name email phone userStatus screenshot tempPackageAmount sponserName createdAt updatedAt"
       );
 
         if(!userData){
@@ -1366,7 +1366,7 @@ const pendingWithdrawPaginate = async (model, query, page = 1, pageSize = 10) =>
       const offset = pageSize * (page - 1);
 
       const results = await model.find(query).select(
-        "name email phone walletWithdrawStatus createdAt walletWithdrawAmount tdsAmount"
+        "name email phone walletWithdrawStatus createdAt walletWithdrawAmount tdsAmount updatedAt"
     ).skip(offset).limit(pageSize);
 
       return {
@@ -1604,3 +1604,42 @@ export const processWalletWithdrawal = async (req, res, next) => {
     next(error);
   }
 };
+
+
+
+
+
+//add bonus fuctions-----------------------------------------------------------------------------------------------------
+
+export const addBonus=async(req,res,next)=>{
+  try {
+    const adminId=req.admin.id;
+    const {id}=req.params;
+
+    const {bonusAmount,transactionId}=req.body;
+    // Fetch admin data
+    const admin = await Admin.findById(adminId);
+    if (!admin) {
+      return next(errorHandler(401, "Admin login failed."));
+    }
+
+    // Fetch user data
+    const user = await User.findById(id);
+    if (!user) {
+      return next(errorHandler(404, "User not found."));
+    }
+
+    user.totalBonusAmount+=bonusAmount;
+
+    user.bonusHistory.push({
+      reportName:"userBonusHistory",
+
+    })
+
+    
+    
+  } catch (error) {
+    next(error)
+  }
+}
+

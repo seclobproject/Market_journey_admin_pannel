@@ -4,7 +4,6 @@
 //generate referal income for all
 
 import Admin from "../models/adminModel.js";
-import AutoPool from "../models/autopoolModel.js";
 import User from "../models/userModel.js";
 
 export const generateReferalIncome = async (

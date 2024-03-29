@@ -14,21 +14,17 @@ const allTransactionSchema = new mongoose.Schema(
   }
 );
 
-const levelROISchema = new mongoose.Schema(
+const creditBounusSchema = new mongoose.Schema(
   {
     reportName: String,
-    userID: String,
-    name: String,
-    dayROI: Number,
-    capitalAmount: Number,
-    LevelAmountCredited: Number,
-    percentage: Number,
+    bonusAmount:Number,
+    transactionId:String,
+    status: String,
   },
   {
     timestamps: true,
   }
 );
-
 
 const withdrawSchema = new mongoose.Schema(
   {
@@ -118,7 +114,6 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     bankDetails: {
-      id:String,
       holderName: String,
       accountNum: String,
       ifscCode: String,
@@ -209,6 +204,11 @@ const userSchema = new mongoose.Schema(
     transactionCode: {
       type: String,
     },
+    totalBonusAmount:{
+      type:Number,
+      default:0
+    },
+    bonusHistory: [creditBounusSchema],
     isAdmin:{
       type: Boolean,
         default: false,

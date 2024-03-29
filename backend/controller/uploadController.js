@@ -667,13 +667,11 @@ if(alert){
       if (!userData) {
         return next(errorHandler(401, "User not found"));
       }
-      if(holderName||accountNum||ifscCode||bankName){
-        userData.bankDetails.id=id;
         userData.bankDetails.bankName = bankName|| userData.bankDetails.bankName;
         userData.bankDetails.holderName = holderName|| userData.bankDetails.holderName;
         userData.bankDetails.accountNum = accountNum|| userData.bankDetails.accountNum;
         userData.bankDetails.ifscCode = ifscCode|| userData.bankDetails.ifscCode;
-      }
+      
 
       const updatedUser = await userData.save();
 

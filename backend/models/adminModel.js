@@ -20,6 +20,20 @@ const autoPoolSchema = new mongoose.Schema(
     }
   );
 
+    const addBounusSchema = new mongoose.Schema(
+      {
+        reportName: String,
+        userID: String,
+        name: String,
+        bonusAmount:Number,
+        transactionId:String,
+        phone:Number,
+        status: String,
+      },
+      {
+        timestamps: true,
+      }
+    );
 
 
 
@@ -43,7 +57,12 @@ autoPoolWallet:{
   type: Number,
   default: 0,
 },
-autoPoolHistory:[autoPoolSchema]
+totalPaidBonusAmount:{
+  type:Number,
+  default:0
+},
+autoPoolHistory:[autoPoolSchema],
+addBounusHistory:[addBounusSchema]
 });
       
 const Admin = mongoose.model("Admin", adminSchema);

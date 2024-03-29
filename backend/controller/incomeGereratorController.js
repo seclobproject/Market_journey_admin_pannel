@@ -12,10 +12,10 @@ export const generateReferalIncome = async (
     sponser2,
    updatedUser
   ) => {
+    console.log("reached Generate Referal Income");
         const directReferalIncome = updatedUser.packageAmount * 0.10;
       const inDirectReferalIncome =updatedUser.packageAmount * 0.05;
       if (sponser1.isAdmin==false) {
-        console.log("Reached admin");
         const totalDirectRaferal = sponser1.directReferalIncome + directReferalIncome;
         sponser1.directReferalIncome = totalDirectRaferal;
         sponser1.walletAmount = sponser1.walletAmount + directReferalIncome;
@@ -29,9 +29,13 @@ export const generateReferalIncome = async (
           status: "Approved",
         });
         const updatedSponser1=await sponser1.save()
-        if(updatedSponser1.isMobileFranchise)levelIncomeGenerator(sponser1,directReferalIncome)
+        if(updatedSponser1.isMobileFranchise){
+          levelIncomeGenerator(sponser1,directReferalIncome)
+
+          franchiseIncomeGenerator(updatedSponser1,directReferalIncome)
         
-          franchiseIncomeGenerator(sponser1,sponser1.packageAmount)
+          franchiseIncomeGenerator(updatedSponser1,updatedUser.packageAmount,updatedUser.name)
+        }
         
       }
       if(sponser2&&sponser2.isAdmin==false){
@@ -49,10 +53,15 @@ export const generateReferalIncome = async (
         });
 
         const updatedSponser2=await sponser2.save()
-        if(updatedSponser2.isMobileFranchise)levelIncomeGenerator(sponser2,sponser2.packageAmount)
+        if(updatedSponser2.isMobileFranchise){
 
-          franchiseIncomeGenerator(sponser2,sponser2.packageAmount)
-        
+          levelIncomeGenerator(sponser2,sponser2.packageAmount)
+  
+          franchiseIncomeGenerator(updatedSponser2,updatedUser.packageAmount,updatedUser.name)
+            franchiseIncomeGenerator(updatedSponser2,inDirectReferalIncome)
+  
+          
+        }
       }
   
       
@@ -72,6 +81,7 @@ export const generateReferalIncome = async (
         sponser.levelIncomeHistory.push({
           reportName: "Level Income ",
           name: userData.name,
+          Amount:amount,
           percentageCredited:"25%",
           amountCredited: levelIncome,
           status: "Approved",
@@ -88,19 +98,23 @@ export const generateReferalIncome = async (
 
 
 
-  const franchiseIncomeGenerator=async(userData,amount)=>{
+  const franchiseIncomeGenerator=async(userData,amount,name)=>{
+  console.log("Reached in Franchise Income generator");
+
     const districtIncome=amount*0.05;
     const zonalIncome=amount*0.08;
 
     const districtId=userData.districtFranchise;
-
     const zonalId=userData.zonalFranchise;
+
     const districtData=await User.findById(districtId);
     const zonalData=await User.findById(zonalId);
+
     districtData.totalLevelIncome = districtData.totalLevelIncome+districtIncome;
     districtData.walletAmount = districtData.walletAmount + districtIncome;
     districtData.levelIncomeHistory.push({
       reportName: "District Income",
+      newMember:name,
       userID: userData.ownSponserId,
       Amount:amount,
       name: userData.name,
@@ -119,6 +133,7 @@ export const generateReferalIncome = async (
     zonalData.walletAmount = zonalData.walletAmount + zonalIncome;
     zonalData.levelIncomeHistory.push({
       reportName: "Zonal Income",
+      newMember:name,
       userID: userData.ownSponserId,
       Amount:amount,
       name: userData.name,
@@ -391,7 +406,7 @@ export const setAutoPool = async (sponser1,user) => {
   const directMembersCount = childLevel1.length;
   const teamMemberCount=childLevel2.length;
   // const teamMemberCount = await countTeamMembers(_id);
-  console.log("Team member count:", teamMemberCount);
+  // console.log("Team member count:", teamMemberCount);
 
 
   const updateAutoPool = async (newPool) => {
@@ -442,13 +457,14 @@ export const setAutoPool = async (sponser1,user) => {
 
 export const addToAutoPoolWallet=async(user)=>{
   const adminData=await Admin.findOne();
-  console.log(adminData);
     const poolAmount = user.packageAmount * 0.1;
     adminData.autoPoolWallet += poolAmount;
     adminData.autoPoolHistory.push({
         reportName: "AutoPool Wallet Income",
         userID: user.ownSponsorId,
         Amount: user.packageAmount,
+        franchise:user.franchise,
+        franchiseName:user.franchiseName,
         name: user.name,
         percentageCredited: "10%",
         amountCredited: poolAmount,

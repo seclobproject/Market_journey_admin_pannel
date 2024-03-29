@@ -8,6 +8,7 @@ import Zonal from "../models/zonalModel.js";
 import Panchayath from "../models/panchayathModel.js";
 import User from "../models/userModel.js";
 import { addToAutoPoolWallet, generateReferalIncome, setAutoPool } from "./incomeGereratorController.js";
+import sendMail from "../config/mailer.js";
 
 
 
@@ -1032,10 +1033,10 @@ export const acceptUser = async (req, res, next) => {
           }
 
           const referalIncome=generateReferalIncome(sponserUser1,sponserUser2,updatedUser)
-          if(!(updatedUser.isDistrictFranchise)&& !(updatedUser.isZonalFranchise)&&updatedUser.packageAmount >= 5000 ){
+          if(updatedUser.packageAmount >= 5000 ){
             addToAutoPoolWallet(updatedUser)
           }
-          setAutoPool(sponserUser1,updatedUser)
+          if(!(sponserUser1.isDistrictFranchise) && !(sponserUser1.isZonalFranchise))setAutoPool(sponserUser1,updatedUser);
 
 
           res
@@ -1069,7 +1070,6 @@ export const rejectUser = async (req, res, next) => {
         const updatedUser = await userData.save();
 
         if (updatedUser) {
-         
           res.status(200).json({ updatedUser, msg: "User verification rejected!" });
         }
       } else {
@@ -1277,15 +1277,19 @@ export const viewUserDetails = async (req, res, next) => {
         email: userData.email,
         phone: userData.phone,
         address: userData.address,
+        dateOfBirth: userData.dateOfBirth,
         district:userData.district,
         screenshot:userData.screenshot,
         aadhaar: userData.aadhaar,
         aadhaar2: userData.aadhaar2,
-        capitalAmount: userData.packageAmount,
+        packageAmount: userData.packageAmount,
         myDownline: countFirstChild,
-        directIncome: userData.directReferalIncome,
-        inDirectIncome: userData.inDirectReferalIncome,
-        totalIncome: userData.walletAmount,
+        directIncome: userData.directReferalIncome.toFixed(2),
+        inDirectIncome: userData.inDirectReferalIncome.toFixed(2),
+        walletAmount: userData.walletAmount.toFixed(2),
+        bankDetails:userData.bankDetails,
+        totalLevelIncome:userData.totalLevelIncome.toFixed(2),
+
         sts: "01",
         msg: "get user profile Success",
       });
@@ -1308,10 +1312,12 @@ export const editProfileByAdmin = async (req, res, next) => {
     if (adminData) {
       const userData = await User.findById(id);
       if (userData) {
-        const { name,email, password, address } =
+        const { name,email, password, address,dateOfBirth } =
           req.body;
         userData.name = name || userData.name;
         userData.address = address || userData.address;
+        userData.email = email || userData.email;
+        userData.dateOfBirth = dateOfBirth || userData.dateOfBirth;
 
         if (password) {
           const hashedPassword = bcryptjs.hashSync(password, 10);
@@ -1324,6 +1330,13 @@ export const editProfileByAdmin = async (req, res, next) => {
         // }
 
         const updatedUser = await userData.save();
+      await User.updateMany({ sponser: id }, { $set: { sponserName: userData.name } });
+      if(email) {
+        await sendMail(
+          userData.email,
+          userData.name,
+          userData.ownSponserId,
+      );}
         res
           .status(200)
           .json({ updatedUser, sts: "01", msg: "Successfully Updated" });
@@ -1340,7 +1353,254 @@ export const editProfileByAdmin = async (req, res, next) => {
 
 
 
-//---------------------------------------------------Add bank Account-----------------------------------------------
+//---------------------------------------------------approve and reject Wallet withdraw----------------------------------------------
+
+
+//view all withdrawal requests
+
+const pendingWithdrawPaginate = async (model, query, page = 1, pageSize = 10) => {
+  try {
+      const totalDocs = await model.countDocuments(query);
+      const totalPages = Math.ceil(totalDocs / pageSize);
+
+      const offset = pageSize * (page - 1);
+
+      const results = await model.find(query).select(
+        "name email phone walletWithdrawStatus createdAt walletWithdrawAmount tdsAmount"
+    ).skip(offset).limit(pageSize);
+
+      return {
+          results,
+          page,
+          pageSize,
+          totalPages,
+          totalDocs
+      };
+  } catch (error) {
+      throw new Error(`Pagination error: ${error.message}`);
+  }
+};
+
+// Paginated version of viewWithdrawPending
+export const viewWithdrawPendingPaginated = async (req, res, next) => {
+  const userId = req.admin._id;
+  let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+  const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+
+  try {
+      const adminData = await Admin.findById(userId);
+      if (adminData) {
+          const withdrawPendingQuery = {
+              walletWithdrawStatus: "pending"
+          };
+          const paginatedWithdrawPending = await pendingWithdrawPaginate(User, withdrawPendingQuery, page, pageSize);
+
+          res.status(200).json({
+              userData: paginatedWithdrawPending.results,
+              pagination: {
+                  page: paginatedWithdrawPending.page,
+                  pageSize: paginatedWithdrawPending.pageSize,
+                  totalPages: paginatedWithdrawPending.totalPages,
+                  totalDocs: paginatedWithdrawPending.totalDocs
+              },
+              sts: "01",
+              msg: "Get withdraw pending users Success",
+          });
+      } else {
+          return next(errorHandler(401, "Admin Login Failed"));
+      }
+  } catch (error) {
+      next(error);
+  }
+};
+
+
+// //admin can approve wallet withdrawal
+
+// export const approveWalletWithdrawal = async (req, res, next) => {
+//   try {
+//     const adminId = req.admin._id;
+//     const { id } = req.params;
+
+//     // Fetch admin data
+//     const admin = await Admin.findById(adminId);
+//     if (!admin) {
+//       return next(errorHandler(401, "Admin login failed."));
+//     }
+
+//     // Fetch user data
+//     const user = await User.findById(id);
+//     if (!user) {
+//       return next(errorHandler(404, "User not found."));
+//     }
+
+//     // Calculate new wallet amount
+//     const tdsAmount=user.tdsAmount;
+//     const withdrawAmount = user.walletWithdrawAmount;
+//     const newWalletAmount = user.walletAmount - user.walletWithdrawAmount;
+
+//     // Update user data
+//     user.walletWithdrawStatus = "approved";
+//     user.walletAmount = newWalletAmount;
+//     user.totalWithdrawAmount += user.walletWithdrawAmount;
+//     user.walletWithdrawAmount = 0;
+//     user.tdsAmount = 0;
+//     user.walletWithdrawHistory.push({
+//       reportName: "walletWithdrawReport",
+//       name: user.name,
+//       ownID: user.ownSponserId,
+//       franchise: user.franchise,
+//       requestedAmount: withdrawAmount,
+//       TDS: "10%",
+//       releasedAmount: tdsAmount,
+//       newWalletAmount: newWalletAmount,
+//       status: "Approved",
+//     });
+
+//     // Save updated user data
+//     const updatedUser = await user.save();
+
+//     // Respond with updated user data
+//     res.status(200).json({
+//       updatedUser,
+//       msg: "User wallet withdraw request accepted!",
+//     });
+
+//   } catch (error) {
+//     console.log(error);
+//     next(error);
+//   }
+// };
+
+
+// //admin can reject wallet withdrawal
+
+// export const rejectWalletWithdrawal = async (req, res, next) => {
+//   try {
+//     const adminId = req.admin._id;
+//     const { id } = req.params;
+
+//     // Fetch admin data
+//     const admin = await Admin.findById(adminId);
+//     if (!admin) {
+//       return next(errorHandler(401, "Admin login failed."));
+//     }
+
+//     // Fetch user data
+//     const user = await User.findById(id);
+//     if (!user) {
+//       return next(errorHandler(404, "User not found."));
+//     }
+
+//     // Calculate new wallet amount
+//     const withdrawAmount = userData.walletWithdrawAmount;
+
+//     // Update user data
+//     user.walletWithdrawStatus = "";
+//     user.walletWithdrawAmount = 0;
+//     user.tdsAmount = 0;
+//     user.walletWithdrawHistory.push({
+//       reportName: "walletWithdrawReject",
+//       name: user.name,
+//       ownID: user.ownSponserId,
+//       franchise: user.franchise,
+//       requestedAmount: withdrawAmount,
+//       status: "Rejected",
+//     });
+
+//     // Save updated user data
+//     const updatedUser = await user.save();
+
+//     // Respond with updated user data
+//     res.status(200).json({
+//       updatedUser,
+//       msg: "User wallet withdraw request Rejected!",
+//     });
+
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 
 
+
+
+export const processWalletWithdrawal = async (req, res, next) => {
+  try {
+    const adminId = req.admin._id;
+    const { id } = req.params;
+    const { action } = req.body; // action can be "approve" or "reject"
+
+    // Fetch admin data
+    const admin = await Admin.findById(adminId);
+    if (!admin) {
+      return next(errorHandler(401, "Admin login failed."));
+    }
+
+    // Fetch user data
+    const user = await User.findById(id);
+    if (!user) {
+      return next(errorHandler(404, "User not found."));
+    }
+
+    // Check if the action is valid
+    if (action !== "approve" && action !== "reject") {
+      return next(errorHandler(400, "Invalid action. Please provide 'approve' or 'reject'."));
+    }
+
+    if (action === "approve") {
+      // Calculate new wallet amount for approval
+      const tdsAmount = user.tdsAmount;
+      const withdrawAmount = user.walletWithdrawAmount;
+      const newWalletAmount = user.walletAmount - user.walletWithdrawAmount;
+
+      // Update user data for approval
+      user.walletWithdrawStatus = "approved";
+      user.walletAmount = newWalletAmount;
+      user.totalWithdrawAmount += user.walletWithdrawAmount;
+      user.walletWithdrawAmount = 0;
+      user.tdsAmount = 0;
+      user.walletWithdrawHistory.push({
+        reportName: "walletWithdrawReport",
+        name: user.name,
+        ownID: user.ownSponserId,
+        franchise: user.franchise,
+        requestedAmount: withdrawAmount,
+        TDS: "10%",
+        releasedAmount: tdsAmount,
+        newWalletAmount: newWalletAmount,
+        status: "Approved",
+      });
+    } else if (action === "reject") {
+      // Calculate new wallet amount for rejection
+      const withdrawAmount = user.walletWithdrawAmount;
+
+      // Update user data for rejection
+      user.walletWithdrawStatus = "";
+      user.walletWithdrawAmount = 0;
+      user.tdsAmount = 0;
+      user.walletWithdrawHistory.push({
+        reportName: "walletWithdrawReject",
+        name: user.name,
+        ownID: user.ownSponserId,
+        franchise: user.franchise,
+        requestedAmount: withdrawAmount,
+        status: "Rejected",
+      });
+    }
+
+    // Save updated user data
+    const updatedUser = await user.save();
+
+    // Respond with updated user data
+    let msg = action === "approve" ? "User wallet withdraw request accepted!" : "User wallet withdraw request rejected!";
+    res.status(200).json({
+      updatedUser,
+      msg,
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};

@@ -29,41 +29,17 @@ const levelROISchema = new mongoose.Schema(
   }
 );
 
-const dailyROISchema = new mongoose.Schema(
-  {
-    reportName: String,
-    name: String,
-    capitalAmount: Number,
-    percentage: Number,
-    creditedAmount: Number,
-  },
-  {
-    timestamps: true,
-  }
-);
 
-const addFundSchema = new mongoose.Schema(
-  {
-    name: String,
-    topUpAmount: Number,
-    transactionCode: String,
-    addFundUrl: String,
-    status: String,
-  },
-  {
-    timestamps: true,
-  }
-);
 const withdrawSchema = new mongoose.Schema(
   {
     name: String,
     reportName: String,
     ownID: String,
-    packageName: String,
-    tnxID: String,
-    withdrawAmount: Number,
-    transactionCode: String,
-    walletUrl: String,
+    franchise: String,
+    requestedAmount: Number,
+    TDS: String,
+    releasedAmount: Number,
+    newWalletAmount: Number,
     status: String,
   },
   {
@@ -72,10 +48,12 @@ const withdrawSchema = new mongoose.Schema(
 );
 const ReferalAmountSchema = new mongoose.Schema(
   {
+    newMember:String,
     reportName: String,
     userID: String,
     franchise:String,
     name: String,
+    Amount:Number,
     percentageCredited:String,
     amountCredited: Number,
     status: String,
@@ -112,6 +90,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    dateOfBirth:{
+      type: Date,
+     
+    },
     franchise: {
       type: String,
       required: true,
@@ -136,6 +118,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     bankDetails: {
+      id:String,
       holderName: String,
       accountNum: String,
       ifscCode: String,
@@ -200,6 +183,10 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    tdsAmount: {
+      type: Number,
+      default: 0,
+    },
     walletWithdrawAmount: {
       type: Number,
       default: 0,
@@ -219,12 +206,7 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-
-    addFundHistory: [addFundSchema],
     transactionCode: {
-      type: String,
-    },
-    walletWithdrawUrl: {
       type: String,
     },
     isAdmin:{

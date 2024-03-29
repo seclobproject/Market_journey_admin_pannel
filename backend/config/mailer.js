@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-const sendMail = (mailId, name, sponserid, transactionPassword, password) => {
+const sendMail = (mailId, name, sponserid, password) => {
   const recipient = mailId;
 
   const transporter = nodemailer.createTransport({
@@ -18,7 +18,7 @@ const sendMail = (mailId, name, sponserid, transactionPassword, password) => {
     to: `${recipient}`,
     subject: `Hi ${name}, Registration successful.`,
     text: `Hi ${name}, Welcome to MARKET JOURNEY`,
-    html: `<h4>Congrats! You have joined the MARKET JOURNEY Group.</h4><p>Your sponserID is <strong>${sponserid}</strong><br/>Username: ${recipient}<br />Transaction Password: ${transactionPassword}<br />Password: ${password}</p>`,
+    html: `<h4>Congrats! You have joined the MARKET JOURNEY Group.</h4><p>Your sponserID is <strong>${sponserid}</strong><br/>Username: ${recipient}<br />Password: ${password}</p>`,
   };
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {

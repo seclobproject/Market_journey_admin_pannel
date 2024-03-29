@@ -660,19 +660,20 @@ if(alert){
 
    export const addUserBankAccount = async (req, res, next) => {
     try {
-      const userId = req.user._id;
+      const {id} = req.query||req.user._id;
       const {holderName,accountNum,ifscCode,bankName} = req.body;
 
-      const userData = await User.findById(userId);
+      const userData = await User.findById(id);
       if (!userData) {
         return next(errorHandler(401, "User not found"));
       }
-
-      userData.bankDetails.bankName = bankName|| userData.bankDetails.bankName;
-      userData.bankDetails.holderName = holderName|| userData.bankDetails.holderName;
-      userData.bankDetails.accountNum = accountNum|| userData.bankDetails.accountNum;
-      userData.bankDetails.ifscCode = ifscCode|| userData.bankDetails.ifscCode;
-
+      if(holderName||accountNum||ifscCode||bankName){
+        userData.bankDetails.id=id;
+        userData.bankDetails.bankName = bankName|| userData.bankDetails.bankName;
+        userData.bankDetails.holderName = holderName|| userData.bankDetails.holderName;
+        userData.bankDetails.accountNum = accountNum|| userData.bankDetails.accountNum;
+        userData.bankDetails.ifscCode = ifscCode|| userData.bankDetails.ifscCode;
+      }
 
       const updatedUser = await userData.save();
 

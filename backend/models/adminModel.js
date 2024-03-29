@@ -7,7 +7,9 @@ const autoPoolSchema = new mongoose.Schema(
     {
       reportName: String,
       userID: String,
+      Amount:Number,
       franchise:String,
+      franchiseName:String,
       name: String,
       percentageCredited:String,
       amountCredited: Number,

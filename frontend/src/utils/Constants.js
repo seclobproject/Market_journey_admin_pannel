@@ -61,3 +61,10 @@ export const editnewsUrl="/api/admin/edit-news"
 export const viewnewsUrl="/api/admin/view-news-details"
 export const deletenewsUrl="/api/admin/delete-news"
 export const viewuserdownlineUrl="/api/user/view-level1-user"
+//------withrawals api
+export const viewwithrawalrequesteUrl="/api/admin/view-withdraw-request"
+export const acceptrequestUrl="/api/admin/process-wallet-withdrawal"
+export const viewhistoryUrl="/api/admin/all-withdraw-history"
+
+//edit or add bank details
+export const editoraddBankUrl="/api/user/add-bank-account"

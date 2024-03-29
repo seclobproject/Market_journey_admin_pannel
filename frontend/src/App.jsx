@@ -23,6 +23,7 @@ import Livenew from "./pages/private/Lives/Livenew";
 import Withrawhistroy from "./pages/private/Withrawals/Withrawhistroy";
 import Pendingwithraw from "./pages/private/Withrawals/Pendingwithraw";
 import Viewtree from "./pages/private/Users/Viewtree";
+import Bonnushistory from "./pages/private/Users/Bonnushistory";
 
 
 function App() {
@@ -51,6 +52,8 @@ function App() {
           <Route path="/withraw/history" element={<Withrawhistroy />}/>
           <Route path="/pending/withraw" element={<Pendingwithraw />}/>
           <Route path="/user/downline" element={<Viewtree />}/>
+          <Route path="/user/bonnushistory" element={<Bonnushistory />}/>
+
 
 
 

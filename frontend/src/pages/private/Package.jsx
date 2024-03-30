@@ -241,12 +241,45 @@ function Package() {
       <option value="District Franchise">District Franchise</option>
       <option value="Zonal Franchise">Zonal Franchise</option>
       <option value="Mobile Franchise">Mobile Franchise</option>
+      <option value="Courses">Courses</option>
+
     </select>
     <Form.Control.Feedback type="invalid">
-      Please select a franchise type.
+      Please select a course
     </Form.Control.Feedback>
+    {addPackages?.franchiseName === "Courses" && (
+      <div className="mt-4">
+        <label htmlFor="mobileFranchiseType" className="form-label">
+          Courses
+        </label>
+        <select
+          required
+          id="mobileFranchiseType"
+          className="form-select form-control-lg"
+          value={addPackages?.packageName}
+          onChange={(e) =>
+            setAddPackages({
+              ...addPackages,
+              packageName: e.target.value,
+            })
+          }
+        >
+          <option value="" disabled selected>
+            Select course type
+          </option>
+          <option value="Mobile Franchise">Mobile Franchise</option>
+          <option value="Premium calls">Premium calls</option>
+          <option value="Diamond course">Diamond course</option>
+          <option value="Platinum course">Platinum course</option>
+          <option value="Algo course">Algo course</option>
 
-    {addPackages?.franchiseName === "Mobile Franchise" && (
+        </select>
+        <Form.Control.Feedback type="invalid">
+          Please select a mobile franchise type.
+        </Form.Control.Feedback>
+      </div>
+    )}
+    {/* {addPackages?.franchiseName === "Mobile Franchise" && (
       <div className="mt-4">
         <label htmlFor="mobileFranchiseType" className="form-label">
           Mobile Franchise Type
@@ -277,7 +310,7 @@ function Package() {
           Please select a mobile franchise type.
         </Form.Control.Feedback>
       </div>
-    )}
+    )} */}
   </div>
 )}
 

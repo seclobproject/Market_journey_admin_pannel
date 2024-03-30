@@ -68,3 +68,5 @@ export const viewhistoryUrl="/api/admin/all-withdraw-history"
 
 //edit or add bank details
 export const editoraddBankUrl="/api/user/add-bank-account"
+//Nominee detials
+export const addoreditNomineeUrl="/api/user/add-nominee"

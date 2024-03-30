@@ -102,6 +102,9 @@ function Pendingwithraw() {
                         <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                       </th>
                       <th>
+                        <h6 className="fs-4 fw-semibold mb-0">Date</h6>
+                      </th>
+                      <th>
                         <h6 className="fs-4 fw-semibold mb-0">Name</h6>
                       </th>
 
@@ -112,9 +115,7 @@ function Pendingwithraw() {
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Phone</h6>
                       </th>
-                      <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Date</h6>
-                      </th>
+                    
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">
                         Wallet Withdraw Amount 
@@ -148,6 +149,8 @@ function Pendingwithraw() {
                           (
                             <tr key={index}>
                               <td>{index + 1}</td>
+                              <td>{request?.updatedAt ? moment(request.updatedAt).format('DD/MM/YYYY') : "--"}</td>
+
                               <td>
                                 {(request?.name &&
                                   request.name.toUpperCase()) ||
@@ -160,7 +163,6 @@ function Pendingwithraw() {
                               </td> */}
                               <td>{request?.email || "--"}</td>
                               <td>{request?.phone || "--"}</td>
-                              <td>{request?.updatedAt ? moment(request.updatedAt).format('DD/MM/YYYY') : "--"}</td>
                               <td>{request?.walletWithdrawAmount || "0"}</td>
                               <td>{request?.tdsAmount || "0"}</td>
                               <td>

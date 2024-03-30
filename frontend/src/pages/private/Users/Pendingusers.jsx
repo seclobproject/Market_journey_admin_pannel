@@ -109,6 +109,9 @@ function Pendingusers() {
                       <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                     </th>
                     <th>
+                      <h6 className="fs-4 fw-semibold mb-0">Date</h6>
+                    </th>
+                    <th>
                       <h6 className="fs-4 fw-semibold mb-0">Name</h6>
                     </th>
 
@@ -124,9 +127,7 @@ function Pendingusers() {
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">Package Amount</h6>
                     </th>
-                    <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Date</h6>
-                    </th>
+                 
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">Image</h6>
                     </th>
@@ -155,6 +156,8 @@ function Pendingusers() {
                           (
                             <tr key={index}>
                               <td>{index + 1}</td>
+                              <td>{members?.createdAt ? moment(members.createdAt).format('DD/MM/YYYY') : "--"}</td>
+
                               <td>
                                 {(members?.name &&
                                   members.name.toUpperCase()) ||
@@ -169,7 +172,6 @@ function Pendingusers() {
                               <td>{members?.email || "--"}</td>
                               <td>{members?.phone || "--"}</td>
                               <td>{members?.tempPackageAmount || "0"}</td>
-                              <td>{members?.createdAt ? moment(members.createdAt).format('DD/MM/YYYY') : "--"}</td>
                               <td>
                                 <img
                                   alt="images"

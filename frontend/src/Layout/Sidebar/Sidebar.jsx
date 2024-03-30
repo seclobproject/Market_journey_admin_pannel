@@ -46,7 +46,7 @@ function Sidebar() {
         },
       ],
     },
-    { title: "Bonnus History", icon: "fas fa-clock", route: "user/bonnushistory" },
+    { title: "Bonus History", icon: "fas fa-clock", route: "user/bonnushistory" },
 
     {
       title: "Uploads",

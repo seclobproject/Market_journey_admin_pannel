@@ -74,6 +74,10 @@ function Withrawhistroy() {
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                       </th>
+                           
+                      <th>
+                        <h6 className="fs-4 fw-semibold mb-0">Date</h6>
+                      </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Name</h6>
                       </th>
@@ -81,10 +85,7 @@ function Withrawhistroy() {
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Franchise Type</h6>
                       </th>
-                      
-                      <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Date</h6>
-                      </th>
+                 
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Requested Amount
 </h6>
@@ -119,6 +120,8 @@ function Withrawhistroy() {
                           (
                             <tr key={index}>
                               <td>{index + 1}</td>
+                              <td>{history?.createdAt ? moment(history.createdAt).format('DD/MM/YYYY') : "--"}</td>
+
                               <td>
                                 {(history?.name &&
                                   history.name.toUpperCase()) ||
@@ -131,7 +134,6 @@ function Withrawhistroy() {
                               </td>
                        
            
-                              <td>{history?.createdAt ? moment(history.createdAt).format('DD/MM/YYYY') : "--"}</td>
                               <td>{history?.requestedAmount || "0"}</td>
                               <td>{history?.releasedAmount || "0"}</td>
                               <td>{history?.newWalletAmount || "0"}</td>

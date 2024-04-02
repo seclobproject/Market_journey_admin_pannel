@@ -63,7 +63,7 @@ console.log(totalgstAmount," totalgstAmounts sum");
   const [statusfilter, setStatusFilter] = useState();
 
   const navigate = useNavigate();
-
+  const startIndex = (params.page - 1) * params.pageSize;
   //-----------list district in drop down--------
   const getStateList = async () => {
     try {
@@ -326,11 +326,12 @@ console.log(totalgstAmount," totalgstAmounts sum");
     const filterStatus = e.target.value;
 
     setFilter(filterStatus);
+    console.log(filterStatus,"==")
     const newFilteredData = allUser.filter((item) => {
       console.log(item, "iteamssssss///");
-      return filterStatus ? item?.userStatus === filterStatus : true;
+      return filterStatus ? item.userStatus === filterStatus : true;
     });
-    console.log(newFilteredData, "");
+    console.log(newFilteredData, "fgdffdfd");
     setFilteredData(newFilteredData);
   };
 
@@ -380,6 +381,7 @@ useEffect(()=>{
                 onClick={() => {
                   setMemberModal({ show: true, id: null });
                   setAddMember("");
+                  setTotalGstAmount("");
                   setValidated(false);
                 }}
               >
@@ -487,7 +489,7 @@ useEffect(()=>{
                         {filteredData.map((users, index) => (
                           console.log(users),
                           <tr key={index}>
-                            <td>{index + 1}</td>
+                            <td>{startIndex + index + 1}</td>
                             <td>
                               {users?.createdAt
                                 ? moment(users.createdAt).format("DD/MM/YYYY")

@@ -15,8 +15,11 @@ function Withrawhistroy() {
     pageSize: 10,
   });
   const [totalPages, setTotalPages] = useState(1);
-
+  const [filteredData, setFilteredData] = useState([]);
+  const [filter, setFilter] = useState();
+  const [statusfilter, setStatusFilter] = useState();
   const [viewHistory, setViewHistory] = useState([]);
+  const startIndex = (params.page - 1) * params.pageSize;
 
   //-------View History-------------------
   const getHistory = async () => {
@@ -26,6 +29,7 @@ function Withrawhistroy() {
       console.log(response, "get");
       if (response.status === 200) {
         setViewHistory(response?.data?.allAddFundHistory);
+        setFilteredData(response?.data?.allAddFundHistory)
         setTotalPages(response?.data?.pagination?.totalPages);
 
         setIsLoading(false);
@@ -46,10 +50,24 @@ function Withrawhistroy() {
       page: newPage,
     }));
   };
+  const handleFilterAndSetFilterStatus = (e) => {
+    const filterStatus = e.target.value;
 
+    setFilter(filterStatus);
+    console.log(filterStatus,"==")
+    const newFilteredData = viewHistory.filter((item) => {
+      console.log(item, "iteamssssss///");
+      return filterStatus ? item.status === filterStatus : true;
+    });
+    console.log(newFilteredData, "fgdffdfdasasdsadasdasdsadasdasdasdsadsadas");
+    setFilteredData(newFilteredData);
+  };
   useEffect(() => {
+    if (filter === "View_all") {
     getHistory();
-  }, [params]);
+  }
+  }, [params,filter]);
+ 
   return (
     <>
       <SlideMotion>
@@ -62,6 +80,25 @@ function Withrawhistroy() {
             >
               Withraw History
             </h5>
+          </div>
+          <div className="row ms-2 me-2">
+          
+            <div className="col-md-3 mt-3">
+              <select
+                value={statusfilter}
+                onChange={(e) => handleFilterAndSetFilterStatus(e)}
+                className="form-control"
+              >
+                <option selected disabled>
+                  Search by status...
+                </option>
+
+                <option value="View_all">View All</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+                {/* Add more filter options as needed */}
+              </select>
+            </div>
           </div>
           {isLoading ? (
             <Loader />
@@ -113,13 +150,13 @@ function Withrawhistroy() {
                     </tr>
                   </thead>
                   <tbody>
-                  {viewHistory?.length ? (
+                  {filteredData?.length ? (
                     <>
-                      {viewHistory.map(
+                      {filteredData.map(
                         (history, index) => (
                           (
                             <tr key={index}>
-                              <td>{index + 1}</td>
+                            <td>{startIndex + index + 1}</td>
                               <td>{history?.createdAt ? moment(history.createdAt).format('DD/MM/YYYY') : "--"}</td>
 
                               <td>

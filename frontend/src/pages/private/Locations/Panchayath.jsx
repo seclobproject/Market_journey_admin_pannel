@@ -46,6 +46,7 @@ function Panchayath() {
   });
 
   const [totalPages, setTotalPages] = useState(1);
+  const startIndex = (params.page - 1) * params.pageSize;
 
   //-----------list state in drop down--------
   const getStateList = async () => {
@@ -282,7 +283,7 @@ function Panchayath() {
                       <>
                         {panchyathList.map((panchayaths, index) => (
                           <tr key={index}>
-                            <td>{index + 1}</td>
+                            <td>{startIndex + index + 1}</td>
                             <td>
                               {(panchayaths?.stateName &&
                                 panchayaths.stateName.toUpperCase()) ||
@@ -319,7 +320,7 @@ function Panchayath() {
                                 >
                                   <i
                                     className="fs-4 fas fa-pencil-alt"
-                                    style={{ color: "red" }}
+                                    style={{ color: "red",cursor:'pointer' }}
                                   ></i>
                                 </a>
                               ) : (
@@ -333,7 +334,7 @@ function Panchayath() {
                                 >
                                   <i
                                     className="fs-4 fas fa-pencil-alt"
-                                    style={{ color: "grey" }}
+                                    style={{ color: "grey",cursor:'pointer' }}
                                   ></i>
                                 </button>
                               )}
@@ -347,7 +348,7 @@ function Panchayath() {
                                 >
                                   <i
                                     className="fs-4 fas fa-trash-alt"
-                                    style={{ color: "red" }}
+                                    style={{ color: "red",cursor:'pointer' }}
                                   ></i>
                                 </a>
                               ) : (
@@ -362,7 +363,7 @@ function Panchayath() {
                                 >
                                   <i
                                     className="fs-4 fas fa-trash-alt"
-                                    style={{ color: "grey" }}
+                                    style={{ color: "grey",cursor:'pointer' }}
                                   ></i>
                                 </button>
                               )}

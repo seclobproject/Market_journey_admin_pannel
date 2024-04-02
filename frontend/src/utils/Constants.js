@@ -70,3 +70,7 @@ export const viewhistoryUrl="/api/admin/all-withdraw-history"
 export const editoraddBankUrl="/api/user/add-bank-account"
 //Nominee detials
 export const addoreditNomineeUrl="/api/user/add-nominee"
+//demate accounts
+export const pendingdemateaccountUrl="/api/admin/view-pending-demates"
+//autopool
+export const viewautopoolhistoryUrl="/api/admin/autopool-credit-history"

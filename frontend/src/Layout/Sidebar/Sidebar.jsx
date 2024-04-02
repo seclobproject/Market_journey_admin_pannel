@@ -46,6 +46,20 @@ function Sidebar() {
         },
       ],
     },
+    {
+      title: "Demat Account",
+      icon: "fas fa-chart-pie",
+      sub: [
+        { title: "All Demat Accounts", route: "member"},
+        {
+          title: "Pending Account",
+          route: "pending/accounts",
+          // icon: "fas fa-user-check",
+        },
+
+       
+      ],
+    },
     { title: "Bonus History", icon: "fas fa-clock", route: "user/bonnushistory" },
 
     {
@@ -84,11 +98,12 @@ function Sidebar() {
     } ,  
     { title: "Awards & Rewards", icon: "fas fa-trophy", route: "user/awards" },
     {
-      title: "My Account",
+      title: "Autopool Wallet",
       icon: "fas fa-user",
       sub: [
-        { title: "Profile", route: "admin/profile",  },
-        { title: "Change password", route: "resetpassword",  },
+        { title: "Distribute History", route: "autopool-wallet/distribute" },
+
+        { title: "Wallet History", route: "autopool-wallet/history"  },
 
       ],
       

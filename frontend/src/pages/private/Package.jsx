@@ -171,7 +171,7 @@ function Package() {
                                 setAddPackages(packages);
                               }}
                             >
-<i className="fs-4 fas fa-pencil-alt" style={{ color: 'red' }}></i>                              
+<i className="fs-4 fas fa-pencil-alt" style={{ color: 'red',cursor:'pointer' }}></i>                              
                             </a>
                           </td>
                         </tr>
@@ -242,10 +242,12 @@ function Package() {
       <option value="Zonal Franchise">Zonal Franchise</option>
       <option value="Mobile Franchise">Mobile Franchise</option>
       <option value="Courses">Courses</option>
+      <option value="Signals">Signals</option>
+
 
     </select>
     <Form.Control.Feedback type="invalid">
-      Please select a course
+      Please select a type
     </Form.Control.Feedback>
     {addPackages?.franchiseName === "Courses" && (
       <div className="mt-4">
@@ -267,7 +269,6 @@ function Package() {
           <option value="" disabled selected>
             Select course type
           </option>
-          <option value="Mobile Franchise">Mobile Franchise</option>
           <option value="Premium calls">Premium calls</option>
           <option value="Diamond course">Diamond course</option>
           <option value="Platinum course">Platinum course</option>
@@ -279,10 +280,10 @@ function Package() {
         </Form.Control.Feedback>
       </div>
     )}
-    {/* {addPackages?.franchiseName === "Mobile Franchise" && (
+    {addPackages?.franchiseName === "Signals" && (
       <div className="mt-4">
         <label htmlFor="mobileFranchiseType" className="form-label">
-          Mobile Franchise Type
+        Signals        
         </label>
         <select
           required
@@ -297,20 +298,20 @@ function Package() {
           }
         >
           <option value="" disabled selected>
-            Select mobile franchise type
+            Select a signal
           </option>
-          <option value="Mobile Franchise">Mobile Franchise</option>
-          <option value="Premium calls">Premium calls</option>
-          <option value="Diamond course">Diamond course</option>
-          <option value="Platinum course">Platinum course</option>
-          <option value="Algo course">Algo course</option>
+          <option value="Nifty">Nifty</option>
+          <option value="Bank Nifty">Bank Nifty</option>
+          <option value="Crude Oil">Crude Oil</option>
+          <option value="All">All</option>
 
         </select>
         <Form.Control.Feedback type="invalid">
           Please select a mobile franchise type.
         </Form.Control.Feedback>
       </div>
-    )} */}
+    )}
+    
   </div>
 )}
 

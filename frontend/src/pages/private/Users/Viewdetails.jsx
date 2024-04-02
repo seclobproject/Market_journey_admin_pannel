@@ -271,7 +271,7 @@ function Viewdetails() {
                           className="card-title mb-9 fw-semibold"
                           style={{ color: "white" }}
                         >
-                          Total Level Income
+                          Level Income
                         </h5>
                         <div className="d-flex align-items-center mb-3">
                           <h4
@@ -364,13 +364,14 @@ function Viewdetails() {
                                     });                               }}
                                   style={{
                                     color: "black",
+                                    cursor:'pointer'
                                   }}
                                 ></i>
                               </h5>
 
                               <a
                                 className="nav-link nav-icon-hover"
-                                href="javascript:void(0)"
+                                href={undefined}
                                 id="drop2"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
@@ -522,7 +523,7 @@ function Viewdetails() {
                     </div>
                   </div>{" "}
                 </div>
-                <div className="col-lg-6 col-md-12 mt-4">
+                <div className="col-lg-6 col-md-12 ">
                   <div className="card">
                     <div className="card-body">
                       <h5
@@ -542,6 +543,7 @@ function Viewdetails() {
                           }}
                           style={{
                             color: "black",
+                            cursor:'pointer'
                           }}
                         ></i>
                       </h5>
@@ -608,56 +610,60 @@ function Viewdetails() {
                           }}
                           style={{
                             color: "black",
+                            cursor:'pointer'
                           }}
                         ></i>
                       </h5>
 
                       <ul className="list-unstyled mt-3">
-                        <li className="d-flex align-items-center gap-3 mb-4">
-                          <i className="fas fa-user text-dark fs-6" />
-                          <h6 className="fs-4 fw-semibold mb-0">
-                            Name:{" "}
-                            <span style={{ color: "rgb(247, 174, 21)" }}>
-                              {details?.nomineeDetails?.name}
-                            </span>
-                          </h6>
-                        </li>
-                        <li className="d-flex align-items-center gap-3 mb-4">
-                          <i className="fas fa-user text-dark fs-6" />
-                          <h6 className="fs-4 fw-semibold mb-0">
-                            Phone:{" "}
-                            <span style={{ color: "rgb(247, 174, 21)" }}>
-                              {details?.nomineeDetails?.phone}
-                            </span>
-                          </h6>
-                        </li>
-                        <li className="d-flex align-items-center gap-3 mb-4">
-                          <i className="fas fa-user text-dark fs-6" />
-                          <h6 className="fs-4 fw-semibold mb-0">
-                          Aadhaar Number:{" "}
-                            <span style={{ color: "rgb(247, 174, 21)" }}>
-                              {details?.nomineeDetails?.aadhaarNum}
-                            </span>
-                          </h6>
-                        </li>
-                        <li className="d-flex align-items-center gap-3 mb-4">
-                          <i className="fas fa-user text-dark fs-6" />
-                          <h6 className="fs-4 fw-semibold mb-0">
-                          Pan Card Number:{" "}
-                            <span style={{ color: "rgb(247, 174, 21)" }}>
-                              {details?.nomineeDetails?.pancardNum}
-                            </span>
-                          </h6>
-                        </li>
-                        <li className="d-flex align-items-center gap-3 mb-4">
-                          <i className="fas fa-user text-dark fs-6" />
-                          <h6 className="fs-4 fw-semibold mb-0">
-                            Address:{" "}
-                            <span style={{ color: "rgb(247, 174, 21)" }}>
-                              {details?.nomineeDetails?.address}
-                            </span>
-                          </h6>
-                        </li>
+       
+  <li className="d-flex align-items-center gap-3 mb-4">
+    <i className="fas fa-user text-dark fs-6" />
+    <h6 className="fs-4 fw-semibold mb-0">
+      Name:{" "}
+      <span style={{ color: "rgb(247, 174, 21)" }}>
+        {details?.nomineeDetails?.name}
+      </span>
+    </h6>
+  </li>
+  <li className="d-flex align-items-center gap-3 mb-4">
+    <i className="fas fa-phone text-dark fs-6" />
+    <h6 className="fs-4 fw-semibold mb-0">
+      Phone:{" "}
+      <span style={{ color: "rgb(247, 174, 21)" }}>
+        {details?.nomineeDetails?.phone}
+      </span>
+    </h6>
+  </li>
+  <li className="d-flex align-items-center gap-3 mb-4">
+    <i className="fas fa-id-card text-dark fs-6" />
+    <h6 className="fs-4 fw-semibold mb-0">
+      Aadhaar Number:{" "}
+      <span style={{ color: "rgb(247, 174, 21)" }}>
+        {details?.nomineeDetails?.aadhaarNum}
+      </span>
+    </h6>
+  </li>
+  <li className="d-flex align-items-center gap-3 mb-4">
+    <i className="fas fa-id-card-alt text-dark fs-6" />
+    <h6 className="fs-4 fw-semibold mb-0">
+      Pan Card Number:{" "}
+      <span style={{ color: "rgb(247, 174, 21)" }}>
+        {details?.nomineeDetails?.pancardNum}
+      </span>
+    </h6>
+  </li>
+  <li className="d-flex align-items-center gap-3 mb-4">
+    <i className="fas fa-map-marker-alt text-dark fs-6" />
+    <h6 className="fs-4 fw-semibold mb-0">
+      Address:{" "}
+      <span style={{ color: "rgb(247, 174, 21)" }}>
+        {details?.nomineeDetails?.address}
+      </span>
+    </h6>
+  </li>
+
+
 
                         <li className="d-flex align-items-center gap-3 mb-4">
                           <i className="fas fa-university text-dark fs-6" />

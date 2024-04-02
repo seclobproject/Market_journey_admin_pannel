@@ -20,6 +20,7 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
 function Zonal() {
+
   const [zonalModal, setZonalModal] = useState({ show: false, id: null });
   const [zonalEditModal, setZonalEditModal] = useState({
     show: false,
@@ -40,6 +41,7 @@ function Zonal() {
     pageSize: 10,
   });
   const [totalPages, setTotalPages] = useState(1);
+  const startIndex = (params.page - 1) * params.pageSize;
 
   //-----------list state in drop down--------
   const getStateList = async () => {
@@ -228,7 +230,7 @@ function Zonal() {
                       <>
                         {zonalList.map((zonals, index) => (
                           <tr key={index}>
-                            <td>{index + 1}</td>
+                            <td>{startIndex + index + 1}</td>
                             <td>
                               {(zonals?.stateName &&
                                 zonals.stateName.toUpperCase()) ||
@@ -255,7 +257,7 @@ function Zonal() {
                                 >
                                   <i
                                     className="fs-4 fas fa-pencil-alt"
-                                    style={{ color: "red" }}
+                                    style={{ color: "red",cursor:'pointer' }}
                                   ></i>
                                 </a>
                               ) : (
@@ -269,7 +271,7 @@ function Zonal() {
                                 >
                                   <i
                                     className="fs-4 fas fa-pencil-alt"
-                                    style={{ color: "grey" }}
+                                    style={{ color: "grey",cursor:'pointer' }}
                                   ></i>
                                 </button>
                               )}
@@ -283,7 +285,7 @@ function Zonal() {
                                 >
                                   <i
                                     className="fs-4 fas fa-trash-alt"
-                                    style={{ color: "red" }}
+                                    style={{ color: "red",cursor:'pointer' }}
                                   ></i>
                                 </a>
                               ) : (
@@ -298,7 +300,7 @@ function Zonal() {
                                 >
                                   <i
                                     className="fs-4 fas fa-trash-alt"
-                                    style={{ color: "grey" }}
+                                    style={{ color: "grey",cursor:'pointer' }}
                                   ></i>
                                 </button>
                               )}

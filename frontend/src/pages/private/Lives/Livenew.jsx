@@ -171,7 +171,7 @@ function Livenew() {
                                     >
                                       <i
                                         className="fs-4 fas fa-pencil-alt"
-                                        style={{ color: "red" }}
+                                        style={{ color: "red" ,cursor:'pointer'}}
                                       ></i>
                                     </a>
                                     <a
@@ -186,7 +186,7 @@ function Livenew() {
                                     >
                                       <i
                                         className="fs-4 fas fa-trash-alt"
-                                        style={{ color: "red" }}
+                                        style={{ color: "red",cursor:'pointer' }}
                                       />
                                     </a>
                                   </td>{" "}                          </tr>

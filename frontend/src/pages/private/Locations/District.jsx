@@ -213,7 +213,7 @@ function District() {
                                 >
                                   <i
                                     className="fs-4 fas fa-pencil-alt"
-                                    style={{ color: "red" }}
+                                    style={{ color: "red" ,cursor:'pointer'}}
                                   ></i>
                                 </a>
                               ) : (
@@ -227,7 +227,7 @@ function District() {
                                 >
                                   <i
                                     className="fs-4 fas fa-pencil-alt"
-                                    style={{ color: "grey" }}
+                                    style={{ color: "grey",cursor:'pointer' }}
                                   ></i>
                                 </button>
                               )}
@@ -241,7 +241,7 @@ function District() {
                                 >
                                   <i
                                     className="fs-4 fas fa-trash-alt"
-                                    style={{ color: "red" }}
+                                    style={{ color: "red" ,cursor:'pointer'}}
                                   ></i>
                                 </a>
                               ) : (
@@ -256,7 +256,7 @@ function District() {
                                 >
                                   <i
                                     className="fs-4 fas fa-trash-alt"
-                                    style={{ color: "grey" }}
+                                    style={{ color: "grey",cursor:'pointer' }}
                                   ></i>
                                 </button>
                               )}

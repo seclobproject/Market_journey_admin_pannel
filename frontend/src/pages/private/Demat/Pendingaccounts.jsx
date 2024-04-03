@@ -1,23 +1,34 @@
 import React, { useEffect, useState } from 'react'
 import { SlideMotion } from '../../../libs/FramerMotion'
 import Loader from '../../../Components/Loader';
-import { pendingdemateaccountUrl } from '../../../utils/Constants';
+import { addorrejectAccountUrl, pendingdemateaccountUrl } from '../../../utils/Constants';
 import { ApiCall } from '../../../Services/Api';
 import moment from 'moment';
+import ModalComponent from '../../../Components/ModalComponet';
+import { Show_Toast } from '../../../utils/Toastify';
+import { Pagination, Stack } from '@mui/material';
 
 function Pendingaccounts() {
   const [isLoading, setIsLoading] = useState(false);
   const [pendingAccounts, setpendingAccounts] = useState([]);
+  const [approveModal, setApproveModal] = useState({ show: false, id: null });
+  const [totalPages, setTotalPages] = useState(1);
+  console.log(totalPages,"setTotalPages")
+  const [params, setParams] = useState({
+    page: 1,
+    pageSize: 2,
+  });
+  const startIndex = (params.page - 1) * params.pageSize;
 
-
-    //-----------list state--------
+    //-----------list pending accounts--------
     const getPendingAccounts = async () => {
       try {
         setIsLoading(true);
-        const response = await ApiCall("get", pendingdemateaccountUrl);
+        const response = await ApiCall("get", pendingdemateaccountUrl,{},params);
         console.log(response,'response')
         if (response.status === 200) {
           setpendingAccounts(response?.data?.userData);
+          setTotalPages(response?.data?.pagination)
           setIsLoading(false);
         } else {
           console.error(
@@ -30,10 +41,37 @@ function Pendingaccounts() {
         console.error("Error fetching state list:", error);
       }
     };
+    //------------approve user--------------
+  const approveOrReject = async () => {
+    try {
+      const action=approveModal?.action
+
+      const resposne = await ApiCall(
+        "post",
+        `${addorrejectAccountUrl}/${approveModal.id}`,{action}
+      );
+      console.log(resposne,"res ress res")
+      if (resposne?.status === 200) {
+        Show_Toast(resposne?.data?.msg, true);
+        setApproveModal(false);
+        getPendingAccounts();
+      }
+    } catch (error) {
+      Show_Toast(error, false);
+    }
+  };
+  const handlePageChange = (event, newPage) => {
+    setParams((prevParams) => ({
+      ...prevParams,
+      page: newPage,
+    }));
+  };
+
+
 
     useEffect(()=>{
 getPendingAccounts()
-    },[])
+    },[params])
   
   return (
     <>
@@ -98,7 +136,7 @@ getPendingAccounts()
                           console.log(acounts, "45678"),
                           (
                             <tr key={index}>
-                              <td>{index + 1}</td>
+                            <td>{startIndex + index + 1}</td>
                               <td>{acounts?.createdAt ? moment(acounts.createdAt).format('DD/MM/YYYY') : "--"}</td>
 
                               <td>
@@ -128,15 +166,17 @@ getPendingAccounts()
                            
     
 
-{/* 
-                              <td>
-                                {members?.userStatus === "readyToApprove" && (
+
+      <td>
+                                {acounts?.status === "pending" && (
                                   <button
                                     className="btn btn-success"
                                     onClick={() =>
                                       setApproveModal({
                                         show: true,
-                                        id: members._id,
+                                        id: acounts._id,
+                                        action: 'approve'
+
                                       })
                                     }
                                   >
@@ -145,20 +185,22 @@ getPendingAccounts()
                                 )}
                               </td>
                               <td>
-                                {members?.userStatus === "readyToApprove" && (
+                                {acounts?.status === "pending" && (
                                   <button
                                     className="btn btn-cancel"
                                     onClick={() =>
-                                      setrejectModal({
+                                      setApproveModal({
                                         show: true,
-                                        id: members._id,
+                                        id: acounts._id,
+                                        action: 'reject'
+
                                       })
                                     }
                                   >
                                     Reject
                                   </button>
                                 )}
-                              </td> */}
+                              </td>
   
                             </tr>
                           )
@@ -168,22 +210,82 @@ getPendingAccounts()
                   ) : (
                     <tr>
                       <td colSpan={20} style={{ textAlign: "center" }}>
-                        <b>No History Found</b>{" "}
+                        <b>No Accounts Found</b>{" "}
                       </td>
                     </tr>
                   )}
                 </tbody>
               </table>
+        
             </div>
           </div>
+          
             )}
-          <div className="me-2">
-            {/* -------------------------pagination--------------------- */}
-
-            {/* -------------------------pagination--------------------- */}
+              <div className="me-2 mb-3 d-flex ms-auto">
+            <Stack spacing={2}>
+              <Pagination
+                count={totalPages}
+                page={params.page}
+                onChange={handlePageChange}
+                color="primary"
+              />
+            </Stack>
           </div>
         </div>
       </SlideMotion>
+   {/* approve modal */}
+   <ModalComponent
+        show={approveModal.show}
+        onHide={() => {
+          setApproveModal({ show: false, id: null });
+        }}
+        centered
+        width={"500px"}
+      >
+        <div className="modal-body">
+          <div className="row mb-4">
+            <div className="col d-flex justify-content-center">
+              <i
+                style={{ fontSize: "50px", color: "#fe9423" }}
+                className="fa fa-exclamation-triangle "
+                aria-hidden="true"
+              ></i>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col d-flex justify-content-center ">
+              <h5 className="">
+              Are you sure you want to {approveModal?.action === 'approve' ? 'approve' : 'reject'} this account?               </h5>
+            </div>
+          </div>
+        </div>
+
+        <div className="modal-footer">
+          <div className="col gap-3 d-flex justify-content-center">
+            <button
+              onClick={() => {
+                setApproveModal({ show: false, id: null });
+              }}
+              type="button"
+              className="btn btn-cancel"
+              data-bs-dismiss="modal"
+            >
+              No, keep it
+            </button>
+            <button
+              type="button"
+              className="btn btn-custom text-white"
+              onClick={() => {
+                approveOrReject();
+              }}
+            >
+              Yes, {approveModal?.action === 'approve' ? 'Approve' : 'Reject'} it
+            </button>
+          </div>
+        </div>
+      </ModalComponent>
+
+  
     </>
   )
 }

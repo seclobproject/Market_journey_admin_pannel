@@ -3,7 +3,6 @@ import MenuItem from "./MenuItem";
 import { Link } from "react-router-dom";
 import { ContextData } from "../../Services/Context";
 import { SidebarAnimation } from "../../libs/FramerMotion";
-import { Helmet } from 'react-helmet';
 function Sidebar() {
   const { setHamburgClicked, hamburgClicked } = useContext(ContextData);
 
@@ -14,17 +13,10 @@ function Sidebar() {
       title: "Users",
       icon: "fas fa-users",
       sub: [
-        { title: "All Users", route: "member"},
+        { title: "All Users", route: "member" },
         {
           title: "Pending Users",
           route: "user/pending",
-          // icon: "fas fa-user-check",
-        },
-
-        {
-          title: "Franchise Users",
-          route: "settings-invoice",
-          // icon: "fas fa-building",
         },
       ],
     },
@@ -32,8 +24,8 @@ function Sidebar() {
       title: "Locations",
       icon: "fas fa-map-marker-alt",
       sub: [
-        { title: "State", route: "locations/state",  },
-        { title: "District", route: "locations/district",},
+        { title: "State", route: "locations/state" },
+        { title: "District", route: "locations/district" },
         {
           title: "Zonal",
           route: "locations/zonal",
@@ -42,7 +34,6 @@ function Sidebar() {
         {
           title: "Panchayath",
           route: "locations/panchayath",
-          // icon: "fas fa-landmark",
         },
       ],
     },
@@ -50,36 +41,32 @@ function Sidebar() {
       title: "Demat Account",
       icon: "fas fa-chart-pie",
       sub: [
-        { title: "All Demat Accounts", route: "member"},
+        { title: "All Demat Accounts", route: "member" },
         {
           title: "Pending Account",
           route: "pending/accounts",
-          // icon: "fas fa-user-check",
         },
-
-       
       ],
     },
-    { title: "Bonus History", icon: "fas fa-clock", route: "user/bonnushistory" },
+    {
+      title: "Bonus History",
+      icon: "fas fa-clock",
+      route: "user/bonnushistory",
+    },
 
     {
       title: "Uploads",
       icon: "fas fa-cloud-upload-alt",
-      // route: "user/uploads",
       sub: [
         {
           title: "Upload Image",
           route: "user/uploads",
-          // icon: "fas fa-user-check",
         },
 
         {
           title: "Upload Video",
           route: "user/videos",
-
-          // icon: "fas fa-building",
         },
-     
       ],
     },
 
@@ -90,12 +77,10 @@ function Sidebar() {
       title: "Withdrawals",
       icon: "fas fa-money-bill",
       sub: [
-        { title: "Pending withrawals", route: "pending/withraw",  },
-        { title: "Withdraw History", route: "withraw/history",  },
-
+        { title: "Pending withrawals", route: "pending/withraw" },
+        { title: "Withdraw History", route: "withraw/history" },
       ],
-      
-    } ,  
+    },
     { title: "Awards & Rewards", icon: "fas fa-trophy", route: "user/awards" },
     {
       title: "Autopool Wallet",
@@ -103,12 +88,9 @@ function Sidebar() {
       sub: [
         { title: "Distribute History", route: "autopool-wallet/distribute" },
 
-        { title: "Credit History", route: "autopool-wallet/history"  },
-
+        { title: "Credit History", route: "autopool-wallet/history" },
       ],
-      
-    }
-    
+    },
   ];
 
   return (
@@ -118,9 +100,18 @@ function Sidebar() {
           <div>
             <div className="brand-logo d-flex align-items-center justify-content-center">
               <Link to={undefined} className="text-nowrap logo-img ">
-              <a href={undefined} className="text-nowrap logo-img text-center d-block py-3 w-100">
-  <img src="/dist/images/marketlogo.png" alt="Logo" width="100" height="50" />
-</a>              </Link>
+                <a
+                  href={undefined}
+                  className="text-nowrap logo-img text-center d-block py-3 w-100"
+                >
+                  <img
+                    src="/dist/images/marketlogo.png"
+                    alt="Logo"
+                    width="100"
+                    height="50"
+                  />
+                </a>{" "}
+              </Link>
 
               <div
                 className="close-btn d-lg-none d-block sidebartoggler cursor-pointer"
@@ -132,7 +123,6 @@ function Sidebar() {
                 />
               </div>
             </div>
-            {/* Sidebar navigation*/}
             <nav className="sidebar-nav scroll-sidebar" data-simplebar>
               <ul id="sidebarnav">
                 {menus.map((menu, index) => {
@@ -143,11 +133,6 @@ function Sidebar() {
           </div>
         </SidebarAnimation>
       </aside>
-      
-      {/* <Helmet>
-      <script src="public/dist/js/sidebarmenu.js"></script>
-
-      </Helmet> */}
     </>
   );
 }

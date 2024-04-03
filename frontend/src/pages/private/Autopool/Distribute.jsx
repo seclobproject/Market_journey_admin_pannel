@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { ApiCall } from "../../../Services/Api";
-import { viewautopoolhistoryUrl } from "../../../utils/Constants";
-import Loader from "../../../Components/Loader";
 import { SlideMotion } from "../../../libs/FramerMotion";
-import moment from "moment";
-import { Pagination, Stack } from "@mui/material";
+import ModalComponent from "../../../Components/ModalComponet";
+import { Form } from "react-bootstrap";
 
 function Distribute() {
+  const [percentageModal, setPercentageModal] = useState({
+    show: false,
+    id: null,
+  });
+
   const [isLoading, setIsLoading] = useState(false);
   const [getHistory, setGetHistory] = useState([]);
   console.log(getHistory, "getHistory,,,,,,,,,,,,,,,,,,,,,,,,,,");
@@ -51,7 +53,133 @@ function Distribute() {
       <SlideMotion>
         <div className="container-fluid">
           <div class="row mt-2">
-            <div class="col-md-3 mb-2">
+          <div className="col-md-3 mb-2">
+  <div className="card" style={{ background: "#00335B" }}>
+    <div className="card-body ">
+      <h5 className="card-title mb-3 fw-semibold" style={{ color: "white" }}>
+        Autopool Wallet
+      </h5>
+      <img className="mb-3" src="/dist/images/Total.svg" alt="rupee" />
+      <h4 className="fw-semibold mb-0" style={{ color: "rgb(247, 174, 21)" }}>
+        8000000
+      </h4>
+    </div>
+  </div>
+</div>
+
+
+
+            <div class="col-md-9 mb-2">
+              <div
+                class="card"
+                style={{ background: "#00335B", height: "100%" }}
+              >
+                <div className="row align-items-center p-4">
+                  <div className="d-flex align-items-center">
+                    <h5
+                      className="card-title mb-0 fw-semibold"
+                      style={{ color: "white" }}
+                    >
+                      Pool Percentage
+                    </h5>
+                    <button
+                      onClick={() => {
+                        setPercentageModal({ show: true, id: null });
+                        // setAddAlerts(alert);
+                      }}
+                      className="btn btn-link"
+                      style={{ color: "rgb(247, 174, 21)" }}
+                    >
+                      <i className="fas fa-pencil-alt"></i>
+                    </button>
+                  </div>
+
+                  <div className="col d-flex align-items-center">
+                    <div className="me-2">
+                      <div
+                        className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center mb-2"
+                        style={{ width: "30px", height: "30px" }}
+                      >
+                        <i className="fas fa-font"></i>
+                      </div>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder="%"
+                        style={{ background: "#ffff" }}
+                      />
+                    </div>
+                    <div className="me-2">
+                      <div
+                        className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center mb-2"
+                        style={{ width: "30px", height: "30px" }}
+                      >
+                        <i class="fa-solid fa-b"></i>{" "}
+                      </div>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder="%"
+                        style={{ background: "#ffff" }}
+                      />
+                    </div>
+                    <div className="me-2">
+                      <div
+                        className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center mb-2"
+                        style={{ width: "30px", height: "30px" }}
+                      >
+                        <i class="fa-solid fa-c"></i>{" "}
+                      </div>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder="%"
+                        style={{ background: "#ffff" }}
+                      />
+                    </div>
+                    <div className="me-2">
+                      <div
+                        className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center mb-2"
+                        style={{ width: "30px", height: "30px" }}
+                      >
+                        <i class="fa-solid fa-d"></i>{" "}
+                      </div>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder="%"
+                        style={{ background: "#ffff" }}
+                      />
+                    </div>
+                    <div className="me-2">
+                      <div
+                        className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center mb-2"
+                        style={{ width: "30px", height: "30px" }}
+                      >
+                        <i class="fa-solid fa-e"></i>{" "}
+                      </div>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder="%"
+                        style={{ background: "#ffff" }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="col-12 mt-4">
+                  <div className="col-12 mt-4">
+                      <button type="submit" className="btn btn-warning">
+                        Distribute
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-md-2 mb-2">
               <div
                 class="card "
                 style={{ background: "#00335B", height: "100%" }}
@@ -81,171 +209,243 @@ function Distribute() {
                 </div>
               </div>
             </div>
-
-            <div class="col-md-9 mb-2">
+            <div class="col-md-2 mb-2">
               <div
-                class="card"
-                style={{ background: "#00335B", height: "100%" }}
+                class="card "
+                style={{ background: "#00335B", height: "100%",overflow: "hidden"  }}
               >
-                <div className="row align-items-center p-4">
-                  <h5
-                    className="card-title mb-9 fw-semibold"
-                    style={{ color: "white" }}
-                  >
-                    Pool Percentage
-                  </h5>
-                  <div className="col">
-                    <input
-                      type="number"
-                      className="form-control mb-2"
-                      placeholder="%"
-                      style={{ background: "#ffff" }}
-                    />
-                  </div>
-                  <div className="col">
-                    <input
-                      type="number"
-                      className="form-control mb-2"
-                      placeholder="%"
-                      style={{ background: "#ffff" }}
-                    />
-                  </div>
-                  <div className="col">
-                    <input
-                      type="number"
-                      className="form-control mb-2"
-                      placeholder="%"
-                      style={{ background: "#ffff" }}
-                    />
-                  </div>
-                  <div className="col">
-                    <input
-                      type="number"
-                      className="form-control mb-2"
-                      placeholder="%"
-                      style={{ background: "#ffff" }}
-                    />
-                  </div>
-                  <div className="col">
-                    <input
-                      type="number"
-                      className="form-control mb-2"
-                      placeholder="%"
-                      style={{ background: "#ffff" }}
-                    />
-                  </div>
-                  <div className="col-12 mt-4">
-                    <button type="submit" className="btn btn-warning">
-                      Save
-                    </button>
+                <div className="row align-items-center  p-4">
+                  <div className="col-8">
+                    <h5
+                      className="card-title mb-9 fw-semibold"
+                      style={{ color: "white" }}
+                    >
+                      Autopool Wallet
+                    </h5>
+                    <div className="d-flex align-items-center mb-3">
+                      <h4
+                        className="fw-semibold mb-3"
+                        style={{ color: "rgb(247, 174, 21)" }}
+                      >
+                        8000000
+                      </h4>
+                    </div>
+                    <div className="col-12 mt-4">
+                      <button type="submit" className="btn btn-warning">
+                        Distribute
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
+            <div class="col-md-2 mb-2">
+              <div
+                class="card "
+                style={{ background: "#00335B", height: "100%",overflow: "hidden"  }}
+              >
+                <div className="row align-items-center  p-4">
+                  <div className="col-8">
+                    <h5
+                      className="card-title mb-9 fw-semibold"
+                      style={{ color: "white" }}
+                    >
+                      Autopool Wallet
+                    </h5>
+                    <div className="d-flex align-items-center mb-3">
+                      <h4
+                        className="fw-semibold mb-3"
+                        style={{ color: "rgb(247, 174, 21)" }}
+                      >
+                        8000000
+                      </h4>
+                    </div>
+                    <div className="col-12 mt-4">
+                      <button type="submit" className="btn btn-warning">
+                        Distribute
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          
+
+            
           </div>
-          {/* <div className="card w-100 position-relative overflow-hidden">
-            {" "}
-            <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
-              <h5
-                className="card-title fw-semibold mb-0 lh-sm px-0 mt-4"
-                style={{ color: "#F7AE15" }}
-              >
-                Distribute History
-              </h5>
-            </div>
-            {isLoading ? (
-              <Loader />
-            ) : (
-              <div className="card-body p-2 mb-2">
-                <div className="table-container table-responsive rounded-2 mb-4">
-                  <table className="table border text-nowrap customize-table mb-0 align-middle">
-                    <thead className="text-dark fs-4 table-light">
-                      <tr>
-                        <th>
-                          <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
-                        </th>
-                        <th>
-                          <h6 className="fs-4 fw-semibold mb-0">Date</h6>
-                        </th>
-                        <th>
-                          <h6 className="fs-4 fw-semibold mb-0">Name</h6>
-                        </th>
-
-                        <th>
-                          <h6 className="fs-4 fw-semibold mb-0">Report Name</h6>
-                        </th>
-                        <th>
-                          <h6 className="fs-4 fw-semibold mb-0">
-                            Amount Credited{" "}
-                          </h6>
-                        </th>
-                        <th>
-                          <h6 className="fs-4 fw-semibold mb-0">
-                            Percentage Credited
-                          </h6>
-                        </th>
-
-                        <th />
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {getHistory?.length ? (
-                        <>
-                          {getHistory.map(
-                            (history, index) => (
-                              console.log(history, "45678"),
-                              (
-                                <tr key={index}>
-                                  <td>{startIndex + index + 1}</td>
-                                  <td>
-                                    {history?.createdAt
-                                      ? moment(history.createdAt).format(
-                                          "DD/MM/YYYY"
-                                        )
-                                      : "--"}
-                                  </td>
-
-                                  <td>
-                                    {(history?.name &&
-                                      history.name.toUpperCase()) ||
-                                      "--"}
-                                  </td>
-
-                                  <td>{history?.reportName}</td>
-                                  <td>{history?.amountCredited || "00"}</td>
-                                  <td>{history?.percentageCredited || "0%"}</td>
-
-                             
-                                </tr>
-                              )
-                            )
-                          )}
-                        </>
-                      ) : (
-                        <tr>
-                          <td colSpan={20} style={{ textAlign: "center" }}>
-                            <b>No History Found</b>{" "}
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-            <div className="me-2 mb-3 d-flex ms-auto">
-              <Stack spacing={2}>
-                <Pagination
-                  count={totalPages}
-                  page={params.page}
-                  onChange={handlePageChange}
-                  color="primary"
-                />
-              </Stack>
-            </div>
-          </div> */}
         </div>
       </SlideMotion>
+
+      <ModalComponent
+        show={percentageModal.show}
+        onHide={() => {
+          setPercentageModal({ show: false, id: null });
+        }}
+        title={<h5 style={{ color: "#F7AE15", margin: 0 }}>Add Percentage</h5>}
+        centered
+        width={"500px"}
+      >
+        <Form
+        // noValidate
+        // validated={validated}
+        // onSubmit={(e) => Check_Validation(e, addAlertsFun, setValidated)}
+        >
+          <div className="mb-4">
+            <label htmlFor="exampleInputEmail1" className="form-label">
+              Team Leader - (A)
+            </label>
+            <input
+              type="number"
+              id="packageAmountInput"
+              className="form-control form-control-lg"
+              placeholder="Enter percentage"
+              // value={addAlerts?.description}
+              // onChange={(e) => {
+              //   setAddAlerts({
+              //     ...addAlerts,
+              //     description: e.target.value,
+              //   });
+              // }}
+              // required
+            />
+
+            <Form.Control.Feedback type="invalid">
+              Please enter alert content.
+            </Form.Control.Feedback>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="exampleInputEmail1" className="form-label">
+              Business Development Manager - (B)
+            </label>
+            <input
+              type="number"
+              id="packageAmountInput"
+              className="form-control form-control-lg"
+              placeholder="Enter percentage"
+              // value={addAlerts?.description}
+              // onChange={(e) => {
+              //   setAddAlerts({
+              //     ...addAlerts,
+              //     description: e.target.value,
+              //   });
+              // }}
+              // required
+            />
+
+            <Form.Control.Feedback type="invalid">
+              Please enter alert content.
+            </Form.Control.Feedback>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="exampleInputEmail1" className="form-label">
+              Business Development Manager - (C)
+            </label>
+            <input
+              type="number"
+              id="packageAmountInput"
+              className="form-control form-control-lg"
+              placeholder="Enter percentage"
+              // value={addAlerts?.description}
+              // onChange={(e) => {
+              //   setAddAlerts({
+              //     ...addAlerts,
+              //     description: e.target.value,
+              //   });
+              // }}
+              // required
+            />
+
+            <Form.Control.Feedback type="invalid">
+              Please enter alert content.
+            </Form.Control.Feedback>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="exampleInputEmail1" className="form-label">
+            Regional Manager - (C)
+            </label>
+            <input
+              type="number"
+              id="packageAmountInput"
+              className="form-control form-control-lg"
+              placeholder="Enter percentage"
+              // value={addAlerts?.description}
+              // onChange={(e) => {
+              //   setAddAlerts({
+              //     ...addAlerts,
+              //     description: e.target.value,
+              //   });
+              // }}
+              // required
+            />
+
+            <Form.Control.Feedback type="invalid">
+              Please enter alert content.
+            </Form.Control.Feedback>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="exampleInputEmail1" className="form-label">
+            Territory Manager - (D)
+            </label>
+            <input
+              type="number"
+              id="packageAmountInput"
+              className="form-control form-control-lg"
+              placeholder="Enter percentage"
+              // value={addAlerts?.description}
+              // onChange={(e) => {
+              //   setAddAlerts({
+              //     ...addAlerts,
+              //     description: e.target.value,
+              //   });
+              // }}
+              // required
+            />
+
+            <Form.Control.Feedback type="invalid">
+              Please enter alert content.
+            </Form.Control.Feedback>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="exampleInputEmail1" className="form-label">
+            Associate Direction - (E)
+            </label>
+            <input
+              type="number"
+              id="packageAmountInput"
+              className="form-control form-control-lg"
+              placeholder="Enter percentage"
+              // value={addAlerts?.description}
+              // onChange={(e) => {
+              //   setAddAlerts({
+              //     ...addAlerts,
+              //     description: e.target.value,
+              //   });
+              // }}
+              // required
+            />
+
+            <Form.Control.Feedback type="invalid">
+              Please enter alert content.
+            </Form.Control.Feedback>
+          </div>
+         
+          <div className="col-12 mt-4">
+            <button type="submit" className="btn btn-custom float-end ms-1">
+              {/* {addAlerts?._id ? "Update" : "Save"} */}
+            </button>
+          </div>
+        </Form>
+        <button
+          className="btn btn-cancel float-end me-1"
+          onClick={() => {
+            setPercentageModal({ show: false, id: null });
+          }}
+        >
+          Cancel
+        </button>
+      </ModalComponent>
     </>
   );
 }

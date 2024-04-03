@@ -139,7 +139,7 @@ function Uploads() {
     <>
       <SlideMotion>
         <div className="row">
-          <div className="col-md-8 mb-4">
+          <div className="col-md-12 mb-4">
             <div className="card w-100 position-relative overflow-hidden">
               <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
                 <h5
@@ -166,7 +166,6 @@ function Uploads() {
                 </div>
               </div>
               {isLoading ? (
-                /* Loader component or other loading indicator */
                 <Loader />
               ) : (
                 <div className="card-body p-2">

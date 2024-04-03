@@ -253,11 +253,7 @@ function Pendingusers() {
             </div>
           </div>
             )}
-          <div className="me-2">
-            {/* -------------------------pagination--------------------- */}
-
-            {/* -------------------------pagination--------------------- */}
-          </div>
+      
         </div>
       </SlideMotion>
       {/* approve modal */}

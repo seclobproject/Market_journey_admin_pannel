@@ -67,6 +67,9 @@ function Withrawhistroy() {
     getHistory();
   }
   }, [params,filter]);
+  useEffect(() => {
+    getHistory();
+  }, [params]);
  
   return (
     <>
@@ -89,11 +92,11 @@ function Withrawhistroy() {
                 onChange={(e) => handleFilterAndSetFilterStatus(e)}
                 className="form-control"
               >
-                <option selected disabled>
+                {/* <option selected disabled>
                   Search by status...
-                </option>
+                </option> */}
 
-                <option value="View_all">View All</option>
+                <option value="View_all" selected>View All</option>
                 <option value="Approved">Approved</option>
                 <option value="Rejected">Rejected</option>
                 {/* Add more filter options as needed */}

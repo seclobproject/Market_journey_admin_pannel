@@ -72,5 +72,7 @@ export const editoraddBankUrl="/api/user/add-bank-account"
 export const addoreditNomineeUrl="/api/user/add-nominee"
 //demate accounts
 export const pendingdemateaccountUrl="/api/admin/view-pending-demates"
+export const addorrejectAccountUrl="/api/admin/process-demat-account"
 //autopool
 export const viewautopoolhistoryUrl="/api/admin/autopool-credit-history"
+

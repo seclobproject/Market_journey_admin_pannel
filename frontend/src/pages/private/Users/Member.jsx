@@ -258,30 +258,10 @@ console.log(totalgstAmount," totalgstAmounts sum");
     getallUsers();
     getPackagesList();
    
-    // if (packageAmount?.packageAmount) {
-    //   const partAmount = Number(packageAmount.packageAmount) ; 
-    //   console.log(`partAmount: ${typeof(partAmount)}%`);
-      
-    //   const percentage = partAmount * 0.18;
-    //   console.log(`percentage: ${typeof (percentage)}%`);
-  
-  
-    //   const sum = partAmount + percentage;
-    //   console.log(`Sum: ${sum}`);
-
-    //   setTotalGstAmount(sum)
-    // }
+    
   }, [params]);
 
-  // useEffect(() => {
-  //   if (selectedDistrictId) {
-  //     getZonallist();
-  //   }
-
-  //   if (selectedZonalId) {
-  //     getPanchayathList();
-  //   }
-  // }, [selectedDistrictId, selectedZonalId]);
+ 
 
 
 
@@ -458,7 +438,7 @@ useEffect(()=>{
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">
-                          Franchise Type
+                           Type
                         </h6>
                       </th>
                       <th>

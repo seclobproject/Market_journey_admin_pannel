@@ -376,30 +376,7 @@ function District() {
             validated={validated}
             onSubmit={(e) => Check_Validation(e, addDisrtictFun, setValidated)}
           >
-            {/* <div className="mb-4">
-              <label htmlFor="exampleInputEmail1" className="form-label">
-                State
-              </label>
-              <Select
-                required
-                options={stateList?.map((state) => ({
-                  value: state?.id,
-                  label: state?.stateName,
-                }))}
-                value={selectedState?.stateName}
-                onChange={(selectedOption) =>
-                  setAddDistrict({
-                    ...addDistrict,
-                    stateName: selectedOption?.label,
-                  })
-                }
-                placeholder="Select a state"
-                isSearchable={true}
-              />
-              <Form.Control.Feedback type="invalid">
-                Please select a state.
-              </Form.Control.Feedback>
-            </div> */}
+         
             <div className="mb-4">
               <label htmlFor="exampleInputEmail1" className="form-label">
                 District Name
@@ -430,7 +407,7 @@ function District() {
           <button
             className="btn btn-cancel float-end me-1"
             onClick={() => {
-              setDistrictModal({ show: false, id: null });
+              setDistrictEditModal({ show: false, id: null });
             }}
           >
             Cancel

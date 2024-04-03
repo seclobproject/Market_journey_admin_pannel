@@ -15,7 +15,7 @@ function Withdraw() {
     pageSize: 10,
   });
   const [totalPages, setTotalPages] = useState(1);
-  console.log(totalPages, "pages........");
+  console.log(totalPages, "pages......sdsd..");
 
   const startIndex = (params.page - 1) * params.pageSize;
 
@@ -27,7 +27,8 @@ function Withdraw() {
       console.log(response, "response");
       if (response?.status === 200) {
         setGetHistory(response?.data?.levelIncome);
-        setTotalPages(response?.data?.pagination);
+        setTotalPages(response?.data?.pagination?.totalPages);
+        console.log(response?.data?.pagination?.totalPages);
         setIsLoading(false);
       } else {
         console.error("Failed to fetch user details");
@@ -58,7 +59,7 @@ function Withdraw() {
                 className="card-title fw-semibold mb-0 lh-sm px-0 mt-4"
                 style={{ color: "#F7AE15" }}
               >
-                Distribute  Credit History
+                Autopool Credit History
               </h5>
             </div>
             {isLoading ? (
@@ -78,7 +79,12 @@ function Withdraw() {
                         <th>
                           <h6 className="fs-4 fw-semibold mb-0">Name</h6>
                         </th>
-
+                        <th>
+                          <h6 className="fs-4 fw-semibold mb-0">Type</h6>
+                        </th>
+                        <th>
+                          <h6 className="fs-4 fw-semibold mb-0">Franchise Name</h6>
+                        </th>
                         <th>
                           <h6 className="fs-4 fw-semibold mb-0">Report Name</h6>
                         </th>
@@ -118,37 +124,16 @@ function Withdraw() {
                                       history.name.toUpperCase()) ||
                                       "--"}
                                   </td>
+                                  <td>{history?.franchise||"--"}</td>
+                                  <td>{history?.franchiseName||"--"}</td>
 
-                                  <td>{history?.reportName}</td>
+                                  
+                                  <td>{history?.reportName||"--"}</td>
                                   <td>{history?.amountCredited || "00"}</td>
                                   <td>{history?.percentageCredited || "0%"}</td>
 
-                                  {/* <td>{members?.reportName || "--"}</td>
-                              <td>{members?.amountCredited || "--"}</td>
-                              <td>{members?.status || "0"}</td>
-                              <td>
-                                <img
-                                  alt="images"
-                                  src={`                                  http://192.168.29.152:8000/uploads/${members?.screenshot}
-                                  `}
-                                  style={{
-                                    width: "100px",
-                                    height: "100px",
-                                    objectFit: "cover",
-                                    borderRadius: "5px",
-                                  }}
-                                />
-
                               
-                              </td> */}
-                                  {/*                               
-                              <td>
-                                {members?.userStatus === "readyToApprove" && (
-                                  <span className="badge bg-danger rounded-3 fw-semibold">
-                                    Ready to approve
-                                  </span>
-                                )}
-                              </td> */}
+                             
                                 </tr>
                               )
                             )

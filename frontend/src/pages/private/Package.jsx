@@ -350,7 +350,7 @@ function Package() {
               setPackageModal({ show: false, id: null });
             }}
           >
-            cancel
+            Cancel
           </button>
         </ModalComponent>
       </SlideMotion>

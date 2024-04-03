@@ -272,10 +272,10 @@ function Livenew() {
         <button
           className="btn btn-cancel float-end me-1"
           onClick={() => {
-            setShowModal({ show: false, id: null });
+          setNewsModal({ show: false, id: null });
           }}
         >
-          cancel
+          Cancel
         </button>
       </ModalComponent>
 

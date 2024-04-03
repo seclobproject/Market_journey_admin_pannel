@@ -34,7 +34,7 @@ function App() {
     <>
       <Routes>
         <Route index element={<Login />} />
-         <Route path="/forgotpassword" element={<Forgotpassword/>}/>
+         {/* <Route path="/forgotpassword" element={<Forgotpassword/>}/> */}
          <Route path="/resetpassword" element={<Resetpassword/>}/>
          <Route path="/" element={<OutletConnection />}>
           <Route path="/dashboard" element={<Home />} />

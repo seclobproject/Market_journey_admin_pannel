@@ -354,7 +354,7 @@ function Uploads() {
             setImageModal({ show: false, id: null });
           }}
         >
-          cancel
+          Cancel
         </button>
       </ModalComponent>
 

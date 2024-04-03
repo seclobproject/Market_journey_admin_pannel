@@ -454,7 +454,7 @@ function Uploadvideos() {
             setVideoModal({ show: false, id: null });
           }}
         >
-          cancel
+          Cancel
         </button>
       </ModalComponent>
 

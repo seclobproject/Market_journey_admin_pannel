@@ -357,7 +357,7 @@ function District() {
               setDistrictModal({ show: false, id: null });
             }}
           >
-            cancel
+            Cancel
           </button>
         </ModalComponent>
 
@@ -433,7 +433,7 @@ function District() {
               setDistrictModal({ show: false, id: null });
             }}
           >
-            cancel
+            Cancel
           </button>
         </ModalComponent>
 

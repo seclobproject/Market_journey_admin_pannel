@@ -204,15 +204,7 @@ function Alert() {
               </div>
             </div>
           )}
-          <div className="me-2">
-            {/* -------------------------pagination--------------------- */}
-            {/* <Pagination
-              pagination={pagination}
-              params={params}
-              setParams={setParams}
-            /> */}
-            {/* -------------------------pagination--------------------- */}
-          </div>
+       
         </div>
       </SlideMotion>
       <ModalComponent
@@ -262,10 +254,10 @@ function Alert() {
         <button
           className="btn btn-cancel float-end me-1"
           onClick={() => {
-            setShowModal({ show: false, id: null });
+            setAlertModal({ show: false, id: null });
           }}
         >
-          cancel
+          Cancel
         </button>
       </ModalComponent>
 

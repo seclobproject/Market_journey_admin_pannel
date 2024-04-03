@@ -209,7 +209,6 @@ function Panchayath() {
   };
   useEffect(() => {
     getPanchayathList();
-    // getStateList();
     if (districtId) {
       getZonallist();
     }
@@ -535,7 +534,7 @@ function Panchayath() {
               setPanchayathModal({ show: false, id: null });
             }}
           >
-            cancel
+            Cancel
           </button>
         </ModalComponent>
         {/* edit modal */}
@@ -557,84 +556,7 @@ function Panchayath() {
               Check_Validation(e, addPanchayathFun, setValidated)
             }
           >
-            {/* <div className="mb-4">
-              <label htmlFor="exampleInputEmail1" className="form-label">
-                State
-              </label>
-
-              <Select
-                required
-                options={stateList?.map((state) => ({
-                  value: state?.id,
-                  label: state?.stateName,
-                }))}
-                value={selectedState?.stateName}
-                onChange={(selectedOption) => {
-                  setSelectedId(selectedOption?.value);
-                  setAddPanchayath({
-                    ...addPanchayath,
-                    stateName: selectedOption?.label,
-                  });
-                }}
-                placeholder="Select a state"
-                isSearchable={true}
-              />
-
-              <Form.Control.Feedback type="invalid">
-                Please select a state.
-              </Form.Control.Feedback>
-            </div>
-            <div className="mb-4">
-              <label htmlFor="exampleInputEmail1" className="form-label">
-                District
-              </label>
-              <Select
-                required
-                options={districtList?.map((districts) => ({
-                  value: districts?.id,
-                  label: districts?.name,
-                }))}
-                value={selectedState?.stateName}
-                onChange={(selectedOption) => {
-                  setDistrictId(selectedOption?.value);
-
-                  setAddPanchayath({
-                    ...addPanchayath,
-                    districtName: selectedOption?.label,
-                  });
-                }}
-                placeholder="Select a district"
-                isSearchable={true}
-              />
-              <Form.Control.Feedback type="invalid">
-                Please provide a package Amount.
-              </Form.Control.Feedback>
-            </div>
-            <div className="mb-4">
-              <label htmlFor="exampleInputEmail1" className="form-label">
-                Zonal
-              </label>
-              <Select
-                required
-                options={zonalList?.map((zonal) => ({
-                  value: zonal?.id,
-                  label: zonal?.name,
-                }))}
-                value={selectedState?.zonalName}
-                onChange={(selectedOption) => {
-
-                  setAddPanchayath({
-                    ...addPanchayath,
-                    zonalName: selectedOption?.label,
-                  });
-                }}
-                placeholder="Select a zonal"
-                isSearchable={true}
-              />
-              <Form.Control.Feedback type="invalid">
-                Please provide a zonal
-              </Form.Control.Feedback>
-            </div> */}
+           
             <div className="mb-4">
               <label htmlFor="exampleInputEmail1" className="form-label">
                 Panchayath
@@ -667,10 +589,10 @@ function Panchayath() {
           <button
             className="btn btn-cancel float-end me-1"
             onClick={() => {
-              setPanchayathModal({ show: false, id: null });
+              setPanchayathEditModal({ show: false, id: null });
             }}
           >
-            cancel
+            Cancel
           </button>
         </ModalComponent>
 

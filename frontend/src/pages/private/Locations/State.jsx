@@ -279,7 +279,7 @@ function State() {
               setStateModal({ show: false, id: null });
             }}
           >
-            cancel
+            Cancel
           </button>
         </ModalComponent>
 

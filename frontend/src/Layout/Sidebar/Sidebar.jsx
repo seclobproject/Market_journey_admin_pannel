@@ -103,7 +103,7 @@ function Sidebar() {
       sub: [
         { title: "Distribute History", route: "autopool-wallet/distribute" },
 
-        { title: "Wallet History", route: "autopool-wallet/history"  },
+        { title: "Credit History", route: "autopool-wallet/history"  },
 
       ],
       

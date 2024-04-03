@@ -1,5 +1,6 @@
 import { errorHandler } from "../middleware/errorHandler.js";
 import Admin from "../models/adminModel.js";
+import Demate from "../models/demateModel.js";
 import User from "../models/userModel.js";
 
 
@@ -318,6 +319,206 @@ export const totalWalletWithdrawHistory = async (req, res, next) => {
             });
         } else {
             return next(errorHandler(401, "Admin Login Failed"));
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+
+
+//view pending demate accounts
+
+export const getPendingDematesPaginated = async (req, res, next) => {
+    try {
+        const userId = req.admin._id;
+        const adminData = await Admin.findById(userId);
+        
+        if (!adminData) {
+            return next(errorHandler(401, "Admin Login Failed"));
+        }
+        
+        let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+        const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+
+        const userData = await Demate.find({ status: "pending" })
+            .skip((page - 1) * pageSize)
+            .limit(pageSize);
+
+        if (!userData || userData.length === 0) {
+            return next(errorHandler(401, "No pending demates found"));
+        }
+
+        res.status(200).json({
+            userData,
+            pagination: {
+                page,
+                pageSize,
+                totalDocs: userData.length  // This assumes the total count is the same as the number of fetched documents
+            },
+            sts: "01",
+            msg: "Successfully retrieved pending demates",
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+//view approved demate accounts
+
+export const getApprovedDematesPaginated = async (req, res, next) => {
+    try {
+        const userId = req.admin._id;
+        const adminData = await Admin.findById(userId);
+        
+        if (!adminData) {
+            return next(errorHandler(401, "Admin Login Failed"));
+        }
+        
+        let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+        const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+
+        const userData = await Demate.find({ status: "approved" })
+            .skip((page - 1) * pageSize)
+            .limit(pageSize);
+
+        if (!userData || userData.length === 0) {
+            return next(errorHandler(401, "No pending demates found"));
+        }
+
+        res.status(200).json({
+            userData,
+            pagination: {
+                page,
+                pageSize,
+                totalDocs: userData.length  // This assumes the total count is the same as the number of fetched documents
+            },
+            sts: "01",
+            msg: "Successfully retrieved pending demates",
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+
+  // view autopool credit history
+
+
+  export const autoPoolHistory = async (req, res, next) => {
+
+    const userId = req.admin._id;
+    let page=parseInt(req.query.page)||1;
+    const pageSize=parseInt(req.query.pageSize)||10;
+    try {
+    const adminData = await Admin.findById(userId).populate({
+        path: "autoPoolHistory",
+        options: {
+            sort: { createdAt: 1 } // Sort by createdAt in descending order
+        }
+    });
+      if (!adminData) {
+        return next(errorHandler(401, "Admin Login Failed"));
+      }
+      const poolHistory = adminData.autoPoolHistory;
+      const paginatedPoolHistory = await paginate(poolHistory, page, pageSize);
+      res.status(200).json({
+          levelIncome: paginatedPoolHistory.results,
+          pagination: {
+              page: paginatedPoolHistory.page,
+              pageSize: paginatedPoolHistory.pageSize,
+              totalPages: paginatedPoolHistory.totalPages,
+              totalDocs: paginatedPoolHistory.totalDocs
+          },
+          sts: "01",
+          msg: "Get auto pool wallet income credit report users Success",
+      });
+     
+    } catch (error) {
+      next(error);
+    }
+  };
+
+
+  // Paginated version of demat accounts
+export const userDemateAccounts = async (req, res, next) => {
+    const userId = req.user._id;
+    let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+    const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+
+    try {
+        const userData = await User.findById(userId).populate({
+            path: "demateAccounts",
+            options: {
+                sort: { createdAt: 1 } // Sort by createdAt in descending order
+            }
+        });
+        console.log(userData);
+
+        
+        if (userData) {
+            const userStatus = userData.userStatus;
+            const userDemateAccounts = userData.demateAccounts;
+            console.log(userDemateAccounts);
+            const paginateduserDemateAccounts = await paginate(userDemateAccounts, page, pageSize);
+            res.status(200).json({
+                demateAccounts: paginateduserDemateAccounts.results,
+                userStatus,
+                pagination: {
+                    page: paginateduserDemateAccounts.page,
+                    pageSize: paginateduserDemateAccounts.pageSize,
+                    totalPages: paginateduserDemateAccounts.totalPages,
+                    totalDocs: paginateduserDemateAccounts.totalDocs
+                },
+                sts: "01",
+                msg: "Get Demate Account report users Success",
+            });
+        } else {
+            return next(errorHandler(401, "User Login Failed"));
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
+// Paginated View Pools
+export const viewPoolUsers = async (req, res, next) => {
+    const userId = req.admin._id;
+    let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+    const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+    const pool = parseInt(req.query.pool); // Default page size to 10 if not provided
+
+    try {
+        const userData = await User.findById(userId).populate({
+            path: "pool",
+            options: {
+                sort: { createdAt: 1 } // Sort by createdAt in descending order
+            }
+        });
+        console.log(userData);
+
+        
+        if (userData) {
+            const userStatus = userData.userStatus;
+            const userDemateAccounts = userData.demateAccounts;
+            console.log(userDemateAccounts);
+            const paginateduserDemateAccounts = await paginate(userDemateAccounts, page, pageSize);
+            res.status(200).json({
+                demateAccounts: paginateduserDemateAccounts.results,
+                userStatus,
+                pagination: {
+                    page: paginateduserDemateAccounts.page,
+                    pageSize: paginateduserDemateAccounts.pageSize,
+                    totalPages: paginateduserDemateAccounts.totalPages,
+                    totalDocs: paginateduserDemateAccounts.totalDocs
+                },
+                sts: "01",
+                msg: "Get Demate Account report users Success",
+            });
+        } else {
+            return next(errorHandler(401, "User Login Failed"));
         }
     } catch (error) {
         next(error);

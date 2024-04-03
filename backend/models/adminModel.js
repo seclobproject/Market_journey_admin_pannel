@@ -19,6 +19,21 @@ const autoPoolSchema = new mongoose.Schema(
       timestamps: true,
     }
   );
+  const autoPoolDistributionSchema = new mongoose.Schema(
+    {
+      reportName: String,
+      distributedAmount:Number,
+      poolA: Number,
+      poolB: Number,
+      poolC: Number,
+      poolD: Number,
+      poolE: Number,
+      status: String,
+    },
+    {
+      timestamps: true,
+    }
+  );
 
     const addBounusSchema = new mongoose.Schema(
       {
@@ -53,6 +68,11 @@ poolB: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 poolC: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 poolD: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 poolE: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+autoPoolPercentageA:Number,
+autoPoolPercentageB:Number,
+autoPoolPercentageC:Number,
+autoPoolPercentageD:Number,
+autoPoolPercentageE:Number,
 autoPoolWallet:{
   type: Number,
   default: 0,
@@ -62,7 +82,9 @@ totalPaidBonusAmount:{
   default:0
 },
 autoPoolHistory:[autoPoolSchema],
-addBounusHistory:[addBounusSchema]
+autoPoolDistributionHistory:[autoPoolDistributionSchema],
+addBounusHistory:[addBounusSchema],
+
 });
       
 const Admin = mongoose.model("Admin", adminSchema);

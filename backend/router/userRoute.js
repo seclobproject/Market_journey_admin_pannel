@@ -4,8 +4,8 @@ import {
   addUser, changePassword, editProfile, userLogin, verifyUser, viewLevel1User, viewLevel2User, viewUserProfile, walletWithdrawRequest,
 } from "../controller/userController.js";
 import { protectUser } from "../middleware/authMiddleware.js";
-import { addUserBankAccount } from "../controller/uploadController.js";
-import { directIncomeReportPaginated, inDirectIncomeReportPaginated, levelIncomeReportPaginated, walletWithdrawReportUser } from "../controller/reportController.js";
+import { addDemateAccount, addNomineeDetails, addUserBankAccount } from "../controller/uploadController.js";
+import { directIncomeReportPaginated, inDirectIncomeReportPaginated, levelIncomeReportPaginated, userDemateAccounts, walletWithdrawReportUser } from "../controller/reportController.js";
 
 const router = express.Router();
 
@@ -16,6 +16,8 @@ router.post("/user-verification", protectUser,verifyUser);
 router.post("/change-password", protectUser,changePassword);
 router.post("/edit-profile", protectUser,editProfile);
 router.post("/add-bank-account", protectUser,addUserBankAccount);
+router.post("/add-nominee", protectUser,addNomineeDetails);
+router.post("/add-demate-account", protectUser,addDemateAccount);
 router.post("/add-referal-user",addReferalUser);
 
 //withdraw request
@@ -27,6 +29,7 @@ router.post("/withdraw-wallet",protectUser,walletWithdrawRequest);
 router.get("/view-user-profile", protectUser,viewUserProfile);
 router.get("/view-level1-user", protectUser,viewLevel1User);
 router.get("/view-level2-user", protectUser,viewLevel2User);
+router.get("/view-demate-accounts", protectUser,userDemateAccounts);
 
 
 //Reports

@@ -29,11 +29,11 @@ export const generateReferalIncome = async (
         });
         const updatedSponser1=await sponser1.save()
         if(updatedSponser1.isMobileFranchise){
-          levelIncomeGenerator(sponser1,directReferalIncome)
+          await levelIncomeGenerator(sponser1,directReferalIncome)
 
-          franchiseIncomeGenerator(updatedSponser1,directReferalIncome)
+          await franchiseIncomeGenerator(updatedSponser1,directReferalIncome)
         
-          franchiseIncomeGenerator(updatedSponser1,updatedUser.packageAmount,updatedUser.name)
+          await franchiseIncomeGenerator(updatedSponser1,updatedUser.packageAmount,updatedUser.name)
         }
         
       }
@@ -54,10 +54,10 @@ export const generateReferalIncome = async (
         const updatedSponser2=await sponser2.save()
         if(updatedSponser2.isMobileFranchise){
 
-          levelIncomeGenerator(sponser2,sponser2.packageAmount)
+          await levelIncomeGenerator(sponser2,sponser2.packageAmount)
   
-          franchiseIncomeGenerator(updatedSponser2,updatedUser.packageAmount,updatedUser.name)
-            franchiseIncomeGenerator(updatedSponser2,inDirectReferalIncome)
+         await franchiseIncomeGenerator(updatedSponser2,updatedUser.packageAmount,updatedUser.name)
+           await franchiseIncomeGenerator(updatedSponser2,inDirectReferalIncome)
   
           
         }
@@ -87,7 +87,7 @@ export const generateReferalIncome = async (
         });
         const updatedSponser=await sponser.save();
         if(updatedSponser){
-          franchiseIncomeGenerator(updatedSponser,levelIncome)
+         await franchiseIncomeGenerator(updatedSponser,levelIncome)
           userData=updatedSponser;
           amount=levelIncome;
         }
@@ -109,8 +109,9 @@ export const generateReferalIncome = async (
     const districtData=await User.findById(districtId);
     const zonalData=await User.findById(zonalId);
 
-    districtData.totalLevelIncome = districtData.totalLevelIncome+districtIncome;
-    districtData.walletAmount = districtData.walletAmount + districtIncome;
+    districtData.totalLevelIncome +=districtIncome;
+    console.log();
+    districtData.walletAmount+= districtIncome;
     districtData.levelIncomeHistory.push({
       reportName: "District Income",
       newMember:name,
@@ -517,3 +518,171 @@ export const addToAutoPoolWallet=async(user)=>{
     }
   };
   
+
+
+  //promoters income generator
+
+  export const generatePromotersIncome = async (userData) => {
+    const promoterIncome = userData.packageAmount * 0.025;
+
+    // Find all promoters
+    const promoterData = await User.find({ isPromoter: true });
+
+    // Loop through each promoter and update data
+    for (const promoter of promoterData) {
+        promoter.totalLevelIncome += promoterIncome;
+        promoter.walletAmount += promoterIncome;
+        promoter.levelIncomeHistory.push({
+            reportName: "Promoter Income",
+            userID: userData.ownSponserId,
+            name: userData.name,
+            percentageCredited: "2.5%",
+            amountCredited: promoterIncome,
+            status: "Approved",
+        });
+
+        try {
+            await promoter.save();
+            console.log("Promoter data saved successfully.");
+        } catch (error) {
+            console.error("Error saving Promoter data:", error);
+        }
+    }
+}
+
+//add and autoPoolPercentage
+
+export const addPoolPercentage=async(req,res,next)=>{
+  try {
+    const adminId = req.admin._id;
+
+    const adminData = await Admin.findById(adminId);
+    if(!adminData){
+      return next(errorHandler(401, "Admin not found"));
+    }
+    const {
+      autoPoolPercentageA,
+      autoPoolPercentageB,
+      autoPoolPercentageC,
+      autoPoolPercentageD,
+      autoPoolPercentageE
+    } = req.body;
+
+    adminData.autoPoolPercentageA = autoPoolPercentageA || adminData.autoPoolPercentageA;
+    adminData.autoPoolPercentageB = autoPoolPercentageB || adminData.autoPoolPercentageB;
+    adminData.autoPoolPercentageC = autoPoolPercentageC || adminData.autoPoolPercentageC;
+    adminData.autoPoolPercentageD = autoPoolPercentageD || adminData.autoPoolPercentageD;
+    adminData.autoPoolPercentageE = autoPoolPercentageE || adminData.autoPoolPercentageE;
+
+
+    // Save the updated SEO data
+    const updatedAdminData = await adminData.save();
+
+    // Respond with the updated SEO data
+    if(updatedAdminData){
+      return res.status(200).json({
+        updatedAdminData,
+          sts: "01",
+          msg: "Percentage data updated successfully",
+        });
+    }
+
+    
+  } catch (error) {
+    next(error)
+  }
+}
+
+
+
+
+
+
+// distribute autopool wallet
+
+
+export const distributeAutoPoolWallet = async (req,res,next) => {
+  try {
+  const adminId = req.admin._id;
+
+    const adminData = await Admin.findById(adminId);
+    if(!adminData){
+      return next(errorHandler(401, "Admin not found"));
+    }
+    const autoPoolWalletAmount = adminData.autoPoolWallet;
+    const {
+      autoPoolPercentageA,
+      autoPoolPercentageB,
+      autoPoolPercentageC,
+      autoPoolPercentageD,
+      autoPoolPercentageE
+    } = adminData; // Get percentages for each pool
+    console.log(autoPoolPercentageA,
+      autoPoolPercentageB,
+      autoPoolPercentageC,
+      autoPoolPercentageD,
+      autoPoolPercentageE);
+    // Calculate amounts for each pool
+    const amountPoolA = (autoPoolWalletAmount * autoPoolPercentageA) / 100;
+    const amountPoolB = (autoPoolWalletAmount * autoPoolPercentageB) / 100;
+    const amountPoolC = (autoPoolWalletAmount * autoPoolPercentageC) / 100;
+    const amountPoolD = (autoPoolWalletAmount * autoPoolPercentageD) / 100;
+    const amountPoolE = (autoPoolWalletAmount * autoPoolPercentageE) / 100;
+console.log(amountPoolA,
+  amountPoolB,
+  amountPoolC,
+  amountPoolD,
+  amountPoolE);
+    // Distribute amounts to users in each pool
+    await distributeToPool(adminData.poolA, amountPoolA,autoPoolPercentageA);
+    await distributeToPool(adminData.poolB, amountPoolB,autoPoolPercentageB);
+    await distributeToPool(adminData.poolC, amountPoolC,autoPoolPercentageC);
+    await distributeToPool(adminData.poolD, amountPoolD,autoPoolPercentageD);
+    await distributeToPool(adminData.poolE, amountPoolE,autoPoolPercentageE);
+
+    // Reset autoPoolWallet amount after distribution
+    adminData.autoPoolDistributionHistory.push=({
+      reportName: "autoPoolDistributionHistory",
+      distributedAmount:autoPoolWalletAmount,
+      poolA: amountPoolA,
+      poolB: amountPoolB,
+      poolC: amountPoolC,
+      poolD: amountPoolD,
+      poolE: amountPoolE,
+      status: String,
+    })
+    adminData.autoPoolWallet = 0;
+    await adminData.save();
+    console.log("Auto pool wallet distributed successfully.");
+  } catch (error) {
+    console.error("Error distributing auto pool wallet:", error);
+  }
+};
+
+const distributeToPool = async (poolUsers, amount,percentage) => {
+  console.log("Reached calculation");
+  const numUsers = (poolUsers.length)+1;
+  const amountPerUser = amount / numUsers;
+  for (const userId of poolUsers) {
+    try {
+      const user = await User.findById(userId);
+      if (user) {
+        console.log(user.name);
+        // Update user's wallet amount
+        user.walletAmount += amountPerUser;
+        user.totalAutoPoolIncome+=amountPerUser;
+        // Add transaction to user's history
+        user.autoPoolIncomeHistory.push({
+          reportName: "Auto Pool Distribution",
+          Amount:amount,
+          percentageCredited:percentage,
+          amountCredited: amountPerUser,
+          status: "Approved",
+        });
+        await user.save();
+      }
+    } catch (error) {
+      console.error("Error distributing to pool users:", error);
+    }
+  }
+};

@@ -24,17 +24,21 @@ export const generateRandomString = () => {
 export const addUser = async (req, res, next) => {
     try {
       const sponser = req.admin ? req.admin._id : (req.user ? req.user._id : null);
-        let { name, email, phone,packageAmount,franchise,franchiseName, address,dateOfBirth,state,district,zonal,panchayath, transactionPassword, password } =
+        let { name, email, phone,packageAmount,franchise,franchiseName, address,dateOfBirth,state,district,zonal,panchayath, password } =
           req.body;
           const sponserData = (await User.findById(sponser)) || (await Admin.findById(sponser));
      
-
+          console.log(`name:${name},email:${email},phone:${phone},packageAmount:${packageAmount},
+          franchiseName:${franchiseName},franchise:${franchise},address:${address},state:${state},district:${district},
+          zonal:${zonal},panchayath:${panchayath},password:${password},dateOfBirth:${dateOfBirth},`);
+     
       const userStatus = "pending";
       const tempPackageAmount=packageAmount;
       const ownSponserId = generateRandomString();
         let isDistrictFranchise;
         let isZonalFranchise;
         let isMobileFranchise;
+        let isSignalFranchise
         let districtFranchise;
         let zonalFranchise;
         const existingUser = await User.findOne({ email });
@@ -67,7 +71,7 @@ export const addUser = async (req, res, next) => {
           zonalFranchise=zonalData._id;
         }else{
           franchiseName=null;
-          is=true;
+          isSignalFranchise=true;
           const districtData=await User.findOne({franchiseName:district})
          if(!districtData)return next(errorHandler(401, "No one has taken this District franchise yet!!"));
           districtFranchise=districtData._id;
@@ -95,6 +99,7 @@ export const addUser = async (req, res, next) => {
         isDistrictFranchise,
         isZonalFranchise,
         isMobileFranchise,
+        isSignalFranchise,
         // transactionPassword: hashedTxnPassword,
         password: hashedPassword,
         ownSponserId,
@@ -107,7 +112,6 @@ export const addUser = async (req, res, next) => {
           user.email,
           user.name,
           user.ownSponserId,
-          transactionPassword,
           password
         );
         if(isDistrictFranchise){
@@ -290,6 +294,8 @@ export const viewUserProfile = async (req, res, next) => {
         walletAmount: wallet,
         totalLevelIncome:totalLevelIncome,
         bankDetails:userData.bankDetails,
+        nomineeDetails:userData.nomineeDetails,
+
         sts: "01",
         msg: "get user profile Success",
       });
@@ -352,13 +358,12 @@ export const viewUserProfile = async (req, res, next) => {
 // add user by Referal link
 export const addReferalUser = async (req, res, next) => {
   try {
-    let { userId,name, email, phone,packageAmount,franchiseName,franchise, address,state,district,zonal,panchayath, transactionPassword, password } =
+    let { userId,name, email, phone,packageAmount,franchiseName,franchise, address,state,district,zonal,panchayath, password } =
     req.body;
     const sponser = userId;
           const sponserData = (await User.findById(sponser)) || (await Admin.findById(sponser));
         const sponserName = sponserData.name;
      
-
         const userStatus = "pending";
         const tempPackageAmount=packageAmount;
         const ownSponserId = generateRandomString();
@@ -382,7 +387,7 @@ export const addReferalUser = async (req, res, next) => {
           }else if(franchise==="Zonal Franchise"){
             isZonalFranchise=true;
             panchayath=null;
-          }else{
+          }else if(franchise==="Mobile Franchise"){
             isMobileFranchise=true;
             const districtData=await User.findOne({franchiseName:district})
             districtFranchise=districtData._id;
@@ -648,6 +653,17 @@ export const walletWithdrawRequest = async (req, res, next) => {
     const userId = req.user._id;
     const { withdrawAmount } = req.body;
 
+     // Calculate weeks since user creation
+     const createdAt = user.createdAt;
+     const todayDate = new Date();
+     const weeksDifference = calculateWeeksDifference(createdAt, todayDate);
+
+     // Update user data for approval
+     const dematCount = user.demateAccounts.length;
+const demateDifference=weeksDifference-dematCount;
+     if (weeksDifference > (dematCount)) {
+      return next(errorHandler(401, `Your Demate accounts is lessthan your Weeks, Please add ${demateDifference} more Accounts` ));
+  };
     // Calculate TDS amount
     const tdsAmount = withdrawAmount * 0.90;
 
@@ -658,10 +674,13 @@ export const walletWithdrawRequest = async (req, res, next) => {
       return next(errorHandler(401, "User not found. Please login first."));
     }
 
+
     // Check if wallet amount is sufficient
     if (user.walletAmount < withdrawAmount) {
       return next(errorHandler(401, "Insufficient funds. Amount should be less than Wallet Amount."));
     }
+
+
 
     // Update user's wallet withdraw status
     user.walletWithdrawStatus = "pending";
@@ -680,4 +699,11 @@ export const walletWithdrawRequest = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+
+// Function to calculate weeks difference between two dates
+const calculateWeeksDifference = (startDate, endDate) => {
+  const timeDifferenceMs = endDate.getTime() - startDate.getTime();
+  return Math.floor(timeDifferenceMs / (1000 * 60 * 60 * 24 * 7));
 };

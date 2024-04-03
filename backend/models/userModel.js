@@ -59,6 +59,10 @@ const ReferalAmountSchema = new mongoose.Schema(
   }
 );
 
+
+
+
+
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -119,6 +123,16 @@ const userSchema = new mongoose.Schema(
       ifscCode: String,
       bankName: String,
     },
+    nomineeDetails: {
+      name: String,
+      phone: String,
+      address: String,
+      bankName: String,
+      accountNum: String,
+      ifscCode: String,
+      aadhaarNum: String,
+      pancardNum: String,
+    },
     transactionNumber: {
       type: String,
     },
@@ -154,10 +168,14 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    totalAutoPoolIncome:{
+      type: Number,
+      default: 0,
+    },
     directReferalHistory: [ReferalAmountSchema],
     inDirectReferalHistory: [ReferalAmountSchema],
     levelIncomeHistory: [ReferalAmountSchema],
-
+    autoPoolIncomeHistory: [ReferalAmountSchema],
     isDistrictFranchise: {
       type: Boolean,
       default: false,
@@ -167,6 +185,10 @@ const userSchema = new mongoose.Schema(
         default: false,
       },
       isMobileFranchise: {
+        type: Boolean,
+        default: false,
+      },
+      isSignalFranchise: {
         type: Boolean,
         default: false,
       },
@@ -213,6 +235,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
         default: false,
     },
+        isPromoter:{
+      type: Boolean,
+        default: false,
+    },
     userStatus: {
       type: String,
       enum: ["pending", "readyToApprove", "approved"],
@@ -222,9 +248,14 @@ const userSchema = new mongoose.Schema(
       enum: ["noPool", "poolA", "poolB","poolC","poolD","poolE"],
       default: "noPool",
     },
+    withdrawable:{
+      type: Boolean,
+        default: false,
+    },
     allTransactions: [allTransactionSchema],
     districtFranchise:{ type: mongoose.Schema.Types.ObjectId, ref: "User" },
     zonalFranchise:{ type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    demateAccounts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Demate" }],
     childLevel1: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     childLevel2: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },

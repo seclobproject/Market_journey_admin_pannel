@@ -7,8 +7,9 @@ import District from "../models/districtModel.js";
 import Zonal from "../models/zonalModel.js";
 import Panchayath from "../models/panchayathModel.js";
 import User from "../models/userModel.js";
-import { addToAutoPoolWallet, generateReferalIncome, setAutoPool } from "./incomeGereratorController.js";
+import { addToAutoPoolWallet, generatePromotersIncome, generateReferalIncome, setAutoPool } from "./incomeGereratorController.js";
 import sendMail from "../config/mailer.js";
+import Demate from "../models/demateModel.js";
 
 
 
@@ -73,17 +74,35 @@ export const adminLogin = async (req, res, next) => {
 //view admin profile
 
 
-// export const viewAdminProfile=async(req,res,next)=>{
-//   const adminId = req.admin._id;
+export const viewAdminProfile=async(req,res,next)=>{
+  const adminId = req.admin._id;
 
-//   try {
-//     const admin = await Admin.findById(adminId);
-//     if (admin) {
-//   } catch (error) {
-    
-//   }
-// }
+  try {
+    const admin = await Admin.findById(adminId);
+    if (!admin) {
+      return next(errorHandler(401, "Admin Login Failed"));
+    }
 
+const countInPoolA=admin.poolA.length;
+const countInPoolB=admin.poolB.length;
+const countInPoolC=admin.poolC.length;
+const countInPoolD=admin.poolD.length;
+const countInPoolE=admin.poolE.length;
+    return res.status(201).json({
+      admin,
+      countInPoolA,
+      countInPoolB,
+      countInPoolC,
+      countInPoolD,
+      countInPoolE,
+      sts: "01",
+        msg: " Successfully Get Admin Profile",
+    });
+  } catch (error) {
+    next(error)
+  }
+
+}
 
 //view all users by Admin---------------------------------------------------------------------------------------------------------------------
 
@@ -1032,11 +1051,12 @@ export const acceptUser = async (req, res, next) => {
             await sponserUser1.save();
           }
 
-          const referalIncome=generateReferalIncome(sponserUser1,sponserUser2,updatedUser)
+          const referalIncome=await generateReferalIncome(sponserUser1,sponserUser2,updatedUser)
           if(updatedUser.packageAmount >= 5000 ){
-            addToAutoPoolWallet(updatedUser)
+            await addToAutoPoolWallet(updatedUser)
           }
-          if(!(sponserUser1.isDistrictFranchise) && !(sponserUser1.isZonalFranchise))setAutoPool(sponserUser1,updatedUser);
+          await generatePromotersIncome(updatedUser)
+          if(!(sponserUser1.isDistrictFranchise) && !(sponserUser1.isZonalFranchise))await setAutoPool(sponserUser1,updatedUser);
 
 
           res
@@ -1288,6 +1308,7 @@ export const viewUserDetails = async (req, res, next) => {
         inDirectIncome: userData.inDirectReferalIncome.toFixed(2),
         walletAmount: userData.walletAmount.toFixed(2),
         bankDetails:userData.bankDetails,
+        nomineeDetails:userData.nomineeDetails,
         totalLevelIncome:userData.totalLevelIncome.toFixed(2),
 
         sts: "01",
@@ -1642,4 +1663,60 @@ export const addBonus=async(req,res,next)=>{
     next(error)
   }
 }
+
+
+
+//admin approve and reject demate account
+
+
+export const processDematAccount = async (req, res, next) => {
+  try {
+    const adminId = req.admin._id;
+    const { id } = req.params;
+    const { action } = req.body; // action can be "approve" or "reject"
+
+    // Fetch admin data
+    const admin = await Admin.findById(adminId);
+    if (!admin) {
+      return next(errorHandler(401, "Admin login failed."));
+    }
+
+    // Fetch Demat data
+    const dematData = await Demate.findById(id).populate("sponser");
+    if (!dematData) {
+      return next(errorHandler(404, "Demat data not found."));
+    }
+
+    const user = dematData.sponser;
+
+    // Check if the action is valid
+    if (action !== "approve" && action !== "reject") {
+      return next(errorHandler(400, "Invalid action. Please provide 'approve' or 'reject'."));
+    }
+
+    if (action === "approve") {
+      await User.findOneAndUpdate({ _id: user._id }, { $push: { demateAccounts: dematData._id } });
+      dematData.status = "approved";
+
+      
+    } else if (action === "reject") {
+      // Update DematData status to empty string for rejection
+      dematData.status = "";
+    }
+
+    // Save updated DematData
+    const updatedDemateData = await dematData.save();
+
+    // Respond with appropriate message
+    const msg = action === "approve" ? " Demat Account Approved!" : "Demat Account rejected!";
+    res.status(200).json({
+      updatedDemateData,
+      msg,
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
 

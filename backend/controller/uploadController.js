@@ -3,6 +3,8 @@ import { errorHandler } from "../middleware/errorHandler.js";
 import Admin from "../models/adminModel.js";
 import Alert from "../models/alertModel.js";
 import Award from "../models/awardModel.js";
+import Demate from "../models/demateModel.js";
+import District from "../models/districtModel.js";
 import HomeImage from "../models/homeImageModel.js";
 import homeVideo from "../models/homeVideoModel.js";
 import LiveNews from "../models/liveNewsModel.js";
@@ -660,7 +662,8 @@ if(alert){
 
    export const addUserBankAccount = async (req, res, next) => {
     try {
-      const {id} = req.query||req.user._id;
+      const id = req.query.id||req.user._id;
+      console.log(id);
       const {holderName,accountNum,ifscCode,bankName} = req.body;
 
       const userData = await User.findById(id);
@@ -688,3 +691,95 @@ if(alert){
       next(error);
     }
   };
+
+
+
+
+   //----------------------------Add and Edit Nominee details-------------------------
+
+
+   export const addNomineeDetails = async (req, res, next) => {
+    try {
+      const id = req.query.id||req.user._id;
+      // const {id}=req.query||userId
+      console.log(id);
+      const {name,phone,address,bankName,accountNum,ifscCode,aadhaarNum,pancardNum} = req.body;
+
+      const userData = await User.findById(id);
+      if (!userData) {
+        return next(errorHandler(401, "User not found"));
+      }
+        userData.nomineeDetails.bankName = bankName|| userData.nomineeDetails.bankName;
+        userData.nomineeDetails.name = name|| userData.nomineeDetails.name;
+        userData.nomineeDetails.accountNum = accountNum|| userData.nomineeDetails.accountNum;
+        userData.nomineeDetails.ifscCode = ifscCode|| userData.nomineeDetails.ifscCode;
+        userData.nomineeDetails.phone = phone|| userData.nomineeDetails.phone;
+        userData.nomineeDetails.address = address|| userData.nomineeDetails.address;
+        userData.nomineeDetails.aadhaarNum = aadhaarNum|| userData.nomineeDetails.aadhaarNum;
+        userData.nomineeDetails.pancardNum = pancardNum|| userData.nomineeDetails.pancardNum;
+      
+
+      const updatedUser = await userData.save();
+
+      if(updatedUser){
+        return res.status(200).json({
+          updatedUser,
+            sts: "01",
+            msg: "nominee data updated successfully",
+          });
+      }
+
+
+    } catch (error) {
+      next(error);
+    }
+  };
+
+
+//---------------------------------------------add and edit demate account-----------------------------------------
+
+
+export const addDemateAccount = async (req, res, next) => {
+  try {
+    const id =req.query.id||req.user._id;
+    console.log(id);
+    const {name,phone,address,email,demateUserName} = req.body;
+
+    const userData = await User.findById(id);
+    let demateUser = await Demate.findById(id);
+
+    if (demateUser) {
+      // If the demate account exists, update its details
+      demateUser.name = name||demateUser.name;
+      demateUser.phone = phone|| demateUser.phone ;
+      demateUser.address = address|| demateUser.address;
+      demateUser.email = email||demateUser.email;
+      demateUser.demateUserName = demateUserName||demateUser.demateUserName;
+      demateUser = await demateUser.save();
+    } else {
+      // If the demate account doesn't exist, create a new one
+      demateUser = await Demate.create({
+        sponserName:userData.name,
+        sponser: id,
+        name,
+        phone,
+        address,
+        email,
+        demateUserName,
+        status: "pending",
+      });
+    }
+
+    if(demateUser){
+      return res.status(200).json({
+        demateUser,
+          sts: "01",
+          msg: "demate accoun data updated successfully",
+        });
+    }
+
+
+  } catch (error) {
+    next(error);
+  }
+};

@@ -41,7 +41,7 @@ function Sidebar() {
       title: "Demat Account",
       icon: "fas fa-chart-pie",
       sub: [
-        { title: "All Demat Accounts", route: "member" },
+        { title: "All Demat Accounts", route: "demat-accounts" },
         {
           title: "Pending Account",
           route: "pending/accounts",

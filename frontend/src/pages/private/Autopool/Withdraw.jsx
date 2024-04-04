@@ -15,7 +15,7 @@ function Withdraw() {
     pageSize: 10,
   });
   const [totalPages, setTotalPages] = useState(1);
-  console.log(totalPages, "pages......sdsd..");
+  console.log(totalPages, "pages......sdsd.wewewewew.");
 
   const startIndex = (params.page - 1) * params.pageSize;
 

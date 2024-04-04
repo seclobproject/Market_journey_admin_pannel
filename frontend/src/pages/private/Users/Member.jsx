@@ -63,7 +63,7 @@ console.log(totalgstAmount," totalgstAmounts sum");
   const [statusfilter, setStatusFilter] = useState();
 
   const navigate = useNavigate();
-
+  const startIndex = (params.page - 1) * params.pageSize;
   //-----------list district in drop down--------
   const getStateList = async () => {
     try {
@@ -258,30 +258,10 @@ console.log(totalgstAmount," totalgstAmounts sum");
     getallUsers();
     getPackagesList();
    
-    // if (packageAmount?.packageAmount) {
-    //   const partAmount = Number(packageAmount.packageAmount) ; 
-    //   console.log(`partAmount: ${typeof(partAmount)}%`);
-      
-    //   const percentage = partAmount * 0.18;
-    //   console.log(`percentage: ${typeof (percentage)}%`);
-  
-  
-    //   const sum = partAmount + percentage;
-    //   console.log(`Sum: ${sum}`);
-
-    //   setTotalGstAmount(sum)
-    // }
+    
   }, [params]);
 
-  // useEffect(() => {
-  //   if (selectedDistrictId) {
-  //     getZonallist();
-  //   }
-
-  //   if (selectedZonalId) {
-  //     getPanchayathList();
-  //   }
-  // }, [selectedDistrictId, selectedZonalId]);
+ 
 
 
 
@@ -326,11 +306,12 @@ console.log(totalgstAmount," totalgstAmounts sum");
     const filterStatus = e.target.value;
 
     setFilter(filterStatus);
+    console.log(filterStatus,"==")
     const newFilteredData = allUser.filter((item) => {
       console.log(item, "iteamssssss///");
-      return filterStatus ? item?.userStatus === filterStatus : true;
+      return filterStatus ? item.userStatus === filterStatus : true;
     });
-    console.log(newFilteredData, "");
+    console.log(newFilteredData, "fgdffdfd");
     setFilteredData(newFilteredData);
   };
 
@@ -380,6 +361,7 @@ useEffect(()=>{
                 onClick={() => {
                   setMemberModal({ show: true, id: null });
                   setAddMember("");
+                  setTotalGstAmount("");
                   setValidated(false);
                 }}
               >
@@ -435,21 +417,20 @@ useEffect(()=>{
                         <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                       </th>
                       <th>
+                        <h6 className="fs-4 fw-semibold mb-0">Date</h6>
+                      </th>
+                      <th>
+                        <h6 className="fs-4 fw-semibold mb-0">User ID</h6>
+                      </th>
+                      <th>
                         <h6 className="fs-4 fw-semibold mb-0">Name</h6>
                       </th>
 
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Sponsor Name</h6>
                       </th>
-                      {/* <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Email</h6>
-                      </th>
-                      <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Phone</h6>
-                      </th> */}
-                      <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Date</h6>
-                      </th>
+                   
+                    
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">
                           Package Amount
@@ -457,7 +438,7 @@ useEffect(()=>{
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">
-                          Franchise Type
+                           Type
                         </h6>
                       </th>
                       <th>
@@ -486,8 +467,16 @@ useEffect(()=>{
                     {filteredData?.length ? (
                       <>
                         {filteredData.map((users, index) => (
+                          console.log(users),
                           <tr key={index}>
-                            <td>{index + 1}</td>
+                            <td>{startIndex + index + 1}</td>
+                            <td>
+                              {users?.createdAt
+                                ? moment(users.createdAt).format("DD/MM/YYYY")
+                                : "--"}
+                            </td>
+                            <td>{users?.ownSponserId || "--"}</td>
+
                             <td>
                               {(users?.name && users.name.toUpperCase()) ||
                                 "--"}
@@ -498,13 +487,8 @@ useEffect(()=>{
                                 "--"}
                             </td>
 
-                            {/* <td>{users?.email || "--"}</td>
-                            <td>{users?.phone || "--"}</td> */}
-                            <td>
-                              {users?.createdAt
-                                ? moment(users.createdAt).format("DD/MM/YYYY")
-                                : "--"}
-                            </td>
+                            {/* <td>{users?.phone || "--"}</td> */} 
+                           
                             <td>{users?.packageAmount}</td>
                             <td>{users?.franchise || "--"}</td>
                             <td>{users?.franchiseName || "--"}</td>
@@ -514,7 +498,7 @@ useEffect(()=>{
                                   Ready to Approve
                                 </span>
                               ) : users?.userStatus === "pending" ? (
-                                <span className="badge bg-primary rounded-3 fw-semibold">
+                                <span className="badge bg-warning rounded-3 fw-semibold">
                                   Pending
                                 </span>
                               ) : (

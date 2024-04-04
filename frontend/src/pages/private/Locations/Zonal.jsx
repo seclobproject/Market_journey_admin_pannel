@@ -20,11 +20,15 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
 function Zonal() {
+
   const [zonalModal, setZonalModal] = useState({ show: false, id: null });
+  console.log(zonalModal,"zonalModal zonalModal");
   const [zonalEditModal, setZonalEditModal] = useState({
     show: false,
     id: null,
   });
+  console.log(zonalEditModal,"zonalEditModal zonalModal");
+
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
@@ -40,6 +44,7 @@ function Zonal() {
     pageSize: 10,
   });
   const [totalPages, setTotalPages] = useState(1);
+  const startIndex = (params.page - 1) * params.pageSize;
 
   //-----------list state in drop down--------
   const getStateList = async () => {
@@ -228,7 +233,7 @@ function Zonal() {
                       <>
                         {zonalList.map((zonals, index) => (
                           <tr key={index}>
-                            <td>{index + 1}</td>
+                            <td>{startIndex + index + 1}</td>
                             <td>
                               {(zonals?.stateName &&
                                 zonals.stateName.toUpperCase()) ||
@@ -255,7 +260,7 @@ function Zonal() {
                                 >
                                   <i
                                     className="fs-4 fas fa-pencil-alt"
-                                    style={{ color: "red" }}
+                                    style={{ color: "red",cursor:'pointer' }}
                                   ></i>
                                 </a>
                               ) : (
@@ -269,7 +274,7 @@ function Zonal() {
                                 >
                                   <i
                                     className="fs-4 fas fa-pencil-alt"
-                                    style={{ color: "grey" }}
+                                    style={{ color: "grey",cursor:'pointer' }}
                                   ></i>
                                 </button>
                               )}
@@ -283,7 +288,7 @@ function Zonal() {
                                 >
                                   <i
                                     className="fs-4 fas fa-trash-alt"
-                                    style={{ color: "red" }}
+                                    style={{ color: "red",cursor:'pointer' }}
                                   ></i>
                                 </a>
                               ) : (
@@ -298,7 +303,7 @@ function Zonal() {
                                 >
                                   <i
                                     className="fs-4 fas fa-trash-alt"
-                                    style={{ color: "grey" }}
+                                    style={{ color: "grey",cursor:'pointer' }}
                                   ></i>
                                 </button>
                               )}
@@ -454,7 +459,7 @@ function Zonal() {
               setZonalModal({ show: false, id: null });
             }}
           >
-            cancel
+            Cancel
           </button>
         </ModalComponent>
         {/* edit modal */}
@@ -504,10 +509,10 @@ function Zonal() {
           <button
             className="btn btn-cancel float-end me-1"
             onClick={() => {
-              setZonalModal({ show: false, id: null });
+              setZonalEditModal({ show: false, id: null });
             }}
           >
-            cancel
+            Cancel
           </button>
         </ModalComponent>
         {/* delete modal */}

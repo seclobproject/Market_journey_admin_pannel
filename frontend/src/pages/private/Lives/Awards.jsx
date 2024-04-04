@@ -251,7 +251,7 @@ function Awards() {
                               >
                                 <i
                                   className="fs-4 fas fa-pencil-alt mt-2"
-                                  style={{ color: "red" }}
+                                  style={{ color: "red",cursor: "pointer"}}
                                 ></i>
                               </a>
                               <a
@@ -263,7 +263,7 @@ function Awards() {
                               >
                                 <i
                                   className="fs-4 fas fa-trash-alt"
-                                  style={{ color: "red" }}
+                                  style={{ color: "red",cursor: "pointer"}}
                                 />
                               </a>{" "}
                             
@@ -426,7 +426,7 @@ function Awards() {
               setShowModal({ show: false, id: null });
             }}
           >
-            cancel
+            Cancel
           </button>
         </ModalComponent>
 

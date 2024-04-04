@@ -15,7 +15,7 @@ function Bonnushistory() {
               className="card-title fw-semibold mb-0 lh-sm px-0 mt-4"
               style={{ color: "#F7AE15" }}
             >
-              Bonnus History
+              Bonus History
             </h5>
           </div>
           {isLoading ? (

@@ -68,3 +68,16 @@ export const viewhistoryUrl="/api/admin/all-withdraw-history"
 
 //edit or add bank details
 export const editoraddBankUrl="/api/user/add-bank-account"
+//Nominee detials
+export const addoreditNomineeUrl="/api/user/add-nominee"
+//demate accounts
+export const pendingdemateaccountUrl="/api/admin/view-pending-demates"
+export const addorrejectAccountUrl="/api/admin/process-demat-account"
+export const viewapproveddemateUrl="/api/admin/view-approved-demates"
+//autopool
+export const viewautopoolhistoryUrl="/api/admin/autopool-credit-history"
+export const editpoolPercentageUrl="/api/admin/update-pool-percentage"
+export const distributeWalletUrl="/api/admin/distribute-autowallet"
+//admin profile
+export const adminProfileUrl="/api/admin/view-admin-profile"
+

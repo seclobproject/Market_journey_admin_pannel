@@ -575,10 +575,9 @@ export const addPoolPercentage=async(req,res,next)=>{
     adminData.autoPoolPercentageE = autoPoolPercentageE || adminData.autoPoolPercentageE;
 
 
-    // Save the updated SEO data
+
     const updatedAdminData = await adminData.save();
 
-    // Respond with the updated SEO data
     if(updatedAdminData){
       return res.status(200).json({
         updatedAdminData,
@@ -634,35 +633,48 @@ console.log(amountPoolA,
   amountPoolD,
   amountPoolE);
     // Distribute amounts to users in each pool
-    await distributeToPool(adminData.poolA, amountPoolA,autoPoolPercentageA);
-    await distributeToPool(adminData.poolB, amountPoolB,autoPoolPercentageB);
-    await distributeToPool(adminData.poolC, amountPoolC,autoPoolPercentageC);
-    await distributeToPool(adminData.poolD, amountPoolD,autoPoolPercentageD);
-    await distributeToPool(adminData.poolE, amountPoolE,autoPoolPercentageE);
-
+    const poolACount=await distributeToPool(adminData.poolA, amountPoolA,autoPoolPercentageA);
+    const poolBCount=await distributeToPool(adminData.poolB, amountPoolB,autoPoolPercentageB);
+    const poolCCount=await distributeToPool(adminData.poolC, amountPoolC,autoPoolPercentageC);
+    const poolDCount=await distributeToPool(adminData.poolD, amountPoolD,autoPoolPercentageD);
+    const poolECount=await distributeToPool(adminData.poolE, amountPoolE,autoPoolPercentageE);
+console.log(poolACount,poolBCount,poolCCount,poolDCount,poolECount);
     // Reset autoPoolWallet amount after distribution
-    adminData.autoPoolDistributionHistory.push=({
+    adminData.autoPoolDistributionHistory.push({
       reportName: "autoPoolDistributionHistory",
       distributedAmount:autoPoolWalletAmount,
-      poolA: amountPoolA,
-      poolB: amountPoolB,
-      poolC: amountPoolC,
-      poolD: amountPoolD,
-      poolE: amountPoolE,
-      status: String,
+      amountpoolA: amountPoolA,
+      countInPoolA:poolACount,
+      amountpoolB: amountPoolB,
+      countInPoolB:poolBCount,
+      amountpoolC: amountPoolC,
+      countInPoolC:poolCCount,
+      amountpoolD: amountPoolD,
+      countInPoolD:poolDCount,
+      amountpoolE: amountPoolE,
+      countInPoolE:poolECount,
+      status: "Approved",
     })
+    adminData.totalPaidPoolAmount+=autoPoolWalletAmount
     adminData.autoPoolWallet = 0;
-    await adminData.save();
+    const updatedAdmin=await adminData.save();
+    if(updatedAdmin){
+      res.status(200).json({
+        updatedAdmin,
+          sts: "01",
+          msg: "AutoPool Distribution successfully",
+        });
+    }
     console.log("Auto pool wallet distributed successfully.");
   } catch (error) {
-    console.error("Error distributing auto pool wallet:", error);
+    next(error)
   }
 };
 
 const distributeToPool = async (poolUsers, amount,percentage) => {
   console.log("Reached calculation");
-  const numUsers = (poolUsers.length)+1;
-  const amountPerUser = amount / numUsers;
+  const numUsers = poolUsers.length>0?poolUsers.length:0;
+  const amountPerUser = amount / (numUsers+1);
   for (const userId of poolUsers) {
     try {
       const user = await User.findById(userId);
@@ -675,6 +687,7 @@ const distributeToPool = async (poolUsers, amount,percentage) => {
         user.autoPoolIncomeHistory.push({
           reportName: "Auto Pool Distribution",
           Amount:amount,
+          designation:user.autoPoolStatus,
           percentageCredited:percentage,
           amountCredited: amountPerUser,
           status: "Approved",
@@ -685,4 +698,5 @@ const distributeToPool = async (poolUsers, amount,percentage) => {
       console.error("Error distributing to pool users:", error);
     }
   }
+  return numUsers
 };

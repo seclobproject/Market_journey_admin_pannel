@@ -343,22 +343,19 @@ export const getPendingDematesPaginated = async (req, res, next) => {
         const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
 
         const userData = await Demate.find({ status: "pending" })
-            .skip((page - 1) * pageSize)
-            .limit(pageSize);
-
-        if (!userData || userData.length === 0) {
-            return next(errorHandler(401, "No pending demates found"));
-        }
+            
+        const paginatedPendingDemats = await paginate(userData, page, pageSize);
 
         res.status(200).json({
-            userData,
-            pagination: {
-                page,
-                pageSize,
-                totalDocs: userData.length  // This assumes the total count is the same as the number of fetched documents
-            },
-            sts: "01",
-            msg: "Successfully retrieved pending demates",
+            pendingDemats: paginatedPendingDemats.results,
+                pagination: {
+                    page: paginatedPendingDemats.page,
+                    pageSize: paginatedPendingDemats.pageSize,
+                    totalPages: paginatedPendingDemats.totalPages,
+                    totalDocs: paginatedPendingDemats.totalDocs
+                },
+                sts: "01",
+                msg: "Get Pending Demat accounts report Success",
         });
     } catch (error) {
         next(error);
@@ -378,24 +375,19 @@ export const getApprovedDematesPaginated = async (req, res, next) => {
         
         let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
         const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
-
         const userData = await Demate.find({ status: "approved" })
-            .skip((page - 1) * pageSize)
-            .limit(pageSize);
-
-        if (!userData || userData.length === 0) {
-            return next(errorHandler(401, "No pending demates found"));
-        }
+        const paginatedApproveDemats = await paginate(userData, page, pageSize);
 
         res.status(200).json({
-            userData,
-            pagination: {
-                page,
-                pageSize,
-                totalDocs: userData.length  // This assumes the total count is the same as the number of fetched documents
-            },
-            sts: "01",
-            msg: "Successfully retrieved pending demates",
+            approveDemats: paginatedApproveDemats.results,
+                pagination: {
+                    page: paginatedApproveDemats.page,
+                    pageSize: paginatedApproveDemats.pageSize,
+                    totalPages: paginatedApproveDemats.totalPages,
+                    totalDocs: paginatedApproveDemats.totalDocs
+                },
+                sts: "01",
+                msg: "Get apporved Demat accounts report Success",
         });
     } catch (error) {
         next(error);
@@ -516,6 +508,46 @@ export const viewPoolUsers = async (req, res, next) => {
                 },
                 sts: "01",
                 msg: "Get Demate Account report users Success",
+            });
+        } else {
+            return next(errorHandler(401, "User Login Failed"));
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+
+
+  // user autopool credit history
+  export const userAutoPoolIncomeHistory = async (req, res, next) => {
+    const userId = req.user._id;
+    let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+    const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+
+    try {
+        const userData = await User.findById(userId).populate({
+            path: "autoPoolIncomeHistory",
+            options: {
+                sort: { createdAt: 1 } // Sort by createdAt in descending order
+            }
+        });
+        if (userData) {
+            const userStatus = userData.userStatus;
+            const userCreditHistory = userData.autoPoolIncomeHistory;
+            const paginateduserCreditHistory = await paginate(userCreditHistory, page, pageSize);
+            res.status(200).json({
+                autoPoolCreditHistory: paginateduserCreditHistory.results,
+                userStatus,
+                pagination: {
+                    page: paginateduserCreditHistory.page,
+                    pageSize: paginateduserCreditHistory.pageSize,
+                    totalPages: paginateduserCreditHistory.totalPages,
+                    totalDocs: paginateduserCreditHistory.totalDocs
+                },
+                sts: "01",
+                msg: "Get Autopool amount credit report users Success",
             });
         } else {
             return next(errorHandler(401, "User Login Failed"));

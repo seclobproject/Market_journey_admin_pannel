@@ -268,6 +268,13 @@ export const viewUserProfile = async (req, res, next) => {
     const totalLevelIncome=userData.totalLevelIncome.toFixed(2);
     const franchise = userData.franchise;
     const wallet = userData.walletAmount.toFixed(2);
+const adminData=await Admin.findOne();
+
+const countInPoolA=adminData.poolA.length;
+const countInPoolB=adminData.poolB.length;
+const countInPoolC=adminData.poolC.length;
+const countInPoolD=adminData.poolD.length;
+const countInPoolE=adminData.poolE.length;
 
     const countFirstChild = userData.childLevel1.length;
     const countSecondChild = userData.childLevel2.length;
@@ -295,6 +302,11 @@ export const viewUserProfile = async (req, res, next) => {
         totalLevelIncome:totalLevelIncome,
         bankDetails:userData.bankDetails,
         nomineeDetails:userData.nomineeDetails,
+        countInPoolA,
+        countInPoolB,
+        countInPoolC,
+        countInPoolD,
+        countInPoolE,
 
         sts: "01",
         msg: "get user profile Success",
@@ -653,6 +665,12 @@ export const walletWithdrawRequest = async (req, res, next) => {
     const userId = req.user._id;
     const { withdrawAmount } = req.body;
 
+    // Fetch user data
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      return next(errorHandler(401, "User not found. Please login first."));
+    }
      // Calculate weeks since user creation
      const createdAt = user.createdAt;
      const todayDate = new Date();
@@ -660,19 +678,17 @@ export const walletWithdrawRequest = async (req, res, next) => {
 
      // Update user data for approval
      const dematCount = user.demateAccounts.length;
+     console.log(dematCount);
 const demateDifference=weeksDifference-dematCount;
-     if (weeksDifference > (dematCount)) {
+    if(dematCount===0){
+      return next(errorHandler(401, `Withdrawal is only possible after adding at least one demat account.` ));
+    }
+     if (weeksDifference > (dematCount)||dematCount==0) {
       return next(errorHandler(401, `Your Demate accounts is lessthan your Weeks, Please add ${demateDifference} more Accounts` ));
   };
     // Calculate TDS amount
     const tdsAmount = withdrawAmount * 0.90;
 
-    // Fetch user data
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return next(errorHandler(401, "User not found. Please login first."));
-    }
 
 
     // Check if wallet amount is sufficient

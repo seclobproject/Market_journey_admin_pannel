@@ -23,11 +23,16 @@ const autoPoolSchema = new mongoose.Schema(
     {
       reportName: String,
       distributedAmount:Number,
-      poolA: Number,
-      poolB: Number,
-      poolC: Number,
-      poolD: Number,
-      poolE: Number,
+      amountpoolA: Number,
+      amountpoolB: Number,
+      amountpoolC: Number,
+      amountpoolD: Number,
+      amountpoolE: Number,
+      countInPoolA:Number,
+      countInPoolB:Number,
+      countInPoolC:Number,
+      countInPoolD:Number,
+      countInPoolE:Number,
       status: String,
     },
     {
@@ -78,6 +83,10 @@ autoPoolWallet:{
   default: 0,
 },
 totalPaidBonusAmount:{
+  type:Number,
+  default:0
+},
+totalPaidPoolAmount:{
   type:Number,
   default:0
 },

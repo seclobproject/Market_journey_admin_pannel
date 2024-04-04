@@ -746,9 +746,6 @@ export const addDemateAccount = async (req, res, next) => {
     const {name,phone,address,email,demateUserName} = req.body;
 
     const userData = await User.findById(id);
-    if (!userData) {
-      return next(errorHandler(401, "User not found"));
-    }
     let demateUser = await Demate.findById(id);
 
     if (demateUser) {

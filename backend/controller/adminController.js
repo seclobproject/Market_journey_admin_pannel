@@ -82,8 +82,19 @@ export const viewAdminProfile=async(req,res,next)=>{
     if (!admin) {
       return next(errorHandler(401, "Admin Login Failed"));
     }
+
+const countInPoolA=admin.poolA.length;
+const countInPoolB=admin.poolB.length;
+const countInPoolC=admin.poolC.length;
+const countInPoolD=admin.poolD.length;
+const countInPoolE=admin.poolE.length;
     return res.status(201).json({
       admin,
+      countInPoolA,
+      countInPoolB,
+      countInPoolC,
+      countInPoolD,
+      countInPoolE,
       sts: "01",
         msg: " Successfully Get Admin Profile",
     });

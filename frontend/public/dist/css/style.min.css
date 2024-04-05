@@ -20345,6 +20345,19 @@ fieldset:disabled .btn {
   --bs-btn-disabled-bg: #5d87ff;
   --bs-btn-disabled-border-color: #5d87ff;
 }
+.custom-btn {
+  color: #00335B;
+  border-color: #00335B;
+}
+
+.custom-btn:active {
+  color: white;
+  background-color: #00335B;
+  border-color: #00335B;
+}
+
+
+
 .btn-custom {
   --bs-btn-color: #fff;
   --bs-btn-bg: #00335B;

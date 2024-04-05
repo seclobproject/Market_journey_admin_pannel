@@ -78,6 +78,7 @@ export const viewapproveddemateUrl="/api/admin/view-approved-demates"
 export const viewautopoolhistoryUrl="/api/admin/autopool-credit-history"
 export const editpoolPercentageUrl="/api/admin/update-pool-percentage"
 export const distributeWalletUrl="/api/admin/distribute-autowallet"
+export const viewpoolUserUrl="/api/admin/view-autopool-users"
 //admin profile
 export const adminProfileUrl="/api/admin/view-admin-profile"
 

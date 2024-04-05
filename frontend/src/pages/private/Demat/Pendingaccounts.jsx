@@ -124,7 +124,7 @@ function Pendingaccounts() {
                       </th>
 
                       <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Aprrove User</h6>
+                        <h6 className="fs-4 fw-semibold mb-0">Approve user</h6>
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Reject user</h6>

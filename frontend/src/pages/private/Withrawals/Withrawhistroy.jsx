@@ -86,22 +86,18 @@ function Withrawhistroy() {
           </div>
           <div className="row ms-2 me-2">
           
-            <div className="col-md-3 mt-3">
+            {/* <div className="col-md-3 mt-3">
               <select
                 value={statusfilter}
                 onChange={(e) => handleFilterAndSetFilterStatus(e)}
                 className="form-control"
               >
-                {/* <option selected disabled>
-                  Search by status...
-                </option> */}
-
+           
                 <option value="View_all" selected>View All</option>
                 <option value="Approved">Approved</option>
                 <option value="Rejected">Rejected</option>
-                {/* Add more filter options as needed */}
               </select>
-            </div>
+            </div> */}
           </div>
           {isLoading ? (
             <Loader />

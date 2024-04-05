@@ -28,6 +28,7 @@ import Pendingaccounts from "./pages/private/Demat/Pendingaccounts";
 import Withdraw from "./pages/private/Autopool/Withdraw";
 import Distribute from "./pages/private/Autopool/Distribute";
 import Alldemate from "./pages/private/Demat/Alldemate";
+import Automembers from "./pages/private/Autopool/Automembers";
 
 
 function App() {
@@ -59,9 +60,9 @@ function App() {
           <Route path="/user/bonnushistory" element={<Bonnushistory />}/>
           <Route path="/pending/accounts" element={<Pendingaccounts />}/>
           <Route path="/demat-accounts" element={<Alldemate />}/>
-
           <Route path="/autopool-wallet/history" element={<Withdraw/>}/>
           <Route path="/autopool-wallet/distribute" element={<Distribute />}/>
+          <Route path="/autopool/members" element={<Automembers />}/>
 
 
 

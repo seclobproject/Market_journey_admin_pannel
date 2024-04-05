@@ -12,6 +12,7 @@ import {
   viewAwardUrl,
 } from "../../../utils/Constants";
 import { ApiCall } from "../../../Services/Api";
+import ModalImage from "react-modal-image";
 
 function Awards() {
   const { Check_Validation } = useContext(ContextData);
@@ -220,25 +221,28 @@ function Awards() {
                     {awardDetails?.length ? (
                       <>
                         {awardDetails.map((details, index) => (
+                          console.log(details,"de"),
                           <tr key={index}>
                             <td>{index + 1}</td>
 
                             <td>{details?.memberName || "--"}</td>
                             <td style={{ width: "300px", height: "150px", overflow: "hidden", whiteSpace: "pre-wrap" }}>{details?.achivedDetails || "--"}</td>
 
-                            <td>
-                              <img
-                                alt="images"
-                                src={`                                  http://192.168.29.152:8000/uploads/${details?.memberImage}
-                                  `}
-                                style={{
-                                  width: "100px",
+                            <td   
+                                 style={{
+                                  width: "200px",
                                   height: "100px",
                                   objectFit: "cover",
                                   borderRadius: "5px",
-                                }}
-                              />
-                            </td>
+                                }} >
+<ModalImage
+  small={`http://192.168.29.152:8000/uploads/${details?.memberImage}`}
+  medium={`http://192.168.29.152:8000/uploads/${details?.memberImage}`}
+  alt="Image"
+/>
+
+
+</td>
 
                             <td>
                             <a

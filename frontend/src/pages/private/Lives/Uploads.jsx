@@ -5,7 +5,7 @@ import { ContextData } from "../../../Services/Context";
 import { SlideMotion } from "../../../libs/FramerMotion";
 import ModalComponent from "../../../Components/ModalComponet";
 import { Form } from "react-bootstrap";
-import { set } from "mongoose";
+import ModalImage from "react-modal-image";
 import {
   deleteuploadImageUrl,
   uploadimageUrl,
@@ -197,19 +197,26 @@ function Uploads() {
                             {ImageList.map((image, index) => (
                               <tr key={index}>
                                 <td>{index + 1}</td>
-                                <td>
-                                  <img
-                                    alt="images"
-                                    src={`                                  http://192.168.29.152:6003/uploads/${image?.homeImage}
-                                  `}
-                                    style={{
-                                      width: "100px",
-                                      height: "100px",
-                                      objectFit: "cover",
-                                      borderRadius: "5px",
-                                    }}
-                                  />
-                                </td>
+                                <td   
+                                 style={{
+                                  width: "200px",
+                                  height: "100px",
+                                  objectFit: "cover",
+                                  borderRadius: "5px",
+                                }} >
+  <ModalImage
+ 
+    small={`http://192.168.29.152:6003/uploads/${image?.homeImage}`}
+    medium={`http://192.168.29.152:6003/uploads/${image?.homeImage}`}
+    alt="Image"
+    mediumStyles={{
+      maxWidth: "50%",
+      maxHeight: "50%",
+    }}
+  />
+  
+</td>
+
                                 <td style={{ width: "300px", height: "150px", overflow: "hidden", whiteSpace: "pre-wrap" }}>{image?.description}</td>
                                 <td>
                                   {" "}

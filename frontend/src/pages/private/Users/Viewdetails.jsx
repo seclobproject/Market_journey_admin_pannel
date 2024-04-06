@@ -13,6 +13,7 @@ import { Button, Form } from "react-bootstrap";
 import Loader from "../../../Components/Loader";
 import moment from "moment";
 import ModalComponent from "../../../Components/ModalComponet";
+import { Image } from "antd";
 
 function Viewdetails() {
   const navigate = useNavigate();
@@ -515,6 +516,10 @@ function Viewdetails() {
                                     </h6>
                                   </li>
                                 )}
+                              <Image
+                                    width={200}
+                                    src={`http://192.168.29.152:6003/uploads/${details?.screenshot}`}
+                                  />
                               </ul>
                             </div>
                           </div>

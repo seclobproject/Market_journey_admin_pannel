@@ -5,7 +5,7 @@ import { ContextData } from "../../../Services/Context";
 import { SlideMotion } from "../../../libs/FramerMotion";
 import ModalComponent from "../../../Components/ModalComponet";
 import { Form } from "react-bootstrap";
-import ModalImage from "react-modal-image";
+import { Image } from "antd";
 import {
   deleteuploadImageUrl,
   uploadimageUrl,
@@ -23,7 +23,7 @@ function Uploads() {
   const [description, setDescription] = useState("");
   const [viewImage, setViewImage] = useState({});
   const [ImageList, setImageList] = useState({});
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const [filename, setFileName] = useState({});
 
   //-----------list state--------
@@ -81,7 +81,7 @@ function Uploads() {
   //-------Image upload----------
   const addImageFun = async (e) => {
     if (!filename?.name) {
-      setErrorMessage("Please select an Image")
+      setErrorMessage("Please select an Image");
     }
     try {
       const formdata = new FormData();
@@ -197,27 +197,29 @@ function Uploads() {
                             {ImageList.map((image, index) => (
                               <tr key={index}>
                                 <td>{index + 1}</td>
-                                <td   
-                                 style={{
-                                  width: "200px",
-                                  height: "100px",
-                                  objectFit: "cover",
-                                  borderRadius: "5px",
-                                }} >
-  <ModalImage
- 
-    small={`http://192.168.29.152:6003/uploads/${image?.homeImage}`}
-    medium={`http://192.168.29.152:6003/uploads/${image?.homeImage}`}
-    alt="Image"
-    mediumStyles={{
-      maxWidth: "50%",
-      maxHeight: "50%",
-    }}
-  />
-  
-</td>
-
-                                <td style={{ width: "300px", height: "150px", overflow: "hidden", whiteSpace: "pre-wrap" }}>{image?.description}</td>
+                                <td
+                                  style={{
+                                    width: "200px",
+                                    height: "100px",
+                                    objectFit: "cover",
+                                    borderRadius: "5px",
+                                  }}
+                                >
+                                  <Image
+                                    width={200}
+                                    src={`http://192.168.29.152:6003/uploads/${image?.homeImage}`}
+                                  />
+                                </td>
+                                <td
+                                  style={{
+                                    width: "300px",
+                                    height: "150px",
+                                    overflow: "hidden",
+                                    whiteSpace: "pre-wrap",
+                                  }}
+                                >
+                                  {image?.description}
+                                </td>
                                 <td>
                                   {" "}
                                   <a
@@ -229,7 +231,10 @@ function Uploads() {
                                   >
                                     <i
                                       className="fs-4 fas fa-trash-alt"
-                                      style={{ color: "red" ,cursor:'pointer'}}
+                                      style={{
+                                        color: "red",
+                                        cursor: "pointer",
+                                      }}
                                     />
                                   </a>
                                 </td>{" "}
@@ -342,8 +347,11 @@ function Uploads() {
                   </>
                 ) : (
                   <span>
-                  {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}                  
-                  </span>                )}
+                    {errorMessage && (
+                      <div style={{ color: "red" }}>{errorMessage}</div>
+                    )}
+                  </span>
+                )}
               </span>
             </p>
           </div>

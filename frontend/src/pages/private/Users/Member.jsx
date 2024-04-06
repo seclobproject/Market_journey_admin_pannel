@@ -4,7 +4,6 @@ import { SlideMotion } from "../../../libs/FramerMotion";
 import ModalComponent from "../../../Components/ModalComponet";
 import { ContextData } from "../../../Services/Context";
 import { Form } from "react-bootstrap";
-import DeleteConfirmation from "../../../Components/DeleteConfirmation";
 import Select from "react-select";
 import {
   districtlistinZonalUrl,
@@ -30,7 +29,6 @@ function Member() {
   const [validated, setValidated] = useState(false);
   const [bonusModal, setBonusModal] = useState({ show: false, id: null });
   const [addMember, setAddMember] = useState({});
-  console.log(addMember,"memberAdded");
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [zonalList, setZonalList] = useState([]);
@@ -226,7 +224,7 @@ console.log(totalgstAmount," totalgstAmounts sum");
     try {
       const response = await ApiCall("get", viewalluserUrl, {}, params);
       if (response.status === 200) {
-        console.log("all userssss......", response);
+        console.log("all userssss...ss...", response);
         setAllUser(response?.data?.userData?.results);
         setFilteredData(response?.data?.userData?.results);
         setTotalPages(response?.data?.userData?.totalPages);

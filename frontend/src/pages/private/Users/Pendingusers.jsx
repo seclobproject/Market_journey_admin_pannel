@@ -139,7 +139,7 @@ function Pendingusers() {
                       <h6 className="fs-4 fw-semibold mb-0">View Details</h6>
                     </th>
                     <th>
-                      <h6 className="fs-4 fw-semibold mb-0">Aprrove User</h6>
+                      <h6 className="fs-4 fw-semibold mb-0">Approve  User</h6>
                     </th>
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">Reject user</h6>

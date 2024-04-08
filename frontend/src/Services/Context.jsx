@@ -10,9 +10,7 @@ export const ContextDataProvider = ({ children }) => {
   const[hamburgClicked,setHamburgClicked]=useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  console.log(user,"user")
 
-  console.log(isLoggedIn,"logged")
 
   const storedAuthState=localStorage.getItem('isAuthenticated');
   const initialAuthState=storedAuthState?JSON.parse(storedAuthState):false
@@ -28,7 +26,7 @@ const loginFun =()=>{
 };
 const Logout =()=>{
   setLoggedIn(false)
-  };
+};
   
 
   const Check_Validation = (event, fun_name, setState) => {

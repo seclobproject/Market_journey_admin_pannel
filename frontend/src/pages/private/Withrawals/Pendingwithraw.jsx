@@ -130,7 +130,7 @@ function Pendingwithraw() {
                       </th>
                      
                       <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Aprrove Request</h6>
+                        <h6 className="fs-4 fw-semibold mb-0">Approve  Request</h6>
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Reject Request</h6>

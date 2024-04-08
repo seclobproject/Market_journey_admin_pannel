@@ -548,7 +548,6 @@ export const addPanchayath=async(req,res,next)=>{
     if (admin) {  
       const {stateName,districtName,zonalName,panchayathName}=req.body;
       const panchayathNameLowercase = panchayathName.toLowerCase();
-      console.log(panchayathNameLowercase);
 
       const existingPanchayath = await Panchayath.findOne({ name: { $regex: new RegExp('^' + panchayathNameLowercase + '$', 'i') } });
       if(existingPanchayath){
@@ -655,7 +654,6 @@ export const deletePanchayath=async(req,res,next)=>{
     }
     const zonalName=panchayathData.zonalName;
     const zonalData=await Zonal.findOne({name:zonalName})
-    console.log(zonalData);
     const deletedPanchayath=await Panchayath.findByIdAndDelete(id);
 
     
@@ -1113,7 +1111,7 @@ export const rejectUser = async (req, res, next) => {
             
                   const offset = pageSize * (page - 1);
             
-                  const results = await model.find(query).skip(offset).limit(pageSize);
+                  const results = await model.find(query).sort({createdAt:-1}).skip(offset).limit(pageSize);
             
                   return {
                       results,
@@ -1637,7 +1635,7 @@ export const addBonus=async(req,res,next)=>{
     const adminId=req.admin.id;
     const {id}=req.params;
 
-    const {bonusAmount,transactionId}=req.body;
+    const {bonusAmount,transactionId,description}=req.body;
     // Fetch admin data
     const admin = await Admin.findById(adminId);
     if (!admin) {
@@ -1651,10 +1649,13 @@ export const addBonus=async(req,res,next)=>{
     }
 
     user.totalBonusAmount+=bonusAmount;
-
+    user.walletAmount+=bonusAmount;
     user.bonusHistory.push({
       reportName:"userBonusHistory",
-
+      bonusAmount:bonusAmount,
+      transactionId:transactionId,
+      description:description,
+      status:"Approved"
     })
 
     

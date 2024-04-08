@@ -19,6 +19,7 @@ const creditBounusSchema = new mongoose.Schema(
     reportName: String,
     bonusAmount:Number,
     transactionId:String,
+    description:String,
     status: String,
   },
   {
@@ -48,6 +49,7 @@ const ReferalAmountSchema = new mongoose.Schema(
     reportName: String,
     userID: String,
     franchise:String,
+    designation:String,
     name: String,
     Amount:Number,
     percentageCredited:String,
@@ -92,27 +94,29 @@ const userSchema = new mongoose.Schema(
     },
     dateOfBirth:{
       type: Date,
-     
     },
     franchise: {
       type: String,
       required: true,
     },
+    packageType: {
+      type: String,
+    },
     franchiseName: {
       type: String
     },
-        state: {
+    state: {
           type: String,
-        },
-        district: {
-          type: String,
-        },
-        zonal: {
-          type: String,
-        },
-        panchayath: {
-          type: String,
-        },
+    },
+    district: {
+      type: String,
+    },
+    zonal: {
+      type: String,
+    },
+    panchayath: {
+      type: String,
+    },
     password: {
       type: String,
       required: true,
@@ -154,7 +158,18 @@ const userSchema = new mongoose.Schema(
     withdrawStatus: {
       type: String,
     },
-
+    nifty:{
+      type: Boolean,
+      default: true,
+    },
+    bankNifty:{
+      type: Boolean,
+      default: true,
+    },
+    crudeOil:{
+      type: Boolean,
+      default: true,
+    },
     walletWithdrawHistory: [withdrawSchema],
     directReferalIncome: {
       type: Number,
@@ -184,11 +199,15 @@ const userSchema = new mongoose.Schema(
         type: Boolean,
         default: false,
       },
-      isMobileFranchise: {
+    isMobileFranchise: {
         type: Boolean,
         default: false,
       },
-      isSignalFranchise: {
+    isSignalFranchise: {
+        type: Boolean,
+        default: false,
+      },
+      isPackageFranchise: {
         type: Boolean,
         default: false,
       },
@@ -235,7 +254,7 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
         default: false,
     },
-        isPromoter:{
+    isPromoter:{
       type: Boolean,
         default: false,
     },

@@ -82,7 +82,6 @@ export const uploadHomeImages=async(req,res,next)=>{
 export const deleteSingleImage = async (req, res, next) => {
     try {
       const { id } = req.params;
-      console.log(id);
       const adminId = req.admin._id;
       const admin = await Admin.findById(adminId);
   
@@ -663,7 +662,6 @@ if(alert){
    export const addUserBankAccount = async (req, res, next) => {
     try {
       const id = req.query.id||req.user._id;
-      console.log(id);
       const {holderName,accountNum,ifscCode,bankName} = req.body;
 
       const userData = await User.findById(id);
@@ -702,7 +700,6 @@ if(alert){
     try {
       const id = req.query.id||req.user._id;
       // const {id}=req.query||userId
-      console.log(id);
       const {name,phone,address,bankName,accountNum,ifscCode,aadhaarNum,pancardNum} = req.body;
 
       const userData = await User.findById(id);
@@ -742,7 +739,6 @@ if(alert){
 export const addDemateAccount = async (req, res, next) => {
   try {
     const id =req.query.id||req.user._id;
-    console.log(id);
     const {name,phone,address,email,demateUserName} = req.body;
 
     const userData = await User.findById(id);

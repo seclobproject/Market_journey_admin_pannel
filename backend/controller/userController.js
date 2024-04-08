@@ -21,130 +21,347 @@ export const generateRandomString = () => {
  
 // add user by another user
 
-export const addUser = async (req, res, next) => {
-    try {
-      const sponser = req.admin ? req.admin._id : (req.user ? req.user._id : null);
-        let { name, email, phone,packageAmount,franchise,franchiseName, address,dateOfBirth,state,district,zonal,panchayath, password } =
-          req.body;
-          const sponserData = (await User.findById(sponser)) || (await Admin.findById(sponser));
+// export const addUser = async (req, res, next) => {
+//     try {
+//       const sponser = req.admin ? req.admin._id : (req.user ? req.user._id : null);
+//         let { name, email, phone,packageAmount,packageType,franchise,franchiseName, address,dateOfBirth,state,district,zonal,panchayath, password } =
+//           req.body;
+//           console.log(name, email, phone,packageAmount,franchise,franchiseName, address,dateOfBirth,state,district,zonal,panchayath, password);
+//           const sponserData = (await User.findById(sponser)) || (await Admin.findById(sponser));
      
-          console.log(`name:${name},email:${email},phone:${phone},packageAmount:${packageAmount},
-          franchiseName:${franchiseName},franchise:${franchise},address:${address},state:${state},district:${district},
-          zonal:${zonal},panchayath:${panchayath},password:${password},dateOfBirth:${dateOfBirth},`);
-     
-      const userStatus = "pending";
-      const tempPackageAmount=packageAmount;
-      const ownSponserId = generateRandomString();
-        let isDistrictFranchise;
-        let isZonalFranchise;
-        let isMobileFranchise;
-        let isSignalFranchise
-        let districtFranchise;
-        let zonalFranchise;
-        const existingUser = await User.findOne({ email });
-        const existingUserByPhone = await User.findOne({ phone });
-        if (existingUser || existingUserByPhone) {
-            return next(errorHandler(401, "User Already Exist"));
-        }
+//       const userStatus = "pending";
+//       const tempPackageAmount=packageAmount;
+//       const ownSponserId = generateRandomString();
+//         let isDistrictFranchise;
+//         let isZonalFranchise;
+//         let isMobileFranchise;
+//         let isSignalFranchise;
+//         let isCourseFranchise;
+//         let districtFranchise;
+//         let zonalFranchise;
+//         let nifty;
+//         let bankNifty;
+//         let crudeOil;
+//         const existingUser = await User.findOne({ email });
+//         const existingUserByPhone = await User.findOne({ phone });
+//         if (existingUser || existingUserByPhone) {
+//             return next(errorHandler(401, "User Already Exist"));
+//         }
             
 
-        if(franchise==="District Franchise") {
-          const districtData=await User.findOne({franchiseName:franchiseName})
-          if(districtData)return next(errorHandler(401, "This District franchise Already taken!!"));
-          isDistrictFranchise=true;
-          zonal=null;
-          panchayath=null;
-        }else if(franchise==="Zonal Franchise"){
+//         if(franchise==="District Franchise") {
+//           const districtData=await User.findOne({franchiseName:franchiseName})
+//           if(districtData)return next(errorHandler(401, "This District franchise Already taken!!"));
+//           isDistrictFranchise=true;
+//           zonal=null;
+//           panchayath=null;
+//         }else if(franchise==="Zonal Franchise"){
 
-          const zonalData=await User.findOne({franchiseName:franchiseName})
-          if(zonalData)return next(errorHandler(401, "This Zonal franchise Already taken!!"));
-          isZonalFranchise=true;
-          panchayath=null;
-        }else if(franchise==="Mobile Franchise"){
-          franchiseName=null;
-          isMobileFranchise=true;
-          const districtData=await User.findOne({franchiseName:district})
-         if(!districtData)return next(errorHandler(401, "No one has taken this District franchise yet!!"));
-          districtFranchise=districtData._id;
-          const zonalData=await User.findOne({franchiseName:zonal})
-         if(!zonalData)return next(errorHandler(401, "No one has taken this Zonal franchise yet!!"));
-          zonalFranchise=zonalData._id;
-        }else{
-          franchiseName=null;
-          isSignalFranchise=true;
-          const districtData=await User.findOne({franchiseName:district})
-         if(!districtData)return next(errorHandler(401, "No one has taken this District franchise yet!!"));
-          districtFranchise=districtData._id;
-          const zonalData=await User.findOne({franchiseName:zonal})
-         if(!zonalData)return next(errorHandler(401, "No one has taken this Zonal franchise yet!!"));
-          zonalFranchise=zonalData._id;
-        }
-      const hashedPassword = bcryptjs.hashSync(password, 10);
-      // const hashedTxnPassword = bcryptjs.hashSync(transactionPassword, 10);
-      const user = await User.create({
-        sponser,
-        sponserName:sponserData.name,
-        name,
-        email,
-        phone,
-        dateOfBirth,
-        address,
-        franchise,
-        franchiseName,
-        state,
-        district,
-        zonal,
-        panchayath,
-        tempPackageAmount,
-        isDistrictFranchise,
-        isZonalFranchise,
-        isMobileFranchise,
-        isSignalFranchise,
-        // transactionPassword: hashedTxnPassword,
-        password: hashedPassword,
-        ownSponserId,
-        userStatus,
-        districtFranchise,
-        zonalFranchise
-      });
-      if (user) {
-        await sendMail(
-          user.email,
-          user.name,
-          user.ownSponserId,
-          password
-        );
-        if(isDistrictFranchise){
-          const districtTakeData=await District.findOne({name:franchiseName})
-          districtTakeData.taken=true;
-          districtTakeData.editable=false;
-          await districtTakeData.save();
-        }
-        if(isZonalFranchise){
-          const zonalTakeData=await Zonal.findOne({name:franchiseName})
-          zonalTakeData.taken=true;
-          zonalTakeData.editable=false;
-          await zonalTakeData.save();
-        }
-        if(isMobileFranchise){
-          const panchayathData=await Panchayath.findOne({name:panchayath})
-          panchayathData.editable=false;
-          await panchayathData.save();
-        }
+//           const zonalData=await User.findOne({franchiseName:franchiseName})
+//           if(zonalData)return next(errorHandler(401, "This Zonal franchise Already taken!!"));
+//           isZonalFranchise=true;
+//           panchayath=null;
+//         }else if(franchise==="Mobile Franchise"){
+//           franchiseName=null;
+//           isMobileFranchise=true;
+//           const districtData=await User.findOne({franchiseName:district})
+//          if(!districtData)return next(errorHandler(401, "No one has taken this District franchise yet!!"));
+//           districtFranchise=districtData._id;
+//           const zonalData=await User.findOne({franchiseName:zonal})
+//          if(!zonalData)return next(errorHandler(401, "No one has taken this Zonal franchise yet!!"));
+//           zonalFranchise=zonalData._id;
 
-        res.status(200).json({
-          user,
-        sts: "01",
-          msg: "Add user Success",
-        });
-      } else {
-        return next(errorHandler(400, "Registration failed. Please try again!"));
-      }
-    } catch (error) {
-      console.log(error);
-      next(error);
+//         }
+//         if(packageType==="Courses"){
+//           franchiseName=null;
+//           isCourseFranchise=true;
+//           const districtData=await User.findOne({franchiseName:district})
+//          if(!districtData)return next(errorHandler(401, "No one has taken this District franchise yet!!"));
+//           districtFranchise=districtData._id;
+//           const zonalData=await User.findOne({franchiseName:zonal})
+//          if(!zonalData)return next(errorHandler(401, "No one has taken this Zonal franchise yet!!"));
+//           zonalFranchise=zonalData._id;
+//         }
+//         if(packageType==="Signals"){
+//           franchiseName=null;
+//           isSignalFranchise=true;
+//           const districtData=await User.findOne({franchiseName:district})
+//          if(!districtData)return next(errorHandler(401, "No one has taken this District franchise yet!!"));
+//           districtFranchise=districtData._id;
+//           const zonalData=await User.findOne({franchiseName:zonal})
+//          if(!zonalData)return next(errorHandler(401, "No one has taken this Zonal franchise yet!!"));
+//           zonalFranchise=zonalData._id;
+//           if(franchise==="Nifty"){
+//             nifty=true;
+//           }
+//           if(franchise==="Bank Nifty"){
+//             bankNifty=true;
+//           }
+//           if(franchise==="Crude Oil"){
+//             crudeOil=true;
+//           }
+//           if(franchise==="Nifty & Bank Nifty"){
+//             nifty=true;
+//             bankNifty=true;
+//           }
+//           if(franchise==="Bank Nifty & Crude Oil"){
+//             bankNifty=true;
+//             crudeOil=true;
+//           }
+//           if(franchise==="Nifty & Crude Oil"){
+//             crudeOil=true;
+//             nifty=true;
+//           }
+//           if(franchise==="All"){
+//             crudeOil=true;
+//             nifty=true;
+//             bankNifty=true;
+//           }
+//         }
+//       const hashedPassword = bcryptjs.hashSync(password, 10);
+//       // const hashedTxnPassword = bcryptjs.hashSync(transactionPassword, 10);
+//       const user = await User.create({
+//         sponser,
+//         sponserName:sponserData.name,
+//         name,
+//         email,
+//         phone,
+//         dateOfBirth,
+//         address,
+//         franchise,
+//         franchiseName,
+//         packageType,
+//         state,
+//         district,
+//         zonal,
+//         panchayath,
+//         tempPackageAmount,
+//         isDistrictFranchise,
+//         isZonalFranchise,
+//         isMobileFranchise,
+//         isSignalFranchise,
+//         nifty,
+//         bankNifty,
+//         crudeOil,
+//         password: hashedPassword,
+//         ownSponserId,
+//         userStatus,
+//         districtFranchise,
+//         zonalFranchise
+//       });
+//       if (user) {
+//         await sendMail(
+//           user.email,
+//           user.name,
+//           user.ownSponserId,
+//           password
+//         );
+//         if(isDistrictFranchise){
+//           const districtTakeData=await District.findOne({name:franchiseName})
+//           districtTakeData.taken=true;
+//           districtTakeData.editable=false;
+//           await districtTakeData.save();
+//         }
+//         if(isZonalFranchise){
+//           const zonalTakeData=await Zonal.findOne({name:franchiseName})
+//           zonalTakeData.taken=true;
+//           zonalTakeData.editable=false;
+//           await zonalTakeData.save();
+//         }
+//         if(isMobileFranchise){
+//           const panchayathData=await Panchayath.findOne({name:panchayath})
+//           panchayathData.editable=false;
+//           await panchayathData.save();
+//         }
+
+//         res.status(200).json({
+//           user,
+//         sts: "01",
+//           msg: "Add user Success",
+//         });
+//       } else {
+//         return next(errorHandler(400, "Registration failed. Please try again!"));
+//       }
+//     } catch (error) {
+//       console.log(error);
+//       next(error);
+//     }
+//   };
+export const addUser = async (req, res, next) => {
+  try {
+    const { name, email, phone, packageAmount, packageType, franchise, franchiseName, address, dateOfBirth, state, district, zonal, panchayath, password } = req.body;
+
+    // Determine the sponsor
+    const sponser = req.admin ? req.admin._id : (req.user ? req.user._id : null);
+    const sponserData = await (req.admin ? Admin.findById(sponser) : User.findById(sponser));
+
+    // Check if the user already exists
+    const existingUser = await User.findOne({ email });
+    const existingUserByPhone = await User.findOne({ phone });
+    if (existingUser || existingUserByPhone) {
+      return next(errorHandler(401, "User Already Exists"));
     }
-  };
+
+    // Handle franchise logic
+    let isDistrictFranchise = false;
+    let isZonalFranchise = false;
+    let isMobileFranchise = false;
+    let isSignalFranchise = false;
+    let isCourseFranchise = false;
+    let districtFranchise = null;
+    let zonalFranchise = null;
+    let nifty = false;
+    let bankNifty = false;
+    let crudeOil = false;
+
+    if (franchise === "District Franchise") {
+      const districtData = await User.findOne({ franchiseName });
+      if (districtData) {
+        return next(errorHandler(401, "This District franchise is already taken!"));
+      }
+      isDistrictFranchise = true;
+      zonal = null;
+      panchayath = null;
+    } else if (franchise === "Zonal Franchise") {
+      const zonalData = await User.findOne({ franchiseName });
+      if (zonalData) {
+        return next(errorHandler(401, "This Zonal franchise is already taken!"));
+      }
+      isZonalFranchise = true;
+      panchayath = null;
+    } else if (franchise === "Mobile Franchise") {
+      isMobileFranchise = true;
+      const districtData = await User.findOne({ franchiseName: district });
+      if (!districtData) {
+        return next(errorHandler(401, "No one has taken this District franchise yet!"));
+      }
+      districtFranchise = districtData._id;
+      const zonalData = await User.findOne({ franchiseName: zonal });
+      if (!zonalData) {
+        return next(errorHandler(401, "No one has taken this Zonal franchise yet!"));
+      }
+      zonalFranchise = zonalData._id;
+    }
+
+    // Handle package type logic
+    if (packageType === "Courses" || packageType === "Signals") {
+      franchiseName = null;
+      isCourseFranchise = packageType === "Courses";
+      isSignalFranchise = packageType === "Signals";
+      
+      const districtData = await User.findOne({ franchiseName: district });
+      if (!districtData) {
+        return next(errorHandler(401, "No one has taken this District franchise yet!"));
+      }
+      districtFranchise = districtData._id;
+      
+      const zonalData = await User.findOne({ franchiseName: zonal });
+      if (!zonalData) {
+        return next(errorHandler(401, "No one has taken this Zonal franchise yet!"));
+      }
+      zonalFranchise = zonalData._id;
+
+      if (isSignalFranchise) {
+        switch (franchise) {
+          case "Nifty":
+            nifty = true;
+            break;
+          case "Bank Nifty":
+            bankNifty = true;
+            break;
+          case "Crude Oil":
+            crudeOil = true;
+            break;
+          case "Nifty & Bank Nifty":
+            nifty = true;
+            bankNifty = true;
+            break;
+          case "Bank Nifty & Crude Oil":
+            bankNifty = true;
+            crudeOil = true;
+            break;
+          case "Nifty & Crude Oil":
+            nifty = true;
+            crudeOil = true;
+            break;
+          case "All":
+            nifty = true;
+            bankNifty = true;
+            crudeOil = true;
+            break;
+          default:
+            break;
+        }
+      }
+    }
+
+    // Hash password
+    const hashedPassword = bcryptjs.hashSync(password, 10);
+
+    // Create new user
+    const user = await User.create({
+      sponser,
+      sponserName: sponserData.name,
+      name,
+      email,
+      phone,
+      dateOfBirth,
+      address,
+      franchise,
+      franchiseName,
+      packageType,
+      state,
+      district,
+      zonal,
+      panchayath,
+      tempPackageAmount: packageAmount,
+      isDistrictFranchise,
+      isZonalFranchise,
+      isMobileFranchise,
+      isSignalFranchise,
+      nifty,
+      bankNifty,
+      crudeOil,
+      password: hashedPassword,
+      ownSponserId: generateRandomString(),
+      userStatus: "pending",
+      districtFranchise,
+      zonalFranchise
+    });
+
+    // Send confirmation email
+    await sendMail(user.email, user.name, user.ownSponserId, password);
+
+    // Update franchise status
+    if (isDistrictFranchise) {
+      const districtTakeData = await District.findOne({ name: franchiseName });
+      districtTakeData.taken = true;
+      districtTakeData.editable = false;
+      await districtTakeData.save();
+    }
+    if (isZonalFranchise) {
+      const zonalTakeData = await Zonal.findOne({ name: franchiseName });
+      zonalTakeData.taken = true;
+      zonalTakeData.editable = false;
+      await zonalTakeData.save();
+    }
+    if (isMobileFranchise) {
+      const panchayathData = await Panchayath.findOne({ name: panchayath });
+      panchayathData.editable = false;
+      await panchayathData.save();
+    }
+
+    // Respond with success message
+    res.status(200).json({
+      user,
+      sts: "01",
+      msg: "User successfully added",
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
 
 
   //user login
@@ -268,13 +485,6 @@ export const viewUserProfile = async (req, res, next) => {
     const totalLevelIncome=userData.totalLevelIncome.toFixed(2);
     const franchise = userData.franchise;
     const wallet = userData.walletAmount.toFixed(2);
-const adminData=await Admin.findOne();
-
-const countInPoolA=adminData.poolA.length;
-const countInPoolB=adminData.poolB.length;
-const countInPoolC=adminData.poolC.length;
-const countInPoolD=adminData.poolD.length;
-const countInPoolE=adminData.poolE.length;
 
     const countFirstChild = userData.childLevel1.length;
     const countSecondChild = userData.childLevel2.length;
@@ -302,12 +512,7 @@ const countInPoolE=adminData.poolE.length;
         totalLevelIncome:totalLevelIncome,
         bankDetails:userData.bankDetails,
         nomineeDetails:userData.nomineeDetails,
-        countInPoolA,
-        countInPoolB,
-        countInPoolC,
-        countInPoolD,
-        countInPoolE,
-
+        pool:userData.autoPoolStatus,
         sts: "01",
         msg: "get user profile Success",
       });
@@ -384,7 +589,6 @@ export const addReferalUser = async (req, res, next) => {
           let isMobileFranchise;
           let districtFranchise;
           let zonalFranchise;
-          console.log(district);
           const existingUser = await User.findOne({ email });
           const existingUserByPhone = await User.findOne({ phone });
           if (existingUser || existingUserByPhone) {
@@ -408,7 +612,6 @@ export const addReferalUser = async (req, res, next) => {
           } 
         const hashedPassword = bcryptjs.hashSync(password, 10);
         // const hashedTxnPassword = bcryptjs.hashSync(transactionPassword, 10);
-        console.log(franchiseName);
         const user = await User.create({
           sponser,
           sponserName,
@@ -678,7 +881,6 @@ export const walletWithdrawRequest = async (req, res, next) => {
 
      // Update user data for approval
      const dematCount = user.demateAccounts.length;
-     console.log(dematCount);
 const demateDifference=weeksDifference-dematCount;
     if(dematCount===0){
       return next(errorHandler(401, `Withdrawal is only possible after adding at least one demat account.` ));

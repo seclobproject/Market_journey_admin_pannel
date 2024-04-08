@@ -1,15 +1,20 @@
 import mongoose from "mongoose";
 
-const alertSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
 
+const signalSchema = new mongoose.Schema(
+  {
+    title: String,
+    description: String,
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const alertSchema = new mongoose.Schema({
+niftySignals:[signalSchema],
+bankNiftySignals:[signalSchema],
+crudeOilSignal:[signalSchema],
 },  {
     timestamps: true,
   });

@@ -155,7 +155,7 @@ export const walletWithdrawReportUser = async (req, res, next) => {
     const userId = req.user._id;
     try {
       // Fetch user data with populated walletWithdrawHistory
-      const userData = await User.findById(userId).populate("walletWithdrawHistory");
+      const userData = await User.findById(userId).populate("walletWithdrawHistory").sort({createdAt:1});
   
       if (!userData) {
         return next(errorHandler(401, "User login failed."));
@@ -447,13 +447,11 @@ export const userDemateAccounts = async (req, res, next) => {
                 sort: { createdAt: 1 } // Sort by createdAt in descending order
             }
         });
-        console.log(userData);
 
         
         if (userData) {
             const userStatus = userData.userStatus;
             const userDemateAccounts = userData.demateAccounts;
-            console.log(userDemateAccounts);
             const paginateduserDemateAccounts = await paginate(userDemateAccounts, page, pageSize);
             res.status(200).json({
                 demateAccounts: paginateduserDemateAccounts.results,
@@ -477,46 +475,43 @@ export const userDemateAccounts = async (req, res, next) => {
 
 // Paginated View Pools
 export const viewPoolUsers = async (req, res, next) => {
-    const userId = req.admin._id;
-    let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
-    const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
-    const pool = parseInt(req.query.pool); // Default page size to 10 if not provided
-
     try {
-        const userData = await User.findById(userId).populate({
-            path: "pool",
-            options: {
-                sort: { createdAt: 1 } // Sort by createdAt in descending order
-            }
-        });
-        console.log(userData);
+        const userId = req.admin._id;
+        const { page = 1, pageSize = 10, pool } = req.query;
+        let userData;
 
-        
-        if (userData) {
-            const userStatus = userData.userStatus;
-            const userDemateAccounts = userData.demateAccounts;
-            console.log(userDemateAccounts);
-            const paginateduserDemateAccounts = await paginate(userDemateAccounts, page, pageSize);
-            res.status(200).json({
-                demateAccounts: paginateduserDemateAccounts.results,
-                userStatus,
-                pagination: {
-                    page: paginateduserDemateAccounts.page,
-                    pageSize: paginateduserDemateAccounts.pageSize,
-                    totalPages: paginateduserDemateAccounts.totalPages,
-                    totalDocs: paginateduserDemateAccounts.totalDocs
-                },
-                sts: "01",
-                msg: "Get Demate Account report users Success",
+        if (['poolA', 'poolB', 'poolC', 'poolD', 'poolE'].includes(pool)) {
+            userData = await Admin.findById(userId).populate({
+                path: pool,
+                options: { sort: { createdAt: 1 } }
             });
-        } else {
-            return next(errorHandler(401, "User Login Failed"));
+
+            if (userData) {
+                const poolUsers = userData[pool];
+                const userStatus = userData.userStatus;
+                const paginatedPoolUsers = await paginate(poolUsers, parseInt(page), parseInt(pageSize));
+
+                return res.status(200).json({
+                    poolUsers: paginatedPoolUsers.results,
+                    userStatus,
+                    pagination: {
+                        page: paginatedPoolUsers.page,
+                        pageSize: paginatedPoolUsers.pageSize,
+                        totalPages: paginatedPoolUsers.totalPages,
+                        totalDocs: paginatedPoolUsers.totalDocs
+                    },
+                    sts: "01",
+                    msg: "Get Auto pool users report Success",
+                });
+            }
         }
+
+        return next(errorHandler(401, "User Login Failed"));
     } catch (error) {
+        console.log(error);
         next(error);
     }
 };
-
 
 
 
@@ -556,3 +551,73 @@ export const viewPoolUsers = async (req, res, next) => {
         next(error);
     }
 };
+
+
+//get autopool count and distributed amount
+
+// Function to get autopool count and distributed amount
+export const getAutoPoolCountAmount = async (req, res, next) => {
+    try {
+        // Extract user ID from request
+        const userId = req.user._id;
+
+        // Fetch user data
+        const userData = await User.findById(userId);
+        if (!userData) {
+            throw errorHandler(401, "User Login Failed");
+        }
+
+        // Fetch admin data
+        const admin = await Admin.findOne();
+        if (!admin) {
+            throw errorHandler(401, "Autopool data can't be fetched");
+        }
+
+        // Extract auto pool distribution history
+        const { autoPoolDistributionHistory } = admin;
+
+        // Ensure auto pool distribution history is available
+        if (!autoPoolDistributionHistory || !autoPoolDistributionHistory.length) {
+            throw errorHandler(404, "Auto pool distribution history not found");
+        }
+
+        // Get the latest distribution entry
+        const latestDistribution = autoPoolDistributionHistory[autoPoolDistributionHistory.length - 1];
+
+        // Extract required data from the latest distribution entry
+        const {
+            distributedAmount,
+            amountpoolA,
+            amountpoolB,
+            amountpoolC,
+            amountpoolD,
+            amountpoolE,
+            countInPoolA,
+            countInPoolB,
+            countInPoolC,
+            countInPoolD,
+            countInPoolE
+        } = latestDistribution;
+
+        // Prepare pool data
+        const pool = [
+            { amount: amountpoolA, count: countInPoolA },
+            { amount: amountpoolB, count: countInPoolB },
+            { amount: amountpoolC, count: countInPoolC },
+            { amount: amountpoolD, count: countInPoolD },
+            { amount: amountpoolE, count: countInPoolE }
+        ];
+
+        // Send response
+        res.status(200).json({
+            pool,
+            distributedAmount,
+            sts: "01",
+            msg: "Get Autopool amounts and AutoPool Counts Success",
+        });
+    } catch (error) {
+        // Pass error to error handling middleware
+        next(error);
+    }
+};
+

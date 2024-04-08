@@ -54,25 +54,26 @@ export const addPackage = async (req, res, next) => {
           return next(errorHandler(401, "Admin not found"));
       }
 
-      const { franchiseName, packageAmount, packageName } = req.body;
-
-      if (franchiseName !== "Mobile Franchise") {
+      const { franchiseName, packageAmount, packageName,renewalAmount } = req.body;
+console.log( franchiseName, packageAmount, packageName,renewalAmount );
+      if (franchiseName !== "Courses"&&franchiseName !=="Signals") {
           const packageData = await Package.findOne({ franchiseName: franchiseName });
           if (packageData) {
-              return next(errorHandler(401, "This Package already exists"));
+              return next(errorHandler(401, "Tttthis Package already exists"));
           }
       }
       const packageDetails=await Package.findOne({packageName:packageName})
       if (packageDetails) {
         return next(errorHandler(401, "This Package already exists"));
     }
-
-      const newPackageName = franchiseName !== "Mobile Franchise" ? franchiseName : packageName;
-
+    const validFranchiseNames = ["Mobile Franchise", "District Franchise", "Zonal Franchise"];
+    const newPackageName = validFranchiseNames.includes(franchiseName) ? franchiseName : packageName;
+    
       const newPackage = new Package({
           franchiseName,
           packageName: newPackageName,
-          packageAmount
+          packageAmount,
+          renewalAmount
       });
 
       const addPackage = await newPackage.save();
@@ -88,6 +89,7 @@ export const addPackage = async (req, res, next) => {
       }
 
   } catch (error) {
+    console.log(error);
       return next(error);
   }
 }

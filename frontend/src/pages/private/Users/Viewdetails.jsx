@@ -559,7 +559,7 @@ function Viewdetails() {
                                     </span>
                                   </h6>
                                 </li>
-
+                                
                                 <li className="d-flex align-items-center gap-3 mb-4">
                                   <i className="fas fa-user text-dark fs-6" />
                                   <h6 className="fs-4 fw-semibold mb-0">
@@ -568,6 +568,28 @@ function Viewdetails() {
                                       style={{ color: "rgb(247, 174, 21)" }}
                                     >
                                       {details?.sponserName || "--"}
+                                    </span>
+                                  </h6>
+                                </li>
+                                <li className="d-flex align-items-center gap-3 mb-4">
+                                  <i className="fas fa-user text-dark fs-6" />
+                                  <h6 className="fs-4 fw-semibold mb-0">
+                                  District :{" "}
+                                    <span
+                                      style={{ color: "rgb(247, 174, 21)" }}
+                                    >
+                                      {details?.district || "--"}
+                                    </span>
+                                  </h6>
+                                </li>
+                                <li className="d-flex align-items-center gap-3 mb-4">
+                                  <i className="fas fa-user text-dark fs-6" />
+                                  <h6 className="fs-4 fw-semibold mb-0">
+                                  Zonal :{" "}
+                                    <span
+                                      style={{ color: "rgb(247, 174, 21)" }}
+                                    >
+                                      {details?.Zonal || "--"}
                                     </span>
                                   </h6>
                                 </li>

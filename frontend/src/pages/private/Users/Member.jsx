@@ -467,10 +467,10 @@ useEffect(()=>{
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">View Details</h6>
                       </th>
-                      <th>
+                      {/* <th>
                         <h6 className="fs-4 fw-semibold mb-0">Add bonus</h6>
                       </th>
-                     
+                      */}
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">View Tree</h6>
                       </th>
@@ -531,7 +531,7 @@ useEffect(()=>{
                                 }
                               ></i>
                             </td>
-                            <td>
+                            {/* <td>
                               {" "}
                               <button
                                 className="btn btn-custom"
@@ -543,7 +543,7 @@ useEffect(()=>{
                               >
                                 <i className="fas fa-plus"></i> Add Bonus
                               </button>
-                            </td>
+                            </td> */}
                           
                             <td>
                               <button className="btn btn-custom "

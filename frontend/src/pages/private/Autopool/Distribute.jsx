@@ -98,7 +98,7 @@ function Distribute() {
       (parseInt(poolPercentage?.autoPoolPercentageC) || 0) +
       (parseInt(poolPercentage?.autoPoolPercentageD) || 0) +
       (parseInt(poolPercentage?.autoPoolPercentageE) || 0);
-    setTotalPercentage(totalValues);
+    // setTotalPercentage(totalValues);
   };
 
 

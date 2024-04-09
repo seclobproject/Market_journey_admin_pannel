@@ -7,24 +7,31 @@ import DeleteConfirmation from "../../../Components/DeleteConfirmation";
 import { Form } from "react-bootstrap";
 import Select from "react-select";
 import {
+  deletedistrictPageUrl,
   districtPageUrl,
   districtlistPageUrl,
+  editdistrictUrl,
   statelistPageUrl,
 } from "../../../utils/Constants";
 import { ApiCall } from "../../../Services/Api";
 import Loader from "../../../Components/Loader";
 import { Show_Toast } from "../../../utils/Toastify";
 function District() {
-  const navigate = useNavigate();
+  const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
+  const [districtModal, setDistrictModal] = useState({ show: false, id: null });
+  const [districtEditModal, setDistrictEditModal] = useState({
+    show: false,
+    id: null,
+  });
   const [validated, setValidated] = useState(false);
-  const [formData, setFormData] = useState({});
   const { Check_Validation } = useContext(ContextData);
   const [addDistrict, setAddDistrict] = useState({});
-  const [districtModal, setDistrictModal] = useState({ show: false, id: null });
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedState, setSelectedState] = useState(null);
+
+  //get district list
   const getDistrict = async () => {
     try {
       setIsLoading(true);
@@ -43,15 +50,41 @@ function District() {
       console.error("Error fetching state list:", error);
     }
   };
+
+  //add district
   const addDisrtictFun = async () => {
     try {
-      const response = await ApiCall("post", districtPageUrl, addDistrict);
-      if (response.status === 200) {
-        setDistrictModal(false);
-        setValidated(false);
-        setAddDistrict("");
-        getDistrict();
-        Show_Toast("District added successfully", true);
+      if (addDistrict.id) {
+        const updateResponse = await ApiCall(
+          "POST",
+          `${editdistrictUrl}/${addDistrict.id}`,
+          addDistrict
+        );
+        if (updateResponse.status === 200) {
+          setDistrictEditModal(false);
+          setValidated(false);
+          getDistrict();
+          Show_Toast("District updated successfully", true);
+        } else {
+          Show_Toast("District Update Failed", false);
+        }
+      } else {
+        const createResponse = await ApiCall(
+          "POST",
+          districtPageUrl,
+          addDistrict
+        );
+        if (createResponse.status === 200) {
+          setDistrictModal(false);
+          setValidated(false);
+          setAddDistrict("");
+          getDistrict();
+
+          Show_Toast("District added successfully", true);
+        } else {
+          console.log(error, "error");
+          Show_Toast(error, false);
+        }
       }
     } catch (error) {
       Show_Toast(error, false);
@@ -72,21 +105,31 @@ function District() {
       console.error("Error fetching state list:", error);
     }
   };
+
+  //----------delete Disrict----------
+  const deleteDistrict = async () => {
+    try {
+      const response = await ApiCall(
+        "post",
+        `${deletedistrictPageUrl}/${addDistrict.id}`
+      );
+      if (response?.status === 200) {
+        Show_Toast(response?.data?.msg, true);
+        setDeleteModal(false);
+        getDistrict();
+      } else {
+        Show_Toast("Failed to delete ", false);
+      }
+    } catch (error) {
+      console.error("Error deleting :", error);
+      Show_Toast("Failed to delete. Please try again.", false);
+    }
+  };
   useEffect(() => {
-    getStateList();
+    // getStateList();
     getDistrict();
   }, []);
-  const editDistrict = (district) => {
-    setDistrictModal({ show: true, id: null });
-    setAddDistrict(district);
-    const selectedState = stateList.find(
-      (state) => state.id === district.stateId
-    );
-    setSelectedState({
-      value: selectedState.id,
-      label: selectedState.stateName,
-    });
-  };
+
   return (
     <>
       <SlideMotion>
@@ -103,7 +146,11 @@ function District() {
                 className="btn btn-custom ms-3 float-end"
                 onClick={() => {
                   setDistrictModal({ show: true, id: null });
+                  getStateList();
+
                   setValidated(false);
+                  setDistrictEditModal("");
+                  setAddDistrict("");
                 }}
               >
                 Add
@@ -130,6 +177,9 @@ function District() {
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">District Name</h6>
                       </th>
+                      <th>
+                        <h6 className="fs-4 fw-semibold mb-0">Actions</h6>
+                      </th>
                       <th />
                     </tr>
                   </thead>
@@ -145,19 +195,25 @@ function District() {
                                 "--"}
                             </td>
                             <td>
-                              {(districts?.name &&
-                                districts.name.toUpperCase()) ||
+                              {(districts?.districtName &&
+                                districts.districtName.toUpperCase()) ||
                                 "--"}
                             </td>
-                            {/* <td>
+                            <td>
                               {districts?.isEditable === true ? (
                                 <a
                                   className="dropdown-item d-flex align-items-center gap-3"
-                                  onClick={() => editDistrict(districts)}
+                                  onClick={() => {
+                                    setDistrictEditModal({
+                                      show: true,
+                                      id: null,
+                                    });
+                                    setAddDistrict(districts);
+                                  }}
                                 >
                                   <i
                                     className="fs-4 fas fa-pencil-alt"
-                                    style={{ color: "red" }}
+                                    style={{ color: "red" ,cursor:'pointer'}}
                                   ></i>
                                 </a>
                               ) : (
@@ -165,17 +221,46 @@ function District() {
                                   className="dropdown-item d-flex align-items-center gap-3"
                                   onClick={() =>
                                     Show_Toast(
-                                      "District in already taken so not able to edit"
+                                      "District is already taken so not able to edit"
                                     )
                                   }
                                 >
                                   <i
                                     className="fs-4 fas fa-pencil-alt"
-                                    style={{ color: "grey" }}
+                                    style={{ color: "grey",cursor:'pointer' }}
                                   ></i>
                                 </button>
                               )}
-                            </td> */}
+                              {districts?.isEditable === true ? (
+                                <a
+                                  className="dropdown-item d-flex align-items-center gap-3 mt-2"
+                                  onClick={() => {
+                                    setDeleteModal({ show: true, id: null });
+                                    setAddDistrict(districts);
+                                  }}
+                                >
+                                  <i
+                                    className="fs-4 fas fa-trash-alt"
+                                    style={{ color: "red" ,cursor:'pointer'}}
+                                  ></i>
+                                </a>
+                              ) : (
+                                <button
+                                  className="dropdown-item d-flex align-items-center gap-3 mt-2"
+                                  // disabled
+                                  onClick={() =>
+                                    Show_Toast(
+                                      "District is already taken so not able to delete"
+                                    )
+                                  }
+                                >
+                                  <i
+                                    className="fs-4 fas fa-trash-alt"
+                                    style={{ color: "grey",cursor:'pointer' }}
+                                  ></i>
+                                </button>
+                              )}
+                            </td>
                           </tr>
                         ))}
                       </>
@@ -225,8 +310,13 @@ function District() {
                   value: state?.id,
                   label: state?.stateName,
                 }))}
-                value={selectedState} // Update this line
-                onChange={(selectedOption) => setSelectedState(selectedOption)}
+                value={selectedState?.stateName}
+                onChange={(selectedOption) =>
+                  setAddDistrict({
+                    ...addDistrict,
+                    stateName: selectedOption?.label,
+                  })
+                }
                 placeholder="Select a state"
                 isSearchable={true}
               />
@@ -243,11 +333,11 @@ function District() {
                 className="form-control form-control-lg "
                 rows="4"
                 placeholder="Enter a district name"
-                value={addDistrict?.name || ""}
+                value={addDistrict?.districtName || ""}
                 onChange={(e) =>
                   setAddDistrict({
                     ...addDistrict,
-                    name: e.target.value,
+                    districtName: e.target.value,
                   })
                 }
               ></input>
@@ -267,8 +357,119 @@ function District() {
               setDistrictModal({ show: false, id: null });
             }}
           >
-            cancel
+            Cancel
           </button>
+        </ModalComponent>
+
+        {/* edit  modal */}
+        <ModalComponent
+          show={districtEditModal.show}
+          onHide={() => {
+            setDistrictEditModal({ show: false, id: null });
+          }}
+          title={<h5 style={{ color: "#F7AE15", margin: 0 }}>Edit District</h5>}
+          centered
+          width={"500px"}
+        >
+          <Form
+            noValidate
+            validated={validated}
+            onSubmit={(e) => Check_Validation(e, addDisrtictFun, setValidated)}
+          >
+         
+            <div className="mb-4">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                District Name
+              </label>
+              <input
+                required
+                className="form-control form-control-lg "
+                rows="4"
+                placeholder="Enter a district name"
+                value={addDistrict?.districtName || ""}
+                onChange={(e) =>
+                  setAddDistrict({
+                    ...addDistrict,
+                    districtName: e.target.value,
+                  })
+                }
+              ></input>
+              <Form.Control.Feedback type="invalid">
+                Please provide a district Name.
+              </Form.Control.Feedback>
+            </div>
+            <div className="col-12 mt-4">
+              <button type="submit" className="btn btn-custom float-end ms-1">
+                {addDistrict?.id ? "Update" : "Save"}
+              </button>
+            </div>
+          </Form>
+          <button
+            className="btn btn-cancel float-end me-1"
+            onClick={() => {
+              setDistrictEditModal({ show: false, id: null });
+            }}
+          >
+            Cancel
+          </button>
+        </ModalComponent>
+
+        {/* delete modal */}
+
+        <ModalComponent
+          show={deleteModal.show}
+          onHide={() => {
+            setDeleteModal({ show: false, id: null });
+          }}
+          centered
+          width={"500px"}
+        >
+          <div className="modal-body">
+            <div className="row mb-4">
+              <div className="col d-flex justify-content-center">
+                <i
+                  style={{ fontSize: "50px", color: "#fe9423" }}
+                  className="fa fa-exclamation-triangle "
+                  aria-hidden="true"
+                ></i>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col d-flex justify-content-center ">
+                <h5 className="">
+                  Are you sure you want to reject this State{""} ?
+                </h5>
+              </div>
+            </div>
+          </div>
+
+          <div className="modal-footer">
+            <div className="col gap-3 d-flex justify-content-center">
+              <button
+                onClick={() => {
+                  setDeleteModal({ show: false, id: null });
+                }}
+                type="button"
+                className="btn btn-cancel"
+                data-bs-dismiss="modal"
+              >
+                No, keep it
+              </button>
+              <button
+                type="button"
+                className="btn btn-custom text-white"
+                onClick={() => {
+                  deleteDistrict();
+                }}
+              >
+                <i
+                  className="fs-4 fas fa-trash-alt me-2"
+                  style={{ color: "white" }}
+                />{" "}
+                Yes, Delete it
+              </button>
+            </div>
+          </div>
         </ModalComponent>
       </SlideMotion>
     </>

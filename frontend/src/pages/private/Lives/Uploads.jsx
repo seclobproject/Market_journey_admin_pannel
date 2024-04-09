@@ -5,7 +5,7 @@ import { ContextData } from "../../../Services/Context";
 import { SlideMotion } from "../../../libs/FramerMotion";
 import ModalComponent from "../../../Components/ModalComponet";
 import { Form } from "react-bootstrap";
-import { set } from "mongoose";
+import { Image } from "antd";
 import {
   deleteuploadImageUrl,
   uploadimageUrl,
@@ -16,7 +16,6 @@ import { ApiCall } from "../../../Services/Api";
 function Uploads() {
   const [imageModal, setImageModal] = useState({ show: false, id: null });
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
-
   const [isLoading, setIsLoading] = useState(false);
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
@@ -24,8 +23,7 @@ function Uploads() {
   const [description, setDescription] = useState("");
   const [viewImage, setViewImage] = useState({});
   const [ImageList, setImageList] = useState({});
-  const [errorMessage, setErrorMessage] = useState('');
-
+  const [errorMessage, setErrorMessage] = useState("");
   const [filename, setFileName] = useState({});
 
   //-----------list state--------
@@ -83,7 +81,7 @@ function Uploads() {
   //-------Image upload----------
   const addImageFun = async (e) => {
     if (!filename?.name) {
-      setErrorMessage("Please select an Image")
+      setErrorMessage("Please select an Image");
     }
     try {
       const formdata = new FormData();
@@ -141,7 +139,7 @@ function Uploads() {
     <>
       <SlideMotion>
         <div className="row">
-          <div className="col-md-8 mb-4">
+          <div className="col-md-12 mb-4">
             <div className="card w-100 position-relative overflow-hidden">
               <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
                 <h5
@@ -168,7 +166,6 @@ function Uploads() {
                 </div>
               </div>
               {isLoading ? (
-                /* Loader component or other loading indicator */
                 <Loader />
               ) : (
                 <div className="card-body p-2">
@@ -200,20 +197,29 @@ function Uploads() {
                             {ImageList.map((image, index) => (
                               <tr key={index}>
                                 <td>{index + 1}</td>
-                                <td>
-                                  <img
-                                    alt="images"
-                                    src={`                                  http://192.168.29.152:6003/uploads/${image?.homeImage}
-                                  `}
-                                    style={{
-                                      width: "100px",
-                                      height: "100px",
-                                      objectFit: "cover",
-                                      borderRadius: "5px",
-                                    }}
+                                <td
+                                  style={{
+                                    width: "200px",
+                                    height: "100px",
+                                    objectFit: "cover",
+                                    borderRadius: "5px",
+                                  }}
+                                >
+                                  <Image
+                                    width={200}
+                                    src={`http://192.168.29.152:6003/uploads/${image?.homeImage}`}
                                   />
                                 </td>
-                                <td>{image?.description}</td>
+                                <td
+                                  style={{
+                                    width: "300px",
+                                    height: "150px",
+                                    overflow: "hidden",
+                                    whiteSpace: "pre-wrap",
+                                  }}
+                                >
+                                  {image?.description}
+                                </td>
                                 <td>
                                   {" "}
                                   <a
@@ -225,7 +231,10 @@ function Uploads() {
                                   >
                                     <i
                                       className="fs-4 fas fa-trash-alt"
-                                      style={{ color: "red" }}
+                                      style={{
+                                        color: "red",
+                                        cursor: "pointer",
+                                      }}
                                     />
                                   </a>
                                 </td>{" "}
@@ -338,8 +347,11 @@ function Uploads() {
                   </>
                 ) : (
                   <span>
-                  {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}                  
-                  </span>                )}
+                    {errorMessage && (
+                      <div style={{ color: "red" }}>{errorMessage}</div>
+                    )}
+                  </span>
+                )}
               </span>
             </p>
           </div>
@@ -356,7 +368,7 @@ function Uploads() {
             setImageModal({ show: false, id: null });
           }}
         >
-          cancel
+          Cancel
         </button>
       </ModalComponent>
 
@@ -383,7 +395,7 @@ function Uploads() {
           <div className="row">
             <div className="col d-flex justify-content-center ">
               <h5 className="">
-                Are you sure you want to reject this image{""} ?
+                Are you sure you want to delete this image{""} ?
               </h5>
             </div>
           </div>

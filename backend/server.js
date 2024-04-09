@@ -17,7 +17,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Serving static files
-app.use("/uploads", express.static("/var/www/seclob/marketjourney/uploads"));
+// app.use("/uploads", express.static("/var/www/seclob/marketjourney/uploads"));
+app.use("/uploads", express.static("uploads"));
 
 // Routes
 app.use("/api/user", userRouter);
@@ -34,16 +35,16 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Production setup
-if (NODE_ENV === "production") {
-    // Serve frontend files
-    app.use(express.static("frontend/dist"));
+// // Production setup
+// if (NODE_ENV === "production") {
+//     // Serve frontend files
+//     app.use(express.static("frontend/dist"));
 
-    // Handle React routing, return all requests to React app
-    app.get("*", (req, res) => {
-        res.sendFile("index.html", { root: "./frontend/dist" });
-    });
-}
+//     // Handle React routing, return all requests to React app
+//     app.get("*", (req, res) => {
+//         res.sendFile("index.html", { root: "./frontend/dist" });
+//     });
+// }
 
 // Starting the server
 const PORT = process.env.PORT || 6003;

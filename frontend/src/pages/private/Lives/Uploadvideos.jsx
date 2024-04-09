@@ -12,11 +12,11 @@ import {
   viewvideouploadUrl,
 } from "../../../utils/Constants";
 import Loader from "../../../Components/Loader";
+import { Image } from "antd";
 
 function Uploadvideos() {
   const [videoModal, setVideoModal] = useState({ show: false, id: null });
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
-
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
   const [addVideo, setAddVideo] = useState({});
@@ -25,8 +25,7 @@ function Uploadvideos() {
   const [viewImage, setViewImage] = useState({});
   const [details, setDetails] = useState({});
   const [videoList, setVideoList] = useState({});
-  const [errorMessage, setErrorMessage] = useState('');
-  
+  const [errorMessage, setErrorMessage] = useState("");
 
   //-----------list  video--------
   const getVideoList = async () => {
@@ -82,7 +81,7 @@ function Uploadvideos() {
   const addVideoFun = async (e) => {
     try {
       if (!filename?.name) {
-        setErrorMessage("Please select an Video Thumbnail")
+        setErrorMessage("Please select an Video Thumbnail");
       }
       if (addVideo?._id) {
         const formData = new FormData();
@@ -193,7 +192,7 @@ function Uploadvideos() {
                     setViewImage("");
                     setDetails("");
                     setAddVideo("");
-                    setErrorMessage("")
+                    setErrorMessage("");
                   }}
                 >
                   Add
@@ -231,73 +230,78 @@ function Uploadvideos() {
                     <tbody>
                       {videoList?.length ? (
                         <>
-                          {videoList.map(
-                            (video, index) => (
-                              (
-                                <tr key={index}>
-                                  <td>{index + 1}</td>
-                                  <td>
-                                    <img
-                                      alt="images"
-                                      src={`                                  http://192.168.29.152:8000/uploads/${video?.videoThambnail}
-                                  `}
-                                      style={{
-                                        width: "100px",
-                                        height: "100px",
-                                        objectFit: "cover",
-                                        borderRadius: "5px",
-                                      }}
-                                    />
-                                  </td>
-                                  <td>{video?.videoTitle || "--"}</td>
-                                  <td>
-                                    {video?.videoLink ? (
-                                      <a
-                                        href={video.videoLink}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                      >
-                                        {video.videoLink}
-                                      </a>
-                                    ) : (
-                                      "--"
-                                    )}
-                                  </td>
-                                  <td>
-                                    {" "}
-                                    <a
-                                      className="dropdown-item d-flex align-items-center gap-3"
-                                      onClick={() => {
-                                        setDeleteModal({
-                                          show: true,
-                                          id: null,
-                                        });
-                                        setAddVideo(video);
-                                      }}
-                                    >
-                                      <i
-                                        className="fs-4 fas fa-trash-alt"
-                                        style={{ color: "red" }}
-                                      />
-                                    </a>
-                                    <a
-                                      className="dropdown-item d-flex align-items-center gap-3 mt-2"
-                                      onClick={() => {
-                                        setVideoModal({ show: true, id: null });
-                                        setAddVideo(video);
-                                        setDetails(video);
-                                      }}
-                                    >
-                                      <i
-                                        className="fs-4 fas fa-pencil-alt"
-                                        style={{ color: "red" }}
-                                      ></i>
-                                    </a>
-                                  </td>{" "}
-                                </tr>
-                              )
-                            )
-                          )}
+                          {videoList.map((video, index) => (
+                            <tr key={index}>
+                              <td>{index + 1}</td>
+                              <td
+                                style={{
+                                  width: "200px",
+                                  height: "100px",
+                                  objectFit: "cover",
+                                  borderRadius: "5px",
+                                }}
+                              >
+                                <Image
+                                  width={200}
+                                  src={`http://192.168.29.152:6003/uploads/${video?.videoThambnail}`}
+                                />
+                              </td>
+                              <td
+                                style={{
+                                  width: "300px",
+                                  height: "150px",
+                                  overflow: "hidden",
+                                  whiteSpace: "pre-wrap",
+                                }}
+                              >
+                                {video?.videoTitle || "--"}
+                              </td>
+                              <td>
+                                {video?.videoLink ? (
+                                  <a
+                                    href={video.videoLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    {video.videoLink}
+                                  </a>
+                                ) : (
+                                  "--"
+                                )}
+                              </td>
+                              <td>
+                                {" "}
+                                <a
+                                  className="dropdown-item d-flex align-items-center gap-3 mt-2"
+                                  onClick={() => {
+                                    setVideoModal({ show: true, id: null });
+                                    setAddVideo(video);
+                                    setDetails(video);
+                                  }}
+                                >
+                                  <i
+                                    className="fs-4 fas fa-pencil-alt"
+                                    style={{ color: "red", cursor: "pointer" }}
+                                  ></i>
+                                </a>
+                                <a
+                                  className="dropdown-item d-flex align-items-center gap-3 mt-2"
+                                  onClick={() => {
+                                    setDeleteModal({
+                                      show: true,
+                                      id: null,
+                                    });
+                                    setAddVideo(video);
+                                  }}
+                                >
+                                  <i
+                                    className="fs-4 fas fa-trash-alt"
+                                    style={{ color: "red", cursor: "pointer" }}
+                                  />
+                                </a>
+                              </td>{" "}
+                            </tr>
+                          ))}
                         </>
                       ) : (
                         <tr>
@@ -420,7 +424,7 @@ function Uploadvideos() {
               <span>
                 {filename?.File ? (
                   <>
-                    {filename?.File||"Please select Image"}
+                    {filename?.File || "Please select Image"}
                     <span
                       style={{
                         marginLeft: "5px",
@@ -435,8 +439,10 @@ function Uploadvideos() {
                   </>
                 ) : (
                   <span>
-  {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}                  
-  </span>
+                    {errorMessage && (
+                      <div style={{ color: "red" }}>{errorMessage}</div>
+                    )}
+                  </span>
                 )}
               </span>
             </p>
@@ -454,7 +460,7 @@ function Uploadvideos() {
             setVideoModal({ show: false, id: null });
           }}
         >
-          cancel
+          Cancel
         </button>
       </ModalComponent>
 
@@ -481,7 +487,7 @@ function Uploadvideos() {
           <div className="row">
             <div className="col d-flex justify-content-center ">
               <h5 className="">
-                Are you sure you want to reject this image{""} ?
+                Are you sure you want to delete this image{""} ?
               </h5>
             </div>
           </div>

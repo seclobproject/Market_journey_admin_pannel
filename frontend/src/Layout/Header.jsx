@@ -1,10 +1,13 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Button } from "react-bootstrap";
 import { ContextData } from "../Services/Context";
 import { Link, useNavigate } from "react-router-dom";
+import ModalComponent from "../Components/ModalComponet";
 
 function Header() {
   const navigate = useNavigate();
+  const [logOutModal, setLogOutModal] = useState({ show: false});
+
   const { setHamburgClicked, hamburgClicked, logout, user } =
     useContext(ContextData);
 
@@ -65,7 +68,12 @@ function Header() {
             <p className="mb-0 fs-3">Change Password</p>
           </Link>
          
-          <a href={undefined}  onClick={handleLogout} className="btn btn-cancel mx-3 mt-2 d-block">Logout</a>
+          <a href={undefined}    onClick={() => {
+                  setLogOutModal({ show: true});
+                  
+
+                 
+                }} className="btn btn-cancel mx-3 mt-2 d-block">Logout</a>
         </div>
       </div>
     </li>
@@ -79,6 +87,56 @@ function Header() {
     </div>
   </nav>
 </header>
+
+<ModalComponent
+          show={logOutModal.show}
+          onHide={() => {
+            setLogOutModal({ show: false, id: null });
+          }}
+          centered
+          width={"500px"}
+        >
+          <div className="modal-body">
+            <div className="row mb-4">
+              <div className="col d-flex justify-content-center">
+              <i className="fa fa-door-open" style={{ fontSize: '50px', color: '#fe9423' }}></i>
+
+              </div>
+            </div>
+            <div className="row">
+              <div className="col d-flex justify-content-center ">
+                <h5 className="">
+                  Are you sure you want to log out{""} ?
+                </h5>
+              </div>
+            </div>
+          </div>
+
+          <div className="modal-footer">
+            <div className="col gap-3 d-flex justify-content-center">
+              <button
+                onClick={() => {
+                  setLogOutModal({ show: false, id: null });
+                }}
+                type="button"
+                className="btn btn-cancel"
+                data-bs-dismiss="modal"
+              >
+                No, keep it
+              </button>
+              <button
+                type="button"
+                className="btn btn-custom text-white"
+                onClick={() => {
+                  handleLogout();
+                }}
+              >
+             
+                Yes, log out
+              </button>
+            </div>
+          </div>
+        </ModalComponent>
     </>
   );
 }

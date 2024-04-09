@@ -172,7 +172,7 @@ function Alert() {
                               >
                                 <i
                                   className="fs-4 fas fa-trash-alt"
-                                  style={{ color: "red" }}
+                                  style={{ color: "red",cursor: "pointer" }}
                                 />
                               </a>
                               <a
@@ -184,7 +184,7 @@ function Alert() {
                               >
                                 <i
                                   className="fs-4 fas fa-pencil-alt"
-                                  style={{ color: "red" }}
+                                  style={{ color: "red",cursor: "pointer" }}
                                 ></i>{" "}
                               </a>
                             </td>
@@ -204,15 +204,7 @@ function Alert() {
               </div>
             </div>
           )}
-          <div className="me-2">
-            {/* -------------------------pagination--------------------- */}
-            {/* <Pagination
-              pagination={pagination}
-              params={params}
-              setParams={setParams}
-            /> */}
-            {/* -------------------------pagination--------------------- */}
-          </div>
+       
         </div>
       </SlideMotion>
       <ModalComponent
@@ -229,6 +221,7 @@ function Alert() {
           validated={validated}
           onSubmit={(e) => Check_Validation(e, addAlertsFun, setValidated)}
         >
+          
           <div className="mb-4">
             <label htmlFor="exampleInputEmail1" className="form-label">
               Alert Content
@@ -261,10 +254,10 @@ function Alert() {
         <button
           className="btn btn-cancel float-end me-1"
           onClick={() => {
-            setShowModal({ show: false, id: null });
+            setAlertModal({ show: false, id: null });
           }}
         >
-          cancel
+          Cancel
         </button>
       </ModalComponent>
 

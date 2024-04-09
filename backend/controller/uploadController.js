@@ -3,6 +3,8 @@ import { errorHandler } from "../middleware/errorHandler.js";
 import Admin from "../models/adminModel.js";
 import Alert from "../models/alertModel.js";
 import Award from "../models/awardModel.js";
+import Demate from "../models/demateModel.js";
+import District from "../models/districtModel.js";
 import HomeImage from "../models/homeImageModel.js";
 import homeVideo from "../models/homeVideoModel.js";
 import LiveNews from "../models/liveNewsModel.js";
@@ -80,7 +82,6 @@ export const uploadHomeImages=async(req,res,next)=>{
 export const deleteSingleImage = async (req, res, next) => {
     try {
       const { id } = req.params;
-      console.log(id);
       const adminId = req.admin._id;
       const admin = await Admin.findById(adminId);
   
@@ -409,7 +410,7 @@ try {
 export const addNews = async (req, res, next) => {
   try {
       
-      const {news } = req.body;
+      const {news,title } = req.body;
         const adminId = req.admin._id;
         const admin = await Admin.findById(adminId);
 
@@ -418,7 +419,8 @@ export const addNews = async (req, res, next) => {
       }
 
       const newNews = await LiveNews.create({
-        news
+        news,
+        title
       });
 
 if(newNews){
@@ -442,7 +444,7 @@ if(newNews){
     try {
       const adminId = req.admin._id;
       const { id } = req.params;
-      const { news} = req.body;
+      const { news,title} = req.body;
 
       // Find the admin
       const admin = await Admin.findById(adminId);
@@ -458,6 +460,7 @@ if(newNews){
 
       // Update the Alert data with the new values if they are provided
       newsData.news = news || newsData.news;
+      newsData.title = title || newsData.title;
 
       // Save the updated SEO data
       const updatedNews = await newsData.save();
@@ -529,36 +532,85 @@ if(newNews){
 
 //--------------------------------------------------Alert---------------------------------------------------------------------
 
-// add Alert
-export const addAlert = async (req, res, next) => {
-  try {
+// // add Alert
+// export const addAlert = async (req, res, next) => {
+//   try {
       
-      const { title, description } = req.body;
-        const adminId = req.admin._id;
-        const admin = await Admin.findById(adminId);
+//       const { title, description } = req.body;
+//         const adminId = req.admin._id;
+//         const admin = await Admin.findById(adminId);
 
-      if (!admin) {
-        return next(errorHandler(401, "Admin not found"));
-      }
+//       if (!admin) {
+//         return next(errorHandler(401, "Admin not found"));
+//       }
 
-      const alert = await Alert.create({
-        title,
-        description
-      });
+//       const alert = await Alert.create({
+//         title,
+//         description
+//       });
 
-if(alert){
-  return res.status(201).json({
-    alert,
-    sts: "01",
-    msg: "Alert Added Successfully",
-  });
-}
+// if(alert){
+//   return res.status(201).json({
+//     alert,
+//     sts: "01",
+//     msg: "Alert Added Successfully",
+//   });
+// }
       
     
-  } catch (error) {
-    next(error);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+export const addAlert = async (req, res, next) => {
+  try {
+    const { signal, title, description } = req.body;
+    const adminId = req.admin._id;
+    
+    // Find the admin
+    const admin = await Admin.findById(adminId);
+    if (!admin) {
+      return next(errorHandler(401, "Admin not found"));
+    }
+    
+    // Create a new alert document
+    const alert = new Alert();
+
+    // Check the signal type and push the details into the appropriate array
+    switch (signal) {
+      case "nifty":
+        alert.niftySignals.push({ title, description });
+        break;
+      case "bankNifty":
+        alert.bankNiftySignals.push({ title, description });
+        break;
+      case "crudeOil":
+        alert.crudeOilSignal.push({ title, description });
+        break;
+      default:
+        return res.status(400).json({
+          sts: "00",
+          msg: "Invalid signal type",
+        });
+    }
+
+    // Save the alert document
+    await alert.save();
+
+    return res.status(201).json({
+      alert,
+      sts: "01",
+      msg: "Alert Added Successfully",
+    });
+  } catch (err) {
+    // Handle errors
+    console.error("Error adding alert:", err);
+    return next(err);
   }
 };
+
+
 
 
   //edit alert
@@ -649,3 +701,166 @@ if(alert){
   }
 
   }
+
+
+  // import User from "../models/user"; // Import your User model
+
+// Function to fetch alerts based on user preferences
+export const getAlertsForUser = async (req, res, next) => {
+  try {
+    const userId = req.user._id; // Assuming user object is attached to the request
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    let alerts = [];
+
+    // Check user's preferences for each signal type and include alerts accordingly
+    if (user.nifty) {
+      const niftyAlerts = await Alert.find({ "niftySignals": { $exists: true, $not: { $size: 0 } } });
+      alerts = [...alerts, ...niftyAlerts];
+    }
+    if (user.bankNifty) {
+      const bankNiftyAlerts = await Alert.find({ "bankNiftySignals": { $exists: true, $not: { $size: 0 } } });
+      alerts = [...alerts, ...bankNiftyAlerts];
+    }
+    if (user.crudeOil) {
+      const crudeOilAlerts = await Alert.find({ "crudeOilSignal": { $exists: true, $not: { $size: 0 } } });
+      alerts = [...alerts, ...crudeOilAlerts];
+    }
+
+    return res.status(200).json({ alerts });
+  } catch (err) {
+    console.error("Error fetching alerts for user:", err);
+    return next(err);
+  }
+};
+
+
+
+
+
+  //----------------------------Add Bank account-------------------------
+
+
+   export const addUserBankAccount = async (req, res, next) => {
+    try {
+      const id = req.query.id||req.user._id;
+      const {holderName,accountNum,ifscCode,bankName} = req.body;
+
+      const userData = await User.findById(id);
+      if (!userData) {
+        return next(errorHandler(401, "User not found"));
+      }
+        userData.bankDetails.bankName = bankName|| userData.bankDetails.bankName;
+        userData.bankDetails.holderName = holderName|| userData.bankDetails.holderName;
+        userData.bankDetails.accountNum = accountNum|| userData.bankDetails.accountNum;
+        userData.bankDetails.ifscCode = ifscCode|| userData.bankDetails.ifscCode;
+      
+
+      const updatedUser = await userData.save();
+
+      if(updatedUser){
+        return res.status(200).json({
+          updatedUser,
+            sts: "01",
+            msg: "Bank data updated successfully",
+          });
+      }
+
+
+    } catch (error) {
+      next(error);
+    }
+  };
+
+
+
+
+   //----------------------------Add and Edit Nominee details-------------------------
+
+
+   export const addNomineeDetails = async (req, res, next) => {
+    try {
+      const id = req.query.id||req.user._id;
+      // const {id}=req.query||userId
+      const {name,phone,address,bankName,accountNum,ifscCode,aadhaarNum,pancardNum} = req.body;
+
+      const userData = await User.findById(id);
+      if (!userData) {
+        return next(errorHandler(401, "User not found"));
+      }
+        userData.nomineeDetails.bankName = bankName|| userData.nomineeDetails.bankName;
+        userData.nomineeDetails.name = name|| userData.nomineeDetails.name;
+        userData.nomineeDetails.accountNum = accountNum|| userData.nomineeDetails.accountNum;
+        userData.nomineeDetails.ifscCode = ifscCode|| userData.nomineeDetails.ifscCode;
+        userData.nomineeDetails.phone = phone|| userData.nomineeDetails.phone;
+        userData.nomineeDetails.address = address|| userData.nomineeDetails.address;
+        userData.nomineeDetails.aadhaarNum = aadhaarNum|| userData.nomineeDetails.aadhaarNum;
+        userData.nomineeDetails.pancardNum = pancardNum|| userData.nomineeDetails.pancardNum;
+      
+
+      const updatedUser = await userData.save();
+
+      if(updatedUser){
+        return res.status(200).json({
+          updatedUser,
+            sts: "01",
+            msg: "nominee data updated successfully",
+          });
+      }
+
+
+    } catch (error) {
+      next(error);
+    }
+  };
+
+
+//---------------------------------------------add and edit demate account-----------------------------------------
+
+
+export const addDemateAccount = async (req, res, next) => {
+  try {
+    const id =req.query.id||req.user._id;
+    const {name,phone,address,email,demateUserName} = req.body;
+
+    const userData = await User.findById(id);
+    let demateUser = await Demate.findById(id);
+
+    if (demateUser) {
+      // If the demate account exists, update its details
+      demateUser.name = name||demateUser.name;
+      demateUser.phone = phone|| demateUser.phone ;
+      demateUser.address = address|| demateUser.address;
+      demateUser.email = email||demateUser.email;
+      demateUser.demateUserName = demateUserName||demateUser.demateUserName;
+      demateUser = await demateUser.save();
+    } else {
+      // If the demate account doesn't exist, create a new one
+      demateUser = await Demate.create({
+        sponserName:userData.name,
+        sponser: id,
+        name,
+        phone,
+        address,
+        email,
+        demateUserName,
+        status: "pending",
+      });
+    }
+
+    if(demateUser){
+      return res.status(200).json({
+        demateUser,
+          sts: "01",
+          msg: "demate accoun data updated successfully",
+        });
+    }
+
+
+  } catch (error) {
+    next(error);
+  }
+};

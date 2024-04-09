@@ -1,17 +1,19 @@
 import express from "express";
 const adminRouter = express.Router();
-import {acceptUser, addDistrict, addPanchayath, addState, addZonal, adminLogin,  editDistrict,  editPanchayath,  editProfileByAdmin,  editState,  editZonal,  forgotPassword, getReadyToApproveUsers, rejectUser, viewAllDistricts, viewAllPagePanchayath, viewAllPageUsers, viewAllPageZonal, viewAllPanchayaths, viewAllUsers, viewAllZonals, viewNotTakenDistricts, viewNotTakenZonals, viewParamsDistricts, viewParamsPanchayaths, viewParamsZonals, viewStates, viewUserDetails} from "../controller/adminController.js";
+import {acceptUser, addDistrict, addPanchayath, addState, addZonal, adminLogin,  deleteDistrict,  deletePanchayath,  deleteState,  deleteZonal,  editDistrict,  editPanchayath,  editProfileByAdmin,  editState,  editZonal,  forgotPassword, getReadyToApproveUsers, processDematAccount, processWalletWithdrawal, rejectUser,viewAdminProfile,viewAllDistricts, viewAllPagePanchayath, viewAllPageUsers, viewAllPageZonal, viewAllPanchayaths, viewAllUsers, viewAllZonals, viewNotTakenDistricts, viewNotTakenZonals, viewParamsDistricts, viewParamsPanchayaths, viewParamsZonals, viewStates, viewUserDetails, viewWithdrawPendingPaginated} from "../controller/adminController.js";
 import { protectAdmin } from "../middleware/authMiddleware.js";
 import { addPackage, editPackage, viewPackages } from "../controller/packageController.js";
 import { addUser } from "../controller/userController.js";
 import { addAlert, addNews, deleteSingleAlert, deleteSingleAward, deleteSingleImage, deleteSingleNews, deleteSingleVideo, editAlert, editNews, updateAwardData, updateHomeVideo, uploadAwardDetails, uploadHomeImages, uploadHomeVideos, viewAlert, viewAwardDetails, viewHomeImages, viewHomeVideos, viewNews } from "../controller/uploadController.js";
+import { autoPoolHistory, getApprovedDematesPaginated, getPendingDematesPaginated, totalWalletWithdrawHistory, viewPoolUsers } from "../controller/reportController.js";
+import { addPoolPercentage, distributeAutoPoolWallet } from "../controller/incomeGereratorController.js";
 
 adminRouter.post("/admin-login", adminLogin);
 adminRouter.post("/forgot-password", forgotPassword);
 adminRouter.post("/add-state", protectAdmin,addState);
 adminRouter.post("/add-district", protectAdmin,addDistrict);
 adminRouter.post("/add-zonal", protectAdmin,addZonal);
-adminRouter.post("/add-panchayath", protectAdmin,addPanchayath);
+adminRouter.post("/add-panchayath", protectAdmin,addPanchayath);  
 adminRouter.post("/add-package", protectAdmin,addPackage);
 adminRouter.post("/edit-package/:id", protectAdmin,editPackage);
 adminRouter.post("/add-user", protectAdmin, addUser);
@@ -44,8 +46,28 @@ adminRouter.post("/edit-zonal/:id", protectAdmin,editZonal);
 adminRouter.post("/edit-panchayath/:id", protectAdmin,editPanchayath);
 
 
+adminRouter.post("/delete-district/:id", protectAdmin,deleteDistrict);
+adminRouter.post("/delete-state/:id", protectAdmin,deleteState);
+adminRouter.post("/delete-zonal/:id", protectAdmin,deleteZonal);
+adminRouter.post("/delete-panchayath/:id", protectAdmin,deletePanchayath);
+
+// approve and reject wallet withdrawal and demat account
+
+adminRouter.post("/process-wallet-withdrawal/:id", protectAdmin,processWalletWithdrawal);
+adminRouter.post("/process-demat-account/:id", protectAdmin,processDematAccount);
+
+//add and edit autopool percentage
+
+adminRouter.post("/update-pool-percentage", protectAdmin,addPoolPercentage);
 
 
+//distribute autopool amount
+
+adminRouter.post("/distribute-autowallet", protectAdmin,distributeAutoPoolWallet);
+
+
+
+adminRouter.get("/view-admin-profile", protectAdmin,viewAdminProfile);
 adminRouter.get("/view-states",viewStates);
 adminRouter.get("/view-all-districts", protectAdmin,viewAllDistricts);
 adminRouter.get("/view-all-zonals", protectAdmin,viewAllZonals);
@@ -67,10 +89,13 @@ adminRouter.get("/view-award-details", viewAwardDetails);
 adminRouter.get("/view-alert-details", viewAlert);
 adminRouter.get("/view-news-details", viewNews);
 
+//view withdraw request
 
+adminRouter.get("/view-withdraw-request", protectAdmin,viewWithdrawPendingPaginated);
+adminRouter.get("/all-withdraw-history", protectAdmin,totalWalletWithdrawHistory);
 
-
-
+adminRouter.get("/autopool-credit-history", protectAdmin,autoPoolHistory );
+adminRouter.get("/view-autopool-users", protectAdmin,viewPoolUsers );
 
 adminRouter.get(
     "/view-ready-to-approved-users",
@@ -78,8 +103,16 @@ adminRouter.get(
     getReadyToApproveUsers
   );
 
-
-
+  adminRouter.get(
+    "/view-pending-demates",
+    protectAdmin,
+    getPendingDematesPaginated
+  );
+  adminRouter.get(
+    "/view-approved-demates",
+    protectAdmin,
+    getApprovedDematesPaginated
+  );
 
 
 export default adminRouter;

@@ -17,6 +17,7 @@ import { get } from "mongoose";
 function Livenew() {
   const [newsModal, setNewsModal] = useState({ show: false, id: null });
   const [addNews, setAddNews] = useState({});
+  console.log(addNews)
   const [newsList, setNewsList] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -134,11 +135,15 @@ function Livenew() {
                         <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                       </th>
                       <th>
+                        <h6 className="fs-4 fw-semibold mb-0">title</h6>
+                      </th>
+                      <th>
                         <h6 className="fs-4 fw-semibold mb-0">News</h6>
                       </th>
 
-                      <th>Actions</th>
-
+                      <th>
+                        <h6 className="fs-4 fw-semibold mb-0">Actions</h6>
+                      </th>
                       <th />
                     </tr>
                   </thead>
@@ -148,40 +153,43 @@ function Livenew() {
                         {newsList.map((news, index) => (
                           <tr key={index}>
                             <td>{index + 1}</td>
+                            <td>{news?.title}</td>
 
-                            <td>{news?.news || "--"}</td>
-                            <td>
-                              {" "}
-                              <a
-                                className="dropdown-item d-flex align-items-center gap-3"
-                                onClick={() => {
-                                  setDeleteModal({
-                                    show: true,
-                                    id: null,
-                                  });
-                                  setAddNews(news);
-                                }}
-                              >
-                                <i
-                                  className="fs-4 fas fa-trash-alt"
-                                  style={{ color: "red" }}
-                                />
-                              </a>
-                              <a
-                                className="dropdown-item d-flex align-items-center gap-3 mt-3"
-                                onClick={() => {
-                                  setNewsModal({ show: true, id: null });
-                                  setAddNews(news);
-                                }}
-                              >
-                                <i
-                                  className="fs-4 fas fa-pencil-alt"
-                                  style={{ color: "red" }}
-                                ></i>{" "}
-                              </a>
-                            </td>
-                            <td></td>
-                          </tr>
+                            <td style={{ width: "300px", height: "150px", overflow: "hidden", whiteSpace: "pre-wrap" }}>
+  <p style={{ margin: 0 }}>{news?.news}</p>
+</td>
+
+<td>
+                                    {" "}
+                                
+                                    <a
+                                      className="dropdown-item d-flex align-items-center gap-3 mt-2"
+                                      onClick={() => {
+                                        setNewsModal({ show: true, id: null });
+                                        setAddNews(news);
+                                      }}
+                                    >
+                                      <i
+                                        className="fs-4 fas fa-pencil-alt"
+                                        style={{ color: "red" ,cursor:'pointer'}}
+                                      ></i>
+                                    </a>
+                                    <a
+                                      className="dropdown-item d-flex align-items-center gap-3 mt-2"
+                                      onClick={() => {
+                                        setDeleteModal({
+                                          show: true,
+                                          id: null,
+                                        });
+                                        setAddNews(news);
+                                      }}
+                                    >
+                                      <i
+                                        className="fs-4 fas fa-trash-alt"
+                                        style={{ color: "red",cursor:'pointer' }}
+                                      />
+                                    </a>
+                                  </td>{" "}                          </tr>
                         ))}
                       </>
                     ) : (
@@ -212,6 +220,26 @@ function Livenew() {
           validated={validated}
           onSubmit={(e) => Check_Validation(e, addnewsFun, setValidated)}
         >
+            <div className="mb-4">
+            <label htmlFor="exampleInputEmail1" className="form-label">
+              Title
+            </label>
+            <input
+              required
+              className="form-control form-control-lg "
+              placeholder="Enter a title"
+              value={addNews?.title}
+              onChange={(e) =>
+                setAddNews({
+                  ...addNews,
+                  title: e.target.value,
+                })
+              }
+            ></input>
+            <Form.Control.Feedback type="invalid">
+              Please provide a title.
+            </Form.Control.Feedback>
+          </div>
           <div className="mb-4">
             <label htmlFor="exampleInputEmail1" className="form-label">
               News{" "}
@@ -244,10 +272,10 @@ function Livenew() {
         <button
           className="btn btn-cancel float-end me-1"
           onClick={() => {
-            setShowModal({ show: false, id: null });
+          setNewsModal({ show: false, id: null });
           }}
         >
-          cancel
+          Cancel
         </button>
       </ModalComponent>
 

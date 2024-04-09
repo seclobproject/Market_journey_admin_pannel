@@ -221,7 +221,7 @@ function Package() {
           {!addPackages?._id && (
   <div className="mb-4">
     <label htmlFor="franchiseType" className="form-label">
-      Franchise Type
+      Package Type
     </label>
     <select
       required
@@ -236,19 +236,53 @@ function Package() {
       }
     >
       <option value="" disabled selected>
-        Select franchise type
+        Select package type 
       </option>
       <option value="District Franchise">District Franchise</option>
-      <option value="Zonal Franchise">Zonal Franchise</option>
+      <option value="Franchise">Zonal Franchise</option>
       <option value="Mobile Franchise">Mobile Franchise</option>
+      <option value="Algo">Algo Trade</option>
+      <option value="Trading Cafe">Trading Cafe</option>
       <option value="Courses">Courses</option>
       <option value="Signals">Signals</option>
 
 
     </select>
     <Form.Control.Feedback type="invalid">
-      Please select a type
+      Please select a package type
     </Form.Control.Feedback>
+    {addPackages?.franchiseName === "Franchise" && (
+      <div className="mt-4">
+        <label htmlFor="mobileFranchiseType" className="form-label">
+        Franchise
+        </label>
+        <select
+          required
+          id="mobileFranchiseType"
+          className="form-select form-control-lg"
+          value={addPackages?.packageName}
+          onChange={(e) =>
+            setAddPackages({
+              ...addPackages,
+              packageName: e.target.value,
+            })
+          }
+        >
+          <option value="" disabled selected>
+            Select franchise  type
+          </option>
+          <option value="District Franchise">District Franchise</option>
+
+         <option value="Zonal Franchise">Zonal Franchise</option>
+      <option value="Mobile Franchise">Mobile Franchise</option>
+        
+
+        </select>
+        <Form.Control.Feedback type="invalid">
+          Please select a mobile franchise type.
+        </Form.Control.Feedback>
+      </div>
+    )}
     {addPackages?.franchiseName === "Courses" && (
       <div className="mt-4">
         <label htmlFor="mobileFranchiseType" className="form-label">
@@ -269,10 +303,10 @@ function Package() {
           <option value="" disabled selected>
             Select course type
           </option>
-          <option value="Premium calls">Premium calls</option>
-          <option value="Diamond course">Diamond course</option>
-          <option value="Platinum course">Platinum course</option>
-          <option value="Algo course">Algo course</option>
+          <option value="Loet_0.1">Loet 0.1</option>
+          <option value="Loet_Pro">Loet Pro</option>
+          <option value="PLoet_Promax">Loet Pro Max</option>
+          {/* <option value="Algo course">Algo course</option> */}
 
         </select>
         <Form.Control.Feedback type="invalid">
@@ -296,13 +330,17 @@ function Package() {
               packageName: e.target.value,
             })
           }
+          
         >
           <option value="" disabled selected>
             Select a signal
           </option>
           <option value="Nifty">Nifty</option>
+          <option value="Nifty & Bank Nifty">Nifty & Bank Nifty</option>
           <option value="Bank Nifty">Bank Nifty</option>
-          <option value="Crude Oil">Crude Oil</option>
+          <option value="Bank Nifty & CrudeOil">Bank Nifty & Crude Oil</option>
+          <option value="Nifty & CrudeOil">Nifty & Crude Oil</option>
+          <option value="CrudeOil">Crude Oil</option>
           <option value="All">All</option>
 
         </select>
@@ -337,6 +375,9 @@ function Package() {
                 Please enter a package amount.
               </Form.Control.Feedback>
             </div>
+   
+
+
 
             <div className="col-12 mt-4">
   <button type="submit" className="btn btn-custom float-end ms-1">

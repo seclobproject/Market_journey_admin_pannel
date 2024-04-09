@@ -12,12 +12,11 @@ import {
   viewvideouploadUrl,
 } from "../../../utils/Constants";
 import Loader from "../../../Components/Loader";
-import ModalImage from "react-modal-image";
+import { Image } from "antd";
 
 function Uploadvideos() {
   const [videoModal, setVideoModal] = useState({ show: false, id: null });
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
-
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
   const [addVideo, setAddVideo] = useState({});
@@ -242,14 +241,9 @@ function Uploadvideos() {
                                   borderRadius: "5px",
                                 }}
                               >
-                                <ModalImage
-                                  small={`http://192.168.29.152:6003/uploads/${video?.videoThambnail}`}
-                                  medium={`http://192.168.29.152:6003/uploads/${video?.videoThambnail}`}
-                                  alt="Image"
-                                  mediumStyles={{
-                                    maxWidth: "50%",
-                                    maxHeight: "50%",
-                                  }}
+                                <Image
+                                  width={200}
+                                  src={`http://192.168.29.152:6003/uploads/${video?.videoThambnail}`}
                                 />
                               </td>
                               <td

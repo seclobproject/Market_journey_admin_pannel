@@ -12,7 +12,7 @@ import {
   viewAwardUrl,
 } from "../../../utils/Constants";
 import { ApiCall } from "../../../Services/Api";
-import ModalImage from "react-modal-image";
+import { Image } from "antd";
 
 function Awards() {
   const { Check_Validation } = useContext(ContextData);
@@ -25,7 +25,7 @@ function Awards() {
   const [filename, setFileName] = useState({});
   const [viewImage, setViewImage] = useState({});
   const [awardDetails, setAwardDetails] = useState([]);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleVideoChange = (e) => {
     const file = e.target.files[0];
@@ -79,7 +79,7 @@ function Awards() {
   const addAwardFun = async (e) => {
     try {
       if (!filename?.name) {
-        setErrorMessage("Please select an Image")
+        setErrorMessage("Please select an Image");
       }
       if (addDetails?._id) {
         const formData = new FormData();
@@ -181,7 +181,7 @@ function Awards() {
                   setViewImage("");
                   setAddDetails("");
                   setFileName("");
-                  setErrorMessage("")
+                  setErrorMessage("");
                 }}
               >
                 Add
@@ -220,61 +220,77 @@ function Awards() {
                   <tbody>
                     {awardDetails?.length ? (
                       <>
-                        {awardDetails.map((details, index) => (
-                          console.log(details,"de"),
-                          <tr key={index}>
-                            <td>{index + 1}</td>
+                        {awardDetails.map(
+                          (details, index) => (
+                            console.log(details, "de"),
+                            (
+                              <tr key={index}>
+                                <td>{index + 1}</td>
 
-                            <td>{details?.memberName || "--"}</td>
-                            <td style={{ width: "300px", height: "150px", overflow: "hidden", whiteSpace: "pre-wrap" }}>{details?.achivedDetails || "--"}</td>
+                                <td>{details?.memberName || "--"}</td>
+                                <td
+                                  style={{
+                                    width: "300px",
+                                    height: "150px",
+                                    overflow: "hidden",
+                                    whiteSpace: "pre-wrap",
+                                  }}
+                                >
+                                  {details?.achivedDetails || "--"}
+                                </td>
 
-                            <td   
-                                 style={{
-                                  width: "200px",
-                                  height: "100px",
-                                  objectFit: "cover",
-                                  borderRadius: "5px",
-                                }} >
-<ModalImage
-  small={`http://192.168.29.152:8000/uploads/${details?.memberImage}`}
-  medium={`http://192.168.29.152:8000/uploads/${details?.memberImage}`}
-  alt="Image"
-/>
+                                <td
+                                  style={{
+                                    width: "200px",
+                                    height: "100px",
+                                    objectFit: "cover",
+                                    borderRadius: "5px",
+                                  }}
+                                >
+                                  <Image
+                                    width={200}
+                                    src={`http://192.168.29.152:6003/uploads/${details?.memberImage}`}
+                                  />
+                                </td>
 
-
-</td>
-
-                            <td>
-                            <a
-                                className="dropdown-item d-flex align-items-center gap-3"
-                                onClick={() => {
-                                  setShowModal({ show: true, id: null });
-                                  setAddDetails(details);
-                                  setAddImage(details);
-                                }}
-                              >
-                                <i
-                                  className="fs-4 fas fa-pencil-alt mt-2"
-                                  style={{ color: "red",cursor: "pointer"}}
-                                ></i>
-                              </a>
-                              <a
-                                className="dropdown-item d-flex align-items-center gap-3 mt-2"
-                                onClick={() => {
-                                  setDeleteModal({ show: true, id: null });
-                                  setAddDetails(details);
-                                }}
-                              >
-                                <i
-                                  className="fs-4 fas fa-trash-alt"
-                                  style={{ color: "red",cursor: "pointer"}}
-                                />
-                              </a>{" "}
-                            
-                            </td>
-                            <td></td>
-                          </tr>
-                        ))}
+                                <td>
+                                  <a
+                                    className="dropdown-item d-flex align-items-center gap-3"
+                                    onClick={() => {
+                                      setShowModal({ show: true, id: null });
+                                      setAddDetails(details);
+                                      setAddImage(details);
+                                    }}
+                                  >
+                                    <i
+                                      className="fs-4 fas fa-pencil-alt mt-2"
+                                      style={{
+                                        color: "red",
+                                        cursor: "pointer",
+                                      }}
+                                    ></i>
+                                  </a>
+                                  <a
+                                    className="dropdown-item d-flex align-items-center gap-3 mt-2"
+                                    onClick={() => {
+                                      setDeleteModal({ show: true, id: null });
+                                      setAddDetails(details);
+                                    }}
+                                  >
+                                    <i
+                                      className="fs-4 fas fa-trash-alt"
+                                      style={{
+                                        color: "red",
+                                        cursor: "pointer",
+                                      }}
+                                    />
+                                  </a>{" "}
+                                </td>
+                                <td></td>
+                              </tr>
+                            )
+                          )
+                        )}
                       </>
                     ) : (
                       <tr>
@@ -412,8 +428,11 @@ function Awards() {
                     </>
                   ) : (
                     <span>
-                    {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}                  
-                    </span>                  )}
+                      {errorMessage && (
+                        <div style={{ color: "red" }}>{errorMessage}</div>
+                      )}
+                    </span>
+                  )}
                 </span>
               </p>
             </div>

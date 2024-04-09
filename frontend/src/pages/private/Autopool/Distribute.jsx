@@ -27,31 +27,19 @@ function Distribute() {
   });
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
-
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   const [details, setDetails] = useState({});
   const [count, setCount] = useState({});
-
-  console.log(details, "details.....");
-
   const [distributionHistory, setDistributionHistory] = useState({});
-  console.log(distributionHistory, "distributionHistory.....dsdsdsdsd");
-
-  console.log(details);
   const [poolPercentage, setPoolPercentage] = useState({});
   const [totalPercentage, setTotalPercentage] = useState();
-  console.log(totalPercentage, "totalPercentage.....dsdsdsdsd");
 
-  console.log(details, "details");
- 
 
   const getAdminprofile = async () => {
     setIsLoading(true);
     try {
       const response = await ApiCall("get", adminProfileUrl);
-      console.log(response, "response.....");
       if (response?.status === 200 || 201) {
         setDetails(response?.data?.admin);
         setCount(response?.data);
@@ -78,7 +66,6 @@ function Distribute() {
         (parseInt(poolPercentage?.autoPoolPercentageD) || 0) +
         (parseInt(poolPercentage?.autoPoolPercentageE) || 0);
 
-      console.log(totalValue, "value..........");
 
       if (totalValue !== 100) {
         Show_Toast("The total percentage should be exactly 100");
@@ -89,7 +76,6 @@ function Distribute() {
           editpoolPercentageUrl,
           poolPercentage
         );
-        console.log(response, "response....");
         if (response?.status === 200) {
           Show_Toast("Pool percentage is updated successfully", true);
           setLoading(false);
@@ -106,21 +92,19 @@ function Distribute() {
 
   const calculateTotalValues = (e) => {
     setPoolPercentage({ ...poolPercentage, [e.target.name]: e.target.value });
-    console.log("working percentage");
     const totalValues =
       (parseInt(poolPercentage?.autoPoolPercentageA) || 0) +
       (parseInt(poolPercentage?.autoPoolPercentageB) || 0) +
       (parseInt(poolPercentage?.autoPoolPercentageC) || 0) +
       (parseInt(poolPercentage?.autoPoolPercentageD) || 0) +
       (parseInt(poolPercentage?.autoPoolPercentageE) || 0);
-    console.log(totalValues, "valuesssss......");
-    setTotalPercentage(totalValues);
+    // setTotalPercentage(totalValues);
   };
+
 
   const distributeWalet = async () => {
     try {
       const resposne = await ApiCall("post", distributeWalletUrl);
-      console.log(resposne, "resposne");
       if (resposne.status === 200) {
         Show_Toast("Autopool wallet distributed successfully", true);
         setConfirmationModal(false);
@@ -135,6 +119,9 @@ function Distribute() {
       }
     }
   };
+
+
+  
   useEffect(() => {
     getAdminprofile();
   }, []);
@@ -202,38 +189,43 @@ function Distribute() {
               </div>
             </div>
             <div class="col-md-9 ">
-  <div className="card" style={{ background: "#00335B" }}>
-    <div className="row align-items-center p-4 text-center"> {/* Added text-center class */}
-      <div className="d-flex align-items-center">
-        <h5
-          className="card-title mb-0 fw-semibold"
-          style={{ color: "white" }}
-        >
-          Pool Percentage
-        </h5>
-        <button
-          onClick={() => {
-            setPercentageModal({ show: true, id: null });
-            setValidated(false);
-            setPoolPercentage({
-              ...poolPercentage,
-              autoPoolPercentageA: details?.autoPoolPercentageA,
-              autoPoolPercentageB: details?.autoPoolPercentageB,
-              autoPoolPercentageC: details?.autoPoolPercentageC,
-              autoPoolPercentageD: details?.autoPoolPercentageD,
-              autoPoolPercentageE: details?.autoPoolPercentageE,
-            });
-            calculateTotalValues();
-          }}
-          className="btn btn-link"
-          style={{ color: "rgb(247, 174, 21)" }}
-        >
-          <i className="fas fa-pencil-alt"></i>
-        </button>
-      </div>
-
-      <div className="col d-flex align-items-center">
-      <div className="row mb-3">
+              <div className="card" style={{ background: "#00335B" }}>
+              {isLoading ? (
+            <Loader />
+          ) : (
+                <div className="row align-items-center p-4 text-center">
+                  {" "}
+                  {/* Added text-center class */}
+        
+                  <div className="d-flex align-items-center">
+                    <h5
+                      className="card-title mb-0 fw-semibold"
+                      style={{ color: "white" }}
+                    >
+                      Pool Percentage
+                    </h5>
+                    <button
+                      onClick={() => {
+                        setPercentageModal({ show: true, id: null });
+                        setValidated(false);
+                        setPoolPercentage({
+                          ...poolPercentage,
+                          autoPoolPercentageA: details?.autoPoolPercentageA,
+                          autoPoolPercentageB: details?.autoPoolPercentageB,
+                          autoPoolPercentageC: details?.autoPoolPercentageC,
+                          autoPoolPercentageD: details?.autoPoolPercentageD,
+                          autoPoolPercentageE: details?.autoPoolPercentageE,
+                        });
+                        calculateTotalValues();
+                      }}
+                      className="btn btn-link"
+                      style={{ color: "rgb(247, 174, 21)" }}
+                    >
+                      <i className="fas fa-pencil-alt"></i>
+                    </button>
+                  </div>
+                  <div className="col d-flex align-items-center">
+                    <div className="row mb-3">
                       <div className="col-2 mb-2" style={{ width: "150px" }}>
                         <div className="me-2">
                           <div
@@ -267,7 +259,7 @@ function Distribute() {
                               className="form-control"
                               style={{ background: "#ffff" }}
                             >
-                              {details?.autoPoolPercentageA + "%"}
+                              {details?.autoPoolPercentageA ||0+ "%"}
                             </span>
                           </div>
                           <div>
@@ -318,7 +310,7 @@ function Distribute() {
                               className="form-control"
                               style={{ background: "#ffff" }}
                             >
-                              {details?.autoPoolPercentageB + "%"}
+                              {details?.autoPoolPercentageB||0 + "%"}
                             </span>
                           </div>
                           <div>
@@ -369,7 +361,7 @@ function Distribute() {
                               className="form-control"
                               style={{ background: "#ffff" }}
                             >
-                              {details?.autoPoolPercentageC + "%"}
+                              {details?.autoPoolPercentageC||0 + "%"}
                             </span>
                           </div>
                           <div>
@@ -420,7 +412,7 @@ function Distribute() {
                               className="form-control"
                               style={{ background: "#ffff" }}
                             >
-                              {details?.autoPoolPercentageD + "%"}
+                              {details?.autoPoolPercentageD||0 + "%"}
                             </span>
                           </div>
                           <div>
@@ -478,7 +470,7 @@ function Distribute() {
                               className="form-control"
                               style={{ background: "#ffff" }}
                             >
-                              {details?.autoPoolPercentageE + "%"}
+                              {details?.autoPoolPercentageE||0 + "%"}
                             </span>
                           </div>
                           <div>
@@ -497,12 +489,12 @@ function Distribute() {
                         </div>
                       </div>
                     </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-         
+                  </div>
+      
+                </div>
+                    )}
+              </div>
+            </div>
           </div>
         </div>
         <div className="card position-relative overflow-hidden">
@@ -593,7 +585,6 @@ function Distribute() {
                       <>
                         {distributionHistory.map(
                           (history, index) => (
-                            console.log(history, "history"),
                             (
                               <tr key={index}>
                                 <td>{index + 1}</td>

@@ -4,7 +4,6 @@ import { SlideMotion } from "../../../libs/FramerMotion";
 import ModalComponent from "../../../Components/ModalComponet";
 import { ContextData } from "../../../Services/Context";
 import { Form } from "react-bootstrap";
-import DeleteConfirmation from "../../../Components/DeleteConfirmation";
 import Select from "react-select";
 import {
   districtlistinZonalUrl,
@@ -30,7 +29,8 @@ function Member() {
   const [validated, setValidated] = useState(false);
   const [bonusModal, setBonusModal] = useState({ show: false, id: null });
   const [addMember, setAddMember] = useState({});
-  console.log(addMember,"memberAdded");
+
+console.log(addMember,"addMember");
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [zonalList, setZonalList] = useState([]);
@@ -41,7 +41,9 @@ function Member() {
   const [notTakenDistrict, setnotTakenDistrict] = useState([]);
   const [packageAmount, setPackageAmount] = useState({});
   console.log(packageAmount,"packageAmoun..t");
- 
+  console.log(packageList,"packageList..t");
+  const [packageType, setpackageType] = useState();
+console.log(packageType,"99000");
   const [totalgstAmount, setTotalGstAmount] = useState("");
 console.log(totalgstAmount," totalgstAmounts sum");
   const [showPassword, setShowPassword] = useState(false);
@@ -189,17 +191,27 @@ console.log(totalgstAmount," totalgstAmounts sum");
     try {
       const response = await ApiCall("get", packagesListUrl);
       if (response.status === 200) {
-        setPackageList(response?.data?.packageData);
+        const filteredPackageList = response?.data?.packageData.filter(pkg => {
+          if (addMember?.packageType === 'Franchise') {
+            return pkg?.franchiseName !== 'Courses' && pkg?.franchiseName !== 'Signals';
+          } else {
+            return pkg?.franchiseName === addMember?.packageType;
+          }
+        });
+
+        console.log(filteredPackageList,"filteredPackageList");
+        setPackageList(filteredPackageList);
       } else {
         console.error(
-          "Error fetching state list. Unexpected status:",
+          "Error fetching package list. Unexpected status:",
           response.status
         );
       }
     } catch (error) {
-      console.error("Error fetching state list:", error);
+      console.error("Error fetching package list:", error);
     }
   };
+  
   //---------Add--panchayath---------
   const addMemberFun = async () => {
     try {
@@ -226,7 +238,7 @@ console.log(totalgstAmount," totalgstAmounts sum");
     try {
       const response = await ApiCall("get", viewalluserUrl, {}, params);
       if (response.status === 200) {
-        console.log("all userssss......", response);
+        console.log("all userssss...ss...", response);
         setAllUser(response?.data?.userData?.results);
         setFilteredData(response?.data?.userData?.results);
         setTotalPages(response?.data?.userData?.totalPages);
@@ -256,12 +268,14 @@ console.log(totalgstAmount," totalgstAmounts sum");
   };
   useEffect(() => {
     getallUsers();
-    getPackagesList();
    
     
   }, [params]);
 
- 
+ useEffect(()=>{
+  getPackagesList();
+
+ },[addMember?.packageType])
 
 
 
@@ -361,6 +375,7 @@ useEffect(()=>{
                 onClick={() => {
                   setMemberModal({ show: true, id: null });
                   setAddMember("");
+                  setpackageType("")
                   setTotalGstAmount("");
                   setValidated(false);
                 }}
@@ -452,10 +467,10 @@ useEffect(()=>{
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">View Details</h6>
                       </th>
-                      <th>
+                      {/* <th>
                         <h6 className="fs-4 fw-semibold mb-0">Add bonus</h6>
                       </th>
-                     
+                      */}
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">View Tree</h6>
                       </th>
@@ -467,7 +482,6 @@ useEffect(()=>{
                     {filteredData?.length ? (
                       <>
                         {filteredData.map((users, index) => (
-                          console.log(users),
                           <tr key={index}>
                             <td>{startIndex + index + 1}</td>
                             <td>
@@ -517,7 +531,7 @@ useEffect(()=>{
                                 }
                               ></i>
                             </td>
-                            <td>
+                            {/* <td>
                               {" "}
                               <button
                                 className="btn btn-custom"
@@ -529,7 +543,7 @@ useEffect(()=>{
                               >
                                 <i className="fas fa-plus"></i> Add Bonus
                               </button>
-                            </td>
+                            </td> */}
                           
                             <td>
                               <button className="btn btn-custom "
@@ -758,8 +772,42 @@ useEffect(()=>{
               className=""
               style={{ border: "1px solid ", height: "1px", color: "#F7AE15" }}
             ></div>
+            
             <div className="mb-4 row mt-2">
-              <div className="col-md-4">
+            <div className="col-md-4 mt-2">
+  <label htmlFor="franchiseType" className="form-label">
+    Package Type
+  </label>
+
+  <Select
+    options={[
+      { value: 'Franchise', label: 'Franchise' },
+      { value: 'Courses', label: 'Courses' },
+      { value: 'Signals', label: 'Signals' },
+    ]}
+    value={{
+      value: addMember?.packageType,
+      label: addMember?.packageType,
+    }}
+    User
+    onChange={(selectedOption) => {
+          setAddMember({
+            ...addMember,
+          packageType: selectedOption.value,
+          });
+        }} 
+    
+    placeholder="Select a package type" // Updated placeholder
+    isSearchable={true}
+    required={true}
+  />
+
+  <Form.Control.Feedback type="invalid">
+    Please select a package type.
+  </Form.Control.Feedback>
+</div>
+
+              <div className="col-md-4  mt-2">
                 <label htmlFor="franchiseType" className="form-label">
                   Franchise Type
                 </label>
@@ -788,7 +836,7 @@ useEffect(()=>{
                   Please select a franchise type.
                 </Form.Control.Feedback>
               </div>
-              <div className="col-md-4">
+              <div className="col-md-4  mt-2">
                 <label htmlFor="readOnlyInput" className="form-label">
                   Package Amount
                 </label>
@@ -799,7 +847,7 @@ useEffect(()=>{
                   value={addMember?.packageAmount}
                 />
               </div>
-              <div className="col-md-4">
+              <div className="col-md-4 mt-2">
                 <label htmlFor="readOnlyInput" className="form-label">
                   Package Amount Included GST
                 </label>
@@ -955,11 +1003,10 @@ useEffect(()=>{
               </div>
             )}
 
-            {(addMember?.franchise === "Mobile Franchise" ||
-              addMember?.franchise === "Premium calls" ||
-              addMember?.franchise === "Diamond course" ||
-              addMember?.franchise === "Platinum course" ||
-              addMember?.franchise === "Algo course") && (
+            {(addMember?.franchise === "Mobile Franchise" || 
+           packageType === "Courses" ||
+           packageType === "Signals"
+              ) && (
               <div className="row">
                 <div className="col-md-3 mb-4">
                   <label htmlFor="stateDropdown1" className="form-label">
@@ -1081,6 +1128,7 @@ useEffect(()=>{
               setSelectedStateId("");
               selectedDistrictId("");
               selectedZonalId("");
+              
             }}
           >
             Cancel

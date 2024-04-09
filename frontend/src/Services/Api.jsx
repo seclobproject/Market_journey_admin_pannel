@@ -24,7 +24,7 @@ export const ApiCall = async (
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(res,"res,res")
+    console.log(res,"res,res,rwadsad")
     return {
       status: res?.status,
       data: res.data,

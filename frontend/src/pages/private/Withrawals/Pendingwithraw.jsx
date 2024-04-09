@@ -73,6 +73,9 @@ function Pendingwithraw() {
       page: newPage,
     }));
   };
+  function calculateTenPercent(value) {
+    return (value * 0.1).toFixed(2); // Returns 10% of the value with two decimal places
+  }
   useEffect(() => {
     getRequest();
   }, [params]);
@@ -118,11 +121,14 @@ function Pendingwithraw() {
                     
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">
-                        Wallet Withdraw Amount 
+                        Requested  Amount 
                         </h6>
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">TDS Amount</h6>
+                      </th>
+                      <th>
+                        <h6 className="fs-4 fw-semibold mb-0">Released Amount</h6>
                       </th>
                     
                       <th>
@@ -130,7 +136,7 @@ function Pendingwithraw() {
                       </th>
                      
                       <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Aprrove Request</h6>
+                        <h6 className="fs-4 fw-semibold mb-0">Approve  Request</h6>
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Reject Request</h6>
@@ -164,7 +170,9 @@ function Pendingwithraw() {
                               <td>{request?.email || "--"}</td>
                               <td>{request?.phone || "--"}</td>
                               <td>{request?.walletWithdrawAmount || "0"}</td>
+                              <td>{calculateTenPercent(request?.walletWithdrawAmount )}</td>
                               <td>{request?.tdsAmount || "0"}</td>
+
                               <td>
       {request?.walletWithdrawStatus === "pending" && (
         <span className="badge bg-danger rounded-3 fw-semibold">Pending</span>

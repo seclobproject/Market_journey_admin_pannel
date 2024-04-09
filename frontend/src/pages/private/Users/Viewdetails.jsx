@@ -13,6 +13,7 @@ import { Button, Form } from "react-bootstrap";
 import Loader from "../../../Components/Loader";
 import moment from "moment";
 import ModalComponent from "../../../Components/ModalComponet";
+import { Image } from "antd";
 
 function Viewdetails() {
   const navigate = useNavigate();
@@ -25,35 +26,45 @@ function Viewdetails() {
   const [showPassword, setShowPassword] = useState(false);
   const [editUser, setEditUser] = useState({});
   const [editBankDetails, setEditBankDetails] = useState({});
-  console.log(editBankDetails,"editBankDetails")
   const [addNomineeDetails, setAddNomineeDetails] = useState({});
-  console.log(addNomineeDetails,"addNomineeDetails")
-
+  const [userDetailsArray, setUserDetailsArray] = useState([]);
   const [bankModal, setBankModal] = useState({ show: false, id: null });
   const [userModal, setUserModal] = useState({ show: false, id: null });
   const [nomineeModal, setNomineeModal] = useState({ show: false, id: null });
-
+  const [selectedId, setSelectedId] = useState(null);
   const clearMessageDiv = () => {
-    console.log("working");
     const messageDiv = document.getElementById("msg");
     const errormsgDiv = document.getElementById("errormsg");
-  console.log(errormsgDiv,"bugssss");
     if (messageDiv) {
       messageDiv.innerHTML = "";
     } else {
       errormsgDiv.innerHTML = "";
     }
   };
-  
 
   //-----------------get individaul user data-----------
   const getUserDetails = async () => {
     setIsLoading(true);
     try {
       const response = await ApiCall("get", `${viewsingleuserUrl}/${id}`);
-      console.log(response, "response");
       if (response?.status === 200) {
+        const detailsArray = [
+          {
+            walletAmount: response.data.walletAmount,
+          },
+          {
+            totalLevelIncome: response.data.totalLevelIncome,
+          },
+          {
+            inDirectIncome: response.data.inDirectIncome,
+          },
+          {
+            directIncome: response.data.directIncome,
+          },
+        ];
+
         setDetails(response?.data);
+        setUserDetailsArray(detailsArray);
         setIsLoading(false);
       } else {
         console.error("Failed to fetch user details");
@@ -69,7 +80,7 @@ function Viewdetails() {
     e.preventDefault();
     const messageDiv = document.getElementById("msg");
     const errormsgDiv = document.getElementById("errormsg");
-  
+
     if (
       !(
         editUser?.name ||
@@ -83,7 +94,7 @@ function Viewdetails() {
       Show_Toast("Please fill at least one field", false);
       return;
     }
-  
+
     if (
       typeof password?.confirmpassword === "string" &&
       typeof editUser?.password === "string" &&
@@ -93,7 +104,7 @@ function Viewdetails() {
       Show_Toast("Password and confirm password do not match", false);
       return;
     }
-  
+
     try {
       setIsLoading(true);
       const res = await ApiCall("post", `${edituserUrl}/${id}`, editUser);
@@ -117,7 +128,6 @@ function Viewdetails() {
       Show_Toast(error, false);
     }
   };
-  
 
   const handlePasswordToggle = () => {
     setShowPassword(!showPassword);
@@ -127,7 +137,7 @@ function Viewdetails() {
   const addOrEditBank = async (e) => {
     e.preventDefault();
     const errormsgDiv = document.getElementById("errormsg");
-  
+
     try {
       if (
         !(
@@ -141,20 +151,18 @@ function Viewdetails() {
         Show_Toast("Please fill at least one field", false);
         return; // Add this return statement to prevent API call
       }
-  
+
       const createResponse = await ApiCall(
         "POST",
         `${editoraddBankUrl}?id=${details?.id}`,
         { ...editBankDetails }
       );
-      console.log(createResponse, "response");
       if (createResponse.status === 200) {
         setBankModal(false);
         setEditBankDetails("");
         getUserDetails();
         Show_Toast("Bank details added successfully", true);
       } else {
-        console.log(createResponse.error, "error");
         Show_Toast(createResponse.error, false);
       }
     } catch (error) {
@@ -165,7 +173,7 @@ function Viewdetails() {
   const addOrEditNominee = async (e) => {
     e.preventDefault();
     const errormsgDiv = document.getElementById("errormsg");
-  
+
     try {
       if (
         !(
@@ -183,13 +191,12 @@ function Viewdetails() {
         Show_Toast("Please fill at least one field", false);
         return; // Add this return statement to prevent API call
       }
-  
+
       const createResponse = await ApiCall(
         "POST",
         `${addoreditNomineeUrl}?id=${details?.id}`,
         { ...addNomineeDetails }
       );
-      console.log(createResponse, "response");
       if (createResponse.status === 200) {
         setNomineeModal(false);
         setAddNomineeDetails("");
@@ -203,7 +210,6 @@ function Viewdetails() {
       Show_Toast(error.message, false);
     }
   };
-  
 
   useEffect(() => {
     if (id) {
@@ -240,6 +246,78 @@ function Viewdetails() {
                   style={{ marginRight: "5px" }}
                 />
               </button>
+              {/*   
+              {userDetailsArray.map((item, index) => (
+  <motion.div key={index} layoutId={index} onClick={() => setSelectedId(index)}>
+    <div class="card" style={{ background: "#00335B" }}>
+      <div className="row align-items-center p-4">
+        <div className="col-8">
+          <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
+            Wallet Amount
+          </h5>
+          <div className="d-flex align-items-center mb-3">
+            <h4 className="fw-semibold mb-3" style={{ color: "rgb(247, 174, 21)" }}>
+              {item.walletAmount}
+            </h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style={{ background: "#00335B" }}>
+      <div className="row align-items-center p-4">
+        <div className="col-8">
+          <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
+            Wallet Amount
+          </h5>
+          <div className="d-flex align-items-center mb-3">
+            <h4 className="fw-semibold mb-3" style={{ color: "rgb(247, 174, 21)" }}>
+              {item.totalLevelIncome}
+            </h4>
+          </div>
+        </div>
+      </div>
+    </div> 
+    <div class="card" style={{ background: "#00335B" }}>
+      <div className="row align-items-center p-4">
+        <div className="col-8">
+          <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
+            Wallet Amount
+          </h5>
+          <div className="d-flex align-items-center mb-3">
+            <h4 className="fw-semibold mb-3" style={{ color: "rgb(247, 174, 21)" }}>
+              {item.inDirectIncome}
+            </h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style={{ background: "#00335B" }}>
+      <div className="row align-items-center p-4">
+        <div className="col-8">
+          <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
+            Wallet Amount
+          </h5>
+          <div className="d-flex align-items-center mb-3">
+            <h4 className="fw-semibold mb-3" style={{ color: "rgb(247, 174, 21)" }}>
+              {item.directIncome}
+            </h4>
+          </div>
+        </div>
+      </div>
+    </div>
+      </motion.div>
+))} */}
+
+              {/* <AnimatePresence>
+  {selectedId !== null && (
+    <motion.div layoutId={selectedId}>
+      <motion.h5>{userDetailsArray[selectedId]?.walletAmount}</motion.h5>
+      <motion.h2>{userDetailsArray[selectedId]?.totalLevelIncome}</motion.h2>
+      <motion.button onClick={() => setSelectedId(null)} />zz
+    </motion.div>
+  )}
+</AnimatePresence> */}
+
               <div class="row mt-2">
                 <div class="col-md-3  mb-4">
                   <div class="card " style={{ background: "#00335B" }}>
@@ -358,13 +436,14 @@ function Viewdetails() {
                                   className="fas fa-pencil-alt"
                                   onClick={() => {
                                     setUserModal({ show: true, id: null });
-                                    setEditUser(details)  
+                                    setEditUser(details);
                                     setPassword({
                                       confirmpassword: "",
-                                    });                               }}
+                                    });
+                                  }}
                                   style={{
                                     color: "black",
-                                    cursor:'pointer'
+                                    cursor: "pointer",
                                   }}
                                 ></i>
                               </h5>
@@ -402,17 +481,31 @@ function Viewdetails() {
                                 </div>
                               </div>
 
-                              <div className="mt-4">
-                                <h5
-                                  className="fs-5 mb-0 fw-semibold"
-                                  style={{ textTransform: "uppercase" }}
-                                >
-                                  Name:{" "}
-                                  <span style={{ color: "rgb(247, 174, 21)" }}>
-                                    {details?.name || "--"}
-                                  </span>
-                                </h5>
-                              </div>
+                              
+                              <div className="mt-2">
+  <h5
+    className="fs-5 mb-0 fw-semibold" // Removed margin-bottom and adjusted margin-right
+    style={{ textTransform: "uppercase", display: "flex", alignItems: "center" }}
+  >
+    <span style={{ marginRight: "0.5rem" }}>Userid:</span>
+    <span style={{ color: "rgb(247, 174, 21)" }}>
+      {details?.ownSponserId || "--"}
+    </span>
+  </h5>
+</div>
+
+                              <div className="mt-2">
+  <h5
+    className="fs-5 mb-0 fw-semibold" // Removed margin-bottom and adjusted margin-right
+    style={{ textTransform: "uppercase", display: "flex", alignItems: "center" }}
+  >
+    <span style={{ marginRight: "0.5rem" }}>Name:</span>
+    <span style={{ color: "rgb(247, 174, 21)" }}>
+      {details?.name || "--"}
+    </span>
+  </h5>
+</div>
+
 
                               <ul className="list-unstyled mt-3">
                                 <li className="d-flex align-items-center gap-3 mb-4">
@@ -466,7 +559,7 @@ function Viewdetails() {
                                     </span>
                                   </h6>
                                 </li>
-
+                                
                                 <li className="d-flex align-items-center gap-3 mb-4">
                                   <i className="fas fa-user text-dark fs-6" />
                                   <h6 className="fs-4 fw-semibold mb-0">
@@ -478,11 +571,33 @@ function Viewdetails() {
                                     </span>
                                   </h6>
                                 </li>
+                                <li className="d-flex align-items-center gap-3 mb-4">
+                                  <i className="fas fa-user text-dark fs-6" />
+                                  <h6 className="fs-4 fw-semibold mb-0">
+                                  District :{" "}
+                                    <span
+                                      style={{ color: "rgb(247, 174, 21)" }}
+                                    >
+                                      {details?.district || "--"}
+                                    </span>
+                                  </h6>
+                                </li>
+                                <li className="d-flex align-items-center gap-3 mb-4">
+                                  <i className="fas fa-user text-dark fs-6" />
+                                  <h6 className="fs-4 fw-semibold mb-0">
+                                  Zonal :{" "}
+                                    <span
+                                      style={{ color: "rgb(247, 174, 21)" }}
+                                    >
+                                      {details?.Zonal || "--"}
+                                    </span>
+                                  </h6>
+                                </li>
 
                                 <li className="d-flex align-items-center gap-3 mb-4">
                                   <i className="fas fa-store text-dark fs-6" />
                                   <h6 className="fs-4 fw-semibold mb-0">
-                                    Franchise Type:{" "}
+                                    Package Type:{" "}
                                     <span
                                       style={{ color: "rgb(247, 174, 21)" }}
                                     >
@@ -515,6 +630,10 @@ function Viewdetails() {
                                     </h6>
                                   </li>
                                 )}
+                                <Image
+                                  width={200}
+                                  src={`http://192.168.29.152:6003/uploads/${details?.screenshot}`}
+                                />
                               </ul>
                             </div>
                           </div>
@@ -543,7 +662,7 @@ function Viewdetails() {
                           }}
                           style={{
                             color: "black",
-                            cursor:'pointer'
+                            cursor: "pointer",
                           }}
                         ></i>
                       </h5>
@@ -610,60 +729,57 @@ function Viewdetails() {
                           }}
                           style={{
                             color: "black",
-                            cursor:'pointer'
+                            cursor: "pointer",
                           }}
                         ></i>
                       </h5>
 
                       <ul className="list-unstyled mt-3">
-       
-  <li className="d-flex align-items-center gap-3 mb-4">
-    <i className="fas fa-user text-dark fs-6" />
-    <h6 className="fs-4 fw-semibold mb-0">
-      Name:{" "}
-      <span style={{ color: "rgb(247, 174, 21)" }}>
-        {details?.nomineeDetails?.name}
-      </span>
-    </h6>
-  </li>
-  <li className="d-flex align-items-center gap-3 mb-4">
-    <i className="fas fa-phone text-dark fs-6" />
-    <h6 className="fs-4 fw-semibold mb-0">
-      Phone:{" "}
-      <span style={{ color: "rgb(247, 174, 21)" }}>
-        {details?.nomineeDetails?.phone}
-      </span>
-    </h6>
-  </li>
-  <li className="d-flex align-items-center gap-3 mb-4">
-    <i className="fas fa-id-card text-dark fs-6" />
-    <h6 className="fs-4 fw-semibold mb-0">
-      Aadhaar Number:{" "}
-      <span style={{ color: "rgb(247, 174, 21)" }}>
-        {details?.nomineeDetails?.aadhaarNum}
-      </span>
-    </h6>
-  </li>
-  <li className="d-flex align-items-center gap-3 mb-4">
-    <i className="fas fa-id-card-alt text-dark fs-6" />
-    <h6 className="fs-4 fw-semibold mb-0">
-      Pan Card Number:{" "}
-      <span style={{ color: "rgb(247, 174, 21)" }}>
-        {details?.nomineeDetails?.pancardNum}
-      </span>
-    </h6>
-  </li>
-  <li className="d-flex align-items-center gap-3 mb-4">
-    <i className="fas fa-map-marker-alt text-dark fs-6" />
-    <h6 className="fs-4 fw-semibold mb-0">
-      Address:{" "}
-      <span style={{ color: "rgb(247, 174, 21)" }}>
-        {details?.nomineeDetails?.address}
-      </span>
-    </h6>
-  </li>
-
-
+                        <li className="d-flex align-items-center gap-3 mb-4">
+                          <i className="fas fa-user text-dark fs-6" />
+                          <h6 className="fs-4 fw-semibold mb-0">
+                            Name:{" "}
+                            <span style={{ color: "rgb(247, 174, 21)" }}>
+                              {details?.nomineeDetails?.name}
+                            </span>
+                          </h6>
+                        </li>
+                        <li className="d-flex align-items-center gap-3 mb-4">
+                          <i className="fas fa-phone text-dark fs-6" />
+                          <h6 className="fs-4 fw-semibold mb-0">
+                            Phone:{" "}
+                            <span style={{ color: "rgb(247, 174, 21)" }}>
+                              {details?.nomineeDetails?.phone}
+                            </span>
+                          </h6>
+                        </li>
+                        <li className="d-flex align-items-center gap-3 mb-4">
+                          <i className="fas fa-id-card text-dark fs-6" />
+                          <h6 className="fs-4 fw-semibold mb-0">
+                            Aadhaar Number:{" "}
+                            <span style={{ color: "rgb(247, 174, 21)" }}>
+                              {details?.nomineeDetails?.aadhaarNum}
+                            </span>
+                          </h6>
+                        </li>
+                        <li className="d-flex align-items-center gap-3 mb-4">
+                          <i className="fas fa-id-card-alt text-dark fs-6" />
+                          <h6 className="fs-4 fw-semibold mb-0">
+                            Pan Card Number:{" "}
+                            <span style={{ color: "rgb(247, 174, 21)" }}>
+                              {details?.nomineeDetails?.pancardNum}
+                            </span>
+                          </h6>
+                        </li>
+                        <li className="d-flex align-items-center gap-3 mb-4">
+                          <i className="fas fa-map-marker-alt text-dark fs-6" />
+                          <h6 className="fs-4 fw-semibold mb-0">
+                            Address:{" "}
+                            <span style={{ color: "rgb(247, 174, 21)" }}>
+                              {details?.nomineeDetails?.address}
+                            </span>
+                          </h6>
+                        </li>
 
                         <li className="d-flex align-items-center gap-3 mb-4">
                           <i className="fas fa-university text-dark fs-6" />
@@ -711,9 +827,7 @@ function Viewdetails() {
         }}
         title={
           <h5 style={{ color: "#F7AE15", margin: 0 }}>
-            <span>
-              Edit User Details
-            </span>
+            <span>Edit User Details</span>
           </h5>
         }
         centered
@@ -732,14 +846,13 @@ function Viewdetails() {
               placeholder="Enter username"
               // placeholder={details?.name}
               value={editUser?.name}
-              onChange={(e) =>{
+              onChange={(e) => {
                 setEditUser({
                   ...editUser,
                   name: e.target.value,
-                })
+                });
                 clearMessageDiv();
-              }
-              }
+              }}
             />
           </div>
           <div className="mb-3">
@@ -751,14 +864,13 @@ function Viewdetails() {
               className="form-control form-control-lg"
               value={editUser?.email}
               placeholder="Enter email"
-              onChange={(e) =>{
+              onChange={(e) => {
                 setEditUser({
                   ...editUser,
                   email: e.target.value,
-                })
+                });
                 clearMessageDiv();
-              }
-              }
+              }}
             />
           </div>
           <div className="mb-3">
@@ -771,14 +883,13 @@ function Viewdetails() {
               rows="3"
               value={editUser?.address}
               placeholder="Enter address"
-              onChange={(e) =>{
+              onChange={(e) => {
                 setEditUser({
                   ...editUser,
                   address: e.target.value,
-                })
+                });
                 clearMessageDiv();
-              }
-              }
+              }}
             ></textarea>
           </div>
           <div className="mb-3">
@@ -791,14 +902,13 @@ function Viewdetails() {
               id="exampleTextarea"
               rows="3"
               value={editUser?.dateOfBirth}
-              onChange={(e) =>{
+              onChange={(e) => {
                 setEditUser({
                   ...editUser,
                   dateOfBirth: e.target.value,
-                })
+                });
                 clearMessageDiv();
-              }
-              }
+              }}
             />
           </div>
           <div className="mb-3">
@@ -865,29 +975,25 @@ function Viewdetails() {
           <div id="errormsg" style={{ color: "red" }}></div>
 
           <div className="col-12 mt-4">
-              <Button
-                className={`btn btn-custom  float-end me-1 ${
-                  isLoading ? "loading" : ""
-                }`}
-                type="submit"
-                disabled={isLoading}
-              >
-                {isLoading ? "Updating..." : "Update"}
-              </Button>
-            </div>
-          
-          
-        
+            <Button
+              className={`btn btn-custom  float-end me-1 ${
+                isLoading ? "loading" : ""
+              }`}
+              type="submit"
+              disabled={isLoading}
+            >
+              {isLoading ? "Updating..." : "Update"}
+            </Button>
+          </div>
         </Form>
         <Button
-                className="btn btn-cancel  float-end me-1"
-                onClick={() => {
-                  setUserModal({ show: false, id: null });
-                }}
-              >
-                Cancel
-              </Button>
-         
+          className="btn btn-cancel  float-end me-1"
+          onClick={() => {
+            setUserModal({ show: false, id: null });
+          }}
+        >
+          Cancel
+        </Button>
       </ModalComponent>
       {/* update  user Bank detils modal */}
       <ModalComponent
@@ -896,10 +1002,8 @@ function Viewdetails() {
           setBankModal({ show: false, id: null });
         }}
         title={
-          <h5 style={{ color: "#F7AE15", margin: 0 }}> 
-            <span>
-              Add Or Update Bank Details
-            </span>
+          <h5 style={{ color: "#F7AE15", margin: 0 }}>
+            <span>Add Or Update Bank Details</span>
           </h5>
         }
         centered
@@ -907,7 +1011,6 @@ function Viewdetails() {
       >
         <Form onSubmit={addOrEditBank}>
           <div className="mb-3">
-
             <label htmlFor="exampleInputEmail1" className="form-label">
               Account Holder Name{" "}
             </label>
@@ -1002,7 +1105,7 @@ function Viewdetails() {
           cancel
         </button>
       </ModalComponent>
-         {/* update  Nominee  detils modal */}
+      {/* update  Nominee  detils modal */}
       <ModalComponent
         show={nomineeModal.show}
         onHide={() => {
@@ -1010,10 +1113,7 @@ function Viewdetails() {
         }}
         title={
           <h5 style={{ color: "#F7AE15", margin: 0 }}>
-            <span>
-            Add Or Update Nominee Details
-
-            </span>
+            <span>Add Or Update Nominee Details</span>
           </h5>
         }
         centered
@@ -1021,77 +1121,70 @@ function Viewdetails() {
       >
         <Form onSubmit={addOrEditNominee}>
           <div className="row">
-          <div className="col-6 mb-3">
-
-<label htmlFor="exampleInputEmail1" className="form-label">
-  Nominee Name{" "}
-</label>
-<input
-  type="text"
-  className="form-control"
-  id="exampleInputEmail1"
-  aria-describedby="emailHelp"
-  placeholder=" Enter nominee name"
-  value={addNomineeDetails?.name}
-  onChange={(e) => {
-    setAddNomineeDetails({
-      ...addNomineeDetails,
-      name: e.target.value,
-    });
-    clearMessageDiv();
-  }}
-/>
-</div>
-<div className="col-6 mb-3">
-<label htmlFor="franchiseType" className="form-label">
-Phone number
-</label>
-<input
-  type="text"
-  className="form-control form-control-lg"
-  placeholder=" Enter phone number"
-  value={addNomineeDetails?.phone}
-  onChange={(e) => {
-    const enteredValue = e.target.value;
-    const numericValue = enteredValue.replace(/\D/g, "");
-    const limitedValue = numericValue.slice(0, 15);
-    setAddNomineeDetails({
-      ...addNomineeDetails,
-      phone: limitedValue,
-    });
-    clearMessageDiv();
-
-  }}
-/>
-
-</div>
+            <div className="col-6 mb-3">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                Nominee Name{" "}
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="exampleInputEmail1"
+                aria-describedby="emailHelp"
+                placeholder=" Enter nominee name"
+                value={addNomineeDetails?.name}
+                onChange={(e) => {
+                  setAddNomineeDetails({
+                    ...addNomineeDetails,
+                    name: e.target.value,
+                  });
+                  clearMessageDiv();
+                }}
+              />
+            </div>
+            <div className="col-6 mb-3">
+              <label htmlFor="franchiseType" className="form-label">
+                Phone number
+              </label>
+              <input
+                type="text"
+                className="form-control form-control-lg"
+                placeholder=" Enter phone number"
+                value={addNomineeDetails?.phone}
+                onChange={(e) => {
+                  const enteredValue = e.target.value;
+                  const numericValue = enteredValue.replace(/\D/g, "");
+                  const limitedValue = numericValue.slice(0, 15);
+                  setAddNomineeDetails({
+                    ...addNomineeDetails,
+                    phone: limitedValue,
+                  });
+                  clearMessageDiv();
+                }}
+              />
+            </div>
           </div>
-     
-          <div className="mb-3">
-                <label htmlFor="franchiseType" className="form-label">
-                  Address
-                </label>
-                <textarea
-                  
-                  className="form-control form-control-lg"
-                  style={{ height: "100px" }}
-                  placeholder="Enter a address"
-                  value={addNomineeDetails?.address}
-                  onChange={(e) =>{
-                    setAddNomineeDetails({
-                      ...addNomineeDetails,
-                      address: e.target.value,
-                    })
-                    clearMessageDiv();
-                  }
-                  }
-                />
 
-              
-              </div>
-              <div className="mb-3">
+          <div className="mb-3">
+            <label htmlFor="franchiseType" className="form-label">
+              Address
+            </label>
+            <textarea
+              className="form-control form-control-lg"
+              style={{ height: "100px" }}
+              placeholder="Enter a address"
+              value={addNomineeDetails?.address}
+              onChange={(e) => {
+                setAddNomineeDetails({
+                  ...addNomineeDetails,
+                  address: e.target.value,
+                });
+                clearMessageDiv();
+              }}
+            />
+          </div>
+          <div className="mb-3">
             <label htmlFor="exampleTextarea" className="form-label">
-            Bank Name
+              Bank Name
             </label>
             <input
               className="form-control"
@@ -1108,92 +1201,97 @@ Phone number
               }}
             ></input>
           </div>
-              <div className="row">
-              <div className="col-6 mb-3">
-            <label htmlFor="exampleTextarea" className="form-label">
-              Account Number
-            </label>
-            <input
-              className="form-control"
-              id="exampleTextarea"
-              rows="3"
-              value={editBankDetails?.accountNum}
-              placeholder=" Enter account name"
-              onChange={(e) => {
-                setEditBankDetails({
-                  ...editBankDetails,
-                  accountNum: e.target.value,
-                });
-                clearMessageDiv();
-              }}
-            ></input>
-          </div>
+          <div className="row">
+            <div className="col-6 mb-3">
+              <label htmlFor="exampleTextarea" className="form-label">
+                Account Number
+              </label>
+              <input
+                className="form-control"
+                id="exampleTextarea"
+                rows="3"
+                value={editBankDetails?.accountNum}
+                placeholder=" Enter account name"
+                onChange={(e) => {
+                  setEditBankDetails({
+                    ...editBankDetails,
+                    accountNum: e.target.value,
+                  });
+                  clearMessageDiv();
+                }}
+              ></input>
+            </div>
 
-          <div className="col-6 mb-3">
-            <label htmlFor="exampleInputPassword1" className="form-label">
-              IFCE code
-            </label>
-            <label htmlFor="transactionPassword" className="form-label"></label>
-            <input
-              type="text"
-              className="form-control"
-              id="exampleInputPassword1"
-              placeholder=" Enter IFSE code"
-              value={addNomineeDetails?.ifscCode}
-              onChange={(e) => {
-                setAddNomineeDetails({
-                  ...addNomineeDetails,
-                  ifscCode: e.target.value,
-                });
-                clearMessageDiv();
-              }}
-            />
+            <div className="col-6 mb-3">
+              <label htmlFor="exampleInputPassword1" className="form-label">
+                IFCE code
+              </label>
+              <label
+                htmlFor="transactionPassword"
+                className="form-label"
+              ></label>
+              <input
+                type="text"
+                className="form-control"
+                id="exampleInputPassword1"
+                placeholder=" Enter IFSE code"
+                value={addNomineeDetails?.ifscCode}
+                onChange={(e) => {
+                  setAddNomineeDetails({
+                    ...addNomineeDetails,
+                    ifscCode: e.target.value,
+                  });
+                  clearMessageDiv();
+                }}
+              />
+            </div>
           </div>
-              </div>
-              <div className="row">
-              <div className="col-6 mb-3">
-            <label htmlFor="exampleTextarea" className="form-label">
-            Aadhaar Number
-            </label>
-            <input
-              className="form-control"
-              id="exampleTextarea"
-              rows="3"
-              value={addNomineeDetails?.aadhaarNum}
-              placeholder=" Enter aadhaar Number"
-              onChange={(e) => {
-                setAddNomineeDetails({
-                  ...addNomineeDetails,
-                  aadhaarNum: e.target.value,
-                });
-                clearMessageDiv();
-              }}
-            ></input>
-          </div>
+          <div className="row">
+            <div className="col-6 mb-3">
+              <label htmlFor="exampleTextarea" className="form-label">
+                Aadhaar Number
+              </label>
+              <input
+                className="form-control"
+                id="exampleTextarea"
+                rows="3"
+                value={addNomineeDetails?.aadhaarNum}
+                placeholder=" Enter aadhaar Number"
+                onChange={(e) => {
+                  setAddNomineeDetails({
+                    ...addNomineeDetails,
+                    aadhaarNum: e.target.value,
+                  });
+                  clearMessageDiv();
+                }}
+              ></input>
+            </div>
 
-          <div className="col-6 mb-3">
-            <label htmlFor="exampleInputPassword1" className="form-label">
-            Pancard Number
-            </label>
-            <label htmlFor="transactionPassword" className="form-label"></label>
-            <input
-              type="text"
-              className="form-control"
-              id="exampleInputPassword1"
-              placeholder=" Enter pancard number"
-              value={addNomineeDetails?.pancardNum}
-              onChange={(e) => {
-                setAddNomineeDetails({
-                  ...addNomineeDetails,
-                  pancardNum: e.target.value,
-                });
-                clearMessageDiv();
-              }}
-            />
+            <div className="col-6 mb-3">
+              <label htmlFor="exampleInputPassword1" className="form-label">
+                Pancard Number
+              </label>
+              <label
+                htmlFor="transactionPassword"
+                className="form-label"
+              ></label>
+              <input
+                type="text"
+                className="form-control"
+                id="exampleInputPassword1"
+                placeholder=" Enter pancard number"
+                value={addNomineeDetails?.pancardNum}
+                onChange={(e) => {
+                  setAddNomineeDetails({
+                    ...addNomineeDetails,
+                    pancardNum: e.target.value,
+                  });
+                  clearMessageDiv();
+                }}
+              />
+            </div>
           </div>
-              </div>
-              <div id="errormsg" style={{ color: "red" }}></div>
-
+          <div id="errormsg" style={{ color: "red" }}></div>
 
           <div className="col-12 mt-4">
             <button type="submit" className="btn btn-custom float-end ms-1">

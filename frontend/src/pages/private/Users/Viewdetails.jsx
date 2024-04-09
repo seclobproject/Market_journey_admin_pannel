@@ -630,10 +630,13 @@ function Viewdetails() {
                                     </h6>
                                   </li>
                                 )}
-                                <Image
-                                  width={200}
-                                  src={`http://192.168.29.152:6003/uploads/${details?.screenshot}`}
-                                />
+                              {details?.screenshot && (
+  <Image
+    width={200}
+    src={`http://192.168.29.152:6003/uploads/${details?.screenshot}`}
+  />
+)}
+
                               </ul>
                             </div>
                           </div>

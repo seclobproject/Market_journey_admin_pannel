@@ -259,7 +259,7 @@ function Distribute() {
                               className="form-control"
                               style={{ background: "#ffff" }}
                             >
-                              {details?.autoPoolPercentageA + "%"}
+                              {details?.autoPoolPercentageA ||0+ "%"}
                             </span>
                           </div>
                           <div>
@@ -310,7 +310,7 @@ function Distribute() {
                               className="form-control"
                               style={{ background: "#ffff" }}
                             >
-                              {details?.autoPoolPercentageB + "%"}
+                              {details?.autoPoolPercentageB||0 + "%"}
                             </span>
                           </div>
                           <div>
@@ -361,7 +361,7 @@ function Distribute() {
                               className="form-control"
                               style={{ background: "#ffff" }}
                             >
-                              {details?.autoPoolPercentageC + "%"}
+                              {details?.autoPoolPercentageC||0 + "%"}
                             </span>
                           </div>
                           <div>
@@ -412,7 +412,7 @@ function Distribute() {
                               className="form-control"
                               style={{ background: "#ffff" }}
                             >
-                              {details?.autoPoolPercentageD + "%"}
+                              {details?.autoPoolPercentageD||0 + "%"}
                             </span>
                           </div>
                           <div>
@@ -470,7 +470,7 @@ function Distribute() {
                               className="form-control"
                               style={{ background: "#ffff" }}
                             >
-                              {details?.autoPoolPercentageE + "%"}
+                              {details?.autoPoolPercentageE||0 + "%"}
                             </span>
                           </div>
                           <div>

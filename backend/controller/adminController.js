@@ -1033,6 +1033,8 @@ export const acceptUser = async (req, res, next) => {
         const sponserId1=userData.sponser;
         const sponserUser1= (await User.findById(sponserId1)) || (await Admin.findById(sponserId1));
         let sponserUser2;
+        let updatedSponser1;
+        let updatedSponser2;
         const sponserId2 = sponserUser1.sponser || null;
         if (sponserId2)sponserUser2 = (await User.findById(sponserId2)) || (await Admin.findById(sponserId2));
         
@@ -1042,19 +1044,19 @@ export const acceptUser = async (req, res, next) => {
         if (updatedUser) {
           if (sponserUser2) {
             sponserUser2.childLevel2.push(updatedUser._id);
-            await sponserUser2.save();
+            updatedSponser2=await sponserUser2.save();
           }
           if (sponserUser1) {
             sponserUser1.childLevel1.push(updatedUser._id);
-            await sponserUser1.save();
+            updatedSponser1=await sponserUser1.save();
           }
 
-          const referalIncome=await generateReferalIncome(sponserUser1,sponserUser2,updatedUser)
+          const referalIncome=await generateReferalIncome(updatedSponser1,updatedSponser2._id,updatedUser)
           if(updatedUser.packageAmount >= 5000 ){
             await addToAutoPoolWallet(updatedUser)
           }
           await generatePromotersIncome(updatedUser)
-          if(!(sponserUser1.isDistrictFranchise) && !(sponserUser1.isZonalFranchise))await setAutoPool(sponserUser1,updatedUser);
+          if(!(updatedSponser1.isDistrictFranchise) && !(updatedSponser1.isZonalFranchise))await setAutoPool(updatedSponser1,updatedUser);
 
 
           res
@@ -1297,6 +1299,7 @@ export const viewUserDetails = async (req, res, next) => {
         address: userData.address,
         dateOfBirth: userData.dateOfBirth,
         district:userData.district,
+        zonal:userData.zonal,
         screenshot:userData.screenshot,
         aadhaar: userData.aadhaar,
         aadhaar2: userData.aadhaar2,

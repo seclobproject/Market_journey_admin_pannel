@@ -189,7 +189,11 @@ export const generateRandomString = () => {
 //   };
 export const addUser = async (req, res, next) => {
   try {
-    const { name, email, phone, packageAmount, packageType, franchise, franchiseName, address, dateOfBirth, state, district, zonal, panchayath, password } = req.body;
+    let { name, email, phone, packageAmount, packageType, franchise, franchiseName, address, dateOfBirth, state, district, zonal, panchayath, password } = req.body;
+
+    console.log(`name:${name}, email:${email}, phone:${phone}, packageAmount:${packageAmount}, packageType:${packageType},
+     franchise:${franchise}, franchiseName:${franchiseName}, address:${address}, dateOfBirth:${dateOfBirth}, 
+     state:${state}, district:${district}, zonal:${zonal}, panchayath:${panchayath}, password:${password}` );
 
     // Determine the sponsor
     const sponser = req.admin ? req.admin._id : (req.user ? req.user._id : null);
@@ -276,11 +280,11 @@ export const addUser = async (req, res, next) => {
             nifty = true;
             bankNifty = true;
             break;
-          case "Bank Nifty & Crude Oil":
+          case "Bank Nifty & CrudeOil":
             bankNifty = true;
             crudeOil = true;
             break;
-          case "Nifty & Crude Oil":
+          case "Nifty & CrudeOil":
             nifty = true;
             crudeOil = true;
             break;
@@ -477,48 +481,60 @@ export const verifyUser= async (req, res, next) => {
 //View Profile
 
 export const viewUserProfile = async (req, res, next) => {
-  const userId = req.user._id;
   try {
-    const userData = await User.findById(userId)
+    const userId = req.user._id;
+    const userData = await User.findById(userId);
+
+    if (!userData) {
+      return next(errorHandler("User not found"));
+    }
+
+    const { 
+      _id, userStatus, ownSponserId, franchise, franchiseName, name, email, 
+      phone, address, dateOfBirth, aadhaar, screenshot, packageAmount, 
+      tempPackageAmount, bankDetails, nomineeDetails, autoPoolStatus, 
+      isDistrictFranchise, isZonalFranchise, isMobileFranchise, 
+      isSignalFranchise, isPackageFranchise 
+    } = userData;
+
     const directIncome = userData.directReferalIncome.toFixed(2);
     const inDirectIncome = userData.inDirectReferalIncome.toFixed(2);
-    const totalLevelIncome=userData.totalLevelIncome.toFixed(2);
-    const franchise = userData.franchise;
-    const wallet = userData.walletAmount.toFixed(2);
-
+    const totalLevelIncome = userData.totalLevelIncome.toFixed(2);
+    const walletAmount = userData.walletAmount.toFixed(2);  
     const countFirstChild = userData.childLevel1.length;
     const countSecondChild = userData.childLevel2.length;
 
-    if (userData) {
-      res.status(200).json({
-        id: userData._id,
-        userStatus: userData.userStatus,
-        ownSponserId: userData.ownSponserId,
-        franchise: franchise,
-        franchiseName: userData.franchiseName,
-        name: userData.name,
-        email: userData.email,
-        phone: userData.phone,
-        address: userData.address,
-        dateOfBirth: userData.dateOfBirth,
-        aadhaar: userData.aadhaar,
-        screenshot: userData.screenshot,
-        packageAmount: userData.packageAmount,
-        tempPackageAmount:userData.tempPackageAmount,
-        myDownline: countFirstChild,
-        directIncome: directIncome,
-        inDirectIncome: inDirectIncome,
-        walletAmount: wallet,
-        totalLevelIncome:totalLevelIncome,
-        bankDetails:userData.bankDetails,
-        nomineeDetails:userData.nomineeDetails,
-        pool:userData.autoPoolStatus,
-        sts: "01",
-        msg: "get user profile Success",
-      });
-    } else {
-      next(errorHandler("User not found"));
-    }
+    res.status(200).json({
+      id: _id,
+      userStatus,
+      ownSponserId,
+      franchise,
+      franchiseName,
+      name,
+      email,
+      phone,
+      address,
+      dateOfBirth,
+      aadhaar,
+      screenshot,
+      packageAmount,
+      tempPackageAmount,
+      myDownline: countFirstChild,
+      directIncome,
+      inDirectIncome,
+      walletAmount,
+      totalLevelIncome,
+      bankDetails,
+      nomineeDetails,
+      pool: autoPoolStatus,
+      isDistrictFranchise,
+      isZonalFranchise,
+      isMobileFranchise,
+      isSignalFranchise,
+      isPackageFranchise,
+      sts: "01",
+      msg: "get user profile Success",
+    });
   } catch (error) {
     next(error);
   }

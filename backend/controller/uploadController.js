@@ -532,36 +532,85 @@ if(newNews){
 
 //--------------------------------------------------Alert---------------------------------------------------------------------
 
-// add Alert
-export const addAlert = async (req, res, next) => {
-  try {
+// // add Alert
+// export const addAlert = async (req, res, next) => {
+//   try {
       
-      const { title, description } = req.body;
-        const adminId = req.admin._id;
-        const admin = await Admin.findById(adminId);
+//       const { title, description } = req.body;
+//         const adminId = req.admin._id;
+//         const admin = await Admin.findById(adminId);
 
-      if (!admin) {
-        return next(errorHandler(401, "Admin not found"));
-      }
+//       if (!admin) {
+//         return next(errorHandler(401, "Admin not found"));
+//       }
 
-      const alert = await Alert.create({
-        title,
-        description
-      });
+//       const alert = await Alert.create({
+//         title,
+//         description
+//       });
 
-if(alert){
-  return res.status(201).json({
-    alert,
-    sts: "01",
-    msg: "Alert Added Successfully",
-  });
-}
+// if(alert){
+//   return res.status(201).json({
+//     alert,
+//     sts: "01",
+//     msg: "Alert Added Successfully",
+//   });
+// }
       
     
-  } catch (error) {
-    next(error);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+export const addAlert = async (req, res, next) => {
+  try {
+    const { signal, title, description } = req.body;
+    const adminId = req.admin._id;
+    
+    // Find the admin
+    const admin = await Admin.findById(adminId);
+    if (!admin) {
+      return next(errorHandler(401, "Admin not found"));
+    }
+    
+    // Create a new alert document
+    const alert = new Alert();
+
+    // Check the signal type and push the details into the appropriate array
+    switch (signal) {
+      case "nifty":
+        alert.niftySignals.push({ title, description });
+        break;
+      case "bankNifty":
+        alert.bankNiftySignals.push({ title, description });
+        break;
+      case "crudeOil":
+        alert.crudeOilSignal.push({ title, description });
+        break;
+      default:
+        return res.status(400).json({
+          sts: "00",
+          msg: "Invalid signal type",
+        });
+    }
+
+    // Save the alert document
+    await alert.save();
+
+    return res.status(201).json({
+      alert,
+      sts: "01",
+      msg: "Alert Added Successfully",
+    });
+  } catch (err) {
+    // Handle errors
+    console.error("Error adding alert:", err);
+    return next(err);
   }
 };
+
+
 
 
   //edit alert
@@ -652,6 +701,42 @@ if(alert){
   }
 
   }
+
+
+  // import User from "../models/user"; // Import your User model
+
+// Function to fetch alerts based on user preferences
+export const getAlertsForUser = async (req, res, next) => {
+  try {
+    const userId = req.user._id; // Assuming user object is attached to the request
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    let alerts = [];
+
+    // Check user's preferences for each signal type and include alerts accordingly
+    if (user.nifty) {
+      const niftyAlerts = await Alert.find({ "niftySignals": { $exists: true, $not: { $size: 0 } } });
+      alerts = [...alerts, ...niftyAlerts];
+    }
+    if (user.bankNifty) {
+      const bankNiftyAlerts = await Alert.find({ "bankNiftySignals": { $exists: true, $not: { $size: 0 } } });
+      alerts = [...alerts, ...bankNiftyAlerts];
+    }
+    if (user.crudeOil) {
+      const crudeOilAlerts = await Alert.find({ "crudeOilSignal": { $exists: true, $not: { $size: 0 } } });
+      alerts = [...alerts, ...crudeOilAlerts];
+    }
+
+    return res.status(200).json({ alerts });
+  } catch (err) {
+    console.error("Error fetching alerts for user:", err);
+    return next(err);
+  }
+};
+
 
 
 

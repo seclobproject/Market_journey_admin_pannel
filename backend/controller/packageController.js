@@ -54,8 +54,8 @@ export const addPackage = async (req, res, next) => {
           return next(errorHandler(401, "Admin not found"));
       }
 
-      const { franchiseName, packageAmount, packageName,renewalAmount } = req.body;
-console.log( franchiseName, packageAmount, packageName,renewalAmount );
+      const { franchiseName, packageAmount, packageName } = req.body;
+console.log( franchiseName, packageAmount, packageName);
       if (franchiseName !== "Courses"&&franchiseName !=="Signals") {
           const packageData = await Package.findOne({ franchiseName: franchiseName });
           if (packageData) {
@@ -73,7 +73,6 @@ console.log( franchiseName, packageAmount, packageName,renewalAmount );
           franchiseName,
           packageName: newPackageName,
           packageAmount,
-          renewalAmount
       });
 
       const addPackage = await newPackage.save();

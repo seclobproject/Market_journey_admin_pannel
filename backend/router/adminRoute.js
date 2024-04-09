@@ -5,7 +5,7 @@ import { protectAdmin } from "../middleware/authMiddleware.js";
 import { addPackage, editPackage, viewPackages } from "../controller/packageController.js";
 import { addUser } from "../controller/userController.js";
 import { addAlert, addNews, deleteSingleAlert, deleteSingleAward, deleteSingleImage, deleteSingleNews, deleteSingleVideo, editAlert, editNews, updateAwardData, updateHomeVideo, uploadAwardDetails, uploadHomeImages, uploadHomeVideos, viewAlert, viewAwardDetails, viewHomeImages, viewHomeVideos, viewNews } from "../controller/uploadController.js";
-import { autoPoolHistory, getApprovedDematesPaginated, getPendingDematesPaginated, totalWalletWithdrawHistory } from "../controller/reportController.js";
+import { autoPoolHistory, getApprovedDematesPaginated, getPendingDematesPaginated, totalWalletWithdrawHistory, viewPoolUsers } from "../controller/reportController.js";
 import { addPoolPercentage, distributeAutoPoolWallet } from "../controller/incomeGereratorController.js";
 
 adminRouter.post("/admin-login", adminLogin);
@@ -95,11 +95,7 @@ adminRouter.get("/view-withdraw-request", protectAdmin,viewWithdrawPendingPagina
 adminRouter.get("/all-withdraw-history", protectAdmin,totalWalletWithdrawHistory);
 
 adminRouter.get("/autopool-credit-history", protectAdmin,autoPoolHistory );
-
-
-
-
-
+adminRouter.get("/view-autopool-users", protectAdmin,viewPoolUsers );
 
 adminRouter.get(
     "/view-ready-to-approved-users",

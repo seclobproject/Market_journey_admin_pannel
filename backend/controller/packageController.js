@@ -55,24 +55,24 @@ export const addPackage = async (req, res, next) => {
       }
 
       const { franchiseName, packageAmount, packageName } = req.body;
-
-      if (franchiseName !== "Mobile Franchise") {
+console.log( franchiseName, packageAmount, packageName);
+      if (franchiseName !== "Courses"&&franchiseName !=="Signals") {
           const packageData = await Package.findOne({ franchiseName: franchiseName });
           if (packageData) {
-              return next(errorHandler(401, "This Package already exists"));
+              return next(errorHandler(401, "Tttthis Package already exists"));
           }
       }
       const packageDetails=await Package.findOne({packageName:packageName})
       if (packageDetails) {
         return next(errorHandler(401, "This Package already exists"));
     }
-
-      const newPackageName = franchiseName !== "Mobile Franchise" ? franchiseName : packageName;
-
+    const validFranchiseNames = ["Mobile Franchise", "District Franchise", "Zonal Franchise"];
+    const newPackageName = validFranchiseNames.includes(franchiseName) ? franchiseName : packageName;
+    
       const newPackage = new Package({
           franchiseName,
           packageName: newPackageName,
-          packageAmount
+          packageAmount,
       });
 
       const addPackage = await newPackage.save();
@@ -88,6 +88,7 @@ export const addPackage = async (req, res, next) => {
       }
 
   } catch (error) {
+    console.log(error);
       return next(error);
   }
 }

@@ -548,7 +548,6 @@ export const addPanchayath=async(req,res,next)=>{
     if (admin) {  
       const {stateName,districtName,zonalName,panchayathName}=req.body;
       const panchayathNameLowercase = panchayathName.toLowerCase();
-      console.log(panchayathNameLowercase);
 
       const existingPanchayath = await Panchayath.findOne({ name: { $regex: new RegExp('^' + panchayathNameLowercase + '$', 'i') } });
       if(existingPanchayath){
@@ -655,7 +654,6 @@ export const deletePanchayath=async(req,res,next)=>{
     }
     const zonalName=panchayathData.zonalName;
     const zonalData=await Zonal.findOne({name:zonalName})
-    console.log(zonalData);
     const deletedPanchayath=await Panchayath.findByIdAndDelete(id);
 
     
@@ -1035,6 +1033,8 @@ export const acceptUser = async (req, res, next) => {
         const sponserId1=userData.sponser;
         const sponserUser1= (await User.findById(sponserId1)) || (await Admin.findById(sponserId1));
         let sponserUser2;
+        let updatedSponser1;
+        let updatedSponser2;
         const sponserId2 = sponserUser1.sponser || null;
         if (sponserId2)sponserUser2 = (await User.findById(sponserId2)) || (await Admin.findById(sponserId2));
         
@@ -1044,19 +1044,19 @@ export const acceptUser = async (req, res, next) => {
         if (updatedUser) {
           if (sponserUser2) {
             sponserUser2.childLevel2.push(updatedUser._id);
-            await sponserUser2.save();
+            updatedSponser2=await sponserUser2.save();
           }
           if (sponserUser1) {
             sponserUser1.childLevel1.push(updatedUser._id);
-            await sponserUser1.save();
+            updatedSponser1=await sponserUser1.save();
           }
 
-          const referalIncome=await generateReferalIncome(sponserUser1,sponserUser2,updatedUser)
+          const referalIncome=await generateReferalIncome(updatedSponser1,updatedSponser2._id,updatedUser)
           if(updatedUser.packageAmount >= 5000 ){
             await addToAutoPoolWallet(updatedUser)
           }
           await generatePromotersIncome(updatedUser)
-          if(!(sponserUser1.isDistrictFranchise) && !(sponserUser1.isZonalFranchise))await setAutoPool(sponserUser1,updatedUser);
+          if(!(updatedSponser1.isDistrictFranchise) && !(updatedSponser1.isZonalFranchise))await setAutoPool(updatedSponser1,updatedUser);
 
 
           res
@@ -1113,7 +1113,7 @@ export const rejectUser = async (req, res, next) => {
             
                   const offset = pageSize * (page - 1);
             
-                  const results = await model.find(query).skip(offset).limit(pageSize);
+                  const results = await model.find(query).sort({createdAt:-1}).skip(offset).limit(pageSize);
             
                   return {
                       results,
@@ -1299,6 +1299,7 @@ export const viewUserDetails = async (req, res, next) => {
         address: userData.address,
         dateOfBirth: userData.dateOfBirth,
         district:userData.district,
+        zonal:userData.zonal,
         screenshot:userData.screenshot,
         aadhaar: userData.aadhaar,
         aadhaar2: userData.aadhaar2,
@@ -1637,7 +1638,7 @@ export const addBonus=async(req,res,next)=>{
     const adminId=req.admin.id;
     const {id}=req.params;
 
-    const {bonusAmount,transactionId}=req.body;
+    const {bonusAmount,transactionId,description}=req.body;
     // Fetch admin data
     const admin = await Admin.findById(adminId);
     if (!admin) {
@@ -1651,10 +1652,13 @@ export const addBonus=async(req,res,next)=>{
     }
 
     user.totalBonusAmount+=bonusAmount;
-
+    user.walletAmount+=bonusAmount;
     user.bonusHistory.push({
       reportName:"userBonusHistory",
-
+      bonusAmount:bonusAmount,
+      transactionId:transactionId,
+      description:description,
+      status:"Approved"
     })
 
     

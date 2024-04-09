@@ -17,8 +17,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Serving static files
-app.use("/uploads", express.static("/var/www/seclob/marketjourney/uploads"));
-//app.use("/uploads", express.static("uploads"));
+// app.use("/uploads", express.static("/var/www/seclob/marketjourney/uploads"));
+app.use("/uploads", express.static("uploads"));
 
 // Routes
 app.use("/api/user", userRouter);

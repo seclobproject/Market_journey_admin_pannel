@@ -8,16 +8,17 @@ import User from "../models/userModel.js";
 
 export const generateReferalIncome = async (
     sponser1,
-    sponser2,
+    sponser2Id,
    updatedUser
   ) => {
-    console.log("reached Generate Referal Income");
-        const directReferalIncome = updatedUser.packageAmount * 0.10;
+    console.log("----(1)-------enter to this function---------------------------");
+    console.log("(2)sponser1---",sponser1.name);
+    console.log("(4)New user----",updatedUser.name);
+      const directReferalIncome = updatedUser.packageAmount * 0.10;
       const inDirectReferalIncome =updatedUser.packageAmount * 0.05;
       if (sponser1.isAdmin==false) {
-        const totalDirectRaferal = sponser1.directReferalIncome + directReferalIncome;
-        sponser1.directReferalIncome = totalDirectRaferal;
-        sponser1.walletAmount = sponser1.walletAmount + directReferalIncome;
+        sponser1.directReferalIncome +=directReferalIncome;
+        sponser1.walletAmount += directReferalIncome;
         sponser1.directReferalHistory.push({
           reportName: "DirectIncome for Franchise",
           userID: updatedUser.ownSponserId,
@@ -28,19 +29,26 @@ export const generateReferalIncome = async (
           status: "Approved",
         });
         const updatedSponser1=await sponser1.save()
+        console.log(`(5)sponser1 ${sponser1.name} direct referal=== ${directReferalIncome}`);
         if(updatedSponser1.isMobileFranchise){
-          await levelIncomeGenerator(sponser1,directReferalIncome)
-
+          await franchiseIncomeGenerator(updatedSponser1,updatedUser.packageAmount,updatedUser.name)
+          await levelIncomeGenerator(updatedSponser1,directReferalIncome)
           await franchiseIncomeGenerator(updatedSponser1,directReferalIncome)
         
-          await franchiseIncomeGenerator(updatedSponser1,updatedUser.packageAmount,updatedUser.name)
         }
         
       }
-      if(sponser2&&sponser2.isAdmin==false){
-        const totalInDirectRaferal = sponser2.inDirectReferalIncome + inDirectReferalIncome;
-        sponser2.inDirectReferalIncome = totalInDirectRaferal;
-        sponser2.walletAmount = sponser2.walletAmount + inDirectReferalIncome;
+    console.log("----(1)-------enter to sponser 2 referal---------------------------");
+      const sponser2=await User.findById(sponser2Id)
+    if(sponser2 && sponser2.isAdmin==false){
+        console.log("before adding in direct:",sponser2.walletAmount);
+        sponser2.inDirectReferalIncome +=inDirectReferalIncome;
+        console.log("in direct:",inDirectReferalIncome);
+        console.log("total in direct:",sponser2.inDirectReferalIncome);
+
+        sponser2.walletAmount += inDirectReferalIncome;
+      console.log("before adding in direct:",sponser2.walletAmount);
+
         sponser2.inDirectReferalHistory.push({
           reportName: "inDirectIncome for Franchise",
           userID: updatedUser.ownSponserId,
@@ -52,14 +60,13 @@ export const generateReferalIncome = async (
         });
 
         const updatedSponser2=await sponser2.save()
-        if(updatedSponser2.isMobileFranchise){
+      console.log("updated adding in direct:",sponser2.walletAmount);
 
-          await levelIncomeGenerator(sponser2,sponser2.packageAmount)
-  
-         await franchiseIncomeGenerator(updatedSponser2,updatedUser.packageAmount,updatedUser.name)
-           await franchiseIncomeGenerator(updatedSponser2,inDirectReferalIncome)
-  
-          
+        console.log(`sponser2 ${sponser2.name} direct referal=== ${directReferalIncome}`);
+
+        if(updatedSponser2.isMobileFranchise){
+          await levelIncomeGenerator(updatedSponser2,inDirectReferalIncome)
+          await franchiseIncomeGenerator(updatedSponser2,inDirectReferalIncome)
         }
       }
   
@@ -70,13 +77,26 @@ export const generateReferalIncome = async (
 
 
   const levelIncomeGenerator=async (userData,amount)=>{
+  console.log("-----------------------------------------------------------------------------------------------------------");
+
+    console.log(`enter to level income function---${userData.name}--Amount is-----${amount}-----------------`);
     while(amount>=10){
+    console.log("enter while loop--------------------------------------");
       const sponser=await User.findById(userData.sponser)
-      if (!sponser.isMobileFranchise)break;
+      if (sponser.isDistrictFranchise||sponser.isZonalFranchise){
+        break;
+      };
       const levelIncome=amount*0.25;
-      const totallevelIncome = sponser.totalLevelIncome + levelIncome;
-      sponser.totalLevelIncome = totallevelIncome;
-      sponser.walletAmount = sponser.walletAmount + levelIncome;
+      console.log("before total level income:",sponser.totalLevelIncome);
+
+      console.log("level income:",levelIncome);
+      console.log("Before adding:",sponser.walletAmount);
+      sponser.totalLevelIncome += levelIncome;
+      sponser.walletAmount += levelIncome;
+      console.log("after total level income:",sponser.totalLevelIncome);
+
+      console.log("after adding:",sponser.walletAmount);
+
         sponser.levelIncomeHistory.push({
           reportName: "Level Income ",
           name: userData.name,
@@ -85,7 +105,12 @@ export const generateReferalIncome = async (
           amountCredited: levelIncome,
           status: "Approved",
         });
+
         const updatedSponser=await sponser.save();
+        console.log("updated wallet:",updatedSponser.walletAmount);
+      console.log("updated total level income:",sponser.totalLevelIncome);
+
+        console.log(`${updatedSponser.name} has credited level income ${levelIncome}`);
         if(updatedSponser){
          await franchiseIncomeGenerator(updatedSponser,levelIncome)
           userData=updatedSponser;
@@ -98,7 +123,10 @@ export const generateReferalIncome = async (
 
 
   const franchiseIncomeGenerator=async(userData,amount,name)=>{
+  console.log("-----------------------------------------------------------------------------------------------------------------");
+
   console.log("Reached in Franchise Income generator");
+  console.log(`Reached user ${userData.name} amd Amount ${amount}`);
 
     const districtIncome=amount*0.05;
     const zonalIncome=amount*0.08;
@@ -110,7 +138,6 @@ export const generateReferalIncome = async (
     const zonalData=await User.findById(zonalId);
 
     districtData.totalLevelIncome +=districtIncome;
-    console.log();
     districtData.walletAmount+= districtIncome;
     districtData.levelIncomeHistory.push({
       reportName: "District Income",
@@ -124,13 +151,13 @@ export const generateReferalIncome = async (
     });
     try {
       await districtData.save();
-      console.log("District data saved successfully.");
+      console.log(`District franchise income credited to ${districtData.name} amount is ${districtIncome}`);
   } catch (error) {
       console.error("Error saving District data:", error);
   }
 
-    zonalData.totalLevelIncome = zonalData.totalLevelIncome+zonalIncome;
-    zonalData.walletAmount = zonalData.walletAmount + zonalIncome;
+    zonalData.totalLevelIncome +=zonalIncome;
+    zonalData.walletAmount += zonalIncome;
     zonalData.levelIncomeHistory.push({
       reportName: "Zonal Income",
       newMember:name,
@@ -144,7 +171,8 @@ export const generateReferalIncome = async (
 
     try {
       await zonalData.save();
-      console.log("District data saved successfully.");
+      console.log(`Zonal franchise income credited to ${zonalData.name} amount is ${zonalIncome}`);
+
   } catch (error) {
       console.error("Error saving District data:", error);
   }

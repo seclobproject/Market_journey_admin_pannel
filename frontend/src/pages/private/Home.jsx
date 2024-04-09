@@ -106,7 +106,7 @@ user
 
 
 
-        <div className="row">
+        {/* <div className="row">
     
 
           <div className="col-lg-12 d-flex align-items-stretch">
@@ -198,7 +198,7 @@ user
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
    
       </div>
     </SlideMotion>

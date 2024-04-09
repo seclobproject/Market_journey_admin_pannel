@@ -37,60 +37,60 @@ function Sidebar() {
         },
       ],
     },
-    {
-      title: "Demat Account",
-      icon: "fas fa-chart-pie",
-      sub: [
-        { title: "All Demat Accounts", route: "demat-accounts" },
-        {
-          title: "Pending Account",
-          route: "pending/accounts",
-        },
-      ],
-    },
-    {
-      title: "Bonus History",
-      icon: "fas fa-clock",
-      route: "user/bonnushistory",
-    },
+    // {
+    //   title: "Demat Account",
+    //   icon: "fas fa-chart-pie",
+    //   sub: [
+    //     { title: "All Demat Accounts", route: "demat-accounts" },
+    //     {
+    //       title: "Pending Account",
+    //       route: "pending/accounts",
+    //     },
+    //   ],
+    // },
+    // {
+    //   title: "Bonus History",
+    //   icon: "fas fa-clock",
+    //   route: "user/bonnushistory",
+    // },
 
-    {
-      title: "Uploads",
-      icon: "fas fa-cloud-upload-alt",
-      sub: [
-        {
-          title: "Upload Image",
-          route: "user/uploads",
-        },
+    // {
+    //   title: "Uploads",
+    //   icon: "fas fa-cloud-upload-alt",
+    //   sub: [
+    //     {
+    //       title: "Upload Image",
+    //       route: "user/uploads",
+    //     },
 
-        {
-          title: "Upload Video",
-          route: "user/videos",
-        },
-      ],
-    },
+    //     {
+    //       title: "Upload Video",
+    //       route: "user/videos",
+    //     },
+    //   ],
+    // },
 
-    { title: "Alerts", icon: "fas fa-bell", route: "user/alerts" },
-    { title: "Live News", icon: "fas fa-newspaper", route: "user/news" },
+    // { title: "Alerts", icon: "fas fa-bell", route: "user/alerts" },
+    // { title: "Live News", icon: "fas fa-newspaper", route: "user/news" },
 
-    {
-      title: "Withdrawals",
-      icon: "fas fa-money-bill",
-      sub: [
-        { title: "Pending withrawals", route: "pending/withraw" },
-        { title: "Withdraw History", route: "withraw/history" },
-      ],
-    },
-    { title: "Awards & Rewards", icon: "fas fa-trophy", route: "user/awards" },
-    {
-      title: "Autopool Wallet",
-      icon: "fas fa-user",
-      sub: [
-        { title: "Distribute History", route: "autopool-wallet/distribute" },
+    // {
+    //   title: "Withdrawals",
+    //   icon: "fas fa-money-bill",
+    //   sub: [
+    //     { title: "Pending withrawals", route: "pending/withraw" },
+    //     { title: "Withdraw History", route: "withraw/history" },
+    //   ],
+    // },
+    // { title: "Awards & Rewards", icon: "fas fa-trophy", route: "user/awards" },
+    // {
+    //   title: "Autopool Wallet",
+    //   icon: "fas fa-user",
+    //   sub: [
+    //     { title: "Distribute History", route: "autopool-wallet/distribute" },
 
-        { title: "Credit History", route: "autopool-wallet/history" },
-      ],
-    },
+    //     { title: "Credit History", route: "autopool-wallet/history" },
+    //   ],
+    // },
   ];
 
   return (

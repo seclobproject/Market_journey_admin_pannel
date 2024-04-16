@@ -4,6 +4,9 @@ import Loader from '../../../Components/Loader';
 
 function Bonnushistory() {
     const [isLoading, setIsLoading] = useState(false);
+    const [bonnusHistory, setbonnusHistory] = useState([]);
+
+    
 
   return (
     <>

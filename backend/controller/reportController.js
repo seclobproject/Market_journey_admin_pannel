@@ -621,3 +621,79 @@ export const getAutoPoolCountAmount = async (req, res, next) => {
     }
 };
 
+//bonus paid history-admin
+
+
+export const bonusPaidReportPaginated = async (req, res, next) => {
+    const userId = req.admin._id;
+    let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+    const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+
+    try {
+        const userData = await Admin.findById(userId).populate({
+            path: "addBounusHistory",
+            options: {
+                sort: { createdAt: 1 } // Sort by createdAt in descending order
+            }
+        });
+
+        if (userData) {
+            const addBounusHistory = userData.addBounusHistory;
+            const paginatedaddBounusHistory = await paginate(addBounusHistory, page, pageSize);
+            res.status(200).json({
+                paidBonusHistory: paginatedaddBounusHistory.results,
+                pagination: {
+                    page: paginatedaddBounusHistory.page,
+                    pageSize: paginatedaddBounusHistory.pageSize,
+                    totalPages: paginatedaddBounusHistory.totalPages,
+                    totalDocs: paginatedaddBounusHistory.totalDocs
+                },
+                sts: "01",
+                msg: "Get bonus paid report by admin Success",
+            });
+        } else {
+            return next(errorHandler(401, "User Login Failed"));
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+//bonus credited history-user
+
+
+export const bonusCreditedReport = async (req, res, next) => {
+    const userId = req.user._id;
+    let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+    const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+
+    try {
+        const userData = await User.findById(userId).populate({
+            path: "bonusHistory",
+            options: {
+                sort: { createdAt: 1 } // Sort by createdAt in descending order
+            }
+        });
+
+        if (userData) {
+            const creditBounusHistory = userData.bonusHistory;
+            const paginatedcreditBounusHistory = await paginate(creditBounusHistory, page, pageSize);
+            res.status(200).json({
+                creditBonusHistory: paginatedcreditBounusHistory.results,
+                pagination: {
+                    page: paginatedcreditBounusHistory.page,
+                    pageSize: paginatedcreditBounusHistory.pageSize,
+                    totalPages: paginatedcreditBounusHistory.totalPages,
+                    totalDocs: paginatedcreditBounusHistory.totalDocs
+                },
+                sts: "01",
+                msg: "Get bonus paid report by admin Success",
+            });
+        } else {
+            return next(errorHandler(401, "User Login Failed"));
+        }
+    } catch (error) {
+        next(error);
+    }
+};

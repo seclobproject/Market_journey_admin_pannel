@@ -207,7 +207,7 @@ const userSchema = new mongoose.Schema(
         type: Boolean,
         default: false,
       },
-      isPackageFranchise: {
+      isCourseFranchise: {
         type: Boolean,
         default: false,
       },

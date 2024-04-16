@@ -5,7 +5,7 @@ import {
 } from "../controller/userController.js";
 import { protectUser } from "../middleware/authMiddleware.js";
 import { addDemateAccount, addNomineeDetails, addUserBankAccount } from "../controller/uploadController.js";
-import { directIncomeReportPaginated, getAutoPoolCountAmount, inDirectIncomeReportPaginated, levelIncomeReportPaginated, userAutoPoolIncomeHistory, userDemateAccounts, walletWithdrawReportUser } from "../controller/reportController.js";
+import { bonusCreditedReport, directIncomeReportPaginated, getAutoPoolCountAmount, inDirectIncomeReportPaginated, levelIncomeReportPaginated, userAutoPoolIncomeHistory, userDemateAccounts, walletWithdrawReportUser } from "../controller/reportController.js";
 
 const router = express.Router();
 
@@ -43,6 +43,10 @@ router.get("/autopool-credit-report", protectUser,userAutoPoolIncomeHistory);
 
 //get autopool count and amount
 router.get("/get-pool-count-amount",protectUser,getAutoPoolCountAmount);
+
+//get credit bonus history
+
+router.get("/view-credit-bonus-report",protectUser,bonusCreditedReport  );
 
 
 

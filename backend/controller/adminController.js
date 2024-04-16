@@ -7,7 +7,7 @@ import District from "../models/districtModel.js";
 import Zonal from "../models/zonalModel.js";
 import Panchayath from "../models/panchayathModel.js";
 import User from "../models/userModel.js";
-import { addToAutoPoolWallet, generatePromotersIncome, generateReferalIncome, setAutoPool } from "./incomeGereratorController.js";
+import { addToAutoPoolWallet, franchiseIncomeGenerator, generatePromotersIncome, generateReferalIncome, levelIncomeGenerator, setAutoPool } from "./incomeGereratorController.js";
 import sendMail from "../config/mailer.js";
 import Demate from "../models/demateModel.js";
 
@@ -1050,14 +1050,18 @@ export const acceptUser = async (req, res, next) => {
             sponserUser1.childLevel1.push(updatedUser._id);
             updatedSponser1=await sponserUser1.save();
           }
-
+          if(sponserUser1.isAdmin===false){
+            console.log(sponserUser1);
+            console.log(sponserUser2);
+            
           const referalIncome=await generateReferalIncome(updatedSponser1,updatedSponser2._id,updatedUser)
-          if(updatedUser.packageAmount >= 5000 ){
-            await addToAutoPoolWallet(updatedUser)
-          }
-          await generatePromotersIncome(updatedUser)
-          if(!(updatedSponser1.isDistrictFranchise) && !(updatedSponser1.isZonalFranchise))await setAutoPool(updatedSponser1,updatedUser);
+        }
 
+          if(!(updatedSponser1.isDistrictFranchise) && !(updatedSponser1.isZonalFranchise))await setAutoPool(updatedSponser1,updatedUser);
+        if(updatedUser.packageAmount >= 5000 ){
+          await addToAutoPoolWallet(updatedUser)
+        }
+        await generatePromotersIncome(updatedUser.packageAmount, 0.025)
 
           res
             .status(200)
@@ -1070,6 +1074,7 @@ export const acceptUser = async (req, res, next) => {
       return next(errorHandler(401, "Admin Login Failed"));
     }
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -1660,9 +1665,29 @@ export const addBonus=async(req,res,next)=>{
       description:description,
       status:"Approved"
     })
-
-    
-    
+    const updatedUser=await user.save();
+    if(updatedUser){
+      admin.totalPaidBonusAmount+=bonusAmount;
+      admin.addBounusHistory.push({
+        reportName: "Admin bonus History",
+        userID: updatedUser.ownSponserId,
+        name: updatedUser.name,
+        bonusAmount:bonusAmount,
+        transactionId:transactionId,
+        description:description,
+        phone:updatedUser.phone,
+        status: "Approved",
+      })
+    }
+    const updatedAdmin=  await admin.save();
+    if(updatedUser.isMobileFranchise){
+      await franchiseIncomeGenerator(updatedUser,bonusAmount,0.12,0.20)
+      await levelIncomeGenerator(updatedUser,bonusAmount)
+      await generatePromotersIncome(bonusAmount, 0.04)
+    }
+    res
+    .status(200)
+    .json({ updatedUser, sts: "01", msg: "Successfully Bonus Added" });
   } catch (error) {
     next(error)
   }

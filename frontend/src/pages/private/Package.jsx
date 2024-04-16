@@ -303,9 +303,9 @@ function Package() {
           <option value="" disabled selected>
             Select course type
           </option>
-          <option value="Loet_0.1">Loet 0.1</option>
-          <option value="Loet_Pro">Loet Pro</option>
-          <option value="PLoet_Promax">Loet Pro Max</option>
+          <option value="Loet 0.1">Loet 0.1</option>
+          <option value="Loet Pro">Loet Pro</option>
+          <option value="Loet Promax">Loet Pro Max</option>
           {/* <option value="Algo course">Algo course</option> */}
 
         </select>

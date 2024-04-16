@@ -25,7 +25,7 @@ const upload = multer({ storage: storage }).fields([
   { name: "homeImage", maxCount: 1 },
   { name: "videoThambnail", maxCount: 1 },
   { name: "memberImage", maxCount: 1 },
-
+  { name: "pdfFile", maxCount: 1 }, // Adjust field name and maxCount for PDF file
 
 ]);
 

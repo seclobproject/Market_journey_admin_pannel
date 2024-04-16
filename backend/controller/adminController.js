@@ -8,8 +8,8 @@ import Zonal from "../models/zonalModel.js";
 import Panchayath from "../models/panchayathModel.js";
 import User from "../models/userModel.js";
 import { addToAutoPoolWallet, franchiseIncomeGenerator, generatePromotersIncome, generateReferalIncome, levelIncomeGenerator, setAutoPool } from "./incomeGereratorController.js";
-import sendMail from "../config/mailer.js";
 import Demate from "../models/demateModel.js";
+import { sendMail } from "../config/mailer.js";
 
 
 
@@ -1061,7 +1061,7 @@ export const acceptUser = async (req, res, next) => {
         if(updatedUser.packageAmount >= 5000 ){
           await addToAutoPoolWallet(updatedUser)
         }
-        await generatePromotersIncome(updatedUser.packageAmount, 0.025)
+        await generatePromotersIncome(updatedUser.packageAmount,updatedUser, 0.025)
 
           res
             .status(200)
@@ -1304,6 +1304,7 @@ export const viewUserDetails = async (req, res, next) => {
         address: userData.address,
         dateOfBirth: userData.dateOfBirth,
         district:userData.district,
+        packageType:userData.packageType,
         zonal:userData.zonal,
         screenshot:userData.screenshot,
         aadhaar: userData.aadhaar,
@@ -1681,14 +1682,15 @@ export const addBonus=async(req,res,next)=>{
     }
     const updatedAdmin=  await admin.save();
     if(updatedUser.isMobileFranchise){
-      await franchiseIncomeGenerator(updatedUser,bonusAmount,0.12,0.20)
+      await franchiseIncomeGenerator(updatedUser,bonusAmount,"bonus",0.12,0.20)
       await levelIncomeGenerator(updatedUser,bonusAmount)
-      await generatePromotersIncome(bonusAmount, 0.04)
+      await generatePromotersIncome(bonusAmount,updatedUser, 0.04)
     }
     res
     .status(200)
-    .json({ updatedUser, sts: "01", msg: "Successfully Bonus Added" });
+    .json({ sts: "01", msg: "Successfully Bonus Added" });
   } catch (error) {
+    console.log(error);
     next(error)
   }
 }

@@ -144,6 +144,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    invoicePdf: {
+      type: String,
+      default: null,
+    },
     aadhaar: {
       type: String,
       default: null,

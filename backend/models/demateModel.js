@@ -31,6 +31,9 @@ const demateSchema = new mongoose.Schema({
   status: {
     type: String
   },
+  district:{
+    type:String
+  }
   
   
 

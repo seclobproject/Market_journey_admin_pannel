@@ -1,4 +1,3 @@
-import sendMail from "../config/mailer.js";
 import Admin from "../models/adminModel.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -8,6 +7,7 @@ import upload from "../config/multifileUpload.js";
 import District from "../models/districtModel.js";
 import Zonal from "../models/zonalModel.js";
 import Panchayath from "../models/panchayathModel.js";
+import { sendMail } from "../config/mailer.js";
 
 
 

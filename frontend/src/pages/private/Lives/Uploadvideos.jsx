@@ -124,6 +124,8 @@ function Uploadvideos() {
           "",
           "multipart/form-data"
         );
+        console.log(formData,"uploadimage");
+
         if (response.status === 201 || response.status === 200) {
           setVideoModal(false);
           setValidated(false);

@@ -19,15 +19,17 @@ function Invoice() {
   const handleSendEmail = async () => {
     generatePdf();
     if (pdfData) {
+      console.log(pdfData,"pdfData");
       try {
         const pdfBlob = new Blob([pdfData], { type: "application/pdf" });
         console.log(pdfBlob,"..pdfBlob..");
 
         const formData = new FormData();
-        formData.append("pdfFile", pdfBlob, data.name);
-        console.log(formData, "....");
+        formData.append("pdfFile", pdfBlob, `${data.name}.pdf`);       
+         console.log(formData, "....");
         const response = await ApiCall("post", `${attachMailUrl}/${data?.id}`, formData, "",
         "multipart/form-data");
+        console.log("formData",formData);
 
         console.log("respone",response);
         if (response.ok) {

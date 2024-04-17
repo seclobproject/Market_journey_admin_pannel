@@ -28,8 +28,6 @@ function Member() {
   const [memberModal, setMemberModal] = useState({ show: false, id: null });
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
-  const [bonusModal, setBonusModal] = useState({ show: false, id: null });
-  console.log(bonusModal,"[[[")
   const [addMember, setAddMember] = useState({});
 
   console.log(addMember, "addMember");
@@ -38,9 +36,7 @@ function Member() {
   const [zonalList, setZonalList] = useState([]);
   const [notTakenZonal, setNotTakenZonal] = useState([]);
   const [panchayathList, setPanchayathList] = useState([]);
-  const [addBonnus, setAddBonnus] = useState({
-    bonusAmount:'0'
-  });
+
   const [packageList, setPackageList] = useState([]);
   const [notTakenDistrict, setnotTakenDistrict] = useState([]);
   const [packageAmount, setPackageAmount] = useState({});
@@ -299,7 +295,6 @@ function Member() {
   }, [params]);
 
   useEffect(() => {
-   
     getPackagesList();
   }, [addMember?.packageType]);
 
@@ -328,7 +323,12 @@ function Member() {
     if (selectedZonalId) {
       getPanchayathList();
     }
-  }, [selectedStateId, selectedDistrictId, selectedZonalId,addMember?.franchise]);
+  }, [
+    selectedStateId,
+    selectedDistrictId,
+    selectedZonalId,
+    addMember?.franchise,
+  ]);
 
   const handleFilterAndSetFilter = (selectedOption) => {
     const filter = selectedOption.value;
@@ -375,30 +375,8 @@ function Member() {
     }
   };
 
-  const addBonnusToUser = async () => {
-    try {
-      const userId = bonusModal?.id;
-      if (!(addBonnus?.bonusAmount > 0)) {
-        Show_Toast('Please add a amount.');
-        return;
-      }
   
-      const response = await ApiCall("post", `${addBonnusUrl}/${userId}`, addBonnus);
-      if (response.status === 200) {
-        Show_Toast("Bonus added successfully.", true);
-        setValidated(false);
-        setBonusModal(false);
-        setAddBonnus({
-          bonusAmount:0        })
-      } else {
-        Show_Toast("Failed to add bonus. Please try again.", false);
-      }
-    } catch (error) {
-      Show_Toast(error.message, false);
-    }
-  };
-  
-  
+
   useEffect(() => {
     calculateTotalGstAmount();
   }, [addMember?.packageAmount]);
@@ -504,10 +482,8 @@ function Member() {
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">View Details</h6>
                       </th>
-                      <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Add bonus</h6>
-                      </th>
-                     
+                   
+
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">View Tree</h6>
                       </th>
@@ -538,7 +514,6 @@ function Member() {
                                 "--"}
                             </td>
 
-                            {/* <td>{users?.phone || "--"}</td> */}
 
                             <td>{users?.packageAmount}</td>
                             <td>{users?.franchise || "--"}</td>
@@ -568,19 +543,7 @@ function Member() {
                                 }
                               ></i>
                             </td>
-                            <td>
-                              {" "}
-                              <button
-                                className="btn btn-custom"
-                                onClick={() => {
-                                  setBonusModal({ show: true, id: users?._id });
-                                  // setAddMember("");
-                                  setValidated(false);
-                                }}
-                              >
-                                <i className="fas fa-plus"></i> Add Bonus
-                              </button>
-                            </td>
+                         
 
                             <td>
                               <button
@@ -818,7 +781,6 @@ function Member() {
                     value: addMember?.packageType,
                     label: addMember?.packageType,
                   }}
-                
                   onChange={(selectedOption) => {
                     setAddMember({
                       ...addMember,
@@ -835,9 +797,6 @@ function Member() {
                     });
                     setTotalGstAmount(""); // Correct syntax for setting totalgstAmount
                   }}
-                 
-                  
-                
                   placeholder="Select a package type" // Updated placeholder
                   isSearchable={true}
                   required={true}
@@ -850,7 +809,7 @@ function Member() {
 
               <div className="col-md-4  mt-2">
                 <label htmlFor="franchiseType" className="form-label">
-                   Type
+                  Type
                 </label>
 
                 <Select
@@ -942,7 +901,6 @@ function Member() {
                       options={notTakenDistrict?.map((districts) => ({
                         value: districts?.id,
                         label: districts?.name,
-
                       }))}
                       value={selectedState?.franchiseName}
                       onChange={(selectedOption) => {
@@ -1176,107 +1134,6 @@ function Member() {
           </button>
         </ModalComponent>
 
-        <ModalComponent
-          show={bonusModal.show}
-          onHide={() => {
-            setBonusModal({ show: false, id: null });
-          }}
-          title={<h5 style={{ color: "#F7AE15", margin: 0 }}>Add Bonus</h5>}
-          width={"500px"}
-        >
-          <Form
-            noValidate
-            validated={validated}
-            onSubmit={(e) => Check_Validation(e, addBonnusToUser, setValidated)}
-          >
-<h1 style={{ color: "#00335B" }}>₹{addBonnus?.bonusAmount}</h1>
-            <div className="mb-4">
-              <label htmlFor="exampleInputEmail1" className="form-label">
-              TransactionId 
-              </label>
-              <input 
-                required
-                className="form-control form-control-lg"
-                type="number"
-                pattern="[0-9]*"
-                placeholder="Enter an Transaction Id"
-                value={addBonnus?.transactionId}
-                onChange={(e) =>
-                  setAddBonnus({
-                    ...addBonnus,
-                    transactionId: e.target.value,
-                  })
-                }
-              />
-
-              <Form.Control.Feedback type="invalid">
-                Please provide a transaction Id.
-              </Form.Control.Feedback>
-            </div>
-            <div className="mb-4">
-              <label htmlFor="exampleInputEmail1" className="form-label">
-              Description
-              </label>
-              <textarea
-                  required
-                  className="form-control form-control-lg"
-                  style={{ height: "100px" }}
-                  placeholder="Enter a description"
-                  value={addMember?.description}
-                  onChange={(e) =>
-                    setAddMember({
-                      ...addMember,
-                      description: e.target.value,
-                    })
-                  }
-                />
-
-              <Form.Control.Feedback type="invalid">
-                Please provide a description.
-              </Form.Control.Feedback>
-            </div>
-            <div className="mb-4">
-              <label htmlFor="exampleInputEmail1" className="form-label">
-               Bonnus Amount
-              </label>
-              <input
-                required
-                className="form-control form-control-lg"
-                type="number"
-                pattern="[0-9]*"
-                placeholder="Enter an amount"
-                value={addBonnus?.bonusAmount}
-                onChange={(e) =>
-                  setAddBonnus({
-                    ...addBonnus,
-                    bonusAmount: e.target.value,
-                  })
-                }
-              />
-
-              <Form.Control.Feedback type="invalid">
-                Please provide a bonus amount.
-              </Form.Control.Feedback>
-            </div>
-          
-            <div className="col-12 mt-5">
-              <button type="submit" className="btn btn-custom float-end">
-                {/* {addLocation?._id ? 'Update' : 'Save'}  */}Send
-              </button>
-            </div>
-          </Form>
-          <button
-            className="btn btn-cancel float-end me-1"
-            onClick={() => {
-              setMemberModal({ show: false, id: null });
-              setSelectedStateId("");
-              selectedDistrictId("");
-              selectedZonalId("");
-            }}
-          >
-            Cancel
-          </button>
-        </ModalComponent>
       </SlideMotion>
     </>
   );

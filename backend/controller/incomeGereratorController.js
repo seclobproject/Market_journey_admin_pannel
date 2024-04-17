@@ -31,9 +31,9 @@ export const generateReferalIncome = async (
         const updatedSponser1=await sponser1.save()
         console.log(`(5)sponser1 ${sponser1.name} direct referal=== ${directReferalIncome}`);
         if(updatedSponser1.isMobileFranchise){
-          await franchiseIncomeGenerator(updatedSponser1,updatedUser.packageAmount,updatedUser.name)
+          await franchiseIncomeGenerator(updatedSponser1,updatedUser.packageAmount,updatedUser.name,0.05,0.08)
           await levelIncomeGenerator(updatedSponser1,directReferalIncome)
-          await franchiseIncomeGenerator(updatedSponser1,directReferalIncome)
+          await franchiseIncomeGenerator(updatedSponser1,directReferalIncome,updatedUser.name,0.05,0.08)
         }
         
       }
@@ -65,7 +65,7 @@ export const generateReferalIncome = async (
 
         if(updatedSponser2.isMobileFranchise){
           await levelIncomeGenerator(updatedSponser2,inDirectReferalIncome)
-          await franchiseIncomeGenerator(updatedSponser2,inDirectReferalIncome,0.05,0.08)
+          await franchiseIncomeGenerator(updatedSponser2,inDirectReferalIncome,updatedUser.name,0.05,0.08)
         }
       }
   
@@ -111,7 +111,7 @@ export const generateReferalIncome = async (
 
         console.log(`${updatedSponser.name} has credited level income ${levelIncome}`);
         if(updatedSponser){
-         await franchiseIncomeGenerator(updatedSponser,levelIncome)
+         await franchiseIncomeGenerator(updatedSponser,levelIncome,"",0.5,0.8)
           userData=updatedSponser;
           amount=levelIncome;
         }
@@ -126,6 +126,7 @@ export const generateReferalIncome = async (
 
   console.log("Reached in Franchise Income generator");
   console.log(`Reached user ${userData.name} amd Amount ${amount}`);
+  console.log(distPercentage,zonalPercentage);
 
     const districtIncome=amount*distPercentage ;
     const zonalIncome=amount*zonalPercentage ;
@@ -549,7 +550,7 @@ export const addToAutoPoolWallet=async(user)=>{
 
   //promoters income generator
 
-  export const generatePromotersIncome = async (amount,promoterPercentage) => {
+  export const generatePromotersIncome = async (amount,userData,promoterPercentage) => {
     const promoterIncome = amount * promoterPercentage;
 
     // Find all promoters

@@ -1,11 +1,11 @@
 import express from "express";
 const adminRouter = express.Router();
-import {acceptUser, addDistrict, addPanchayath, addState, addZonal, adminLogin,  deleteDistrict,  deletePanchayath,  deleteState,  deleteZonal,  editDistrict,  editPanchayath,  editProfileByAdmin,  editState,  editZonal,  forgotPassword, getReadyToApproveUsers, processDematAccount, processWalletWithdrawal, rejectUser,viewAdminProfile,viewAllDistricts, viewAllPagePanchayath, viewAllPageUsers, viewAllPageZonal, viewAllPanchayaths, viewAllUsers, viewAllZonals, viewNotTakenDistricts, viewNotTakenZonals, viewParamsDistricts, viewParamsPanchayaths, viewParamsZonals, viewStates, viewUserDetails, viewWithdrawPendingPaginated} from "../controller/adminController.js";
+import {acceptUser, addBonus, addDistrict, addPanchayath, addState, addZonal, adminLogin,  deleteDistrict,  deletePanchayath,  deleteState,  deleteZonal,  editDistrict,  editPanchayath,  editProfileByAdmin,  editState,  editZonal,  forgotPassword, getReadyToApproveUsers, processDematAccount, processWalletWithdrawal, rejectUser,viewAdminProfile,viewAllDistricts, viewAllPagePanchayath, viewAllPageUsers, viewAllPageZonal, viewAllPanchayaths, viewAllUsers, viewAllZonals, viewNotTakenDistricts, viewNotTakenZonals, viewParamsDistricts, viewParamsPanchayaths, viewParamsZonals, viewStates, viewUserDetails, viewWithdrawPendingPaginated} from "../controller/adminController.js";
 import { protectAdmin } from "../middleware/authMiddleware.js";
 import { addPackage, editPackage, viewPackages } from "../controller/packageController.js";
 import { addUser } from "../controller/userController.js";
 import { addAlert, addNews, deleteSingleAlert, deleteSingleAward, deleteSingleImage, deleteSingleNews, deleteSingleVideo, editAlert, editNews, updateAwardData, updateHomeVideo, uploadAwardDetails, uploadHomeImages, uploadHomeVideos, viewAlert, viewAwardDetails, viewHomeImages, viewHomeVideos, viewNews } from "../controller/uploadController.js";
-import { autoPoolHistory, getApprovedDematesPaginated, getPendingDematesPaginated, totalWalletWithdrawHistory, viewPoolUsers } from "../controller/reportController.js";
+import { autoPoolHistory, bonusPaidReportPaginated, getApprovedDematesPaginated, getPendingDematesPaginated, totalWalletWithdrawHistory, viewPoolUsers } from "../controller/reportController.js";
 import { addPoolPercentage, distributeAutoPoolWallet } from "../controller/incomeGereratorController.js";
 
 adminRouter.post("/admin-login", adminLogin);
@@ -65,6 +65,10 @@ adminRouter.post("/update-pool-percentage", protectAdmin,addPoolPercentage);
 
 adminRouter.post("/distribute-autowallet", protectAdmin,distributeAutoPoolWallet);
 
+//add bonus 
+adminRouter.post("/add-bonus/:id", protectAdmin,addBonus);
+
+
 
 
 adminRouter.get("/view-admin-profile", protectAdmin,viewAdminProfile);
@@ -114,5 +118,13 @@ adminRouter.get(
     getApprovedDematesPaginated
   );
 
+
+  //get bonus paid report
+
+  adminRouter.get(
+    "/view-bonus-paid-report",
+    protectAdmin,
+    bonusPaidReportPaginated
+  );
 
 export default adminRouter;

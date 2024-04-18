@@ -99,8 +99,8 @@ export const generateReferalIncome = async (
         sponser.levelIncomeHistory.push({
           reportName: "Level Income ",
           name: userData.name,
-          Amount:amount,
           percentageCredited:"25%",
+          Amount:amount,
           amountCredited: levelIncome,
           status: "Approved",
         });
@@ -130,7 +130,8 @@ export const generateReferalIncome = async (
 
     const districtIncome=amount*distPercentage ;
     const zonalIncome=amount*zonalPercentage ;
-
+    const distpers=distPercentage*100
+    const zonalpers=zonalPercentage*100
     const districtId=userData.districtFranchise;
     const zonalId=userData.zonalFranchise;
 
@@ -145,7 +146,7 @@ export const generateReferalIncome = async (
       userID: userData.ownSponserId,
       Amount:amount,
       name: userData.name,
-      percentageCredited:distPercentage,
+      percentageCredited:distpers,
       amountCredited: districtIncome,
       status: "Approved",
     });
@@ -164,7 +165,7 @@ export const generateReferalIncome = async (
       userID: userData.ownSponserId,
       Amount:amount,
       name: userData.name,
-      percentageCredited:zonalPercentage,
+      percentageCredited:zonalpers,
       amountCredited: zonalIncome,
       status: "Approved",
     });

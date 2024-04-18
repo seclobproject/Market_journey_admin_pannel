@@ -21,7 +21,11 @@ const districtSchema = new mongoose.Schema(
       editable:{
         type:Boolean,
         default:true
-      }
+      },
+      zonalFranchises: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+      mobileFranchises: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+      signalFranchises: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+      courseFranchises: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   {
     timestamps: true,

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import PdfTemplates from "../../../Components/templates";
 import { useLocation } from "react-router-dom";
@@ -99,4 +100,5 @@ function Invoice() {
   );
 }
 
-export default Invoice;
+
+// export default Invoice;

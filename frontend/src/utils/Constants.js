@@ -83,3 +83,5 @@ export const viewpoolUserUrl="/api/admin/view-autopool-users"
 export const adminProfileUrl="/api/admin/view-admin-profile"
 export const addBonnusUrl="/api/admin/add-bonus"
 export const viewBonnusURL="/api/admin/view-bonus-paid-report"
+//upload invoive
+export const attachMailUrl="/api/admin/upload-pdf"

@@ -1,12 +1,9 @@
 import React, { useRef } from "react";
 import Barcode from "react-barcode";
 import "./Templatestyle.css";
-import { jsPDF } from "jspdf";
-import ReactToPrint from "react-to-print";
 
 function PdfTemplates({ invoiceData }) {
-  const componentRef = useRef();
-
+  console.log(invoiceData?.ownSponserId);
   const calculateGSTAmount = (amount) => {
     const gstRate = 18;
     const gstAmount = (amount * gstRate) / 100;
@@ -17,25 +14,12 @@ function PdfTemplates({ invoiceData }) {
   const gstAmount = calculateGSTAmount(totalAmount);
   const totalWithGST = totalAmount + gstAmount;
 
-  const handleDownload = () => {
-    const printableContent = componentRef.current;
-
-    if (!printableContent) {
-      console.error("Printable content is missing.");
-      return;
-    }
-
-    const pdf = new jsPDF("landscape", "px", "a4", false);
-    pdf.html(printableContent, {
-      callback: () => {
-        pdf.save("invoice.pdf");
-      },
-    });
-  };
-
   return (
     <>
-      <div ref={componentRef} className="container">
+      <div
+        className="container"
+        style={{ paddingRight: "50px", paddingLeft: "50px" }}
+      >
         <div className="row">
           <div className="col-md-4 brcode">
             <Barcode
@@ -46,9 +30,17 @@ function PdfTemplates({ invoiceData }) {
             />
           </div>
           <div className="col-md-3 text-right bbc">
-            <h4 style={{ color: "#325aa8" }}>
-              <strong>MARKET JOURNEY</strong>
-            </h4>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <img
+                src="./public/dist/images/web logo-01.png"
+                alt=""
+                width={"15%"}
+                style={{ marginRight: "10px" }}
+              />
+              <h4 style={{ color: "#325aa8", margin: "0" }}>
+                <strong>MARKET JOURNEY</strong>
+              </h4>
+            </div>
             <p>(+91) 1234567890</p>
             <p>sample@gmail.com</p>
           </div>
@@ -60,98 +52,99 @@ function PdfTemplates({ invoiceData }) {
           </div>
         </div>
         <br />
-        <table className="table">
-          <thead>
-            <tr>
-              <th>
-                <h5>Package Type</h5>
-              </th>
-              <th>
-                <h5>Package</h5>
-              </th>
-              <th>
-                <h5>Amount</h5>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="col-md-9">
-                <h4>{invoiceData?.packageType}</h4>
-              </td>
-              <td className="col-md-9">
-                <h4>{invoiceData?.franchise}</h4>
-              </td>
-              <td className="col-md-9">
-                <h4>{invoiceData?.packageAmount}</h4>
-              </td>
-            </tr>
-            <tr>
-              <td className="text-right">
-                <p>
-                  <strong>GST:</strong>
-                </p>
-                <p>
-                  <strong>GST Amount:</strong>
-                </p>
-                <p>
-                  <strong>Package Amount:</strong>
-                </p>
-              </td>
-              <td>
-                <p>
-                  <strong>
-                    <i className="fas fa-rupee-sign"></i> 18%
-                  </strong>
-                </p>
-                <p>
-                  <strong>
-                    <i className="fas fa-rupee-sign"></i> ₹ {gstAmount}
-                  </strong>
-                </p>
-                <p>
-                  <strong>
-                    <i className="fas fa-rupee-sign"></i> ₹{" "}
-                    {invoiceData?.packageAmount}
-                  </strong>
-                </p>
-              </td>
-            </tr>
-            <tr style={{ color: "#F81D2D" }}>
-              <td className="text-right">
-                <h4>
-                  <strong>Total:</strong>
-                </h4>
-              </td>
-              <td className="text-left">
-                <h4>
-                  <strong>
-                    <i className="fas fa-rupee-sign"></i> ₹ {totalWithGST}
-                  </strong>
-                </h4>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+
+        <div className="table-container table-responsive rounded-2 mb-4">
+          <table className="table border text-nowrap customize-table mb-0 align-middle">
+            <thead className="text-dark fs-4 table-light">
+              <tr>
+                <th>
+                  <h6 className="fs-4 fw-semibold mb-0">Package Type</h6>
+                </th>
+                <th>
+                  <h6 className="fs-4 fw-semibold mb-0">Package</h6>
+                </th>
+                <th>
+                  <h6 className="fs-4 fw-semibold mb-0">Amount</h6>
+                </th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="col-md-9">
+                  <h4>{invoiceData?.packageType}</h4>
+                </td>
+                <td className="col-md-9">
+                  <h4>{invoiceData?.franchise}</h4>
+                </td>
+                <td className="col-md-9">
+                  <h4>₹{invoiceData?.packageAmount}</h4>
+                </td>
+              </tr>
+              <tr>
+                <td className="text-right">
+                  <p>
+                    <strong>GST:</strong>
+                  </p>
+                  <p>
+                    <strong>GST Amount:</strong>
+                  </p>
+                  <p>
+                    <strong>Package Amount:</strong>
+                  </p>
+                </td>
+                <td>
+                  <p>
+                    <strong>
+                    ₹ 18%
+                    </strong>
+                  </p>
+                  <p>
+                    <strong>
+                    ₹ {gstAmount}
+                    </strong>
+                  </p>
+                  <p>
+                    <strong>
+                      ₹{" "}
+                      {invoiceData?.packageAmount}
+                    </strong>
+                  </p>
+                </td>
+              </tr>
+              <tr style={{ color: "#F81D2D" }}>
+                <td className="text-right">
+                  <h4>
+                    <strong>Total:</strong>
+                  </h4>
+                </td>
+                <td className="text-left">
+                  <h4>
+                    <strong>
+                     ₹ {totalWithGST}
+                    </strong>
+                  </h4>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <div className="col-md-12">
           <br />
-          <p>
+          <h5>
             <b>Name: {invoiceData?.name}</b>
-          </p>
-          <p>
+          </h5>
+          <h5>
             <b>Contact: {invoiceData?.phone}</b>
-          </p>
-          <p>
+          </h5>
+          <h5>
             <b>Email: {invoiceData?.email}</b>
-          </p>
+          </h5>
+          <h5>
+            <b>Email: {invoiceData?.ownSponserId}</b>
+          </h5>
         </div>
       </div>
-      <button onClick={handleDownload}>Download PDF</button>
-      <ReactToPrint
-        trigger={() => <button>Print</button>}
-        content={() => componentRef.current}
-        documentTitle={`INVOICE`}
-      />
     </>
   );
 }

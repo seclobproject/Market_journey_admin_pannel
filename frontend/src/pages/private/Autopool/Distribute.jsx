@@ -32,9 +32,13 @@ function Distribute() {
   const [details, setDetails] = useState({});
   const [count, setCount] = useState({});
   const [distributionHistory, setDistributionHistory] = useState({});
-  const [poolPercentage, setPoolPercentage] = useState({});
-  const [totalPercentage, setTotalPercentage] = useState();
-
+  const [poolPercentage, setPoolPercentage] = useState({
+    autoPoolPercentageA: "",
+    autoPoolPercentageB: "",
+    autoPoolPercentageC: "",
+    autoPoolPercentageD: "",
+    autoPoolPercentageE: "",
+  });
 
   const getAdminprofile = async () => {
     setIsLoading(true);
@@ -66,7 +70,6 @@ function Distribute() {
         (parseInt(poolPercentage?.autoPoolPercentageD) || 0) +
         (parseInt(poolPercentage?.autoPoolPercentageE) || 0);
 
-
       if (totalValue !== 100) {
         Show_Toast("The total percentage should be exactly 100");
         setLoading(false);
@@ -89,18 +92,17 @@ function Distribute() {
       console.error("Error updating pool percentage:", error);
     }
   };
-
   const calculateTotalValues = (e) => {
-    setPoolPercentage({ ...poolPercentage, [e.target.name]: e.target.value });
-    const totalValues =
-      (parseInt(poolPercentage?.autoPoolPercentageA) || 0) +
-      (parseInt(poolPercentage?.autoPoolPercentageB) || 0) +
-      (parseInt(poolPercentage?.autoPoolPercentageC) || 0) +
-      (parseInt(poolPercentage?.autoPoolPercentageD) || 0) +
-      (parseInt(poolPercentage?.autoPoolPercentageE) || 0);
-    // setTotalPercentage(totalValues);
-  };
+    const { name, value } = e.target;
+    setPoolPercentage({ ...poolPercentage, [name]: value });
 
+    const totalValues =
+      (parseInt(poolPercentage.autoPoolPercentageA) || 0) +
+      (parseInt(poolPercentage.autoPoolPercentageB) || 0) +
+      (parseInt(poolPercentage.autoPoolPercentageC) || 0) +
+      (parseInt(poolPercentage.autoPoolPercentageD) || 0) +
+      (parseInt(poolPercentage.autoPoolPercentageE) || 0);
+  };
 
   const distributeWalet = async () => {
     try {
@@ -120,8 +122,6 @@ function Distribute() {
     }
   };
 
-
-  
   useEffect(() => {
     getAdminprofile();
   }, []);
@@ -151,7 +151,7 @@ function Distribute() {
                     className="fw-semibold mb-0 mt-2"
                     style={{ color: "rgb(247, 174, 21)" }}
                   >
-                    {details?.autoPoolWallet}
+                    ₹ {details?.autoPoolWallet}
                   </h4>
                   <div className="col-12 mt-5">
                     <div className="row">
@@ -170,19 +170,6 @@ function Distribute() {
                           Distribute
                         </button>
                       </div>
-                      <div className="col-6 ">
-                        <button
-                          type="submit"
-                          className="btn btn-warning"
-                          onClick={() =>
-                            navigate("/autopool/members", {
-                              // state: { data: users?._id },
-                            })
-                          }
-                        >
-                          View Members
-                        </button>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -190,309 +177,363 @@ function Distribute() {
             </div>
             <div class="col-md-9 ">
               <div className="card" style={{ background: "#00335B" }}>
-              {isLoading ? (
-            <Loader />
-          ) : (
-                <div className="row align-items-center p-4 text-center">
-                  {" "}
-                  {/* Added text-center class */}
-        
-                  <div className="d-flex align-items-center">
-                    <h5
-                      className="card-title mb-0 fw-semibold"
-                      style={{ color: "white" }}
-                    >
-                      Pool Percentage
-                    </h5>
-                    <button
-                      onClick={() => {
-                        setPercentageModal({ show: true, id: null });
-                        setValidated(false);
-                        setPoolPercentage({
-                          ...poolPercentage,
-                          autoPoolPercentageA: details?.autoPoolPercentageA,
-                          autoPoolPercentageB: details?.autoPoolPercentageB,
-                          autoPoolPercentageC: details?.autoPoolPercentageC,
-                          autoPoolPercentageD: details?.autoPoolPercentageD,
-                          autoPoolPercentageE: details?.autoPoolPercentageE,
-                        });
-                        calculateTotalValues();
-                      }}
-                      className="btn btn-link"
-                      style={{ color: "rgb(247, 174, 21)" }}
-                    >
-                      <i className="fas fa-pencil-alt"></i>
-                    </button>
-                  </div>
-                  <div className="col d-flex align-items-center">
-                    <div className="row mb-3">
-                      <div className="col-2 mb-2" style={{ width: "150px" }}>
-                        <div className="me-2">
-                          <div
-                            className="mb-3"
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "center",
-                            }}
-                          >
-                            <h6
-                              className="mb-3"
-                              style={{ color: "#ffae1f", marginBottom: "5px" }}
-                            >
-                              Pool
-                            </h6>
+                {isLoading ? (
+                  <Loader />
+                ) : (
+                  <div className="row align-items-center p-4 text-center">
+                    {" "}
+                    {/* Added text-center class */}
+                    <div className="d-flex align-items-center">
+                      <h5
+                        className="card-title mb-0 fw-semibold"
+                        style={{ color: "white" }}
+                      >
+                        Pool Percentage
+                      </h5>
+                      <button
+                        onClick={() => {
+                          setPercentageModal({ show: true, id: null });
+                          setValidated(false);
+                          setPoolPercentage({
+                            ...poolPercentage,
+                            autoPoolPercentageA: details?.autoPoolPercentageA,
+                            autoPoolPercentageB: details?.autoPoolPercentageB,
+                            autoPoolPercentageC: details?.autoPoolPercentageC,
+                            autoPoolPercentageD: details?.autoPoolPercentageD,
+                            autoPoolPercentageE: details?.autoPoolPercentageE,
+                          });
+                          calculateTotalValues();
+                        }}
+                        className="btn btn-link"
+                        style={{ color: "rgb(247, 174, 21)" }}
+                      >
+                        <i className="fas fa-pencil-alt"></i>
+                      </button>
+                    </div>
+                    <div className="col d-flex align-items-center">
+                      <div className="row mb-3">
+                        <div className="col-2 mb-2" style={{ width: "150px" }}>
+                          <div className="me-2">
                             <div
-                              className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center"
-                              style={{ width: "30px", height: "30px" }}
+                              className="mb-3"
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                              }}
                             >
-                              <span className="text-uppercase">A</span>
+                              <h6
+                                className="mb-3"
+                                style={{
+                                  color: "#ffae1f",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                Pool
+                              </h6>
+                              <div
+                                className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center"
+                                style={{ width: "30px", height: "30px" }}
+                              >
+                                <span className="text-uppercase">A</span>
+                              </div>
                             </div>
-                          </div>
-                          <div className="mb-3">
-                            <h6
-                              style={{ color: "#ffae1f", marginBottom: "5px" }}
-                            >
-                              Percentage
-                            </h6>
-                            <span
-                              className="form-control"
-                              style={{ background: "#ffff" }}
-                            >
-                              {details?.autoPoolPercentageA ||0+ "%"}
-                            </span>
-                          </div>
-                          <div>
-                            <h6
-                              style={{ color: "#ffae1f", marginBottom: "5px" }}
-                            >
-                              Members
-                            </h6>
-                            <span
-                              className="form-control"
-                              style={{ background: "#ffff" }}
-                            >
-                              {count?.countInPoolA}
-                            </span>
+                            <div className="mb-3">
+                              <h6
+                                style={{
+                                  color: "#ffae1f",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                Percentage
+                              </h6>
+                              <span
+                                className="form-control"
+                                style={{ background: "#ffff" }}
+                              >
+                                {details?.autoPoolPercentageA || 0 + "%"}
+                              </span>
+                            </div>
+                            <div>
+                              <h6
+                                style={{
+                                  color: "#ffae1f",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                Members
+                              </h6>
+                              <span
+                                className="form-control"
+                                style={{ background: "#ffff" }}
+                              >
+                                {count?.countInPoolA}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="col-2  mb-2" style={{ width: "150px" }}>
-                        <div className="me-2">
-                          <div
-                            className="mb-3"
-                            style={{
-                              alignItems: "center",
-                              display: "flex",
-                              flexDirection: "column",
-                            }}
-                          >
-                            <h6
-                              className="mb-3"
-                              style={{ color: "#ffae1f", marginBottom: "5px" }}
-                            >
-                              Pool
-                            </h6>
+                        <div className="col-2  mb-2" style={{ width: "150px" }}>
+                          <div className="me-2">
                             <div
-                              className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center"
-                              style={{ width: "30px", height: "30px" }}
+                              className="mb-3"
+                              style={{
+                                alignItems: "center",
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
                             >
-                              <span className="text-uppercase">B</span>
+                              <h6
+                                className="mb-3"
+                                style={{
+                                  color: "#ffae1f",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                Pool
+                              </h6>
+                              <div
+                                className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center"
+                                style={{ width: "30px", height: "30px" }}
+                              >
+                                <span className="text-uppercase">B</span>
+                              </div>
                             </div>
-                          </div>
-                          <div className="mb-3">
-                            <h6
-                              style={{ color: "#ffae1f", marginBottom: "5px" }}
-                            >
-                              Percentage
-                            </h6>
-                            <span
-                              className="form-control"
-                              style={{ background: "#ffff" }}
-                            >
-                              {details?.autoPoolPercentageB||0 + "%"}
-                            </span>
-                          </div>
-                          <div>
-                            <h6
-                              style={{ color: "#ffae1f", marginBottom: "5px" }}
-                            >
-                              Members
-                            </h6>
-                            <span
-                              className="form-control"
-                              style={{ background: "#ffff" }}
-                            >
-                              {count?.countInPoolB}
-                            </span>
+                            <div className="mb-3">
+                              <h6
+                                style={{
+                                  color: "#ffae1f",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                Percentage
+                              </h6>
+                              <span
+                                className="form-control"
+                                style={{ background: "#ffff" }}
+                              >
+                                {details?.autoPoolPercentageB || 0 + "%"}
+                              </span>
+                            </div>
+                            <div>
+                              <h6
+                                style={{
+                                  color: "#ffae1f",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                Members
+                              </h6>
+                              <span
+                                className="form-control"
+                                style={{ background: "#ffff" }}
+                              >
+                                {count?.countInPoolB}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="col-2  mb-2" style={{ width: "150px" }}>
-                        <div className="me-2">
-                          <div
-                            className="mb-3"
-                            style={{
-                              alignItems: "center",
-                              display: "flex",
-                              flexDirection: "column",
-                            }}
-                          >
-                            <h6
-                              className="mb-3"
-                              style={{ color: "#ffae1f", marginBottom: "5px" }}
-                            >
-                              Pool
-                            </h6>
+                        <div className="col-2  mb-2" style={{ width: "150px" }}>
+                          <div className="me-2">
                             <div
-                              className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center"
-                              style={{ width: "30px", height: "30px" }}
+                              className="mb-3"
+                              style={{
+                                alignItems: "center",
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
                             >
-                              <span className="text-uppercase">C</span>
+                              <h6
+                                className="mb-3"
+                                style={{
+                                  color: "#ffae1f",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                Pool
+                              </h6>
+                              <div
+                                className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center"
+                                style={{ width: "30px", height: "30px" }}
+                              >
+                                <span className="text-uppercase">C</span>
+                              </div>
                             </div>
-                          </div>
-                          <div className="mb-3">
-                            <h6
-                              style={{ color: "#ffae1f", marginBottom: "5px" }}
-                            >
-                              Percentage
-                            </h6>
-                            <span
-                              className="form-control"
-                              style={{ background: "#ffff" }}
-                            >
-                              {details?.autoPoolPercentageC||0 + "%"}
-                            </span>
-                          </div>
-                          <div>
-                            <h6
-                              style={{ color: "#ffae1f", marginBottom: "5px" }}
-                            >
-                              Members
-                            </h6>
-                            <span
-                              className="form-control"
-                              style={{ background: "#ffff" }}
-                            >
-                              {count?.countInPoolC}
-                            </span>
+                            <div className="mb-3">
+                              <h6
+                                style={{
+                                  color: "#ffae1f",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                Percentage
+                              </h6>
+                              <span
+                                className="form-control"
+                                style={{ background: "#ffff" }}
+                              >
+                                {details?.autoPoolPercentageC || 0 + "%"}
+                              </span>
+                            </div>
+                            <div>
+                              <h6
+                                style={{
+                                  color: "#ffae1f",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                Members
+                              </h6>
+                              <span
+                                className="form-control"
+                                style={{ background: "#ffff" }}
+                              >
+                                {count?.countInPoolC}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="col-2  mb-2" style={{ width: "150px" }}>
-                        <div className="me-2">
-                          <div
-                            className="mb-3"
-                            style={{
-                              alignItems: "center",
-                              display: "flex",
-                              flexDirection: "column",
-                            }}
-                          >
-                            <h6
-                              className="mb-3"
-                              style={{ color: "#ffae1f", marginBottom: "5px" }}
-                            >
-                              Pool
-                            </h6>
+                        <div className="col-2  mb-2" style={{ width: "150px" }}>
+                          <div className="me-2">
                             <div
-                              className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center"
-                              style={{ width: "30px", height: "30px" }}
+                              className="mb-3"
+                              style={{
+                                alignItems: "center",
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
                             >
-                              <span className="text-uppercase">D</span>
+                              <h6
+                                className="mb-3"
+                                style={{
+                                  color: "#ffae1f",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                Pool
+                              </h6>
+                              <div
+                                className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center"
+                                style={{ width: "30px", height: "30px" }}
+                              >
+                                <span className="text-uppercase">D</span>
+                              </div>
                             </div>
-                          </div>
-                          <div className="mb-3">
-                            <h6
-                              style={{ color: "#ffae1f", marginBottom: "5px" }}
-                            >
-                              Percentage
-                            </h6>
-                            <span
-                              className="form-control"
-                              style={{ background: "#ffff" }}
-                            >
-                              {details?.autoPoolPercentageD||0 + "%"}
-                            </span>
-                          </div>
-                          <div>
-                            <h6
-                              style={{ color: "#ffae1f", marginBottom: "5px" }}
-                            >
-                              Members
-                            </h6>
-                            <span
-                              className="form-control"
-                              style={{ background: "#ffff" }}
-                            >
-                              {count?.countInPoolD}
-                            </span>
+                            <div className="mb-3">
+                              <h6
+                                style={{
+                                  color: "#ffae1f",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                Percentage
+                              </h6>
+                              <span
+                                className="form-control"
+                                style={{ background: "#ffff" }}
+                              >
+                                {details?.autoPoolPercentageD || 0 + "%"}
+                              </span>
+                            </div>
+                            <div>
+                              <h6
+                                style={{
+                                  color: "#ffae1f",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                Members
+                              </h6>
+                              <span
+                                className="form-control"
+                                style={{ background: "#ffff" }}
+                              >
+                                {count?.countInPoolD}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="col-3  mb-2" style={{ width: "150px" }}>
-                        <div className="me-2">
-                          <div
-                            className="mb-3"
-                            style={{
-                              alignItems: "center",
-                              display: "flex",
-                              flexDirection: "column",
-                            }}
-                          >
-                            <h6
-                              className="mb-3"
-                              style={{ color: "#ffae1f", marginBottom: "5px" }}
-                            >
-                              Pool
-                            </h6>
+                        <div className="col-3  mb-2" style={{ width: "150px" }}>
+                          <div className="me-2">
                             <div
-                              className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center"
-                              style={{ width: "30px", height: "30px" }}
+                              className="mb-3"
+                              style={{
+                                alignItems: "center",
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
                             >
-                              <span className="text-uppercase">E</span>
+                              <h6
+                                className="mb-3"
+                                style={{
+                                  color: "#ffae1f",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                Pool
+                              </h6>
+                              <div
+                                className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center"
+                                style={{ width: "30px", height: "30px" }}
+                              >
+                                <span className="text-uppercase">E</span>
+                              </div>
+                            </div>
+                            <div
+                              className="mb-3"
+                              style={{
+                                alignItems: "center",
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
+                            >
+                              <h6
+                                style={{
+                                  color: "#ffae1f",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                Percentage
+                              </h6>
+                              <span
+                                className="form-control"
+                                style={{ background: "#ffff" }}
+                              >
+                                {details?.autoPoolPercentageE || 0 + "%"}
+                              </span>
+                            </div>
+                            <div>
+                              <h6
+                                style={{
+                                  color: "#ffae1f",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                Members
+                              </h6>
+                              <span
+                                className="form-control"
+                                style={{ background: "#ffff" }}
+                              >
+                                {count?.countInPoolE}
+                              </span>
                             </div>
                           </div>
-                          <div
-                            className="mb-3"
-                            style={{
-                              alignItems: "center",
-                              display: "flex",
-                              flexDirection: "column",
-                            }}
-                          >
-                            <h6
-                              style={{ color: "#ffae1f", marginBottom: "5px" }}
+                        </div>
+                        <div className="col-4  mb-2" style={{ width: "150px" }}>
+                          <div className="col-6">
+                            <button
+                              type="submit"
+                              className="btn btn-warning"
+                              onClick={() => navigate("/autopool/members", {})}
                             >
-                              Percentage
-                            </h6>
-                            <span
-                              className="form-control"
-                              style={{ background: "#ffff" }}
-                            >
-                              {details?.autoPoolPercentageE||0 + "%"}
-                            </span>
-                          </div>
-                          <div>
-                            <h6
-                              style={{ color: "#ffae1f", marginBottom: "5px" }}
-                            >
-                              Members
-                            </h6>
-                            <span
-                              className="form-control"
-                              style={{ background: "#ffff" }}
-                            >
-                              {count?.countInPoolE}
-                            </span>
+                              View Members
+                            </button>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-      
-                </div>
-                    )}
+                )}
               </div>
             </div>
           </div>
@@ -583,33 +624,27 @@ function Distribute() {
                   <tbody>
                     {distributionHistory?.length ? (
                       <>
-                        {distributionHistory.map(
-                          (history, index) => (
-                            (
-                              <tr key={index}>
-                                <td>{index + 1}</td>
-                                <td>
-                                  {history?.createdAt
-                                    ? moment(history.createdAt).format(
-                                        "DD/MM/YYYY"
-                                      )
-                                    : "--"}
-                                </td>
-                                <td>{history?.distributedAmount}</td>
-                                <td>{history?.amountpoolA}</td>
-                                <td>{history?.countInPoolA}</td>
-                                <td>{history?.amountpoolB}</td>
-                                <td>{history?.countInPoolB}</td>
-                                <td>{history?.amountpoolC}</td>
-                                <td>{history?.countInPoolC}</td>
-                                <td>{history?.amountpoolD}</td>
-                                <td>{history?.countInPoolD}</td>
-                                <td>{history?.amountpoolE}</td>
-                                <td>{history?.countInPoolE}</td>
-                              </tr>
-                            )
-                          )
-                        )}
+                        {distributionHistory.map((history, index) => (
+                          <tr key={index}>
+                            <td>{index + 1}</td>
+                            <td>
+                              {history?.createdAt
+                                ? moment(history.createdAt).format("DD/MM/YYYY")
+                                : "--"}
+                            </td>
+                            <td>{history?.distributedAmount}</td>
+                            <td>{history?.amountpoolA}</td>
+                            <td>{history?.countInPoolA}</td>
+                            <td>{history?.amountpoolB}</td>
+                            <td>{history?.countInPoolB}</td>
+                            <td>{history?.amountpoolC}</td>
+                            <td>{history?.countInPoolC}</td>
+                            <td>{history?.amountpoolD}</td>
+                            <td>{history?.countInPoolD}</td>
+                            <td>{history?.amountpoolE}</td>
+                            <td>{history?.countInPoolE}</td>
+                          </tr>
+                        ))}
                       </>
                     ) : (
                       <tr>
@@ -635,7 +670,6 @@ function Distribute() {
         centered
         width={"500px"}
       >
-        {totalPercentage}
         <Form
           noValidate
           validated={validated}
@@ -802,7 +836,6 @@ function Distribute() {
                 distributeWalet();
               }}
             >
-              {/* Yes, {approveModal?.action === "approve" ? "Approve" : "Reject"}{" "} */}
               Yes, Distribute it
             </button>
           </div>

@@ -30,7 +30,6 @@ function Member() {
   const [validated, setValidated] = useState(false);
   const [addMember, setAddMember] = useState({});
 
-  console.log(addMember, "addMember");
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [zonalList, setZonalList] = useState([]);
@@ -40,12 +39,8 @@ function Member() {
   const [packageList, setPackageList] = useState([]);
   const [notTakenDistrict, setnotTakenDistrict] = useState([]);
   const [packageAmount, setPackageAmount] = useState({});
-  console.log(packageAmount, "packageAmoun..t");
-  console.log(packageList, "packageList..t");
   const [packageType, setpackageType] = useState();
-  console.log(packageType, "99000");
   const [totalgstAmount, setTotalGstAmount] = useState("");
-  console.log(totalgstAmount, " totalgstAmounts sum");
   const [showPassword, setShowPassword] = useState(false);
   const [showTransPassword, setShowTransPassword] = useState(false);
   const [selectedStateId, setSelectedStateId] = useState(null);
@@ -60,7 +55,6 @@ function Member() {
   });
   const [totalPages, setTotalPages] = useState(1);
   const [filteredData, setFilteredData] = useState([]);
-  console.log(filteredData, " filteredData sufilteredDatam");
 
   const [filteredDataStatus, setFilteredDataStatus] = useState([]);
   const [filter, setFilter] = useState();
@@ -109,7 +103,6 @@ function Member() {
         "get",
         `${districtnotTakenUrl}/${selectedStateId}`
       );
-      console.log(response, "not taken");
       if (response.status === 200) {
         setnotTakenDistrict(response?.data?.districts);
       } else {
@@ -130,7 +123,6 @@ function Member() {
         "get",
         `${districtlistinZonalUrl}/${selectedStateId}`
       );
-      console.log(response, "ddistrict get");
       if (response.status === 200) {
         setDistrictList(response?.data?.districts);
       } else {
@@ -145,13 +137,11 @@ function Member() {
   };
   //-----------not taken Zonal in drop down--------
   const getZonallist = async () => {
-    console.log("reached hereee ver bad");
     try {
       const response = await ApiCall(
         "get",
         `${nottakenZonalUrl}/${selectedDistrictId}`
       );
-      console.log(response, "reached hereee ver bad");
 
       if (response.status === 200) {
         setNotTakenZonal(response?.data?.zonals);
@@ -186,13 +176,11 @@ function Member() {
   };
   //-----------list Zonal in drop down--------
   const getPanchayathList = async () => {
-    console.log("reaction");
     try {
       const response = await ApiCall(
         "get",
         `${panchayathlistindropdownUrl}/${selectedZonalId}`
       );
-      console.log(response, "res res res from api");
       if (response.status === 200) {
         setPanchayathList(response?.data?.panchayaths);
       } else {
@@ -223,7 +211,6 @@ function Member() {
           }
         );
 
-        console.log(filteredPackageList, "filteredPackageList");
         setPackageList(filteredPackageList);
       } else {
         console.error(
@@ -262,7 +249,6 @@ function Member() {
     try {
       const response = await ApiCall("get", viewalluserUrl, {}, params);
       if (response.status === 200) {
-        console.log("all userssss...ss...", response);
         setAllUser(response?.data?.userData?.results);
         setFilteredData(response?.data?.userData?.results);
         setTotalPages(response?.data?.userData?.totalPages);
@@ -344,12 +330,9 @@ function Member() {
     const filterStatus = e.target.value;
 
     setFilter(filterStatus);
-    console.log(filterStatus, "==");
     const newFilteredData = allUser.filter((item) => {
-      console.log(item, "iteamssssss///");
       return filterStatus ? item.userStatus === filterStatus : true;
     });
-    console.log(newFilteredData, "fgdffdfd");
     setFilteredData(newFilteredData);
   };
 
@@ -361,21 +344,12 @@ function Member() {
 
   const calculateTotalGstAmount = () => {
     if (addMember?.packageAmount) {
-      console.log("working..........");
-
       const partAmount = Number(addMember?.packageAmount);
-      console.log(`partAmount: ${typeof partAmount}`);
-
       const percentage = partAmount * 0.18;
-      console.log(`percentage: ${typeof percentage}`);
-
       const sum = partAmount + percentage;
-      console.log(`Sum: ${sum}`);
       setTotalGstAmount(sum);
     }
   };
-
-  
 
   useEffect(() => {
     calculateTotalGstAmount();
@@ -482,7 +456,6 @@ function Member() {
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">View Details</h6>
                       </th>
-                   
 
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">View Tree</h6>
@@ -514,7 +487,6 @@ function Member() {
                                 "--"}
                             </td>
 
-
                             <td>{users?.packageAmount}</td>
                             <td>{users?.franchise || "--"}</td>
                             <td>{users?.franchiseName || "--"}</td>
@@ -543,7 +515,6 @@ function Member() {
                                 }
                               ></i>
                             </td>
-                         
 
                             <td>
                               <button
@@ -857,7 +828,7 @@ function Member() {
                   readOnly
                   value={totalgstAmount}
                 />
-                <span style={{ color: "red" }}>Included 18% of GST</span>
+                <span style={{ color: "green" }}>Included 18% of GST</span>
               </div>
 
               {addMember?.franchise === "District Franchise" && (
@@ -1133,7 +1104,6 @@ function Member() {
             Cancel
           </button>
         </ModalComponent>
-
       </SlideMotion>
     </>
   );

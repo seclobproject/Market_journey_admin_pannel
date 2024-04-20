@@ -4,7 +4,7 @@ import { SlideMotion } from "../../../libs/FramerMotion";
 import Loader from "../../../Components/Loader";
 import { ContextData } from "../../../Services/Context";
 import ModalComponent from "../../../Components/ModalComponet";
-import { Form } from "react-bootstrap";
+import { Form, Stack } from "react-bootstrap";
 import { ApiCall } from "../../../Services/Api";
 import {
   addalertUrl,
@@ -13,6 +13,8 @@ import {
   editalertUrl,
   viewalertsUrl,
 } from "../../../utils/Constants";
+import { Pagination } from "@mui/material";
+import moment from "moment";
 
 function Alert() {
   const [alertModal, setAlertModal] = useState({ show: false, id: null });
@@ -24,14 +26,21 @@ function Alert() {
   });
   const [alertList, setAlertList] = useState([]);
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
+  const [params, setParams] = useState({
+    page: 1,
+    pageSize: 10,
+  });
+  const [totalPages, setTotalPages] = useState(1);
+  const startIndex = (params.page - 1) * params.pageSize;
 
   //-----------list alerts--------
   const getAlerts = async () => {
     try {
       setIsLoading(true);
-      const response = await ApiCall("get", viewalertsUrl);
+      const response = await ApiCall("get", viewalertsUrl, {}, params);
       if (response.status === 200) {
-        setAlertList(response?.data?.alertData);
+        setAlertList(response?.data?.signals);
+        setTotalPages(response?.data?.pagination?.totalPages);
         setIsLoading(false);
       } else {
         console.error(
@@ -99,9 +108,15 @@ function Alert() {
     }
   };
 
+  const handlePageChange = (event, newPage) => {
+    setParams((prevParams) => ({
+      ...prevParams,
+      page: newPage,
+    }));
+  };
   useEffect(() => {
     getAlerts();
-  }, []);
+  }, [params]);
   return (
     <>
       <SlideMotion>
@@ -142,6 +157,12 @@ function Alert() {
                         <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                       </th>
                       <th>
+                        <h6 className="fs-4 fw-semibold mb-0">Date</h6>
+                      </th>
+                      <th>
+                        <h6 className="fs-4 fw-semibold mb-0">Signals</h6>
+                      </th>
+                      <th>
                         <h6 className="fs-4 fw-semibold mb-0">Alerts</h6>
                       </th>
 
@@ -155,7 +176,13 @@ function Alert() {
                       <>
                         {alertList.map((alert, index) => (
                           <tr key={index}>
-                            <td>{index + 1}</td>
+                            <td>{startIndex + index + 1}</td>
+                            <td>
+                              {alert?.createdAt
+                                ? moment(alert.createdAt).format("DD/MM/YYYY")
+                                : "--"}
+                            </td>
+                            <td>{alert?.title || "--"}</td>
 
                             <td>{alert?.description || "--"}</td>
                             <td>
@@ -172,19 +199,28 @@ function Alert() {
                               >
                                 <i
                                   className="fs-4 fas fa-trash-alt"
-                                  style={{ color: "red",cursor: "pointer" }}
+                                  style={{
+                                    color: "red",
+                                    cursor: "pointer",
+                                  }}
                                 />
                               </a>
                               <a
                                 className="dropdown-item d-flex align-items-center gap-3 mt-2"
                                 onClick={() => {
-                                  setAlertModal({ show: true, id: null });
+                                  setAlertModal({
+                                    show: true,
+                                    id: alert?._id,
+                                  });
                                   setAddAlerts(alert);
                                 }}
                               >
                                 <i
                                   className="fs-4 fas fa-pencil-alt"
-                                  style={{ color: "red",cursor: "pointer" }}
+                                  style={{
+                                    color: "red",
+                                    cursor: "pointer",
+                                  }}
                                 ></i>{" "}
                               </a>
                             </td>
@@ -204,7 +240,16 @@ function Alert() {
               </div>
             </div>
           )}
-       
+          <div className="me-2 mb-3 d-flex ms-auto">
+            <Stack spacing={2}>
+              <Pagination
+                count={totalPages}
+                page={params.page}
+                onChange={handlePageChange}
+                color="primary"
+              />
+            </Stack>
+          </div>
         </div>
       </SlideMotion>
       <ModalComponent
@@ -221,7 +266,29 @@ function Alert() {
           validated={validated}
           onSubmit={(e) => Check_Validation(e, addAlertsFun, setValidated)}
         >
-          
+          {!alertModal?.id && (
+            <div className="mb-4">
+              <label htmlFor="exampleInputEmail1" className="form-label">
+                Signals
+              </label>
+              <select
+                value={addAlerts?.title}
+                onChange={(e) => {
+                  setAddAlerts({
+                    ...addAlerts,
+                    title: e.target.value,
+                  });
+                }}
+                className="form-control"
+              >
+                <option value="bankNifty">BankNifty</option>
+                <option value="nifty">Nifty</option>
+                <option value="crudeOil">crudeOil</option>
+                {/* Add more filter options as needed */}
+              </select>
+            </div>
+          )}
+
           <div className="mb-4">
             <label htmlFor="exampleInputEmail1" className="form-label">
               Alert Content
@@ -247,7 +314,7 @@ function Alert() {
 
           <div className="col-12 mt-4">
             <button type="submit" className="btn btn-custom float-end ms-1">
-              {addAlerts?._id ? "Update" : "Save"}
+              {addAlerts?._id ? "Update" : "Send"}
             </button>
           </div>
         </Form>

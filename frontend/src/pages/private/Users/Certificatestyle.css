@@ -1,0 +1,14 @@
+.container-certificate{
+    height: 400px;
+    width: 560px;
+    position: relative;
+
+}
+.content-certificate{
+    position: relative;
+    top: -303px;
+    left: 70px;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}

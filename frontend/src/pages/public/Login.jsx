@@ -139,13 +139,7 @@ Username
                               Please enter the password
                             </Form.Control.Feedback>
                           </div>
-                          {/* <Link
-                            className="fw-medium mb-3"
-                            style={{ color: "#926c15", fontSize: "15px" }} // Change the color property to red
-                            to={"/forgotpassword"}
-                          >
-                            Forgot password?
-                          </Link> */}
+                        
                         </div>
 
                         <Button

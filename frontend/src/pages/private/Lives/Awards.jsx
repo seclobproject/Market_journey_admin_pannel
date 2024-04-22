@@ -222,7 +222,6 @@ function Awards() {
                       <>
                         {awardDetails.map(
                           (details, index) => (
-                            console.log(details, "de"),
                             (
                               <tr key={index}>
                                 <td>{index + 1}</td>

@@ -17,7 +17,6 @@ import { get } from "mongoose";
 function Livenew() {
   const [newsModal, setNewsModal] = useState({ show: false, id: null });
   const [addNews, setAddNews] = useState({});
-  console.log(addNews)
   const [newsList, setNewsList] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);

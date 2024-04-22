@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Serving static files
-app.use("/uploads", express.static("/var/www/seclob/marketjourney/uploads"));
+app.use("/uploads", express.static("/var/www/seclob/marketjourney/adminfolder/uploads"));
 // app.use("/uploads", express.static("uploads"));
 
 // Routes
@@ -38,11 +38,11 @@ app.use((err, req, res, next) => {
 // Production setup
 if (NODE_ENV === "production") {
     // Serve frontend files
-    app.use(express.static("frontend/dist"));
+    app.use(express.static("/var/www/seclob/marketjourney/adminfolder/frontend/dist"));
 
     // Handle React routing, return all requests to React app
     app.get("*", (req, res) => {
-        res.sendFile("index.html", { root: "./frontend/dist" });
+     res.sendFile("/var/www/seclob/marketjourney/adminfolder/frontend/dist/index.html");
     });
 }
 

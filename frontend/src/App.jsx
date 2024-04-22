@@ -29,6 +29,9 @@ import Withdraw from "./pages/private/Autopool/Withdraw";
 import Distribute from "./pages/private/Autopool/Distribute";
 import Alldemate from "./pages/private/Demat/Alldemate";
 import Automembers from "./pages/private/Autopool/Automembers";
+import Invoice from "./pages/private/Users/Invoice";
+import Certificate from "./pages/private/Users/Certificate";
+import Report from "./pages/private/Reportpages/Report";
 
 
 function App() {
@@ -63,6 +66,12 @@ function App() {
           <Route path="/autopool-wallet/history" element={<Withdraw/>}/>
           <Route path="/autopool-wallet/distribute" element={<Distribute />}/>
           <Route path="/autopool/members" element={<Automembers />}/>
+          <Route path="/invoice" element={<Invoice />}/>
+          <Route path="/certificate" element={<Certificate />}/>
+          <Route path="/reports" element={<Report />}/>
+
+
+
 
 
 

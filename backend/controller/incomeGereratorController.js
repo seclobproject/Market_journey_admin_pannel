@@ -31,10 +31,9 @@ export const generateReferalIncome = async (
         const updatedSponser1=await sponser1.save()
         console.log(`(5)sponser1 ${sponser1.name} direct referal=== ${directReferalIncome}`);
         if(updatedSponser1.isMobileFranchise){
-          await franchiseIncomeGenerator(updatedSponser1,updatedUser.packageAmount,updatedUser.name)
+          await franchiseIncomeGenerator(updatedSponser1,updatedUser.packageAmount,updatedUser.name,0.05,0.08)
           await levelIncomeGenerator(updatedSponser1,directReferalIncome)
-          await franchiseIncomeGenerator(updatedSponser1,directReferalIncome)
-        
+          await franchiseIncomeGenerator(updatedSponser1,directReferalIncome,updatedUser.name,0.05,0.08)
         }
         
       }
@@ -66,7 +65,7 @@ export const generateReferalIncome = async (
 
         if(updatedSponser2.isMobileFranchise){
           await levelIncomeGenerator(updatedSponser2,inDirectReferalIncome)
-          await franchiseIncomeGenerator(updatedSponser2,inDirectReferalIncome)
+          await franchiseIncomeGenerator(updatedSponser2,inDirectReferalIncome,updatedUser.name,0.05,0.08)
         }
       }
   
@@ -76,7 +75,7 @@ export const generateReferalIncome = async (
 
 
 
-  const levelIncomeGenerator=async (userData,amount)=>{
+  export const levelIncomeGenerator=async (userData,amount)=>{
   console.log("-----------------------------------------------------------------------------------------------------------");
 
     console.log(`enter to level income function---${userData.name}--Amount is-----${amount}-----------------`);
@@ -100,19 +99,19 @@ export const generateReferalIncome = async (
         sponser.levelIncomeHistory.push({
           reportName: "Level Income ",
           name: userData.name,
-          Amount:amount,
           percentageCredited:"25%",
+          Amount:amount,
           amountCredited: levelIncome,
           status: "Approved",
         });
 
         const updatedSponser=await sponser.save();
         console.log("updated wallet:",updatedSponser.walletAmount);
-      console.log("updated total level income:",sponser.totalLevelIncome);
+        console.log("updated total level income:",sponser.totalLevelIncome);
 
         console.log(`${updatedSponser.name} has credited level income ${levelIncome}`);
         if(updatedSponser){
-         await franchiseIncomeGenerator(updatedSponser,levelIncome)
+         await franchiseIncomeGenerator(updatedSponser,levelIncome,"",0.5,0.8)
           userData=updatedSponser;
           amount=levelIncome;
         }
@@ -122,15 +121,17 @@ export const generateReferalIncome = async (
 
 
 
-  const franchiseIncomeGenerator=async(userData,amount,name)=>{
+  export const franchiseIncomeGenerator=async(userData,amount,name,distPercentage,zonalPercentage)=>{
   console.log("-----------------------------------------------------------------------------------------------------------------");
 
   console.log("Reached in Franchise Income generator");
   console.log(`Reached user ${userData.name} amd Amount ${amount}`);
+  console.log(distPercentage,zonalPercentage);
 
-    const districtIncome=amount*0.05;
-    const zonalIncome=amount*0.08;
-
+    const districtIncome=amount*distPercentage ;
+    const zonalIncome=amount*zonalPercentage ;
+    const distpers=distPercentage*100
+    const zonalpers=zonalPercentage*100
     const districtId=userData.districtFranchise;
     const zonalId=userData.zonalFranchise;
 
@@ -145,7 +146,7 @@ export const generateReferalIncome = async (
       userID: userData.ownSponserId,
       Amount:amount,
       name: userData.name,
-      percentageCredited:"5%",
+      percentageCredited:distpers,
       amountCredited: districtIncome,
       status: "Approved",
     });
@@ -164,7 +165,7 @@ export const generateReferalIncome = async (
       userID: userData.ownSponserId,
       Amount:amount,
       name: userData.name,
-      percentageCredited:"8%",
+      percentageCredited:zonalpers,
       amountCredited: zonalIncome,
       status: "Approved",
     });
@@ -550,8 +551,8 @@ export const addToAutoPoolWallet=async(user)=>{
 
   //promoters income generator
 
-  export const generatePromotersIncome = async (userData) => {
-    const promoterIncome = userData.packageAmount * 0.025;
+  export const generatePromotersIncome = async (amount,userData,promoterPercentage) => {
+    const promoterIncome = amount * promoterPercentage;
 
     // Find all promoters
     const promoterData = await User.find({ isPromoter: true });
@@ -564,7 +565,7 @@ export const addToAutoPoolWallet=async(user)=>{
             reportName: "Promoter Income",
             userID: userData.ownSponserId,
             name: userData.name,
-            percentageCredited: "2.5%",
+            percentageCredited: promoterPercentage,
             amountCredited: promoterIncome,
             status: "Approved",
         });

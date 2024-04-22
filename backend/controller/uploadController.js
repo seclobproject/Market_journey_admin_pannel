@@ -1,3 +1,4 @@
+import { sendMailWithAttachment } from "../config/mailer.js";
 import upload from "../config/multifileUpload.js";
 import { errorHandler } from "../middleware/errorHandler.js";
 import Admin from "../models/adminModel.js";
@@ -864,3 +865,53 @@ export const addDemateAccount = async (req, res, next) => {
     next(error);
   }
 };
+
+//pdf upload function
+
+export const uploadPdf = async (req, res, next) => {
+  try {
+    const adminId = req.admin._id;
+    const {id}=req.params
+    const adminData = await Admin.findById(adminId);
+
+    if (!adminData) {
+      return next(errorHandler(401, "Admin not exist"));
+    }
+    const userData=await User.findById(id);
+    if (!userData) {
+      return next(errorHandler(401, "User not exist"));
+    }
+
+    upload(req, res, async function (err) {
+      if (err) {
+        return next(errorHandler(401, "File upload error"));
+      }
+
+      if (!req.files.pdfFile) {
+        return next(errorHandler(401, "PDF file not found"));
+      }
+
+      const pdfFileName = req.files.pdfFile[0].filename;
+
+      userData.invoicePdf=pdfFileName
+      const newPdf=userData.save();
+      
+      // Send email with PDF attachment
+      if (newPdf) {
+        const recipientEmail = userData.email; // Use the recipient's email address
+        const pdfFilePath = `http://localhost:6003/uploads/${pdfFileName}`; // Adjust path to PDF
+
+        const emailSent = await sendMailWithAttachment(userData,recipientEmail, pdfFilePath);
+        
+        return res.status(201).json({
+          sts: "01",
+          msg: "PDF Added Successfully",
+          emailSent: emailSent ? "Email Sent Successfully" : "Email Sending Failed",
+        });
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

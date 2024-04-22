@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-const sendMail = (mailId, name, sponserid, password) => {
+export const sendMail = (mailId, name, sponserid, password) => {
   const recipient = mailId;
 
   const transporter = nodemailer.createTransport({
@@ -29,4 +29,71 @@ const sendMail = (mailId, name, sponserid, password) => {
   });
 };
 
-export default sendMail;
+export const withdrawMail = (recipient, receiver, sender, requested, released, walletAmount) => {
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    requireTLS: true,
+    auth: {
+      user: "seclobclt@gmail.com",
+      pass: "tplg bisd mapf emsb",
+    },
+  });
+  const mailOptions = {
+    from: `MARKET JOURNEY GROUP <seclobclt@gmail.com>`,
+    to: `${recipient}`,
+    subject: `Withdraw Request from ${sender}`,
+    text: `Hi ${receiver}, You have a withdraw request from ${sender}.`,
+    html: `<h4>Withdraw Request</h4><p>Hi ${receiver},</p><p>You have a withdraw request from ${sender}.</p><p>Requested Amount: ${requested}</p><p>Released Amount: ${released}</p><p>Wallet Amount: ${walletAmount}</p>`,
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email has been sent:", info.response);
+    }
+  });
+};
+
+
+
+
+
+
+
+
+export const sendMailWithAttachment=async(user,recipient, pdfFilePath)=> {
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    requireTLS: true,
+    auth: {
+      user: "seclobclt@gmail.com",
+      pass: "tplg bisd mapf emsb",
+    },
+  });
+
+  const mailOptions = {
+    from: `MARKET JOURNEY GROUP <seclobclt@gmail.com>`,
+    to: recipient,
+    subject: `Payment Invoice`,
+    text: `Hi, ${user.name} is successfully completed your payment. please find the attachment`,
+    attachments: [
+      {
+        filename: 'Invoice.pdf',
+        path: pdfFilePath,
+      },
+    ],
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email has been sent:", info.response);
+    return true;
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return false;
+  }
+}

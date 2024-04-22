@@ -81,4 +81,9 @@ export const distributeWalletUrl="/api/admin/distribute-autowallet"
 export const viewpoolUserUrl="/api/admin/view-autopool-users"
 //admin profile
 export const adminProfileUrl="/api/admin/view-admin-profile"
-
+export const addBonnusUrl="/api/admin/add-bonus"
+export const viewBonnusURL="/api/admin/view-bonus-paid-report"
+//upload invoive
+export const attachMailUrl="/api/admin/upload-pdf"
+//report
+export const reportuserUrl="/api/admin/view-filtered-users?page=1&pageSize=10"

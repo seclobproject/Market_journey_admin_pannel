@@ -6,6 +6,7 @@ import { ContextData } from "../../../Services/Context";
 import { Form } from "react-bootstrap";
 import Select from "react-select";
 import {
+  addBonnusUrl,
   districtlistinZonalUrl,
   districtnotTakenUrl,
   memberaddUrl,
@@ -27,25 +28,19 @@ function Member() {
   const [memberModal, setMemberModal] = useState({ show: false, id: null });
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
-  const [bonusModal, setBonusModal] = useState({ show: false, id: null });
   const [addMember, setAddMember] = useState({});
 
-console.log(addMember,"addMember");
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [zonalList, setZonalList] = useState([]);
   const [notTakenZonal, setNotTakenZonal] = useState([]);
   const [panchayathList, setPanchayathList] = useState([]);
-  const [addBonnus, setAddBonnus] = useState([]);
+
   const [packageList, setPackageList] = useState([]);
   const [notTakenDistrict, setnotTakenDistrict] = useState([]);
   const [packageAmount, setPackageAmount] = useState({});
-  console.log(packageAmount,"packageAmoun..t");
-  console.log(packageList,"packageList..t");
   const [packageType, setpackageType] = useState();
-console.log(packageType,"99000");
   const [totalgstAmount, setTotalGstAmount] = useState("");
-console.log(totalgstAmount," totalgstAmounts sum");
   const [showPassword, setShowPassword] = useState(false);
   const [showTransPassword, setShowTransPassword] = useState(false);
   const [selectedStateId, setSelectedStateId] = useState(null);
@@ -60,12 +55,30 @@ console.log(totalgstAmount," totalgstAmounts sum");
   });
   const [totalPages, setTotalPages] = useState(1);
   const [filteredData, setFilteredData] = useState([]);
+
   const [filteredDataStatus, setFilteredDataStatus] = useState([]);
   const [filter, setFilter] = useState();
   const [statusfilter, setStatusFilter] = useState();
 
   const navigate = useNavigate();
   const startIndex = (params.page - 1) * params.pageSize;
+  const options = [
+    { value: "View all", label: "View all" },
+    { value: "District Franchise", label: "District Franchise" },
+    { value: "Zonal Franchise", label: "Zonal Franchise" },
+    { value: "Mobile Franchise", label: "Mobile Franchise" },
+    { value: "Algo", label: "Algo Trade" },
+    { value: "Trading Cafe", label: "Trading Cafe" },
+    { value: "Loet 0.1", label: "Loet 0.1" },
+    { value: "Loet Pro", label: "Loet Pro" },
+    { value: "Loet Promax", label: "Loet Pro Max" },
+    { value: "Nifty", label: "Nifty" },
+    { value: "Nifty & Bank Nifty", label: "Nifty & Bank Nifty" },
+    { value: "Bank Nifty", label: "Bank Nifty" },
+    { value: "Bank Nifty & CrudeOil", label: "Bank Nifty & Crude Oil" },
+    { value: "Nifty & CrudeOil", label: "Nifty & Crude Oil" },
+    { value: "CrudeOil", label: "Crude Oil" },
+  ];
   //-----------list district in drop down--------
   const getStateList = async () => {
     try {
@@ -84,13 +97,11 @@ console.log(totalgstAmount," totalgstAmounts sum");
   };
   //----------- not taken district in drop down--------
   const getDistrictList = async () => {
-    console.log("here");
     try {
       const response = await ApiCall(
         "get",
         `${districtnotTakenUrl}/${selectedStateId}`
       );
-      console.log(response, "not taken");
       if (response.status === 200) {
         setnotTakenDistrict(response?.data?.districts);
       } else {
@@ -111,7 +122,6 @@ console.log(totalgstAmount," totalgstAmounts sum");
         "get",
         `${districtlistinZonalUrl}/${selectedStateId}`
       );
-      console.log(response, "ddistrict get");
       if (response.status === 200) {
         setDistrictList(response?.data?.districts);
       } else {
@@ -126,13 +136,11 @@ console.log(totalgstAmount," totalgstAmounts sum");
   };
   //-----------not taken Zonal in drop down--------
   const getZonallist = async () => {
-    console.log("reached hereee ver bad");
     try {
       const response = await ApiCall(
         "get",
         `${nottakenZonalUrl}/${selectedDistrictId}`
       );
-      console.log(response, "reached hereee ver bad");
 
       if (response.status === 200) {
         setNotTakenZonal(response?.data?.zonals);
@@ -146,6 +154,7 @@ console.log(totalgstAmount," totalgstAmounts sum");
       console.error("Error fetching state list:", error);
     }
   };
+  
   //-----------list Zonal in drop down--------
   const getAllZonallist = async () => {
     try {
@@ -167,13 +176,11 @@ console.log(totalgstAmount," totalgstAmounts sum");
   };
   //-----------list Zonal in drop down--------
   const getPanchayathList = async () => {
-    console.log("reaction");
     try {
       const response = await ApiCall(
         "get",
         `${panchayathlistindropdownUrl}/${selectedZonalId}`
       );
-      console.log(response, "res res res from api");
       if (response.status === 200) {
         setPanchayathList(response?.data?.panchayaths);
       } else {
@@ -191,15 +198,19 @@ console.log(totalgstAmount," totalgstAmounts sum");
     try {
       const response = await ApiCall("get", packagesListUrl);
       if (response.status === 200) {
-        const filteredPackageList = response?.data?.packageData.filter(pkg => {
-          if (addMember?.packageType === 'Franchise') {
-            return pkg?.franchiseName !== 'Courses' && pkg?.franchiseName !== 'Signals';
-          } else {
-            return pkg?.franchiseName === addMember?.packageType;
+        const filteredPackageList = response?.data?.packageData.filter(
+          (pkg) => {
+            if (addMember?.packageType === "Franchise") {
+              return (
+                pkg?.franchiseName !== "Courses" &&
+                pkg?.franchiseName !== "Signals"
+              );
+            } else {
+              return pkg?.franchiseName === addMember?.packageType;
+            }
           }
-        });
+        );
 
-        console.log(filteredPackageList,"filteredPackageList");
         setPackageList(filteredPackageList);
       } else {
         console.error(
@@ -211,7 +222,7 @@ console.log(totalgstAmount," totalgstAmounts sum");
       console.error("Error fetching package list:", error);
     }
   };
-  
+
   //---------Add--panchayath---------
   const addMemberFun = async () => {
     try {
@@ -238,7 +249,6 @@ console.log(totalgstAmount," totalgstAmounts sum");
     try {
       const response = await ApiCall("get", viewalluserUrl, {}, params);
       if (response.status === 200) {
-        console.log("all userssss...ss...", response);
         setAllUser(response?.data?.userData?.results);
         setFilteredData(response?.data?.userData?.results);
         setTotalPages(response?.data?.userData?.totalPages);
@@ -268,19 +278,14 @@ console.log(totalgstAmount," totalgstAmounts sum");
   };
   useEffect(() => {
     getallUsers();
-   
-    
   }, [params]);
 
- useEffect(()=>{
-  getPackagesList();
-
- },[addMember?.packageType])
-
-
+  useEffect(() => {
+    getPackagesList();
+  }, [addMember?.packageType]);
 
   useEffect(() => {
-    if (filter === "View_all") {
+    if (filter === "View all") {
       getallUsers();
     }
   }, [filter]);
@@ -304,10 +309,15 @@ console.log(totalgstAmount," totalgstAmounts sum");
     if (selectedZonalId) {
       getPanchayathList();
     }
-  }, [selectedStateId, selectedDistrictId, selectedZonalId]);
+  }, [
+    selectedStateId,
+    selectedDistrictId,
+    selectedZonalId,
+    addMember?.franchise,
+  ]);
 
-  const handleFilterAndSetFilter = (e) => {
-    const filter = e.target.value;
+  const handleFilterAndSetFilter = (selectedOption) => {
+    const filter = selectedOption.value;
 
     setFilter(filter);
     const newFilteredData = allUser.filter((item) => {
@@ -320,12 +330,9 @@ console.log(totalgstAmount," totalgstAmounts sum");
     const filterStatus = e.target.value;
 
     setFilter(filterStatus);
-    console.log(filterStatus,"==")
     const newFilteredData = allUser.filter((item) => {
-      console.log(item, "iteamssssss///");
       return filterStatus ? item.userStatus === filterStatus : true;
     });
-    console.log(newFilteredData, "fgdffdfd");
     setFilteredData(newFilteredData);
   };
 
@@ -337,25 +344,16 @@ console.log(totalgstAmount," totalgstAmounts sum");
 
   const calculateTotalGstAmount = () => {
     if (addMember?.packageAmount) {
-      console.log('working..........');
-
       const partAmount = Number(addMember?.packageAmount);
-      console.log(`partAmount: ${typeof(partAmount)}`);
-  
       const percentage = partAmount * 0.18;
-      console.log(`percentage: ${typeof(percentage)}`);
-  
       const sum = partAmount + percentage;
-      console.log(`Sum: ${sum}`);
-      setTotalGstAmount(sum)
-  
+      setTotalGstAmount(sum);
     }
   };
-console.log(packageOptions?.packageAmount,"packageOptions")
 
-useEffect(()=>{
-  calculateTotalGstAmount()
-},[addMember?.packageAmount]);
+  useEffect(() => {
+    calculateTotalGstAmount();
+  }, [addMember?.packageAmount]);
   return (
     <>
       <SlideMotion>
@@ -375,7 +373,7 @@ useEffect(()=>{
                 onClick={() => {
                   setMemberModal({ show: true, id: null });
                   setAddMember("");
-                  setpackageType("")
+                  setpackageType("");
                   setTotalGstAmount("");
                   setValidated(false);
                 }}
@@ -386,21 +384,15 @@ useEffect(()=>{
           </div>
           <div className="row ms-2 me-2">
             <div className="col-md-3 mt-3 sm-2">
-              <select
-                value={filter}
-                onChange={(e) => handleFilterAndSetFilter(e)}
-                className="form-control"
-              >
-                <option selected disabled>
-                  Search by franchise type...
-                </option>
-
-                <option value="View_all">View All</option>
-                <option value="District Franchise">District Franchise</option>
-                <option value="Zonal Franchise">Zonal Franchise</option>
-                <option value="Mobile Franchise">Mobile Franchise</option>
-                {/* Add more filter options as needed */}
-              </select>
+              <Select
+                // value={{ value: filter, label: filter }}
+                onChange={(selectedOption) =>
+                  handleFilterAndSetFilter(selectedOption)
+                }
+                options={options}
+                placeholder="Search by franchise type..."
+                isSearchable={true}
+              />
             </div>
             <div className="col-md-3 mt-3">
               <select
@@ -412,7 +404,7 @@ useEffect(()=>{
                   Search by status...
                 </option>
 
-                <option value="View_all">View All</option>
+                <option value="View all">View All</option>
                 <option value="readyToApprove">Ready to Approve</option>
                 <option value="pending">pending</option>
                 <option value="approved">Approved</option>
@@ -444,17 +436,14 @@ useEffect(()=>{
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Sponsor Name</h6>
                       </th>
-                   
-                    
+
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">
                           Package Amount
                         </h6>
                       </th>
                       <th>
-                        <h6 className="fs-4 fw-semibold mb-0">
-                           Type
-                        </h6>
+                        <h6 className="fs-4 fw-semibold mb-0">Type</h6>
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">
@@ -467,10 +456,7 @@ useEffect(()=>{
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">View Details</h6>
                       </th>
-                      {/* <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Add bonus</h6>
-                      </th>
-                      */}
+
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">View Tree</h6>
                       </th>
@@ -501,8 +487,6 @@ useEffect(()=>{
                                 "--"}
                             </td>
 
-                            {/* <td>{users?.phone || "--"}</td> */} 
-                           
                             <td>{users?.packageAmount}</td>
                             <td>{users?.franchise || "--"}</td>
                             <td>{users?.franchiseName || "--"}</td>
@@ -531,27 +515,15 @@ useEffect(()=>{
                                 }
                               ></i>
                             </td>
-                            {/* <td>
-                              {" "}
-                              <button
-                                className="btn btn-custom"
-                                onClick={() => {
-                                  setBonusModal({ show: true, id: null });
-                                  // setAddMember("");
-                                  setValidated(false);
-                                }}
-                              >
-                                <i className="fas fa-plus"></i> Add Bonus
-                              </button>
-                            </td> */}
-                          
+
                             <td>
-                              <button className="btn btn-custom "
-                              onClick={() =>
-                                navigate("/user/downline", {
-                                  state: { data: users?._id },
-                                })
-                              }
+                              <button
+                                className="btn btn-custom "
+                                onClick={() =>
+                                  navigate("/user/downline", {
+                                    state: { data: users?._id },
+                                  })
+                                }
                               >
                                 <i className="fas fa-sitemap"></i> View Tree
                               </button>
@@ -689,35 +661,33 @@ useEffect(()=>{
               </div>
               <div className="col-md-6">
                 <div className="row">
-                <div className="col-9">
+                  <div className="col-9">
                     <label htmlFor="transactionPassword" className="form-label">
                       Date Of Birth
                     </label>
                     <label
                       htmlFor="transactionPassword"
                       className="form-label"
-                    >
-                    
-                    </label>
+                    ></label>
                   </div>
-                <div className="input-group mb-2">
-                  <input
-                    required
-                 type="date"
-                    className="form-control form-control-lg"
-                    placeholder="Enter your password"
-                    value={addMember?.dateOfBirth}
-                    onChange={(e) =>
-                      setAddMember({
-                        ...addMember,
-                        dateOfBirth: e.target.value,
-                      })
-                    }
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Please provide a Date.
-                  </Form.Control.Feedback>
-                </div>
+                  <div className="input-group mb-2">
+                    <input
+                      required
+                      type="date"
+                      className="form-control form-control-lg"
+                      placeholder="Enter your password"
+                      value={addMember?.dateOfBirth}
+                      onChange={(e) =>
+                        setAddMember({
+                          ...addMember,
+                          dateOfBirth: e.target.value,
+                        })
+                      }
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a Date.
+                    </Form.Control.Feedback>
+                  </div>
                   <div className="col-9">
                     <label htmlFor="transactionPassword" className="form-label">
                       Password
@@ -734,7 +704,6 @@ useEffect(()=>{
                       )}{" "}
                     </label>
                   </div>
-                 
                 </div>
 
                 <div className="input-group">
@@ -757,14 +726,8 @@ useEffect(()=>{
                 </div>
               </div>
               <div className="col-md-6">
-                <div className="row">
-             
-             
-                </div>
-
-               
+                <div className="row"></div>
               </div>
-           
             </div>
 
             <div className="mb-4 row"></div>
@@ -772,44 +735,52 @@ useEffect(()=>{
               className=""
               style={{ border: "1px solid ", height: "1px", color: "#F7AE15" }}
             ></div>
-            
+
             <div className="mb-4 row mt-2">
-            <div className="col-md-4 mt-2">
-  <label htmlFor="franchiseType" className="form-label">
-    Package Type
-  </label>
+              <div className="col-md-4 mt-2">
+                <label htmlFor="franchiseType" className="form-label">
+                  Package Type
+                </label>
 
-  <Select
-    options={[
-      { value: 'Franchise', label: 'Franchise' },
-      { value: 'Courses', label: 'Courses' },
-      { value: 'Signals', label: 'Signals' },
-    ]}
-    value={{
-      value: addMember?.packageType,
-      label: addMember?.packageType,
-    }}
-    User
-    onChange={(selectedOption) => {
-          setAddMember({
-            ...addMember,
-          packageType: selectedOption.value,
-          });
-        }} 
-    
-    placeholder="Select a package type" // Updated placeholder
-    isSearchable={true}
-    required={true}
-  />
+                <Select
+                  options={[
+                    { value: "Franchise", label: "Franchise" },
+                    { value: "Courses", label: "Courses" },
+                    { value: "Signals", label: "Signals" },
+                  ]}
+                  value={{
+                    value: addMember?.packageType,
+                    label: addMember?.packageType,
+                  }}
+                  onChange={(selectedOption) => {
+                    setAddMember({
+                      ...addMember,
+                      packageType: selectedOption.value,
+                      franchiseName: "",
+                      franchiseType: "",
+                      packageAmount: "",
+                      totalgstAmount: "", // Reset totalgstAmount
+                      franchise: "",
+                      state: "",
+                      District: "",
+                      Zonal: "",
+                      panchayath: "",
+                    });
+                    setTotalGstAmount(""); // Correct syntax for setting totalgstAmount
+                  }}
+                  placeholder="Select a package type" // Updated placeholder
+                  isSearchable={true}
+                  required={true}
+                />
 
-  <Form.Control.Feedback type="invalid">
-    Please select a package type.
-  </Form.Control.Feedback>
-</div>
+                <Form.Control.Feedback type="invalid">
+                  Please select a package type.
+                </Form.Control.Feedback>
+              </div>
 
               <div className="col-md-4  mt-2">
                 <label htmlFor="franchiseType" className="form-label">
-                  Franchise Type
+                  Type
                 </label>
 
                 <Select
@@ -824,8 +795,8 @@ useEffect(()=>{
                       franchise: selectedOption.value,
                       packageAmount: selectedOption.packageAmount,
                     });
-                
-                      getStateList();
+
+                    getStateList();
                   }}
                   placeholder="Select a franchise type" // Set the placeholder here
                   isSearchable={true}
@@ -857,7 +828,7 @@ useEffect(()=>{
                   readOnly
                   value={totalgstAmount}
                 />
-<span style={{ color: 'red' }}>Included 18% of GST</span>
+                <span style={{ color: "green" }}>Included 18% of GST</span>
               </div>
 
               {addMember?.franchise === "District Franchise" && (
@@ -880,7 +851,8 @@ useEffect(()=>{
                         }
                         setAddMember({
                           ...addMember,
-                          state: selectedOption?.label,
+                          state: selectedOption?.value,
+                          franchiseName: "",
                         });
                       }}
                       placeholder="Select a state"
@@ -1003,10 +975,9 @@ useEffect(()=>{
               </div>
             )}
 
-            {(addMember?.franchise === "Mobile Franchise" || 
-           packageType === "Courses" ||
-           packageType === "Signals"
-              ) && (
+            {(addMember?.franchise === "Mobile Franchise" ||
+              packageType === "Courses" ||
+              packageType === "Signals") && (
               <div className="row">
                 <div className="col-md-3 mb-4">
                   <label htmlFor="stateDropdown1" className="form-label">
@@ -1118,62 +1089,6 @@ useEffect(()=>{
             <div className="col-12 mt-5">
               <button type="submit" className="btn btn-custom float-end">
                 {/* {addLocation?._id ? 'Update' : 'Save'}  */}Save
-              </button>
-            </div>
-          </Form>
-          <button
-            className="btn btn-cancel float-end me-1"
-            onClick={() => {
-              setMemberModal({ show: false, id: null });
-              setSelectedStateId("");
-              selectedDistrictId("");
-              selectedZonalId("");
-              
-            }}
-          >
-            Cancel
-          </button>
-        </ModalComponent>
-
-        <ModalComponent
-          show={bonusModal.show}
-          onHide={() => {
-            setBonusModal({ show: false, id: null });
-          }}
-          title={<h5 style={{ color: "#F7AE15", margin: 0 }}>Add Bonus</h5>}
-          width={"500px"}
-        >
-          <Form
-            noValidate
-            validated={validated}
-            onSubmit={(e) => Check_Validation(e, addMemberFun, setValidated)}
-          >
-            <div className="mb-4">
-              <label htmlFor="exampleInputEmail1" className="form-label">
-                Amount
-              </label>
-              <input
-                required
-                className="form-control form-control-lg"
-                type="number"
-                pattern="[0-9]*"
-                placeholder="Enter an amount"
-                value={addBonnus?.amount}
-                onChange={(e) =>
-                  setAddBonnus({
-                    ...addBonnus,
-                    amount: e.target.value,
-                  })
-                }
-              />
-
-              <Form.Control.Feedback type="invalid">
-                Please provide a amount.
-              </Form.Control.Feedback>
-            </div>
-            <div className="col-12 mt-5">
-              <button type="submit" className="btn btn-custom float-end">
-                {/* {addLocation?._id ? 'Update' : 'Save'}  */}Send
               </button>
             </div>
           </Form>

@@ -1,4 +1,3 @@
-import sendMail from "../config/mailer.js";
 import Admin from "../models/adminModel.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -8,6 +7,7 @@ import upload from "../config/multifileUpload.js";
 import District from "../models/districtModel.js";
 import Zonal from "../models/zonalModel.js";
 import Panchayath from "../models/panchayathModel.js";
+import { sendMail, withdrawMail } from "../config/mailer.js";
 
 
 
@@ -214,9 +214,9 @@ export const addUser = async (req, res, next) => {
     let isCourseFranchise = false;
     let districtFranchise = null;
     let zonalFranchise = null;
-    let nifty = false;
-    let bankNifty = false;
-    let crudeOil = false;
+    let nifty = true;
+    let bankNifty = true;
+    let crudeOil = true;
 
     if (franchise === "District Franchise") {
       const districtData = await User.findOne({ franchiseName });
@@ -227,6 +227,11 @@ export const addUser = async (req, res, next) => {
       zonal = null;
       panchayath = null;
     } else if (franchise === "Zonal Franchise") {
+      const districtData = await User.findOne({ franchiseName: district });
+      if (!districtData) {
+        return next(errorHandler(401, "No one has taken this District franchise yet!"));
+      }
+      districtFranchise = districtData._id;
       const zonalData = await User.findOne({ franchiseName });
       if (zonalData) {
         return next(errorHandler(401, "This Zonal franchise is already taken!"));
@@ -269,24 +274,33 @@ export const addUser = async (req, res, next) => {
         switch (franchise) {
           case "Nifty":
             nifty = true;
+            bankNifty = false;
+            crudeOil = false;
             break;
           case "Bank Nifty":
             bankNifty = true;
+            nifty = false;
+            crudeOil = false;
             break;
           case "Crude Oil":
             crudeOil = true;
+            nifty = false;
+            bankNifty = false;
             break;
           case "Nifty & Bank Nifty":
             nifty = true;
             bankNifty = true;
+            crudeOil = false;
             break;
           case "Bank Nifty & CrudeOil":
             bankNifty = true;
             crudeOil = true;
+            nifty = false;
             break;
           case "Nifty & CrudeOil":
             nifty = true;
             crudeOil = true;
+            bankNifty = false;
             break;
           case "All":
             nifty = true;
@@ -323,6 +337,7 @@ export const addUser = async (req, res, next) => {
       isZonalFranchise,
       isMobileFranchise,
       isSignalFranchise,
+      isCourseFranchise,
       nifty,
       bankNifty,
       crudeOil,
@@ -883,7 +898,8 @@ export const walletWithdrawRequest = async (req, res, next) => {
   try {
     const userId = req.user._id;
     const { withdrawAmount } = req.body;
-
+    const admin = await Admin.findOne();
+    const recipient=admin.email;
     // Fetch user data
     const user = await User.findById(userId);
     
@@ -925,10 +941,15 @@ const demateDifference=weeksDifference-dematCount;
     const updatedUser = await user.save();
 
     // Respond with updated user data
-    res.status(200).json({
-      updatedUser,
-      msg: "User wallet withdraw request sent to admin.",
-    });
+    if(updatedUser){
+    await withdrawMail(admin.email,admin.name,user.name,user.walletWithdrawAmount,user.tdsAmount,user.walletAmount);
+
+      res.status(200).json({
+        updatedUser,
+        msg: "User wallet withdraw request sent to admin.",
+      });
+    }
+    
 
   } catch (error) {
     next(error);

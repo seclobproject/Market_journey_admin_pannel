@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Show_Toast } from "../../../utils/Toastify";
 import { SlideMotion } from "../../../libs/FramerMotion";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
+  addBonnusUrl,
   addoreditNomineeUrl,
   editoraddBankUrl,
   edituserUrl,
@@ -13,8 +14,9 @@ import { Button, Form } from "react-bootstrap";
 import Loader from "../../../Components/Loader";
 import moment from "moment";
 import ModalComponent from "../../../Components/ModalComponet";
-import { Image } from "antd";
-
+import { Dropdown, Image } from "antd";
+import { ContextData } from "../../../Services/Context";
+import { Menu } from "antd";
 function Viewdetails() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,7 +33,13 @@ function Viewdetails() {
   const [bankModal, setBankModal] = useState({ show: false, id: null });
   const [userModal, setUserModal] = useState({ show: false, id: null });
   const [nomineeModal, setNomineeModal] = useState({ show: false, id: null });
-  const [selectedId, setSelectedId] = useState(null);
+  const [bonusModal, setBonusModal] = useState({ show: false, id: null });
+  const { Check_Validation } = useContext(ContextData);
+  const [validated, setValidated] = useState(false);
+
+  const [addBonnus, setAddBonnus] = useState({
+    bonusAmount: 0,
+  });
   const clearMessageDiv = () => {
     const messageDiv = document.getElementById("msg");
     const errormsgDiv = document.getElementById("errormsg");
@@ -169,6 +177,7 @@ function Viewdetails() {
       Show_Toast(error.message, false);
     }
   };
+  //--------------add or editNominee
 
   const addOrEditNominee = async (e) => {
     e.preventDefault();
@@ -210,7 +219,68 @@ function Viewdetails() {
       Show_Toast(error.message, false);
     }
   };
+  //---add bonnus-----
+  const addBonnusToUser = async () => {
+    try {
+      const userId = bonusModal?.id;
+      const bonusAmountNumber = Number(addBonnus?.bonusAmount);
+      if (!(bonusAmountNumber > 0)) {
+        Show_Toast("Please add a valid amount.");
+        return;
+      }
 
+      const response = await ApiCall("post", `${addBonnusUrl}/${userId}`, {
+        bonusAmount: bonusAmountNumber,
+      });
+
+      if (response.status === 200) {
+        Show_Toast("Bonus added successfully.", true);
+        setValidated(false);
+        setBonusModal(false);
+        setAddBonnus({
+          bonusAmount: 0,
+        });
+      } else {
+        Show_Toast("Failed to add bonus. Please try again.", false);
+      }
+    } catch (error) {
+      Show_Toast(error.message, false);
+    }
+  };
+
+  const menu = (
+    <Menu>
+      <Menu.Item key="1"></Menu.Item>
+      <Menu.Item key="2">
+        {details.userStatus === "approved" && (
+          <i
+            className="fas fa-eye"
+            onClick={() => {
+              navigate("/invoice", {
+                state: { data: details },
+              });
+            }}
+          >
+            View Invoice
+          </i>
+        )}
+      </Menu.Item>
+      <Menu.Item key="3">
+        {details.userStatus === "approved" && (
+          <i
+            className="fas fa-eye"
+            onClick={() => {
+              navigate("/certificate", {
+                state: { data: details },
+              });
+            }}
+          >
+            View Certificate
+          </i>
+        )}
+      </Menu.Item>
+    </Menu>
+  );
   useEffect(() => {
     if (id) {
       getUserDetails();
@@ -246,77 +316,6 @@ function Viewdetails() {
                   style={{ marginRight: "5px" }}
                 />
               </button>
-              {/*   
-              {userDetailsArray.map((item, index) => (
-  <motion.div key={index} layoutId={index} onClick={() => setSelectedId(index)}>
-    <div class="card" style={{ background: "#00335B" }}>
-      <div className="row align-items-center p-4">
-        <div className="col-8">
-          <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
-            Wallet Amount
-          </h5>
-          <div className="d-flex align-items-center mb-3">
-            <h4 className="fw-semibold mb-3" style={{ color: "rgb(247, 174, 21)" }}>
-              {item.walletAmount}
-            </h4>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="card" style={{ background: "#00335B" }}>
-      <div className="row align-items-center p-4">
-        <div className="col-8">
-          <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
-            Wallet Amount
-          </h5>
-          <div className="d-flex align-items-center mb-3">
-            <h4 className="fw-semibold mb-3" style={{ color: "rgb(247, 174, 21)" }}>
-              {item.totalLevelIncome}
-            </h4>
-          </div>
-        </div>
-      </div>
-    </div> 
-    <div class="card" style={{ background: "#00335B" }}>
-      <div className="row align-items-center p-4">
-        <div className="col-8">
-          <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
-            Wallet Amount
-          </h5>
-          <div className="d-flex align-items-center mb-3">
-            <h4 className="fw-semibold mb-3" style={{ color: "rgb(247, 174, 21)" }}>
-              {item.inDirectIncome}
-            </h4>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="card" style={{ background: "#00335B" }}>
-      <div className="row align-items-center p-4">
-        <div className="col-8">
-          <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
-            Wallet Amount
-          </h5>
-          <div className="d-flex align-items-center mb-3">
-            <h4 className="fw-semibold mb-3" style={{ color: "rgb(247, 174, 21)" }}>
-              {item.directIncome}
-            </h4>
-          </div>
-        </div>
-      </div>
-    </div>
-      </motion.div>
-))} */}
-
-              {/* <AnimatePresence>
-  {selectedId !== null && (
-    <motion.div layoutId={selectedId}>
-      <motion.h5>{userDetailsArray[selectedId]?.walletAmount}</motion.h5>
-      <motion.h2>{userDetailsArray[selectedId]?.totalLevelIncome}</motion.h2>
-      <motion.button onClick={() => setSelectedId(null)} />zz
-    </motion.div>
-  )}
-</AnimatePresence> */}
 
               <div class="row mt-2">
                 <div class="col-md-3  mb-4">
@@ -423,30 +422,65 @@ function Viewdetails() {
                         <div className="">
                           <div className="card shadow-none border">
                             <div className="card-body">
-                              <h5
-                                className="card-title fw-semibold mb-4"
+                              <div
                                 style={{
-                                  color: "rgba(247, 174, 21)",
                                   display: "flex",
                                   justifyContent: "space-between",
+                                  alignItems: "center",
                                 }}
                               >
-                                <span>Profile Details</span>
-                                <i
-                                  className="fas fa-pencil-alt"
-                                  onClick={() => {
-                                    setUserModal({ show: true, id: null });
-                                    setEditUser(details);
-                                    setPassword({
-                                      confirmpassword: "",
-                                    });
-                                  }}
+                                <h5
+                                  className="card-title fw-semibold mb-4"
                                   style={{
-                                    color: "black",
-                                    cursor: "pointer",
+                                    color: "rgba(247, 174, 21)",
+                                    display: "flex",
+                                    justifyContent: "space-between",
                                   }}
-                                ></i>
-                              </h5>
+                                >
+                                  <span>Profile Details</span>
+                                  <i
+                                    className="fas fa-pencil-alt"
+                                    onClick={() => {
+                                      setUserModal({ show: true, id: null });
+                                      setEditUser(details);
+                                      setPassword({ confirmpassword: "" });
+                                    }}
+                                    style={{
+                                      color: "black",
+                                      cursor: "pointer",
+                                    }}
+                                  ></i>
+                                </h5>
+                              </div>
+                              <div className="d-flex justify-content-end flex-wrap mt-3">
+                                {details.packageType === "Franchise" && (
+                                  <>
+                                    <Button
+                                      className="btn btn-custom"
+                                      onClick={() => {
+                                        setBonusModal({
+                                          show: true,
+                                          id: details?.id,
+                                        });
+                                        setValidated(false);
+                                      }}
+                                    >
+                                      <i className="fas fa-plus"></i>
+                                      Add Bonus
+                                    </Button>
+                                  </>
+                                )}
+                                {details.userStatus === "approved" && (
+                                  <Dropdown
+                                    overlay={menu}
+                                    placement="bottomLeft"
+                                  >
+                                    <Button className="btn btn-custom ms-2">
+                                      More
+                                    </Button>
+                                  </Dropdown>
+                                )}
+                              </div>
 
                               <a
                                 className="nav-link nav-icon-hover"
@@ -481,31 +515,41 @@ function Viewdetails() {
                                 </div>
                               </div>
 
-                              
                               <div className="mt-2">
-  <h5
-    className="fs-5 mb-0 fw-semibold" // Removed margin-bottom and adjusted margin-right
-    style={{ textTransform: "uppercase", display: "flex", alignItems: "center" }}
-  >
-    <span style={{ marginRight: "0.5rem" }}>Userid:</span>
-    <span style={{ color: "rgb(247, 174, 21)" }}>
-      {details?.ownSponserId || "--"}
-    </span>
-  </h5>
-</div>
+                                <h5
+                                  className="fs-5 mb-0 fw-semibold" // Removed margin-bottom and adjusted margin-right
+                                  style={{
+                                    textTransform: "uppercase",
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <span style={{ marginRight: "0.5rem" }}>
+                                    Userid:
+                                  </span>
+                                  <span style={{ color: "rgb(247, 174, 21)" }}>
+                                    {details?.ownSponserId || "--"}
+                                  </span>
+                                </h5>
+                              </div>
 
                               <div className="mt-2">
-  <h5
-    className="fs-5 mb-0 fw-semibold" // Removed margin-bottom and adjusted margin-right
-    style={{ textTransform: "uppercase", display: "flex", alignItems: "center" }}
-  >
-    <span style={{ marginRight: "0.5rem" }}>Name:</span>
-    <span style={{ color: "rgb(247, 174, 21)" }}>
-      {details?.name || "--"}
-    </span>
-  </h5>
-</div>
-
+                                <h5
+                                  className="fs-5 mb-0 fw-semibold" // Removed margin-bottom and adjusted margin-right
+                                  style={{
+                                    textTransform: "uppercase",
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <span style={{ marginRight: "0.5rem" }}>
+                                    Name:
+                                  </span>
+                                  <span style={{ color: "rgb(247, 174, 21)" }}>
+                                    {details?.name || "--"}
+                                  </span>
+                                </h5>
+                              </div>
 
                               <ul className="list-unstyled mt-3">
                                 <li className="d-flex align-items-center gap-3 mb-4">
@@ -559,7 +603,7 @@ function Viewdetails() {
                                     </span>
                                   </h6>
                                 </li>
-                                
+
                                 <li className="d-flex align-items-center gap-3 mb-4">
                                   <i className="fas fa-user text-dark fs-6" />
                                   <h6 className="fs-4 fw-semibold mb-0">
@@ -571,33 +615,48 @@ function Viewdetails() {
                                     </span>
                                   </h6>
                                 </li>
-                                <li className="d-flex align-items-center gap-3 mb-4">
-                                  <i className="fas fa-user text-dark fs-6" />
-                                  <h6 className="fs-4 fw-semibold mb-0">
-                                  District :{" "}
-                                    <span
-                                      style={{ color: "rgb(247, 174, 21)" }}
-                                    >
-                                      {details?.district || "--"}
-                                    </span>
-                                  </h6>
-                                </li>
-                                <li className="d-flex align-items-center gap-3 mb-4">
-                                  <i className="fas fa-user text-dark fs-6" />
-                                  <h6 className="fs-4 fw-semibold mb-0">
-                                  Zonal :{" "}
-                                    <span
-                                      style={{ color: "rgb(247, 174, 21)" }}
-                                    >
-                                      {details?.Zonal || "--"}
-                                    </span>
-                                  </h6>
-                                </li>
+                                {!details?.packageType == "course" && (
+                                  <>
+                                    <li className="d-flex align-items-center gap-3 mb-4">
+                                      <i className="fas fa-user text-dark fs-6" />
+                                      <h6 className="fs-4 fw-semibold mb-0">
+                                        District :{" "}
+                                        <span
+                                          style={{ color: "rgb(247, 174, 21)" }}
+                                        >
+                                          {details?.district || "--"}
+                                        </span>
+                                      </h6>
+                                    </li>
+                                    <li className="d-flex align-items-center gap-3 mb-4">
+                                      <i className="fas fa-user text-dark fs-6" />
+                                      <h6 className="fs-4 fw-semibold mb-0">
+                                        Zonal :{" "}
+                                        <span
+                                          style={{ color: "rgb(247, 174, 21)" }}
+                                        >
+                                          {details?.zonal || "--"}
+                                        </span>
+                                      </h6>
+                                    </li>
+                                  </>
+                                )}
 
                                 <li className="d-flex align-items-center gap-3 mb-4">
                                   <i className="fas fa-store text-dark fs-6" />
                                   <h6 className="fs-4 fw-semibold mb-0">
                                     Package Type:{" "}
+                                    <span
+                                      style={{ color: "rgb(247, 174, 21)" }}
+                                    >
+                                      {details?.packageType || "--"}
+                                    </span>
+                                  </h6>
+                                </li>
+                                <li className="d-flex align-items-center gap-3 mb-4">
+                                  <i className="fas fa-store text-dark fs-6" />
+                                  <h6 className="fs-4 fw-semibold mb-0">
+                                    Package:{" "}
                                     <span
                                       style={{ color: "rgb(247, 174, 21)" }}
                                     >
@@ -617,26 +676,27 @@ function Viewdetails() {
                                   </h6>
                                 </li>
                                 {}
-                                {details?.franchise !== "Mobile Franchise" && (
-                                  <li className="d-flex align-items-center gap-3 mb-4">
-                                    <i className="fas fa-building text-dark fs-6" />
-                                    <h6 className="fs-4 fw-semibold mb-0">
-                                      Franchise Name:{" "}
-                                      <span
-                                        style={{ color: "rgb(247, 174, 21)" }}
-                                      >
-                                        {details?.franchiseName || "--"}
-                                      </span>
-                                    </h6>
-                                  </li>
-                                )}
-                               {details?.screenshot && (
-  <Image
-    width={200}
-    src={`http://192.168.29.152:6003/uploads/${details?.screenshot}`}
-  />
-)}
+                                {details?.franchise !== "Mobile Franchise" &&
+                                  !details?.packageType == "course" && (
+                                    <li className="d-flex align-items-center gap-3 mb-4">
+                                      <i className="fas fa-building text-dark fs-6" />
+                                      <h6 className="fs-4 fw-semibold mb-0">
+                                        Franchise Name:{" "}
+                                        <span
+                                          style={{ color: "rgb(247, 174, 21)" }}
+                                        >
+                                          {details?.franchiseName || "--"}
+                                        </span>
+                                      </h6>
+                                    </li>
+                                  )}
 
+                                {details?.screenshot && (
+                                  <Image
+                                    width={200}
+                                    src={`http://192.168.29.152:6003/uploads/${details?.screenshot}`}
+                                  />
+                                )}
                               </ul>
                             </div>
                           </div>
@@ -1309,6 +1369,108 @@ function Viewdetails() {
           }}
         >
           cancel
+        </button>
+      </ModalComponent>
+
+      {/* add bonnus modal */}
+
+      <ModalComponent
+        show={bonusModal.show}
+        onHide={() => {
+          setBonusModal({ show: false, id: null });
+        }}
+        title={<h5 style={{ color: "#F7AE15", margin: 0 }}>Add Bonus</h5>}
+        width={"500px"}
+      >
+        <Form
+          noValidate
+          validated={validated}
+          onSubmit={(e) => Check_Validation(e, addBonnusToUser, setValidated)}
+        >
+          <h1 style={{ color: "#00335B" }}>₹{addBonnus?.bonusAmount}</h1>
+          <div className="mb-4">
+            <label htmlFor="exampleInputEmail1" className="form-label">
+              TransactionId
+            </label>
+            <input
+              required
+              className="form-control form-control-lg"
+              type="text"
+              placeholder="Enter an Transaction Id"
+              value={addBonnus?.transactionId}
+              onChange={(e) =>
+                setAddBonnus({
+                  ...addBonnus,
+                  transactionId: e.target.value,
+                })
+              }
+            />
+
+            <Form.Control.Feedback type="invalid">
+              Please provide a transaction Id.
+            </Form.Control.Feedback>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="exampleInputEmail1" className="form-label">
+              Description
+            </label>
+            <textarea
+              required
+              className="form-control form-control-lg"
+              style={{ height: "100px" }}
+              placeholder="Enter a description"
+              value={addBonnus?.description}
+              onChange={(e) =>
+                setAddBonnus({
+                  ...addBonnus,
+                  description: e.target.value,
+                })
+              }
+            />
+
+            <Form.Control.Feedback type="invalid">
+              Please provide a description.
+            </Form.Control.Feedback>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="exampleInputEmail1" className="form-label">
+              Bonnus Amount
+            </label>
+            <input
+              required
+              className="form-control form-control-lg"
+              type="number"
+              placeholder="Enter an amount"
+              value={addBonnus?.bonusAmount}
+              onChange={(e) =>
+                setAddBonnus({
+                  ...addBonnus,
+                  bonusAmount: e.target.value,
+                })
+              }
+            />
+
+            <Form.Control.Feedback type="invalid">
+              Please provide a bonus amount.
+            </Form.Control.Feedback>
+          </div>
+
+          <div className="col-12 mt-5">
+            <button type="submit" className="btn btn-custom float-end">
+              {/* {addLocation?._id ? 'Update' : 'Save'}  */}Send
+            </button>
+          </div>
+        </Form>
+        <button
+          className="btn btn-cancel float-end me-1"
+          onClick={() => {
+            setBonusModal({ show: false, id: null });
+            setAddBonnus({
+              bonusAmount: 0,
+            });
+          }}
+        >
+          Cancel
         </button>
       </ModalComponent>
     </>

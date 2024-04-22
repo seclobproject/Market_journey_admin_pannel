@@ -144,6 +144,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    invoicePdf: {
+      type: String,
+      default: null,
+    },
     aadhaar: {
       type: String,
       default: null,
@@ -207,7 +211,7 @@ const userSchema = new mongoose.Schema(
         type: Boolean,
         default: false,
       },
-      isPackageFranchise: {
+      isCourseFranchise: {
         type: Boolean,
         default: false,
       },

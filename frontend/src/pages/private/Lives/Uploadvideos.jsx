@@ -104,9 +104,7 @@ function Uploadvideos() {
           setDetails("");
           setFileName("");
           setValidated(false);
-          getVideoList();
-          // getImageList();
-          // setDescription("")
+          getVideoList();       
           Show_Toast("Video updated successfully", true);
         } else {
           Show_Toast("Video update failed", false);
@@ -124,6 +122,7 @@ function Uploadvideos() {
           "",
           "multipart/form-data"
         );
+
         if (response.status === 201 || response.status === 200) {
           setVideoModal(false);
           setValidated(false);

@@ -22,12 +22,10 @@ import Stack from "@mui/material/Stack";
 function Zonal() {
 
   const [zonalModal, setZonalModal] = useState({ show: false, id: null });
-  console.log(zonalModal,"zonalModal zonalModal");
   const [zonalEditModal, setZonalEditModal] = useState({
     show: false,
     id: null,
   });
-  console.log(zonalEditModal,"zonalEditModal zonalModal");
 
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
   const { Check_Validation } = useContext(ContextData);

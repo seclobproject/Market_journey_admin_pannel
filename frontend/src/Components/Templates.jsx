@@ -1,0 +1,134 @@
+import React, { useRef } from "react";
+import Barcode from "react-barcode";
+import "./Templatestyle.css";
+
+function PdfTemplates({ invoiceData }) {
+  console.log(invoiceData?.ownSponserId);
+  const calculateGSTAmount = (amount) => {
+    const gstRate = 18;
+    const gstAmount = (amount * gstRate) / 100;
+    return gstAmount;
+  };
+
+  const totalAmount = invoiceData?.packageAmount;
+  const gstAmount = calculateGSTAmount(totalAmount);
+  const totalWithGST = totalAmount + gstAmount;
+
+  return (
+    <>
+      <div className="container" style={{paddingRight:"50px",paddingLeft:"50px"}}>
+      <div className="row">
+        <div className="col-md-4 col-sm-12 brcode">
+          <Barcode
+            value={`4n%${invoiceData.ownSponsorId}+ut%`}
+            width={1}
+            height={50}
+            displayValue={false}
+          />
+        </div>
+        <div className="col-md-8 col-sm-12 text-right bbc">
+          <div className="d-flex align-items-center">
+            <img
+              src="/dist/images/marketlogo.png"
+              alt=""
+              width="15%"
+              className="me-3"
+            />
+          </div>
+          <p><b>(+91) 1234567890</b></p>
+          <p><b>sample@gmail.com</b></p>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-md-12 text-center">
+          <h2 style={{ color: "#325aa8" }}>INVOICE</h2>
+        </div>
+      </div>
+      <div className="table-container table-responsive rounded-2 mb-4">
+        <table className="table border text-nowrap customize-table mb-0 align-middle">
+          <thead className="text-dark fs-4 table-light">
+            <tr>
+              <th>
+                <h6 className="fs-4 fw-semibold mb-0">Package Type</h6>
+              </th>
+              <th>
+                <h6 className="fs-4 fw-semibold mb-0">Package</h6>
+              </th>
+              <th>
+                <h6 className="fs-4 fw-semibold mb-0">Amount</h6>
+              </th>
+              <th />
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="col-md-9">
+                <h4>{invoiceData?.packageType}</h4>
+              </td>
+              <td className="col-md-9">
+                <h4>{invoiceData?.franchise}</h4>
+              </td>
+              <td className="col-md-9">
+                <h4>₹{invoiceData?.packageAmount}</h4>
+              </td>
+            </tr>
+            <tr>
+              <td className="text-right">
+                <p>
+                  <strong>GST:</strong>
+                </p>
+                <p>
+                  <strong>GST Amount:</strong>
+                </p>
+                <p>
+                  <strong>Package Amount:</strong>
+                </p>
+              </td>
+              <td>
+                <p>
+                  <strong>₹ 18%</strong>
+                </p>
+                <p>
+                  <strong>₹ {gstAmount}</strong>
+                </p>
+                <p>
+                  <strong>₹ {invoiceData?.packageAmount}</strong>
+                </p>
+              </td>
+            </tr>
+            <tr style={{ color: "#F81D2D" }}>
+              <td className="text-right">
+                <h4>
+                  <strong>Total:</strong>
+                </h4>
+              </td>
+              <td className="text-left">
+                <h4>
+                  <strong>₹ {totalWithGST}</strong>
+                </h4>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div className="col-md-12">
+        <br />
+        <h5>
+          <b>Name: {invoiceData?.name}</b>
+        </h5>
+        <h5>
+          <b>Contact: {invoiceData?.phone}</b>
+        </h5>
+        <h5>
+          <b>Email: {invoiceData?.email}</b>
+        </h5>
+        <h5>
+          <b>Email: {invoiceData?.ownSponserId}</b>
+        </h5>
+      </div>
+    </div>
+    </>
+  );
+}
+
+export default PdfTemplates;

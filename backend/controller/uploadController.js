@@ -10,6 +10,7 @@ import HomeImage from "../models/homeImageModel.js";
 import homeVideo from "../models/homeVideoModel.js";
 import LiveNews from "../models/liveNewsModel.js";
 import User from "../models/userModel.js";
+import { paginate } from "./reportController.js";
 
 
 
@@ -566,41 +567,56 @@ if(newNews){
 
 export const addAlert = async (req, res, next) => {
   try {
-    const { signal, title, description } = req.body;
+    const { title, description } = req.body;
+    console.log("signals",title, description);
     const adminId = req.admin._id;
-    
+    let users;
     // Find the admin
     const admin = await Admin.findById(adminId);
     if (!admin) {
       return next(errorHandler(401, "Admin not found"));
     }
     
-    // Create a new alert document
-    const alert = new Alert();
+    const newAlert = await Alert.create({
+      title,
+      description
+    })
 
-    // Check the signal type and push the details into the appropriate array
-    switch (signal) {
-      case "nifty":
-        alert.niftySignals.push({ title, description });
-        break;
-      case "bankNifty":
-        alert.bankNiftySignals.push({ title, description });
-        break;
-      case "crudeOil":
-        alert.crudeOilSignal.push({ title, description });
-        break;
-      default:
-        return res.status(400).json({
-          sts: "00",
-          msg: "Invalid signal type",
-        });
+    if (newAlert){
+      switch (newAlert.title) {
+        case "nifty":
+          users=await User.find({nifty:true})
+          break;
+        case "bankNifty":
+          users=await User.find({bankNifty:true})
+          break;
+        case "crudeOil":
+          users=await User.find({crudeOil:true})
+          break;
+        default:
+          return res.status(400).json({
+            sts: "00",
+            msg: "Invalid signal type",
+          });
+      }
+     
     }
 
-    // Save the alert document
-    await alert.save();
+    for(const user of users){
+      console.log(user.userStatus);
+      if(user.userStatus==="approved"){
+console.log("approved",user.name);
+        user.signals.push(newAlert._id)
+        try {
+          await user.save();
+      } catch (error) {
+          console.error("Error saving user data:", error);
+      }
+      }
+    }    
 
     return res.status(201).json({
-      alert,
+      newAlert,
       sts: "01",
       msg: "Alert Added Successfully",
     });
@@ -620,7 +636,7 @@ export const addAlert = async (req, res, next) => {
     try {
       const adminId = req.admin._id;
       const { id } = req.params;
-      const { title, description} = req.body;
+      const { description} = req.body;
 
       // Find the admin
       const admin = await Admin.findById(adminId);
@@ -635,7 +651,6 @@ export const addAlert = async (req, res, next) => {
       }
 
       // Update the Alert data with the new values if they are provided
-      alertData.title = title || alertData.title;
       alertData.description = description || alertData.description;
 
       // Save the updated SEO data
@@ -686,17 +701,22 @@ export const addAlert = async (req, res, next) => {
 //view alert data
 
   export const viewAlert=async(req,res,next)=>{
+    let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+    const pageSize = parseInt(req.query.pageSize) || 10; 
     try {
-      const alertData=await Alert.find()
-      if(alertData){
-        res.status(200).json({
-          alertData,
-          sts: "01",
-          msg: "alert data get Success",
-        });
-      }else {
-      next(errorHandler("alerts not found"));
-    }
+      const alertData=await Alert.find().sort({createdAt: 1})
+    const paginatedSignals = await paginate(alertData, page, pageSize);
+    res.status(200).json({
+        signals: paginatedSignals.results,
+        pagination: {
+            page: paginatedSignals.page,
+            pageSize: paginatedSignals.pageSize,
+            totalPages: paginatedSignals.totalPages,
+            totalDocs: paginatedSignals.totalDocs
+        },
+        sts: "01",
+        msg: "Get admin signals Success",
+    });
   } catch (error) {
     next(error);
   }
@@ -704,34 +724,40 @@ export const addAlert = async (req, res, next) => {
   }
 
 
-  // import User from "../models/user"; // Import your User model
 
 // Function to fetch alerts based on user preferences
 export const getAlertsForUser = async (req, res, next) => {
+  const userId = req.user._id;
+    let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+    const pageSize = parseInt(req.query.pageSize) || 10; 
   try {
-    const userId = req.user._id; // Assuming user object is attached to the request
-    const user = await User.findById(userId);
-    if (!user) {
+    const userData = await User.findById(userId).populate({
+      path: "signals",
+      options: {
+        sort: { createdAt: 1 } // Sort by createdAt in descending order
+      }
+    });
+    
+    if (!userData) {
       return res.status(404).json({ msg: "User not found" });
     }
 
-    let alerts = [];
+    const userStatus = userData.userStatus;
+    const signals = userData.signals;
+    const paginatedSignals = await paginate(signals, page, pageSize);
+    res.status(200).json({
+        signals: paginatedSignals.results,
+        userStatus,
+        pagination: {
+            page: paginatedSignals.page,
+            pageSize: paginatedSignals.pageSize,
+            totalPages: paginatedSignals.totalPages,
+            totalDocs: paginatedSignals.totalDocs
+        },
+        sts: "01",
+        msg: "Get users signals Success",
+    });
 
-    // Check user's preferences for each signal type and include alerts accordingly
-    if (user.nifty) {
-      const niftyAlerts = await Alert.find({ "niftySignals": { $exists: true, $not: { $size: 0 } } });
-      alerts = [...alerts, ...niftyAlerts];
-    }
-    if (user.bankNifty) {
-      const bankNiftyAlerts = await Alert.find({ "bankNiftySignals": { $exists: true, $not: { $size: 0 } } });
-      alerts = [...alerts, ...bankNiftyAlerts];
-    }
-    if (user.crudeOil) {
-      const crudeOilAlerts = await Alert.find({ "crudeOilSignal": { $exists: true, $not: { $size: 0 } } });
-      alerts = [...alerts, ...crudeOilAlerts];
-    }
-
-    return res.status(200).json({ alerts });
   } catch (err) {
     console.error("Error fetching alerts for user:", err);
     return next(err);
@@ -870,9 +896,9 @@ export const addDemateAccount = async (req, res, next) => {
 
 export const uploadPdf = async (req, res, next) => {
   try {
-    const adminId = req.admin._id;
+    // const adminId = req.admin._id;
     const {id}=req.params
-    const adminData = await Admin.findById(adminId);
+    const adminData = await Admin.find();
 
     if (!adminData) {
       return next(errorHandler(401, "Admin not exist"));
@@ -892,10 +918,11 @@ export const uploadPdf = async (req, res, next) => {
       }
 
       const pdfFileName = req.files.pdfFile[0].filename;
-
+      console.log(pdfFileName);
       userData.invoicePdf=pdfFileName
+
       const newPdf=userData.save();
-      
+      console.log((await newPdf).invoicePdf);
       // Send email with PDF attachment
       if (newPdf) {
         const recipientEmail = userData.email; // Use the recipient's email address

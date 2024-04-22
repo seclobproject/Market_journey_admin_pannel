@@ -4,8 +4,8 @@ import {
   addUser, changePassword, editProfile, userLogin, verifyUser, viewLevel1User, viewLevel2User, viewUserProfile, walletWithdrawRequest,
 } from "../controller/userController.js";
 import { protectUser } from "../middleware/authMiddleware.js";
-import { addDemateAccount, addNomineeDetails, addUserBankAccount } from "../controller/uploadController.js";
-import { bonusCreditedReport, directIncomeReportPaginated, getAutoPoolCountAmount, inDirectIncomeReportPaginated, levelIncomeReportPaginated, userAutoPoolIncomeHistory, userDemateAccounts, walletWithdrawReportUser } from "../controller/reportController.js";
+import { addDemateAccount, addNomineeDetails, addUserBankAccount, getAlertsForUser } from "../controller/uploadController.js";
+import { bonusCreditedReport, directIncomeReportPaginated, filteredUsers, getAutoPoolCountAmount, inDirectIncomeReportPaginated, levelIncomeReportPaginated, userAutoPoolIncomeHistory, userDemateAccounts, walletWithdrawReportUser } from "../controller/reportController.js";
 
 const router = express.Router();
 
@@ -47,6 +47,14 @@ router.get("/get-pool-count-amount",protectUser,getAutoPoolCountAmount);
 //get credit bonus history
 
 router.get("/view-credit-bonus-report",protectUser,bonusCreditedReport  );
+
+//view user alert
+
+router.get("/view-user-alerts",protectUser,getAlertsForUser  );
+
+//view filtered users
+
+router.get("/view-district-Users",protectUser,filteredUsers );
 
 
 

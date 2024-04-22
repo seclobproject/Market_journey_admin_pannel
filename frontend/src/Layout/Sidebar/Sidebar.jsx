@@ -10,17 +10,6 @@ function Sidebar() {
     { title: "Dashboard", icon: "fas fa-chart-line", route: "dashboard" },
     { title: "Package", icon: "fas fa-box", route: "packages" },
     {
-      title: "Users",
-      icon: "fas fa-users",
-      sub: [
-        { title: "All Users", route: "member" },
-        {
-          title: "Pending Users",
-          route: "user/pending",
-        },
-      ],
-    },
-    {
       title: "Locations",
       icon: "fas fa-map-marker-alt",
       sub: [
@@ -37,6 +26,20 @@ function Sidebar() {
         },
       ],
     },
+    {
+      title: "Users",
+      icon: "fas fa-users",
+      sub: [
+        { title: "All Users", route: "member" },
+        {
+          title: "Pending Users",
+          route: "user/pending",
+        },
+      ],
+    },
+    
+    { title: "Reports", icon: "fas fa-chart-line", route: "reports" },
+
     {
       title: "Demat Account",
       icon: "fas fa-chart-pie",

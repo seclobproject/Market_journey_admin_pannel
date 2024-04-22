@@ -9,14 +9,11 @@ import { Pagination, Stack } from '@mui/material';
 function Withdraw() {
   const [isLoading, setIsLoading] = useState(false);
   const [getHistory, setGetHistory] = useState([]);
-  console.log(getHistory, "getHistory,,,,,,,,,,,,,,,,,,,,,,,,,,");
   const [params, setParams] = useState({
     page: 1,
     pageSize: 10,
   });
   const [totalPages, setTotalPages] = useState(1);
-  console.log(totalPages, "pages......sdsd.wewewewew.");
-
   const startIndex = (params.page - 1) * params.pageSize;
 
 
@@ -24,11 +21,9 @@ function Withdraw() {
     setIsLoading(true);
     try {
       const response = await ApiCall("get", viewautopoolhistoryUrl, {}, params);
-      console.log(response, "response");
       if (response?.status === 200) {
         setGetHistory(response?.data?.levelIncome);
         setTotalPages(response?.data?.pagination?.totalPages);
-        console.log(response?.data?.pagination?.totalPages);
         setIsLoading(false);
       } else {
         console.error("Failed to fetch user details");
@@ -107,7 +102,6 @@ function Withdraw() {
                         <>
                           {getHistory.map(
                             (history, index) => (
-                              console.log(history, "45678"),
                               (
                                 <tr key={index}>
                                   <td>{startIndex + index + 1}</td>

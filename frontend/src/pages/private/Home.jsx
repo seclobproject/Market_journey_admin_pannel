@@ -1,6 +1,7 @@
 import React from "react";
 import { SlideMotion } from "../../libs/FramerMotion";
 import QRCode from "react-qr-code";
+import { RiseOutlined } from '@ant-design/icons';
 function Home() {
   return (
     <>
@@ -9,89 +10,73 @@ function Home() {
       
 
   <div class="row">
-    <div class="col-md-6 col-lg-3 mb-4">
-    <div class="card " style={{background:"#00335B"}}>
-      <div className="row align-items-center  p-4">
-      <div className="col-8">
-        <h5 className="card-title mb-9 fw-semibold"
-         style={{color:"white"}}
-         >
-      Total 
-package 
-        </h5>
-        <div className="d-flex align-items-center mb-3">
-        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>36,358</h4>
-
-     
+  <div className="col-md-6 col-lg-3 mb-4">
+      <div className="card" style={{ background: "#00335B" }}>
+        <div className="row align-items-center p-4">
+          <div className="col-8">
+            <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
+              Total package
+            </h5>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h4 className="fw-semibold mb-0" style={{ color: "rgb(247, 174, 21)" }}>
+                36,358
+              </h4>
+              <RiseOutlined style={{ color: "yellow", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
+            </div>
+          </div>
         </div>
-      
       </div>
-    
-    </div>      
     </div>
-    </div>
-    <div class="col-md-6 col-lg-3 mb-4">
-    <div class="card " style={{background:"#00335B"}}>
-      <div className="row align-items-center  p-4">
-      <div className="col-8">
-        <h5 className="card-title mb-9 fw-semibold"
-         style={{color:"white"}}
-         >
-          Total users 
-        </h5>
-        <div className="d-flex align-items-center mb-3">
-        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>36000</h4>
-
-     
+    <div className="col-md-6 col-lg-3 mb-4">
+      <div className="card" style={{ background: "#00335B" }}>
+        <div className="row align-items-center p-4">
+          <div className="col-8">
+            <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
+              Total package
+            </h5>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h4 className="fw-semibold mb-0" style={{ color: "rgb(247, 174, 21)" }}>
+                36,358
+              </h4>
+              <RiseOutlined style={{ color: "yellow", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
+            </div>
+          </div>
         </div>
-      
       </div>
-    
-    </div>      
     </div>
-    </div>
-    <div class="col-md-6 col-lg-3 mb-4">
-    <div class="card " style={{background:"#00335B"}}>
-      <div className="row align-items-center  p-4">
-      <div className="col-8">
-        <h5 className="card-title mb-9 fw-semibold"
-         style={{color:"white"}}
-         >
-        Total 
-amount
-        </h5>
-        <div className="d-flex align-items-center mb-3">
-        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>36,000</h4>
-
-     
+    <div className="col-md-6 col-lg-3 mb-4">
+      <div className="card" style={{ background: "#00335B" }}>
+        <div className="row align-items-center p-4">
+          <div className="col-8">
+            <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
+              Total package
+            </h5>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h4 className="fw-semibold mb-0" style={{ color: "rgb(247, 174, 21)" }}>
+                36,358
+              </h4>
+              <RiseOutlined style={{ color: "yellow", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
+            </div>
+          </div>
         </div>
-      
       </div>
-    
-    </div>      
     </div>
-    </div>
-    <div class="col-md-6 col-lg-3 mb-4">
-    <div class="card " style={{background:"#00335B"}}>
-      <div className="row align-items-center p-4">
-      <div className="col-8">
-        <h5 className="card-title mb-9 fw-semibold"
-         style={{color:"white"}}
-         >
-        
-Pending 
-user 
-        </h5>
-        <div className="d-flex align-items-center mb-3">
-        <h4 className="fw-semibold mb-3"style={{color:"rgb(247, 174, 21)"}}>1000</h4>
-
-     
+    <div className="col-md-6 col-lg-3 mb-4">
+      <div className="card" style={{ background: "#00335B" }}>
+        <div className="row align-items-center p-4">
+          <div className="col-8">
+            <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
+              Total package
+            </h5>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h4 className="fw-semibold mb-0" style={{ color: "rgb(247, 174, 21)" }}>
+                36,358
+              </h4>
+              <RiseOutlined style={{ color: "yellow", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
+            </div>
+          </div>
         </div>
-      
       </div>
-    
-    </div>      
-    </div>
     </div>
   </div>
 

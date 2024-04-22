@@ -22,7 +22,7 @@ function Alert() {
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
   const [addAlerts, setAddAlerts] = useState({
-    title: "notifications",
+    // title: "notifications",
   });
   const [alertList, setAlertList] = useState([]);
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null });
@@ -63,6 +63,7 @@ function Alert() {
           `${editalertUrl}/${addAlerts?._id}`,
           addAlerts
         );
+        console.log(response,"res");
         if (response.status === 201 || response.status === 200) {
           setAlertModal(false);
           setValidated(false);
@@ -84,8 +85,8 @@ function Alert() {
         }
       }
     } catch (error) {
-      console.error("News uploading Video:", error);
-      Show_Toast("News upload failed", false);
+      console.error("alert uploading failed:", error);
+      Show_Toast("alert upload failed", false);
     }
   };
   //----------delete image----------
@@ -137,7 +138,6 @@ function Alert() {
                   setAlertModal({ show: true, id: null });
                   setValidated(false);
                   setAddAlerts({
-                    title: "notification",
                   });
                 }}
               >
@@ -273,6 +273,7 @@ function Alert() {
               </label>
               <select
                 value={addAlerts?.title}
+                required
                 onChange={(e) => {
                   setAddAlerts({
                     ...addAlerts,
@@ -281,12 +282,18 @@ function Alert() {
                 }}
                 className="form-control"
               >
+                                <option value=""  disabled selected>select one</option>
+
                 <option value="bankNifty">BankNifty</option>
                 <option value="nifty">Nifty</option>
                 <option value="crudeOil">crudeOil</option>
                 {/* Add more filter options as needed */}
               </select>
+              <Form.Control.Feedback type="invalid">
+              Please select one.
+            </Form.Control.Feedback>
             </div>
+            
           )}
 
           <div className="mb-4">

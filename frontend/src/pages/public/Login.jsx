@@ -66,7 +66,7 @@ setValidated(false)
             <div className="row justify-content-center w-100">
               <div className="col-md-8 col-lg-6 col-xxl-3">
                 <SlideMotion>
-                  <div className="card mb-0">
+                  <div className="card mb-0" style={{maxWidth:'400px'}}>
                     <div className="card-body">
                     <a href={undefined} className="text-nowrap logo-img text-center d-block py-3 w-100">
   <img src="/dist/images/marketlogo.png" alt="Logo" width="130" height="90" />

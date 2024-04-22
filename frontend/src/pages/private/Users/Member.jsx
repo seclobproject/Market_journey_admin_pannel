@@ -97,7 +97,6 @@ function Member() {
   };
   //----------- not taken district in drop down--------
   const getDistrictList = async () => {
-    console.log("here");
     try {
       const response = await ApiCall(
         "get",
@@ -155,6 +154,7 @@ function Member() {
       console.error("Error fetching state list:", error);
     }
   };
+  
   //-----------list Zonal in drop down--------
   const getAllZonallist = async () => {
     try {

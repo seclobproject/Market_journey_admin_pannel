@@ -279,6 +279,7 @@ const userSchema = new mongoose.Schema(
     districtFranchise:{ type: mongoose.Schema.Types.ObjectId, ref: "User" },
     zonalFranchise:{ type: mongoose.Schema.Types.ObjectId, ref: "User" },
     demateAccounts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Demate" }],
+    signals: [{ type: mongoose.Schema.Types.ObjectId, ref: "Alert" }],
     childLevel1: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     childLevel2: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },

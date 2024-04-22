@@ -5,7 +5,7 @@ import { protectAdmin } from "../middleware/authMiddleware.js";
 import { addPackage, editPackage, viewPackages } from "../controller/packageController.js";
 import { addUser } from "../controller/userController.js";
 import { addAlert, addNews, deleteSingleAlert, deleteSingleAward, deleteSingleImage, deleteSingleNews, deleteSingleVideo, editAlert, editNews, updateAwardData, updateHomeVideo, uploadAwardDetails, uploadHomeImages, uploadHomeVideos, uploadPdf, viewAlert, viewAwardDetails, viewHomeImages, viewHomeVideos, viewNews } from "../controller/uploadController.js";
-import { autoPoolHistory, bonusPaidReportPaginated, getApprovedDematesPaginated, getPendingDematesPaginated, totalWalletWithdrawHistory, viewPoolUsers } from "../controller/reportController.js";
+import { autoPoolHistory, bonusPaidReportPaginated, filteredUsers, getApprovedDematesPaginated, getPendingDematesPaginated, totalWalletWithdrawHistory, viewPoolUsers } from "../controller/reportController.js";
 import { addPoolPercentage, distributeAutoPoolWallet } from "../controller/incomeGereratorController.js";
 
 adminRouter.post("/admin-login", adminLogin);
@@ -70,7 +70,7 @@ adminRouter.post("/add-bonus/:id", protectAdmin,addBonus);
 
 //upload pdf
 
-adminRouter.post("/upload-pdf/:id", protectAdmin,uploadPdf);
+adminRouter.post("/upload-pdf/:id",uploadPdf);
 
 
 
@@ -128,6 +128,15 @@ adminRouter.get(
     "/view-bonus-paid-report",
     protectAdmin,
     bonusPaidReportPaginated
+  );
+
+
+  //get filtered Users
+
+  adminRouter.post(
+    "/view-filtered-users",
+    protectAdmin,
+    filteredUsers
   );
 
 export default adminRouter;

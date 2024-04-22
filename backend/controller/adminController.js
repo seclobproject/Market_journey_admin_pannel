@@ -823,7 +823,7 @@ export const viewParamsPanchayaths = async (req, res, next) => {
     // const admin = await Admin.findById(adminId);
 
     // if (admin) {
-      const zonalData = await Zonal.findById(id).populate("panchayaths")
+      const zonalData = await Zonal.findById(id).populate("panchayaths");
       if (!zonalData || zonalData.length === 0) {
         return next(errorHandler(401, "No zonal exist"));
       }
@@ -1050,10 +1050,36 @@ export const acceptUser = async (req, res, next) => {
             sponserUser1.childLevel1.push(updatedUser._id);
             updatedSponser1=await sponserUser1.save();
           }
+          if(updatedUser.state){
+            const statData=await State.findOne({name:updatedUser.state})
+            if(statData){
+              statData.users.push(updatedUser._id);
+              await statData.save();
+            }
+          }
+          if(updatedUser.district){
+            const distData=await District.findOne({name:updatedUser.district})
+            if(distData){
+              distData.users.push(updatedUser._id);
+              await distData.save();
+            }
+          }
+          if(updatedUser.zonal){
+            const zoneData=await Zonal.findOne({name:updatedUser.zonal})
+            if(zoneData){
+              zoneData.users.push(updatedUser._id);
+              await zoneData.save();
+            }
+          }
+          if(updatedUser.panchayath){
+            const panchData=await Panchayath.findOne({name:updatedUser.panchayath})
+            if(panchData){
+              panchData.users.push(updatedUser._id);
+              await panchData.save();
+            }
+
+          }
           if(sponserUser1.isAdmin===false){
-            console.log(sponserUser1);
-            console.log(sponserUser2);
-            
           const referalIncome=await generateReferalIncome(updatedSponser1,updatedSponser2._id,updatedUser)
         }
 
@@ -1154,6 +1180,58 @@ export const rejectUser = async (req, res, next) => {
                   next(error);
               }
             };
+
+  //   const paginate = async (model, query, page = 1, pageSize = 10, searchQuery = {}) => {
+  //     try {
+  //         const totalDocs = await model.countDocuments({ ...query, ...searchQuery });
+  //         const totalPages = Math.ceil(totalDocs / pageSize);
+  //         const offset = pageSize * (page - 1);
+  //         const results = await model.find({ ...query, ...searchQuery }).sort({ createdAt: -1 }).skip(offset).limit(pageSize);
+  //         return {
+  //             results,
+  //             page,
+  //             pageSize,
+  //             totalPages,
+  //             totalDocs
+  //         };
+  //     } catch (error) {
+  //         throw new Error(`Pagination error: ${error.message}`);
+  //     }
+  // };
+  
+  // export const viewAllPageUsers = async (req, res, next) => {
+  //     const adminId = req.admin._id;
+  //     const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+  //     const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+  //     const searchQuery = {}; // Initialize empty search query
+  
+  //     // Check if search query parameter exists
+  //     if (req.query.search) {
+  //         // Define the fields on which you want to search
+  //         const searchFields = ["name", "sponserName", "ownSponserId", "packageAmount", "franchiseName", "franchise"];
+  //         // Construct regex search criteria for each field
+  //         const regexSearchCriteria = searchFields.map(field => ({ [field]: { $regex: req.query.search, $options: "i" } }));
+  //         // Combine all search criteria with OR operator
+  //         searchQuery.$or = regexSearchCriteria;
+  //     }
+  
+  //     try {
+  //         const admin = await Admin.findById(adminId);
+  //         if (admin) {
+  //             const userData = await paginate(User, {}, page, pageSize, searchQuery);
+  //             return res.status(200).json({
+  //                 userData,
+  //                 sts: "01",
+  //                 msg: "Successfully Get all users",
+  //             });
+  //         } else {
+  //             next(errorHandler("User not found"));
+  //         }
+  //     } catch (error) {
+  //         next(error);
+  //     }
+  // };
+  
 
 
 

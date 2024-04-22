@@ -1,7 +1,11 @@
 import { errorHandler } from "../middleware/errorHandler.js";
 import Admin from "../models/adminModel.js";
 import Demate from "../models/demateModel.js";
+import District from "../models/districtModel.js";
+import Panchayath from "../models/panchayathModel.js";
+import State from "../models/stateModel.js";
 import User from "../models/userModel.js";
+import Zonal from "../models/zonalModel.js";
 
 
 
@@ -9,7 +13,7 @@ import User from "../models/userModel.js";
 
 
 //------------------Paginated Function-------------------------------------------------------------------------------
-const paginate = async (model, page = 1, pageSize = 10) => {
+export const paginate = async (model, page = 1, pageSize = 10) => {
     try {
         const totalDocs = model.length;
         const totalPages = Math.ceil(totalDocs / pageSize);
@@ -702,3 +706,88 @@ export const bonusCreditedReport = async (req, res, next) => {
 
 //zonal and district member list
 
+
+
+export const filteredUsers = async (req, res, next) => {
+    const userId = req.admin ? req.admin._id : (req.user ? req.user._id : null);
+
+    let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+    const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+    const {state}=req.body
+    const {district}=req.body
+    const {zonal}=req.body
+    const {panchayath}=req.body
+    let userData;
+
+    try {
+        if(state){
+            userData = await State.findOne({name:state}).populate({
+                path: "users",
+                options: {
+                    sort: { createdAt: 1 } // Sort by createdAt in descending order
+                }
+            });
+        }else if(district){
+            userData = await District.findOne({name:district}).populate({
+                path: "users",
+                options: {
+                    sort: { createdAt: 1 } // Sort by createdAt in descending order
+                }
+            });
+        }else if(zonal){
+            userData = await Zonal.findOne({name:zonal}).populate({
+                path: "users",
+                options: {
+                    sort: { createdAt: 1 } // Sort by createdAt in descending order
+                }
+            });
+        }else if(panchayath){
+            userData = await Panchayath.findOne({name:zonal}).populate({
+                path: "users",
+                options: {
+                    sort: { createdAt: 1 } // Sort by createdAt in descending order
+                }
+            });
+        }else if(userId){
+            const data=await User.findById(userId)
+            if(data.isDistrictFranchise){
+                const dist=data.franchiseName
+                userData = await District.findOne({name:dist}).populate({
+                    path: "users",
+                    options: {
+                        sort: { createdAt: 1 } // Sort by createdAt in descending order
+                    }
+                });
+            }
+            if(data.isZonalFranchise){
+                const zon=data.franchiseName
+                userData = await Zonal.findOne({name:zon}).populate({
+                    path: "users",
+                    options: {
+                        sort: { createdAt: 1 } // Sort by createdAt in descending order
+                    }
+                });
+            }
+        }
+
+        if (userData) {
+            const users = userData.users;
+            const paginatedUsers = await paginate(users, page, pageSize);
+            res.status(200).json({
+                filteredUsers: paginatedUsers.results,
+                pagination: {
+                    page: paginatedUsers.page,
+                    pageSize: paginatedUsers.pageSize,
+                    totalPages: paginatedUsers.totalPages,
+                    totalDocs: paginatedUsers.totalDocs
+                },
+                sts: "01",
+                msg: "Get Filtered Users",
+            });
+        } else {
+            return next(errorHandler(401, "User Login Failed"));
+        }
+    } catch (error) {
+        next(error);
+    }
+};

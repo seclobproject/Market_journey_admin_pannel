@@ -265,7 +265,7 @@ function Viewdetails() {
           </i>
         )}
       </Menu.Item>
-      <Menu.Item key="3">
+      {/* <Menu.Item key="3">
         {details.userStatus === "approved" && (
           <i
             className="fas fa-eye"
@@ -278,7 +278,7 @@ function Viewdetails() {
             View Certificate
           </i>
         )}
-      </Menu.Item>
+      </Menu.Item> */}
     </Menu>
   );
   useEffect(() => {

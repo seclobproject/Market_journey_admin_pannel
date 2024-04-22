@@ -111,7 +111,7 @@ function Panchayath() {
       const response = await ApiCall("get", paginatedPanchayathUrl, {}, params);
       console.log(response,"res");
       if (response.status === 200) {
-        setPanchayathList(response?.data?.panchayathData?.results);
+        setPanchayathList(response?.data?.panchayaths);
         setTotalPages(response?.data?.totalPages);
 
         setIsLoading(false);
@@ -301,8 +301,8 @@ function Panchayath() {
                             </td>
 
                             <td>
-                              {(panchayaths?.name &&
-                                panchayaths.name.toUpperCase()) ||
+                              {(panchayaths?.panchayathName &&
+                                panchayaths.panchayathName.toUpperCase()) ||
                                 "--"}
                             </td>
 

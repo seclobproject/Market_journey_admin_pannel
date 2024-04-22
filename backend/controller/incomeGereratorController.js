@@ -111,7 +111,7 @@ export const generateReferalIncome = async (
 
         console.log(`${updatedSponser.name} has credited level income ${levelIncome}`);
         if(updatedSponser){
-         await franchiseIncomeGenerator(updatedSponser,levelIncome,"",0.5,0.8)
+         await franchiseIncomeGenerator(updatedSponser,levelIncome,"",0.05,0.08)
           userData=updatedSponser;
           amount=levelIncome;
         }

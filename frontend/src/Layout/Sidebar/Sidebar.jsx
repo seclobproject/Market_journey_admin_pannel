@@ -40,17 +40,17 @@ function Sidebar() {
     
     // { title: "Reports", icon: "fas fa-chart-line", route: "reports" },
 
-    {
-      title: "Demat Account",
-      icon: "fas fa-chart-pie",
-      sub: [
-        { title: "All Demat Accounts", route: "demat-accounts" },
-        {
-          title: "Pending Account",
-          route: "pending/accounts",
-        },
-      ],
-    },
+    // {
+    //   title: "Demat Account",
+    //   icon: "fas fa-chart-pie",
+    //   sub: [
+    //     { title: "All Demat Accounts", route: "demat-accounts" },
+    //     {
+    //       title: "Pending Account",
+    //       route: "pending/accounts",
+    //     },
+    //   ],
+    // },
     {
       title: "Bonus History",
       icon: "fas fa-clock",

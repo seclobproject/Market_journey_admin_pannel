@@ -694,7 +694,9 @@ function Viewdetails() {
                                 {details?.screenshot && (
                                   <Image
                                     width={200}
-                                    src={`http://192.168.29.152:6003/uploads/${details?.screenshot}`}
+                                    // src={`http://192.168.29.152:6003/uploads/${details?.screenshot}`}
+                                    src={`https://admin.marketjourney.in/uploads/${details?.screenshot}`}
+
                                   />
                                 )}
                               </ul>

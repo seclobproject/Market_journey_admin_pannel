@@ -207,7 +207,9 @@ function Uploads() {
                                 >
                                   <Image
                                     width={200}
-                                    src={`http://192.168.29.152:6003/uploads/${image?.homeImage}`}
+                                    // src={`http://192.168.29.152:6003/uploads/${image?.homeImage}`}
+                                    src={`https://admin.marketjourney.in/uploads/${image?.homeImage}`}
+
                                   />
                                 </td>
                                 <td

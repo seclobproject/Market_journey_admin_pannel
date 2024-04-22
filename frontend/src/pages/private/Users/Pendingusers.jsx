@@ -177,7 +177,10 @@ function Pendingusers() {
                               {members?.screenshot && (
                                 <Image
                                   width={200}
-                                  src={`http://192.168.29.152:6003/uploads/${members?.screenshot}`}
+                               
+                                  // src={`http://192.168.29.152:6003/uploads/${members?.screenshot}`}
+                                  src={`https://admin.marketjourney.in/uploads/${members?.screenshot}`}
+
                                 />
                               )}
                             </td>

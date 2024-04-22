@@ -242,7 +242,9 @@ function Uploadvideos() {
                               >
                                 <Image
                                   width={200}
-                                  src={`http://192.168.29.152:6003/uploads/${video?.videoThambnail}`}
+                                  // src={`http://192.168.29.152:6003/uploads/${video?.videoThambnail}`}
+                                  src={`https://admin.marketjourney.in/uploads/${video?.videoThambnail}`}
+
                                 />
                               </td>
                               <td

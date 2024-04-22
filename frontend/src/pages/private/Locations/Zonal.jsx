@@ -87,8 +87,9 @@ function Zonal() {
       setIsLoading(true);
 
       const response = await ApiCall("get", paginatedZonals, {}, params);
+      console.log(response,"....")
       if (response.status === 200) {
-        setZonalList(response?.data?.zonals);
+        setZonalList(response?.data?.zonalData?.results);
         setTotalPages(response?.data?.totalPages);
 
         setIsLoading(false);
@@ -243,8 +244,8 @@ function Zonal() {
                                 "--"}
                             </td>
                             <td>
-                              {(zonals?.zonalName &&
-                                zonals.zonalName.toUpperCase()) ||
+                              {(zonals?.name &&
+                                zonals.name.toUpperCase()) ||
                                 "--"}
                             </td>
                             <td>

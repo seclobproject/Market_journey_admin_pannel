@@ -35,26 +35,15 @@ function Report() {
   const [reportData, setReportData] = useState({});
   const [stateLabel, setStateLabel] = useState("");
 
-  console.log(stateLabel, "stateLabellllll");
 
-  console.log(reportData, "data");
   const [params, setParams] = useState({
     page: 1,
     pageSize: 10,
   });
   const [totalPages, setTotalPages] = useState(1);
-  console.log(filterReport, "filterReport");
 
-  console.log(selectedStateId, "StateId");
-  console.log(selectedDistrictId, " dist id");
-  console.log(selectedZonalId, " zonal id");
-  console.log(selectedPanId, " pan id");
 
-  console.log(stateList, "stateList");
-  console.log(zonalList, "zonalList");
-  console.log(panchayathList, "zonalList");
 
-  console.log(districtList, "districtList");
   const startIndex = (params.page - 1) * params.pageSize;
 
   //-----------list state in drop down--------
@@ -77,7 +66,6 @@ function Report() {
   //-----------list district in drop down--------
 
   const getAllDistrictList = async () => {
-    console.log("working");
     try {
       const response = await ApiCall(
         "get",
@@ -144,7 +132,6 @@ function Report() {
         filterReport,
         params
       );
-      console.log(response, "res");
       if (response.status === 200) {
         setReportData(response?.data?.filteredUsers);
         setTotalPages(response?.data?.pagination);

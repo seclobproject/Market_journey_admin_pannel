@@ -323,6 +323,8 @@ function Uploads() {
                   id="fileInput"
                   accept="image/*"
                   style={{ display: "none" }}
+                  onChange={handleImageChange}
+
                 />
               </div>
             </div>

@@ -86,4 +86,4 @@ export const viewBonnusURL="/api/admin/view-bonus-paid-report"
 //upload invoive
 export const attachMailUrl="/api/admin/upload-pdf"
 //report
-export const reportuserUrl="/api/admin/view-filtered-users?page=1&pageSize=10"
+export const reportuserUrl="/api/admin/view-filtered-users"

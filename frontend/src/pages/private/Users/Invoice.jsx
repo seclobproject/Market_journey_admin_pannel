@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from "react";
-import PdfTemplates from "../../../Components/templates";
+import PdfTemplates from "../../../Components/Templates";
 import { useLocation } from "react-router-dom";
 import { usePDF } from "react-to-pdf";
 import { ApiCall } from "../../../Services/Api";

@@ -207,7 +207,9 @@ function Uploads() {
                                 >
                                   <Image
                                     width={200}
-                                    src={`http://192.168.29.152:6003/uploads/${image?.homeImage}`}
+                                    // src={`http://192.168.29.152:6003/uploads/${image?.homeImage}`}
+                                    src={`https://admin.marketjourney.in/uploads/${image?.homeImage}`}
+
                                   />
                                 </td>
                                 <td
@@ -306,7 +308,7 @@ function Uploads() {
                     />
                   ) : (
                     <img
-                      src="/public/dist/images/upload image.webp" // Replace with your default image path
+                      src="/dist/images/upload image.webp" h
                       alt="Default"
                       style={{
                         width: "110px",
@@ -321,7 +323,6 @@ function Uploads() {
                   id="fileInput"
                   accept="image/*"
                   style={{ display: "none" }}
-                  onChange={handleImageChange}
                 />
               </div>
             </div>

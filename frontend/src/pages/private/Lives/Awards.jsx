@@ -222,7 +222,6 @@ function Awards() {
                       <>
                         {awardDetails.map(
                           (details, index) => (
-                            console.log(details, "de"),
                             (
                               <tr key={index}>
                                 <td>{index + 1}</td>
@@ -387,8 +386,7 @@ function Awards() {
                       />
                     ) : (
                       <img
-                        src="/public/dist/images/upload image.webp" // Replace with your default image path
-                        alt="Default"
+                        src="/dist/images/upload image.webp" 
                         style={{
                           width: "110px",
                           height: "110px",

@@ -21,7 +21,6 @@ localStorage.setItem('isAuthenticated',JSON.stringify(loggedIn))
 },[loggedIn]);
 
 const loginFun =()=>{
-  console.log(loggedIn,"here  logged in")
   setLoggedIn(true)
 };
 const Logout =()=>{

@@ -1,5 +1,8 @@
 import nodemailer from "nodemailer";
 
+const CLIENT_ID = "shyamkumarbeypore@gmail.com";
+const CLIENT_SECRET = "hqav yyzp xspj dhep"
+
 export const sendMail = (mailId, name, sponserid, password) => {
   const recipient = mailId;
 
@@ -9,8 +12,8 @@ export const sendMail = (mailId, name, sponserid, password) => {
     secure: false,
     requireTLS: true,
     auth: {
-      user: "seclobclt@gmail.com",
-      pass: "tplg bisd mapf emsb",
+      user: CLIENT_ID,
+      pass: CLIENT_SECRET,
     },
   });
   const mailOptions = {
@@ -36,8 +39,8 @@ export const withdrawMail = (recipient, receiver, sender, requested, released, w
     secure: false,
     requireTLS: true,
     auth: {
-      user: "seclobclt@gmail.com",
-      pass: "tplg bisd mapf emsb",
+      user: CLIENT_ID,
+      pass: CLIENT_SECRET,
     },
   });
   const mailOptions = {
@@ -70,8 +73,8 @@ export const sendMailWithAttachment=async(user,recipient, pdfFilePath)=> {
     secure: false,
     requireTLS: true,
     auth: {
-      user: "seclobclt@gmail.com",
-      pass: "tplg bisd mapf emsb",
+      user: CLIENT_ID,
+      pass: CLIENT_SECRET,
     },
   });
 

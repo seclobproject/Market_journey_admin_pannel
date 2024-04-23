@@ -386,8 +386,7 @@ function Awards() {
                       />
                     ) : (
                       <img
-                        src="/public/dist/images/upload image.webp" // Replace with your default image path
-                        alt="Default"
+                        src="/dist/images/upload image.webp" 
                         style={{
                           width: "110px",
                           height: "110px",

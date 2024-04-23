@@ -399,7 +399,7 @@ function Uploadvideos() {
                     />
                   ) : (
                     <img
-                      src="/public/dist/images/upload image.webp" // Replace with your default image path
+                      src="/dist/images/upload image.webp" 
                       alt="Default"
                       style={{
                         width: "110px",

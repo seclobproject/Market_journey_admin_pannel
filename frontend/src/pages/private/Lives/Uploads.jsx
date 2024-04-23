@@ -308,7 +308,7 @@ function Uploads() {
                     />
                   ) : (
                     <img
-                      src="/public/dist/images/upload image.webp" // Replace with your default image path
+                      src="/dist/images/upload image.webp" h
                       alt="Default"
                       style={{
                         width: "110px",
@@ -323,7 +323,6 @@ function Uploads() {
                   id="fileInput"
                   accept="image/*"
                   style={{ display: "none" }}
-                  onChange={handleImageChange}
                 />
               </div>
             </div>

@@ -25,6 +25,7 @@ function Viewdetails() {
   const [password, setPassword] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [details, setDetails] = useState({});
+  console.log(details,"pp");
   const [showPassword, setShowPassword] = useState(false);
   const [editUser, setEditUser] = useState({});
   const [editBankDetails, setEditBankDetails] = useState({});
@@ -1275,11 +1276,11 @@ function Viewdetails() {
                 className="form-control"
                 id="exampleTextarea"
                 rows="3"
-                value={editBankDetails?.accountNum}
+                value={addNomineeDetails?.accountNum}
                 placeholder=" Enter account name"
                 onChange={(e) => {
-                  setEditBankDetails({
-                    ...editBankDetails,
+                  setAddNomineeDetails({
+                    ...addNomineeDetails,
                     accountNum: e.target.value,
                   });
                   clearMessageDiv();

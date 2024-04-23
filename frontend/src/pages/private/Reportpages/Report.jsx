@@ -12,6 +12,7 @@ import {
   zonallistindropdownUrl,
 } from "../../../utils/Constants";
 import { Button } from "antd";
+import moment from "moment";
 
 function Report() {
   const [isLoading, setIsLoading] = useState(false);
@@ -19,6 +20,8 @@ function Report() {
   const [selectedStateId, setSelectedStateId] = useState(null);
   const [selectedDistrictId, setSelectedDistrictId] = useState(null);
   const [selectedZonalId, setselectedZonalId] = useState(null);
+  const [selectedPanId, setselectedPanId] = useState(null);
+
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [zonalList, setZonalList] = useState([]);
@@ -29,6 +32,12 @@ function Report() {
     zonal: "",
     panchayath: "",
   });
+  const [reportData, setReportData] = useState({});
+  const [stateLabel, setStateLabel] = useState("");
+
+  console.log(stateLabel, "stateLabellllll");
+
+  console.log(reportData, "data");
   const [params, setParams] = useState({
     page: 1,
     pageSize: 10,
@@ -36,14 +45,17 @@ function Report() {
   const [totalPages, setTotalPages] = useState(1);
   console.log(filterReport, "filterReport");
 
-  console.log(selectedStateId, "selectedStateId");
+  console.log(selectedStateId, "StateId");
   console.log(selectedDistrictId, " dist id");
+  console.log(selectedZonalId, " zonal id");
+  console.log(selectedPanId, " pan id");
 
   console.log(stateList, "stateList");
   console.log(zonalList, "zonalList");
   console.log(panchayathList, "zonalList");
 
   console.log(districtList, "districtList");
+  const startIndex = (params.page - 1) * params.pageSize;
 
   //-----------list state in drop down--------
   const getStateList = async () => {
@@ -126,19 +138,35 @@ function Report() {
 
   const getFilterData = async () => {
     try {
-      const response = await ApiCall("get", reportuserUrl, filterReport
-    
+      const response = await ApiCall(
+        "post",
+        reportuserUrl,
+        filterReport,
+        params
       );
-      console.log(response);
+      console.log(response, "res");
+      if (response.status === 200) {
+        setReportData(response?.data?.filteredUsers);
+        setTotalPages(response?.data?.pagination);
+      }
     } catch (error) {
       // Handle errors here
       console.error("Error fetching data:", error);
     }
   };
-  
-useEffect(()=>{
-getFilterData();
-},[filterReport,params]);
+  const handlePageChange = (event, newPage) => {
+    setParams((prevParams) => ({
+      ...prevParams,
+      page: newPage,
+    }));
+  };
+
+  useEffect(() => {
+    if (filterReport?.state != "" || filterReport?.district != "" || filterReport?.zonal != "" || filterReport?.panchayath != ""){
+      getFilterData();
+
+    }
+  }, [filterReport, params]);
 
   useEffect(() => {
     getStateList();
@@ -152,7 +180,22 @@ getFilterData();
       getPanchayathList();
     }
   }, [selectedStateId, selectedDistrictId, selectedZonalId]);
-
+  
+  const handleReset = () => {
+    setSelectedStateId("");
+    setStateLabel("")
+    setFilterReport({
+      state: "",
+      district: "",
+      zonal: "",
+      panchayath: "",
+    })
+    setSelectedState("")
+    setReportData({})
+    setSelectedDistrictId("");
+    setselectedPanId("");
+    setselectedZonalId('')
+  };
   return (
     <>
       <SlideMotion>
@@ -176,12 +219,14 @@ getFilterData();
                     value: states?.id,
                     label: states?.stateName,
                   }))}
-                  value={selectedState?.state}
                   onChange={(selectedOption) => {
+                    setStateLabel(selectedOption?.label)
                     setSelectedStateId(selectedOption?.value);
                     if (selectedStateId) {
                       getAllDistrictList();
                     }
+                    setselectedZonalId("");
+                    setSelectedDistrictId("");
                     setFilterReport({
                       ...filterReport,
                       state: selectedOption?.label,
@@ -204,16 +249,17 @@ getFilterData();
                     }))}
                     onChange={(selectedOption) => {
                       setSelectedDistrictId(selectedOption?.value);
-                      if (selectedDistrictId) {
+
+                      if (selectedOption?.value) {
                         getAllZonallist();
+
+                        setFilterReport({
+                          ...filterReport,
+                          district: selectedOption?.label,
+                          state: "", // Reset state if needed
+                        });
                       }
-                      setFilterReport({
-                        ...filterReport,
-                        district: selectedOption?.label,
-                        state: "",
-                      });
                     }}
-                    // options={options}
                     placeholder="Select a district"
                     isSearchable={true}
                   />
@@ -254,10 +300,8 @@ getFilterData();
                     }))}
                     // options={options}
                     onChange={(selectedOption) => {
-                      setselectedZonalId(selectedOption?.value);
-                      if (selectedZonalId) {
-                        getPanchayathList();
-                      }
+                      setselectedPanId(selectedOption?.value);
+
                       setFilterReport({
                         ...filterReport,
                         panchayath: selectedOption?.label,
@@ -271,7 +315,7 @@ getFilterData();
               )}
 
               <div className="col-md-2 mt-3 sm-2">
-                <Button className="btn btn-custom">Reset</Button>
+                <Button className="btn btn-custom" onClick={handleReset}>Reset</Button>
               </div>
             </div>
             {isLoading ? (
@@ -289,7 +333,22 @@ getFilterData();
                           <h6 className="fs-4 fw-semibold mb-0">Date</h6>
                         </th>
                         <th>
+                          <h6 className="fs-4 fw-semibold mb-0">User ID</h6>
+                        </th>
+                        <th>
                           <h6 className="fs-4 fw-semibold mb-0">Name</h6>
+                        </th>
+
+                        <th>
+                          <h6 className="fs-4 fw-semibold mb-0">
+                            Sponsor Name
+                          </h6>
+                        </th>
+
+                        <th>
+                          <h6 className="fs-4 fw-semibold mb-0">
+                            Package Amount
+                          </h6>
                         </th>
                         <th>
                           <h6 className="fs-4 fw-semibold mb-0">Type</h6>
@@ -299,67 +358,47 @@ getFilterData();
                             Franchise Name
                           </h6>
                         </th>
-                        <th>
-                          <h6 className="fs-4 fw-semibold mb-0">Report Name</h6>
-                        </th>
-                        <th>
-                          <h6 className="fs-4 fw-semibold mb-0">
-                            Amount Credited{" "}
-                          </h6>
-                        </th>
-                        <th>
-                          <h6 className="fs-4 fw-semibold mb-0">
-                            Percentage Credited
-                          </h6>
-                        </th>
 
                         <th />
                       </tr>
                     </thead>
-                    {/* <tbody>
-                      {getHistory?.length ? (
+                    <tbody>
+                      {reportData?.length ? (
                         <>
-                          {getHistory.map(
-                            (history, index) => (
-                              (
-                                <tr key={index}>
-                                  <td>{startIndex + index + 1}</td>
-                                  <td>
-                                    {history?.createdAt
-                                      ? moment(history.createdAt).format(
-                                          "DD/MM/YYYY"
-                                        )
-                                      : "--"}
-                                  </td>
+                          {reportData.map((data, index) => (
+                            <tr key={index}>
+                              <td>{startIndex + index + 1}</td>
+                              <td>
+                                {data?.createdAt
+                                  ? moment(data.createdAt).format("DD/MM/YYYY")
+                                  : "--"}
+                              </td>
+                              <td>{data?.ownSponserId || "--"}</td>
 
-                                  <td>
-                                    {(history?.name &&
-                                      history.name.toUpperCase()) ||
-                                      "--"}
-                                  </td>
-                                  <td>{history?.franchise||"--"}</td>
-                                  <td>{history?.franchiseName||"--"}</td>
+                              <td>
+                                {(data?.name && data.name.toUpperCase()) ||
+                                  "--"}
+                              </td>
+                              <td>
+                                {(data?.sponserName &&
+                                  data.sponserName.toUpperCase()) ||
+                                  "--"}
+                              </td>
 
-                                  
-                                  <td>{history?.reportName||"--"}</td>
-                                  <td>{history?.amountCredited || "00"}</td>
-                                  <td>{history?.percentageCredited || "0%"}</td>
-
-                              
-                             
-                                </tr>
-                              )
-                            )
-                          )}
+                              <td>{data?.packageAmount}</td>
+                              <td>{data?.franchise || "--"}</td>
+                              <td>{data?.franchiseName || "--"}</td>
+                            </tr>
+                          ))}
                         </>
                       ) : (
                         <tr>
                           <td colSpan={20} style={{ textAlign: "center" }}>
-                            <b>No History Found</b>{" "}
+                            <b>No Report Found</b>{" "}
                           </td>
                         </tr>
                       )}
-                    </tbody> */}
+                    </tbody>
                   </table>
                 </div>
               </div>
@@ -367,9 +406,9 @@ getFilterData();
             <div className="me-2 mb-3 d-flex ms-auto">
               <Stack spacing={2}>
                 <Pagination
-                  //   count={totalPages}
-                  //   page={params.page}
-                  //   onChange={handlePageChange}
+                  count={totalPages}
+                  page={params.page}
+                  onChange={handlePageChange}
                   color="primary"
                 />
               </Stack>

@@ -38,7 +38,7 @@ function Sidebar() {
       ],
     },
     
-    // { title: "Reports", icon: "fas fa-chart-line", route: "reports" },
+    { title: "Reports", icon: "fas fa-chart-line", route: "reports" },
 
     // {
     //   title: "Demat Account",

@@ -106,21 +106,24 @@ function Distribute() {
 
   const distributeWalet = async () => {
     try {
-      const resposne = await ApiCall("post", distributeWalletUrl);
-      if (resposne.status === 200) {
-        Show_Toast("Autopool wallet distributed successfully", true);
-        setConfirmationModal(false);
-        getAdminprofile();
-      } else {
-        Show_Toast("Failed to distribute", false);
-      }
+        if (details?.autoPoolWallet > 0) {
+            const response = await ApiCall("post", distributeWalletUrl);
+            if (response.status === 200) {
+                Show_Toast("Autopool wallet distributed successfully", true);
+                setConfirmationModal(false);
+                getAdminprofile();
+            } else {
+                Show_Toast("Failed to distribute", false);
+            }
+        } else {
+            console.log("AutoPoolWallet is not greater than 0, skipping API call.");
+            Show_Toast("AutoPoolWallet balance is 0.", false);
+        }
     } catch (error) {
-      {
-        console.error("failed:", error);
+        console.error("Failed:", error);
         Show_Toast(error, false);
-      }
     }
-  };
+};
 
   useEffect(() => {
     getAdminprofile();
@@ -660,7 +663,6 @@ function Distribute() {
           )}
         </div>
       </SlideMotion>
-      {/* update  percentage */}
       <ModalComponent
         show={percentageModal.show}
         onHide={() => {

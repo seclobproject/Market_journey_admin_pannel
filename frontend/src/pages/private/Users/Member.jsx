@@ -29,7 +29,7 @@ function Member() {
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
   const [addMember, setAddMember] = useState({});
-
+console.log(addMember,"addMember");
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [zonalList, setZonalList] = useState([]);
@@ -47,6 +47,7 @@ function Member() {
   const [selectedDistrictId, setSelectedDistrictId] = useState(null);
   const [selectedZonalId, setSelectedZonalId] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
+  console.log(selectedState," testing selected");
   const [allUser, setAllUser] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [params, setParams] = useState({
@@ -852,8 +853,10 @@ function Member() {
                         setAddMember({
                           ...addMember,
                           state: selectedOption?.value,
-                          franchiseName: "",
+                          franchiseName: "", 
                         });
+                        // selectedState("")
+                        
                       }}
                       placeholder="Select a state"
                       isSearchable={true}
@@ -880,7 +883,7 @@ function Member() {
                           franchiseName: selectedOption?.label,
                         });
                       }}
-                      placeholder="Select a state"
+                      placeholder="Select a district"
                       isSearchable={true}
                     />{" "}
                     <Form.Control.Feedback type="invalid">

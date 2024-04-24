@@ -40,6 +40,7 @@ console.log(addMember,"addMember");
   const [notTakenDistrict, setnotTakenDistrict] = useState([]);
   const [packageAmount, setPackageAmount] = useState({});
   const [packageType, setpackageType] = useState();
+  console.log(packageType,"packageType");
   const [totalgstAmount, setTotalGstAmount] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showTransPassword, setShowTransPassword] = useState(false);
@@ -978,7 +979,7 @@ console.log(addMember,"addMember");
 
             {(addMember?.franchise === "Mobile Franchise" ||
               packageType === "Courses" ||
-              packageType === "Signals") && (
+              addMember?.packageType === "Courses"||addMember?.packageType === "Signals") && (
               <div className="row">
                 <div className="col-md-3 mb-4">
                   <label htmlFor="stateDropdown1" className="form-label">

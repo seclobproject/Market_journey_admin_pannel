@@ -701,9 +701,9 @@ console.log("approved",user.name);
 //view alert data
 
   export const viewAlert=async(req,res,next)=>{
+    try {
     let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const pageSize = parseInt(req.query.pageSize) || 10; 
-    try {
       const alertData=await Alert.find().sort({createdAt: 1})
     const paginatedSignals = await paginate(alertData, page, pageSize);
     res.status(200).json({
@@ -727,10 +727,10 @@ console.log("approved",user.name);
 
 // Function to fetch alerts based on user preferences
 export const getAlertsForUser = async (req, res, next) => {
+  try {
   const userId = req.user._id;
     let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const pageSize = parseInt(req.query.pageSize) || 10; 
-  try {
     const userData = await User.findById(userId).populate({
       path: "signals",
       options: {
@@ -813,7 +813,7 @@ export const getAlertsForUser = async (req, res, next) => {
       const id = req.query.id||req.user._id;
       // const {id}=req.query||userId
       const {name,phone,address,bankName,accountNum,ifscCode,aadhaarNum,pancardNum} = req.body;
-
+console.log(accountNum);
       const userData = await User.findById(id);
       if (!userData) {
         return next(errorHandler(401, "User not found"));

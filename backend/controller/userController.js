@@ -388,8 +388,8 @@ export const addUser = async (req, res, next) => {
 
 
 export const userLogin = async (req, res, next) => {
-  const { email, password } = req.body;
   try {
+  const { email, password } = req.body;
     const validUser = await User.findOne({ email });
 
     if (!validUser) {
@@ -426,9 +426,9 @@ export const userLogin = async (req, res, next) => {
 //change password
 
 export const changePassword = async (req, res, next) => {
+  try {
   const userId = req.user._id;
   const userData = await User.findById(userId);
-  try {
     if (userData) {
       const { newPassword, confirmPassword } = req.body;
       if (newPassword) {
@@ -562,8 +562,8 @@ export const viewUserProfile = async (req, res, next) => {
    // edit user profile by user
 
    export const editProfile = async (req, res, next) => {
+     try {
     const id = req.user._id;
-    try {
         const userData = await User.findById(id);
         if (userData) {
           const { name,email, password, address,dateOfBirth } =
@@ -1058,3 +1058,28 @@ const calculateWeeksDifference = (startDate, endDate) => {
   const timeDifferenceMs = endDate.getTime() - startDate.getTime();
   return Math.floor(timeDifferenceMs / (1000 * 60 * 60 * 24 * 7));
 };
+
+
+
+
+// view add on packages
+
+export const viewAddOn=async(req,res,next)=>{
+  try {
+    const userId=req.user._id;
+    const userData=await User.findById(userId)
+    if(userData){
+      return next(errorHandler(401, "User not found. Please login first."))
+    }
+    if(userData.renewalStatus){
+      
+    }
+
+
+
+
+    
+  } catch (error) {
+    next(error)
+  }
+}

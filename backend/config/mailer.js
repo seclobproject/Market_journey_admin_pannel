@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 
-const CLIENT_ID = "shyamkumarbeypore@gmail.com";
-const CLIENT_SECRET = "hqav yyzp xspj dhep"
+const CLIENT_ID = "marketjourney.super@gmail.com";
+const CLIENT_SECRET = "nssn fmtq zzvl asfo"
 
 export const sendMail = (mailId, name, sponserid, password) => {
   const recipient = mailId;

@@ -616,8 +616,111 @@ function Viewdetails() {
                                     </span>
                                   </h6>
                                 </li>
-                                {!details?.packageType == "course" && (
+                                {details?.franchise == "District Franchise" && (
                                   <>
+                                     <li className="d-flex align-items-center gap-3 mb-4">
+                                      <i className="fas fa-user text-dark fs-6" />
+                                      <h6 className="fs-4 fw-semibold mb-0">
+                                        State :{" "}
+                                        <span
+                                          style={{ color: "rgb(247, 174, 21)" }}
+                                        >
+                                          {details?.state || "--"}
+                                        </span>
+                                      </h6>
+                                    </li>
+                                  
+                                  </>
+                                )}
+                                {details?.franchise == "Zonal Franchise" && (
+                                  <>
+                                     <li className="d-flex align-items-center gap-3 mb-4">
+                                      <i className="fas fa-user text-dark fs-6" />
+                                      <h6 className="fs-4 fw-semibold mb-0">
+                                        State :{" "}
+                                        <span
+                                          style={{ color: "rgb(247, 174, 21)" }}
+                                        >
+                                          {details?.state || "--"}
+                                        </span>
+                                      </h6>
+                                    </li>
+                                    <li className="d-flex align-items-center gap-3 mb-4">
+                                      <i className="fas fa-user text-dark fs-6" />
+                                      <h6 className="fs-4 fw-semibold mb-0">
+                                        District :{" "}
+                                        <span
+                                          style={{ color: "rgb(247, 174, 21)" }}
+                                        >
+                                          {details?.district || "--"}
+                                        </span>
+                                      </h6>
+                                    </li>
+                                  
+                                 
+                                  </>
+                                )}
+                                  {details?.franchise == "Mobile Franchise" && (
+                                   <>
+                                   <li className="d-flex align-items-center gap-3 mb-4">
+                                    <i className="fas fa-user text-dark fs-6" />
+                                    <h6 className="fs-4 fw-semibold mb-0">
+                                      State :{" "}
+                                      <span
+                                        style={{ color: "rgb(247, 174, 21)" }}
+                                      >
+                                        {details?.state || "--"}
+                                      </span>
+                                    </h6>
+                                  </li>
+                                  <li className="d-flex align-items-center gap-3 mb-4">
+                                    <i className="fas fa-user text-dark fs-6" />
+                                    <h6 className="fs-4 fw-semibold mb-0">
+                                      District :{" "}
+                                      <span
+                                        style={{ color: "rgb(247, 174, 21)" }}
+                                      >
+                                        {details?.district || "--"}
+                                      </span>
+                                    </h6>
+                                  </li>
+                                  <li className="d-flex align-items-center gap-3 mb-4">
+                                    <i className="fas fa-user text-dark fs-6" />
+                                    <h6 className="fs-4 fw-semibold mb-0">
+                                      Zonal :{" "}
+                                      <span
+                                        style={{ color: "rgb(247, 174, 21)" }}
+                                      >
+                                        {details?.zonal || "--"}
+                                      </span>
+                                    </h6>
+                                  </li>
+                                  <li className="d-flex align-items-center gap-3 mb-4">
+                                    <i className="fas fa-user text-dark fs-6" />
+                                    <h6 className="fs-4 fw-semibold mb-0">
+                                      Panchayath :{" "}
+                                      <span
+                                        style={{ color: "rgb(247, 174, 21)" }}
+                                      >
+                                        {details?.panchayath || "--"}
+                                      </span>
+                                    </h6>
+                                  </li>
+                                </>
+                                )}
+                                {details?.packageType == "Courses" && (
+                                  <>
+                                     <li className="d-flex align-items-center gap-3 mb-4">
+                                      <i className="fas fa-user text-dark fs-6" />
+                                      <h6 className="fs-4 fw-semibold mb-0">
+                                        State :{" "}
+                                        <span
+                                          style={{ color: "rgb(247, 174, 21)" }}
+                                        >
+                                          {details?.state || "--"}
+                                        </span>
+                                      </h6>
+                                    </li>
                                     <li className="d-flex align-items-center gap-3 mb-4">
                                       <i className="fas fa-user text-dark fs-6" />
                                       <h6 className="fs-4 fw-semibold mb-0">
@@ -640,6 +743,17 @@ function Viewdetails() {
                                         </span>
                                       </h6>
                                     </li>
+                                    <li className="d-flex align-items-center gap-3 mb-4">
+                                      <i className="fas fa-user text-dark fs-6" />
+                                      <h6 className="fs-4 fw-semibold mb-0">
+                                        Panchayath :{" "}
+                                        <span
+                                          style={{ color: "rgb(247, 174, 21)" }}
+                                        >
+                                          {details?.panchayath || "--"}
+                                        </span>
+                                      </h6>
+                                    </li>
                                   </>
                                 )}
 
@@ -654,6 +768,7 @@ function Viewdetails() {
                                     </span>
                                   </h6>
                                 </li>
+                                
                                 <li className="d-flex align-items-center gap-3 mb-4">
                                   <i className="fas fa-store text-dark fs-6" />
                                   <h6 className="fs-4 fw-semibold mb-0">
@@ -665,6 +780,18 @@ function Viewdetails() {
                                     </span>
                                   </h6>
                                 </li>
+                                {details?.packageType !== "Courses" && (
+  <li className="d-flex align-items-center gap-3 mb-4">
+    <i className="fas fa-store text-dark fs-6" />
+    <h6 className="fs-4 fw-semibold mb-0">
+      Franchise Name:{" "}
+      <span style={{ color: "rgb(247, 174, 21)" }}>
+        {details?.franchiseName || "--"}
+      </span>
+    </h6>
+  </li>
+)}
+
                                 <li className="d-flex align-items-center gap-3 mb-4">
                                   <i className="fas fa-money-bill-alt text-dark fs-6" />
                                   <h6 className="fs-4 fw-semibold mb-0">

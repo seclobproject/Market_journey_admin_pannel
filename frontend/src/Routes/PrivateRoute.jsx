@@ -5,8 +5,6 @@ import { Navigate } from 'react-router-dom'
 
 function PrivateRoute({children}) {
     const {isLoggedIn}=useContext(ContextData)
-    console.log(isLoggedIn,"oooo")
-
     if(!isLoggedIn){
         return <Navigate to="/" />
     }

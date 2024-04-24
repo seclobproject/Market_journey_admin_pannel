@@ -17,9 +17,7 @@ function Automembers() {
     pool: isClicked,
   });
   const [memebers, setMemebers] = useState({});
-  console.log(memebers, "memebers");
   const [totalPages, setTotalPages] = useState(1);
-  console.log(totalPages, "pages......sdsd.wewewewew.");
 const navigate=useNavigate()
   const startIndex = (params.page - 1) * params.pageSize;
 
@@ -35,7 +33,6 @@ const navigate=useNavigate()
     try {
       setIsLoading(true);
       const response = await ApiCall("get", viewpoolUserUrl, {}, params);
-      console.log(response, "response");
       if (response?.status === 200) {
         setMemebers(response?.data?.poolUsers);
         setTotalPages(response?.data?.pagination?.totalPages);
@@ -240,7 +237,6 @@ const navigate=useNavigate()
                       {memebers?.length ? (
                         <>
                           {memebers.map((users, index) => (
-                            console.log(users),
                             <tr key={index}>
                               <td>{startIndex + index + 1}</td>
                               <td>

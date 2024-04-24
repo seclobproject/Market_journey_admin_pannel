@@ -104,9 +104,7 @@ function Uploadvideos() {
           setDetails("");
           setFileName("");
           setValidated(false);
-          getVideoList();
-          // getImageList();
-          // setDescription("")
+          getVideoList();       
           Show_Toast("Video updated successfully", true);
         } else {
           Show_Toast("Video update failed", false);
@@ -124,7 +122,6 @@ function Uploadvideos() {
           "",
           "multipart/form-data"
         );
-        console.log(formData,"uploadimage");
 
         if (response.status === 201 || response.status === 200) {
           setVideoModal(false);
@@ -245,7 +242,9 @@ function Uploadvideos() {
                               >
                                 <Image
                                   width={200}
-                                  src={`http://192.168.29.152:6003/uploads/${video?.videoThambnail}`}
+                                  // src={`http://192.168.29.152:6003/uploads/${video?.videoThambnail}`}
+                                  src={`https://admin.marketjourney.in/uploads/${video?.videoThambnail}`}
+
                                 />
                               </td>
                               <td
@@ -400,7 +399,7 @@ function Uploadvideos() {
                     />
                   ) : (
                     <img
-                      src="/public/dist/images/upload image.webp" // Replace with your default image path
+                      src="/dist/images/upload image.webp" 
                       alt="Default"
                       style={{
                         width: "110px",

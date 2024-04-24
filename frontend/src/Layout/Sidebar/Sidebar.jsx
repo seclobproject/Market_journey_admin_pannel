@@ -10,17 +10,6 @@ function Sidebar() {
     { title: "Dashboard", icon: "fas fa-chart-line", route: "dashboard" },
     { title: "Package", icon: "fas fa-box", route: "packages" },
     {
-      title: "Users",
-      icon: "fas fa-users",
-      sub: [
-        { title: "All Users", route: "member" },
-        {
-          title: "Pending Users",
-          route: "user/pending",
-        },
-      ],
-    },
-    {
       title: "Locations",
       icon: "fas fa-map-marker-alt",
       sub: [
@@ -38,16 +27,30 @@ function Sidebar() {
       ],
     },
     {
-      title: "Demat Account",
-      icon: "fas fa-chart-pie",
+      title: "Users",
+      icon: "fas fa-users",
       sub: [
-        { title: "All Demat Accounts", route: "demat-accounts" },
+        { title: "All Users", route: "member" },
         {
-          title: "Pending Account",
-          route: "pending/accounts",
+          title: "Pending Users",
+          route: "user/pending",
         },
       ],
     },
+    
+    { title: "Reports", icon: "fas fa-chart-line", route: "reports" },
+
+    // {
+    //   title: "Demat Account",
+    //   icon: "fas fa-chart-pie",
+    //   sub: [
+    //     { title: "All Demat Accounts", route: "demat-accounts" },
+    //     {
+    //       title: "Pending Account",
+    //       route: "pending/accounts",
+    //     },
+    //   ],
+    // },
     {
       title: "Bonus History",
       icon: "fas fa-clock",

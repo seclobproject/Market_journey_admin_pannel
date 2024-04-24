@@ -14,9 +14,9 @@ import { Button, Form } from "react-bootstrap";
 import Loader from "../../../Components/Loader";
 import moment from "moment";
 import ModalComponent from "../../../Components/ModalComponet";
-import { Image } from "antd";
+import { Dropdown, Image } from "antd";
 import { ContextData } from "../../../Services/Context";
-
+import { Menu } from "antd";
 function Viewdetails() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -25,6 +25,7 @@ function Viewdetails() {
   const [password, setPassword] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [details, setDetails] = useState({});
+  console.log(details,"pp");
   const [showPassword, setShowPassword] = useState(false);
   const [editUser, setEditUser] = useState({});
   const [editBankDetails, setEditBankDetails] = useState({});
@@ -34,14 +35,12 @@ function Viewdetails() {
   const [userModal, setUserModal] = useState({ show: false, id: null });
   const [nomineeModal, setNomineeModal] = useState({ show: false, id: null });
   const [bonusModal, setBonusModal] = useState({ show: false, id: null });
-  console.log(bonusModal, "bonusModal");
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
 
   const [addBonnus, setAddBonnus] = useState({
     bonusAmount: 0,
   });
-  console.log(typeof addBonnus?.bonusAmount,"....");
   const clearMessageDiv = () => {
     const messageDiv = document.getElementById("msg");
     const errormsgDiv = document.getElementById("errormsg");
@@ -221,36 +220,68 @@ function Viewdetails() {
       Show_Toast(error.message, false);
     }
   };
-//---add bonnus-----
-const addBonnusToUser = async () => {
-  try {
-    const userId = bonusModal?.id;
-    const bonusAmountNumber = Number(addBonnus?.bonusAmount);
-    if (!(bonusAmountNumber > 0)) {
-      Show_Toast("Please add a valid amount.");
-      return;
-    }
+  //---add bonnus-----
+  const addBonnusToUser = async () => {
+    try {
+      const userId = bonusModal?.id;
+      const bonusAmountNumber = Number(addBonnus?.bonusAmount);
+      if (!(bonusAmountNumber > 0)) {
+        Show_Toast("Please add a valid amount.");
+        return;
+      }
 
-    const response = await ApiCall("post", `${addBonnusUrl}/${userId}`, {
-      bonusAmount: bonusAmountNumber,
-    });
-
-    if (response.status === 200) {
-      Show_Toast("Bonus added successfully.", true);
-      setValidated(false);
-      setBonusModal(false);
-      setAddBonnus({
-        bonusAmount: 0,
+      const response = await ApiCall("post", `${addBonnusUrl}/${userId}`, {
+        bonusAmount: bonusAmountNumber,
       });
-    } else {
-      Show_Toast("Failed to add bonus. Please try again.", false);
+
+      if (response.status === 200) {
+        Show_Toast("Bonus added successfully.", true);
+        setValidated(false);
+        setBonusModal(false);
+        setAddBonnus({
+          bonusAmount: 0,
+        });
+      } else {
+        Show_Toast("Failed to add bonus. Please try again.", false);
+      }
+    } catch (error) {
+      Show_Toast(error.message, false);
     }
-  } catch (error) {
-    Show_Toast(error.message, false);
-  }
-};
+  };
 
-
+  const menu = (
+    <Menu>
+      <Menu.Item key="1"></Menu.Item>
+      <Menu.Item key="2">
+        {details.userStatus === "approved" && (
+          <i
+            className="fas fa-eye"
+            onClick={() => {
+              navigate("/invoice", {
+                state: { data: details },
+              });
+            }}
+          >
+            View Invoice
+          </i>
+        )}
+      </Menu.Item>
+      {/* <Menu.Item key="3">
+        {details.userStatus === "approved" && (
+          <i
+            className="fas fa-eye"
+            onClick={() => {
+              navigate("/certificate", {
+                state: { data: details },
+              });
+            }}
+          >
+            View Certificate
+          </i>
+        )}
+      </Menu.Item> */}
+    </Menu>
+  );
   useEffect(() => {
     if (id) {
       getUserDetails();
@@ -401,11 +432,15 @@ const addBonnusToUser = async () => {
                               >
                                 <h5
                                   className="card-title fw-semibold mb-4"
-                                  style={{ color: "rgba(247, 174, 21)" }}
+                                  style={{
+                                    color: "rgba(247, 174, 21)",
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                  }}
                                 >
                                   <span>Profile Details</span>
                                   <i
-                                    className="fas fa-pencil-alt sm"
+                                    className="fas fa-pencil-alt"
                                     onClick={() => {
                                       setUserModal({ show: true, id: null });
                                       setEditUser(details);
@@ -417,36 +452,36 @@ const addBonnusToUser = async () => {
                                     }}
                                   ></i>
                                 </h5>
-  
- 
                               </div>
                               <div className="d-flex justify-content-end flex-wrap mt-3">
-     
-        {details.packageType === "Franchise"&&(
-          <button
-            className="btn btn-custom mb-2 mx-2"
-            onClick={() => {
-              setBonusModal({ show: true, id: details?.id });
-              setValidated(false);
-            }}
-          >
-            <i className="fas fa-plus"></i> Add Bonus
-          </button>
-        )}
-
-        {/* Button 2 */}
-        {details.userStatus === "approved" && (
-          <button
-            className="btn btn-custom mb-2 mx-2"
-            onClick={() => {
-              navigate("/invoice", {
-                state: { data: details },
-              });
-            }}
-          >
-  <i className="fas fa-eye"></i> View Invoice          </button>
-        )}
-      </div>
+                                {details.packageType === "Franchise" && (
+                                  <>
+                                    <Button
+                                      className="btn btn-custom"
+                                      onClick={() => {
+                                        setBonusModal({
+                                          show: true,
+                                          id: details?.id,
+                                        });
+                                        setValidated(false);
+                                      }}
+                                    >
+                                      <i className="fas fa-plus"></i>
+                                      Add Bonus
+                                    </Button>
+                                  </>
+                                )}
+                                {details.userStatus === "approved" && (
+                                  <Dropdown
+                                    overlay={menu}
+                                    placement="bottomLeft"
+                                  >
+                                    <Button className="btn btn-custom ms-2">
+                                      More
+                                    </Button>
+                                  </Dropdown>
+                                )}
+                              </div>
 
                               <a
                                 className="nav-link nav-icon-hover"
@@ -581,33 +616,48 @@ const addBonnusToUser = async () => {
                                     </span>
                                   </h6>
                                 </li>
-                                <li className="d-flex align-items-center gap-3 mb-4">
-                                  <i className="fas fa-user text-dark fs-6" />
-                                  <h6 className="fs-4 fw-semibold mb-0">
-                                    District :{" "}
-                                    <span
-                                      style={{ color: "rgb(247, 174, 21)" }}
-                                    >
-                                      {details?.district || "--"}
-                                    </span>
-                                  </h6>
-                                </li>
-                                <li className="d-flex align-items-center gap-3 mb-4">
-                                  <i className="fas fa-user text-dark fs-6" />
-                                  <h6 className="fs-4 fw-semibold mb-0">
-                                    Zonal :{" "}
-                                    <span
-                                      style={{ color: "rgb(247, 174, 21)" }}
-                                    >
-                                      {details?.zonal || "--"}
-                                    </span>
-                                  </h6>
-                                </li>
+                                {!details?.packageType == "course" && (
+                                  <>
+                                    <li className="d-flex align-items-center gap-3 mb-4">
+                                      <i className="fas fa-user text-dark fs-6" />
+                                      <h6 className="fs-4 fw-semibold mb-0">
+                                        District :{" "}
+                                        <span
+                                          style={{ color: "rgb(247, 174, 21)" }}
+                                        >
+                                          {details?.district || "--"}
+                                        </span>
+                                      </h6>
+                                    </li>
+                                    <li className="d-flex align-items-center gap-3 mb-4">
+                                      <i className="fas fa-user text-dark fs-6" />
+                                      <h6 className="fs-4 fw-semibold mb-0">
+                                        Zonal :{" "}
+                                        <span
+                                          style={{ color: "rgb(247, 174, 21)" }}
+                                        >
+                                          {details?.zonal || "--"}
+                                        </span>
+                                      </h6>
+                                    </li>
+                                  </>
+                                )}
 
                                 <li className="d-flex align-items-center gap-3 mb-4">
                                   <i className="fas fa-store text-dark fs-6" />
                                   <h6 className="fs-4 fw-semibold mb-0">
                                     Package Type:{" "}
+                                    <span
+                                      style={{ color: "rgb(247, 174, 21)" }}
+                                    >
+                                      {details?.packageType || "--"}
+                                    </span>
+                                  </h6>
+                                </li>
+                                <li className="d-flex align-items-center gap-3 mb-4">
+                                  <i className="fas fa-store text-dark fs-6" />
+                                  <h6 className="fs-4 fw-semibold mb-0">
+                                    Package:{" "}
                                     <span
                                       style={{ color: "rgb(247, 174, 21)" }}
                                     >
@@ -627,23 +677,27 @@ const addBonnusToUser = async () => {
                                   </h6>
                                 </li>
                                 {}
-                                {details?.franchise !== "Mobile Franchise" && (
-                                  <li className="d-flex align-items-center gap-3 mb-4">
-                                    <i className="fas fa-building text-dark fs-6" />
-                                    <h6 className="fs-4 fw-semibold mb-0">
-                                      Franchise Name:{" "}
-                                      <span
-                                        style={{ color: "rgb(247, 174, 21)" }}
-                                      >
-                                        {details?.franchiseName || "--"}
-                                      </span>
-                                    </h6>
-                                  </li>
-                                )}
+                                {details?.franchise !== "Mobile Franchise" &&
+                                  !details?.packageType == "course" && (
+                                    <li className="d-flex align-items-center gap-3 mb-4">
+                                      <i className="fas fa-building text-dark fs-6" />
+                                      <h6 className="fs-4 fw-semibold mb-0">
+                                        Franchise Name:{" "}
+                                        <span
+                                          style={{ color: "rgb(247, 174, 21)" }}
+                                        >
+                                          {details?.franchiseName || "--"}
+                                        </span>
+                                      </h6>
+                                    </li>
+                                  )}
+
                                 {details?.screenshot && (
                                   <Image
                                     width={200}
-                                    src={`http://192.168.29.152:6003/uploads/${details?.screenshot}`}
+                                    // src={`http://192.168.29.152:6003/uploads/${details?.screenshot}`}
+                                    src={`https://admin.marketjourney.in/uploads/${details?.screenshot}`}
+
                                   />
                                 )}
                               </ul>
@@ -1222,11 +1276,11 @@ const addBonnusToUser = async () => {
                 className="form-control"
                 id="exampleTextarea"
                 rows="3"
-                value={editBankDetails?.accountNum}
+                value={addNomineeDetails?.accountNum}
                 placeholder=" Enter account name"
                 onChange={(e) => {
-                  setEditBankDetails({
-                    ...editBankDetails,
+                  setAddNomineeDetails({
+                    ...addNomineeDetails,
                     accountNum: e.target.value,
                   });
                   clearMessageDiv();
@@ -1344,7 +1398,7 @@ const addBonnusToUser = async () => {
             <input
               required
               className="form-control form-control-lg"
-            type="text"
+              type="text"
               placeholder="Enter an Transaction Id"
               value={addBonnus?.transactionId}
               onChange={(e) =>
@@ -1415,8 +1469,8 @@ const addBonnusToUser = async () => {
           onClick={() => {
             setBonusModal({ show: false, id: null });
             setAddBonnus({
-              bonusAmount:0
-            })
+              bonusAmount: 0,
+            });
           }}
         >
           Cancel

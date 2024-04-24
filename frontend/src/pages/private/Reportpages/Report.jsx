@@ -40,7 +40,7 @@ console.log(filteredData,"filteredData");
 
   const [params, setParams] = useState({
     page: 1,
-    pageSize: 1,
+    pageSize: 10,
   });
   const [totalPages, setTotalPages] = useState(1);
   console.log(totalPages,"totalPages");
@@ -49,7 +49,6 @@ console.log(filteredData,"filteredData");
 console.log(filter,"set");
   const startIndex = (params.page - 1) * params.pageSize;
   const options = [
-    { value: "View all", label: "View all" },
     { value: "District Franchise", label: "District Franchise" },
     { value: "Zonal Franchise", label: "Zonal Franchise" },
     { value: "Mobile Franchise", label: "Mobile Franchise" },
@@ -438,7 +437,7 @@ console.log(filter,"set");
             <div className="me-2 mb-3 d-flex ms-auto">
               <Stack spacing={2}>
                 <Pagination
-                  count={totalPages}
+                  count={totalPages?.totalPages}
                   page={params.page}
                   onChange={handlePageChange}
                   color="primary"

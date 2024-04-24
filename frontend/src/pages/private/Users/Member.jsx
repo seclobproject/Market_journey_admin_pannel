@@ -385,7 +385,6 @@ console.log(addMember,"addMember");
           <div className="row ms-2 me-2">
             <div className="col-md-3 mt-3 sm-2">
               <Select
-                // value={{ value: filter, label: filter }}
                 onChange={(selectedOption) =>
                   handleFilterAndSetFilter(selectedOption)
                 }

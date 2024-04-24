@@ -19355,18 +19355,19 @@ progress {
   border-color: var(--bs-table-border-color);
 }
 .table-light {
-  --bs-table-color: #0F1535;
-  --bs-table-bg: #0F1535; /* Updated hex value for background with opacity */
-  --bs-table-border-color: #0F1535;
+  --bs-table-color: rgb(218, 226, 237);
+  --bs-table-bg: rgb(218, 226, 237);
+  --bs-table-border-color: rgb(218, 226, 237);
   --bs-table-striped-bg: #eaedef;
-  --bs-table-striped-color: #0F1535;
+  --bs-table-striped-color: rgb(218, 226, 237);
   --bs-table-active-bg: #dde0e3;
-  --bs-table-active-color: #0F1535;
+  --bs-table-active-color: rgb(218, 226, 237);
   --bs-table-hover-bg: #e4e6e9;
-  --bs-table-hover-color: #0F1535;
+  --bs-table-hover-color: rgb(218, 226, 237);
   border-color: var(--bs-table-border-color);
-  background: linear-gradient(to right, #0F1535, #ffffff); /* Adjust the colors and direction as needed */
+  background: linear-gradient(to right, rgb(218, 226, 237), #ffffff);
 }
+
 
 .table-dark {
   --bs-table-color: #fff;
@@ -37715,7 +37716,7 @@ html[dir="rtl"] .welcome-bg-img {
   font-size: 21px;
 }
 .sidebar-nav ul .sidebar-item .sidebar-link:hover {
-  background-color: #89BE1D;
+  background-color: #A5EA4A;
   color: #fff ;
 }
 .sidebar-nav ul .sidebar-item .sidebar-link:hover.has-arrow::after {
@@ -46480,6 +46481,6 @@ ul {
   color: black; /* Adjust color as needed */
 }
 th h6{
-color: white;
+color: #0F1535;
 }
 

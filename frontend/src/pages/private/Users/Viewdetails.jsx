@@ -301,7 +301,7 @@ function Viewdetails() {
                   navigate(-1);
                 }}
                 style={{
-                  backgroundColor: "#00335B",
+                  backgroundColor: "#0F1535",
                   color: "white",
                   border: "none",
                   borderRadius: "8px",
@@ -320,7 +320,7 @@ function Viewdetails() {
 
               <div class="row mt-2">
                 <div class="col-md-3  mb-4">
-                  <div class="card " style={{ background: "#00335B" }}>
+                  <div class="card " style={{ background: "#0F1535" }}>
                     <div className="row align-items-center  p-4">
                       <div className="col-8">
                         <h5
@@ -342,7 +342,7 @@ function Viewdetails() {
                   </div>
                 </div>
                 <div class="col-md-3  mb-4">
-                  <div class="card " style={{ background: "#00335B" }}>
+                  <div class="card " style={{ background: "#0F1535" }}>
                     <div className="row align-items-center  p-4">
                       <div className="col-8">
                         <h5
@@ -364,7 +364,7 @@ function Viewdetails() {
                   </div>
                 </div>
                 <div class="col-md-3  mb-4">
-                  <div class="card " style={{ background: "#00335B" }}>
+                  <div class="card " style={{ background: "#0F1535" }}>
                     <div className="row align-items-center  p-4">
                       <div className="col-8">
                         <h5
@@ -387,7 +387,7 @@ function Viewdetails() {
                 </div>
 
                 <div class="col-md-3 mb-4">
-                  <div class="card " style={{ background: "#00335B" }}>
+                  <div class="card " style={{ background: "#0F1535" }}>
                     <div className="row align-items-center p-4">
                       <div className="col-8">
                         <h5
@@ -433,7 +433,7 @@ function Viewdetails() {
                                 <h5
                                   className="card-title fw-semibold mb-4"
                                   style={{
-                                    color: "rgba(247, 174, 21)",
+                                    color: "#0F1535",
                                     display: "flex",
                                     justifyContent: "space-between",
                                   }}
@@ -714,7 +714,7 @@ function Viewdetails() {
                       <h5
                         className="card-title fw-semibold mb-4"
                         style={{
-                          color: "rgba(247, 174, 21)",
+                          color: "#0F1535",
                           display: "flex",
                           justifyContent: "space-between",
                         }}
@@ -781,7 +781,7 @@ function Viewdetails() {
                       <h5
                         className="card-title fw-semibold mb-4"
                         style={{
-                          color: "rgba(247, 174, 21)",
+                          color: "#0F1535",
                           display: "flex",
                           justifyContent: "space-between",
                         }}

@@ -52,7 +52,7 @@ function Withdraw() {
             <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
               <h5
                 className="card-title fw-semibold mb-0 lh-sm px-0 mt-4"
-                style={{ color: "#F7AE15" }}
+                style={{ color: "#0F1535" }}
               >
                 Autopool Credit History
               </h5>

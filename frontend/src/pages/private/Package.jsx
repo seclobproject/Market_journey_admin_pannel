@@ -95,7 +95,7 @@ function Package() {
           <div className="px-4 py-3 border-bottom d-flex  align-items-center justify-content-between">
             <h5
               className="card-title fw-semibold mb-0  px-0 mt-3"
-              style={{ color: "#F7AE15" }}
+              style={{ color: "#0F1535" }}
             >
               Packages
             </h5>
@@ -119,9 +119,9 @@ function Package() {
             <div className="card-body p-2">
               <div className="table-container table-responsive rounded-2 mb-4">
                 <table className="table border text-nowrap customize-table mb-0 align-middle">
-                  <thead className="text-dark fs-4 table-light">
+                  <thead className="fs-4 table-light" style={{color:"#fff"}}>
                     <tr>
-                      <th>
+                      <th  >
                         <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                       </th>
                       <th>

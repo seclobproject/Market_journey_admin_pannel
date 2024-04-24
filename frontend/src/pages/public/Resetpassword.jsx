@@ -75,7 +75,7 @@ function Resetpassword() {
       >
         <div
           className="position-relative overflow-hidden  min-vh-100 d-flex align-items-center justify-content-center"
-          style={{ backgroundColor: "#2a3547" }}
+          style={{ backgroundColor: "#0F1535" }}
         >
           <div className="d-flex align-items-center justify-content-center w-100">
             <div className="row justify-content-center w-100">
@@ -84,7 +84,7 @@ function Resetpassword() {
                   <div className="card mb-0">
                     <div className="card-body">
                     <a href={undefined} className="text-nowrap logo-img text-center d-block py-3 w-100">
-                    <img src="/dist/images/marketlogo.png" alt="Logo" width="130" height="90" />
+                    <img src="/dist/images/Mjgreen.svg" alt="Logo" width="130" height="90" />
 </a>
 
                       <Form

@@ -11,7 +11,7 @@ function Home() {
 
   <div class="row">
   <div className="col-md-6 col-lg-3 mb-4">
-      <div className="card" style={{ background: "#00335B" }}>
+      <div className="card" style={{ background: "#0F1535" }}>
         <div className="row align-items-center p-4">
           <div className="col-8">
             <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
@@ -21,14 +21,14 @@ function Home() {
               <h4 className="fw-semibold mb-0" style={{ color: "rgb(247, 174, 21)" }}>
                 36,358
               </h4>
-              <RiseOutlined style={{ color: "yellow", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
+              <RiseOutlined style={{ color: "#89BE1D", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
             </div>
           </div>
         </div>
       </div>
     </div>
     <div className="col-md-6 col-lg-3 mb-4">
-      <div className="card" style={{ background: "#00335B" }}>
+      <div className="card" style={{ background: "#0F1535" }}>
         <div className="row align-items-center p-4">
           <div className="col-8">
             <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
@@ -38,14 +38,14 @@ function Home() {
               <h4 className="fw-semibold mb-0" style={{ color: "rgb(247, 174, 21)" }}>
                 36,358
               </h4>
-              <RiseOutlined style={{ color: "yellow", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
+              <RiseOutlined style={{ color: "#89BE1D", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
             </div>
           </div>
         </div>
       </div>
     </div>
     <div className="col-md-6 col-lg-3 mb-4">
-      <div className="card" style={{ background: "#00335B" }}>
+      <div className="card" style={{ background: "#0F1535" }}>
         <div className="row align-items-center p-4">
           <div className="col-8">
             <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
@@ -55,14 +55,14 @@ function Home() {
               <h4 className="fw-semibold mb-0" style={{ color: "rgb(247, 174, 21)" }}>
                 36,358
               </h4>
-              <RiseOutlined style={{ color: "yellow", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
+              <RiseOutlined style={{ color: "#89BE1D", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
             </div>
           </div>
         </div>
       </div>
     </div>
     <div className="col-md-6 col-lg-3 mb-4">
-      <div className="card" style={{ background: "#00335B" }}>
+      <div className="card" style={{ background: "#0F1535" }}>
         <div className="row align-items-center p-4">
           <div className="col-8">
             <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
@@ -72,7 +72,7 @@ function Home() {
               <h4 className="fw-semibold mb-0" style={{ color: "rgb(247, 174, 21)" }}>
                 36,358
               </h4>
-              <RiseOutlined style={{ color: "yellow", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
+              <RiseOutlined style={{ color: "#89BE1D", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
             </div>
           </div>
         </div>

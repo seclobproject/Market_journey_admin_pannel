@@ -108,7 +108,7 @@ function Sidebar() {
                   className="text-nowrap logo-img text-center d-block py-3 w-100"
                 >
                   <img
-                    src="/dist/images/marketlogo.png"
+                    src="/dist/images/Mjgreen.svg"
                     alt="Logo"
                     width="100"
                     height="50"

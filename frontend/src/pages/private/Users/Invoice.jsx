@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PdfTemplates from "../../../Components/templates";
 import { useLocation } from "react-router-dom";
 import { usePDF } from "react-to-pdf";
@@ -8,11 +8,15 @@ import Dragger from "antd/es/upload/Dragger";
 import { InboxOutlined } from "@ant-design/icons";
 import { message } from "antd";
 import { Base_url } from "../../../Services/Base_url";
+import { SlideMotion } from "../../../libs/FramerMotion";
+import Loader from "../../../Components/Loader";
 function Invoice() {
   const location = useLocation();
   const { data } = location.state || {};
   const [uploadModal, setuploadModal] = useState({ show: false, id: null });
   const { toPDF, targetRef } = usePDF({ filename: `${data.name}-invoiceSlip` });
+  const [isLoading, setIsLoading] = useState(false);
+  const [invoiceData, setInvoiceDataa] = useState(false);
 
   const generatePdf = async () => {
     try {
@@ -44,8 +48,21 @@ function Invoice() {
     },
   };
 
+
+useEffect(()=>{
+setIsLoading(true);
+if(data){
+ setInvoiceDataa(data);
+setIsLoading(false);
+}
+},[location])
   return (
     <>
+      <div className="mt-5" style={{ alignItems: "center" }}>
+      {isLoading ? (
+          <Loader />
+        ) : (
+          <SlideMotion>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div className="spacer">
           <button
@@ -84,7 +101,9 @@ function Invoice() {
               `}
         </style>
       </div>
-
+      </SlideMotion>
+        )}
+        </div>
       <ModalComponent
         show={uploadModal.show}
         onHide={() => {

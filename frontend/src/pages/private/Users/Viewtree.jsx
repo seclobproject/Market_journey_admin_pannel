@@ -56,8 +56,7 @@ function Viewtree() {
             
             <h5
               className="card-title fw-semibold mb-0 lh-sm px-0 mt-4"
-              style={{ color: "#F7AE15" }}
-            >
+              style={{ color: "#0F1535" }}            >
                Down Lines
             </h5>
           </div>
@@ -153,7 +152,7 @@ function Viewtree() {
                               )}
                             </td>
                             <td>
-                              <button className="btn btn-custom "
+                              <button className="btn btn-custom"
                               onClick={() => {
                                 setUserLevelID(downlines?._id);
                                 setUserID('')

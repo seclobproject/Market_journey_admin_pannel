@@ -30,6 +30,7 @@ function Distribute() {
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [details, setDetails] = useState({});
+  console.log(details,"resport");
   const [count, setCount] = useState({});
   const [distributionHistory, setDistributionHistory] = useState({});
   const [poolPercentage, setPoolPercentage] = useState({
@@ -136,7 +137,7 @@ function Distribute() {
             <div className="col-md-3 mb-2">
               <div
                 className="card"
-                style={{ background: "#00335B", height: "325px" }}
+                style={{ background: "#0F1535", height: "325px" }}
               >
                 <div className="card-body ">
                   <h5
@@ -161,7 +162,8 @@ function Distribute() {
                       <div className="col-6 ">
                         <button
                           type="submit"
-                          className="btn btn-warning"
+                          className="btn btn"
+                          style={{ backgroundColor:"#89BE1D",color:"#fff"}}
                           onClick={() => {
                             setConfirmationModal({
                               show: true,
@@ -179,7 +181,7 @@ function Distribute() {
               </div>
             </div>
             <div class="col-md-9 ">
-              <div className="card" style={{ background: "#00335B" }}>
+              <div className="card" style={{ background: "#0F1535" }}>
                 {isLoading ? (
                   <Loader />
                 ) : (
@@ -526,7 +528,9 @@ function Distribute() {
                           <div className="col-6">
                             <button
                               type="submit"
-                              className="btn btn-warning"
+                              className="btn btn"
+                              style={{ backgroundColor:"#89BE1D",color:"#fff"}}
+
                               onClick={() => navigate("/autopool/members", {})}
                             >
                               View Members
@@ -545,7 +549,7 @@ function Distribute() {
           <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
             <h5
               className="card-title fw-semibold mb-0 lh-sm px-0 mt-3"
-              style={{ color: "#F7AE15" }}
+              style={{ color: "#0F1535" }}
             >
               Distribute History
             </h5>

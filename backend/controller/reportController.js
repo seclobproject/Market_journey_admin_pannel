@@ -35,11 +35,11 @@ export const paginate = async (model, page = 1, pageSize = 10) => {
 
 // Paginated version of directReferalIncomeReport
 export const directIncomeReportPaginated = async (req, res, next) => {
+    try {
     const userId = req.user._id;
     let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
 
-    try {
         const userData = await User.findById(userId).populate({
             path: "directReferalHistory",
             options: {
@@ -74,11 +74,11 @@ export const directIncomeReportPaginated = async (req, res, next) => {
 
 // Paginated version of inDirectReferalIncomeReport
 export const inDirectIncomeReportPaginated = async (req, res, next) => {
+    try {
     const userId = req.user._id;
     let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
 
-    try {
         const userData = await User.findById(userId).populate({
             path: "inDirectReferalHistory",
             options: {
@@ -114,11 +114,11 @@ export const inDirectIncomeReportPaginated = async (req, res, next) => {
 
 // Paginated version of levelIncomeReport
 export const levelIncomeReportPaginated = async (req, res, next) => {
+    try {
     const userId = req.user._id;
     let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
 
-    try {
         const userData = await User.findById(userId).populate({
             path: "levelIncomeHistory",
             options: {
@@ -156,8 +156,8 @@ export const levelIncomeReportPaginated = async (req, res, next) => {
 //Wallet withdraw report
 
 export const walletWithdrawReportUser = async (req, res, next) => {
-    const userId = req.user._id;
     try {
+    const userId = req.user._id;
       // Fetch user data with populated walletWithdrawHistory
       const userData = await User.findById(userId).populate("walletWithdrawHistory").sort({createdAt:1});
   
@@ -279,11 +279,11 @@ const paginateAggregate = async (model, aggregateQuery, page = 1, pageSize = 10)
 
 // Paginated version of totalWalletWithdrawHistory
 export const totalWalletWithdrawHistory = async (req, res, next) => {
+    try {
     const userId = req.admin._id;
     let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
 
-    try {
         const adminData = await Admin.findById(userId);
         if (adminData) {
             const aggregateQuery = [
@@ -405,10 +405,10 @@ export const getApprovedDematesPaginated = async (req, res, next) => {
 
   export const autoPoolHistory = async (req, res, next) => {
 
+      try {
     const userId = req.admin._id;
     let page=parseInt(req.query.page)||1;
     const pageSize=parseInt(req.query.pageSize)||10;
-    try {
     const adminData = await Admin.findById(userId).populate({
         path: "autoPoolHistory",
         options: {
@@ -440,11 +440,11 @@ export const getApprovedDematesPaginated = async (req, res, next) => {
 
   // Paginated version of demat accounts
 export const userDemateAccounts = async (req, res, next) => {
+    try {
     const userId = req.user._id;
     let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
 
-    try {
         const userData = await User.findById(userId).populate({
             path: "demateAccounts",
             options: {
@@ -521,11 +521,11 @@ export const viewPoolUsers = async (req, res, next) => {
 
   // user autopool credit history
   export const userAutoPoolIncomeHistory = async (req, res, next) => {
+      try {
     const userId = req.user._id;
     let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
 
-    try {
         const userData = await User.findById(userId).populate({
             path: "autoPoolIncomeHistory",
             options: {
@@ -629,11 +629,11 @@ export const getAutoPoolCountAmount = async (req, res, next) => {
 
 
 export const bonusPaidReportPaginated = async (req, res, next) => {
+    try {
     const userId = req.admin._id;
     let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
 
-    try {
         const userData = await Admin.findById(userId).populate({
             path: "addBounusHistory",
             options: {
@@ -668,11 +668,11 @@ export const bonusPaidReportPaginated = async (req, res, next) => {
 
 
 export const bonusCreditedReport = async (req, res, next) => {
+    try {
     const userId = req.user._id;
     let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
 
-    try {
         const userData = await User.findById(userId).populate({
             path: "bonusHistory",
             options: {
@@ -709,6 +709,7 @@ export const bonusCreditedReport = async (req, res, next) => {
 
 
 export const filteredUsers = async (req, res, next) => {
+    try {
     const userId = req.admin ? req.admin._id : (req.user ? req.user._id : null);
 
     let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
@@ -718,8 +719,7 @@ export const filteredUsers = async (req, res, next) => {
     const {zonal}=req.body
     const {panchayath}=req.body
     let userData;
-
-    try {
+console.log(state,district,zonal,panchayath);
         if(state){
             userData = await State.findOne({name:state}).populate({
                 path: "users",
@@ -742,7 +742,7 @@ export const filteredUsers = async (req, res, next) => {
                 }
             });
         }else if(panchayath){
-            userData = await Panchayath.findOne({name:zonal}).populate({
+            userData = await Panchayath.findOne({name:panchayath}).populate({
                 path: "users",
                 options: {
                     sort: { createdAt: 1 } // Sort by createdAt in descending order
@@ -785,9 +785,13 @@ export const filteredUsers = async (req, res, next) => {
                 msg: "Get Filtered Users",
             });
         } else {
-            return next(errorHandler(401, "User Login Failed"));
+            return next(errorHandler(401, "No Members"));
         }
     } catch (error) {
         next(error);
     }
 };
+
+
+
+

@@ -17,8 +17,8 @@ import { sendMail } from "../config/mailer.js";
 // admin login Api
 
 export const adminLogin = async (req, res, next) => {
+  try {
     const { username, password } = req.body;
-    try {
       const validAdmin = await Admin.findOne({ username });
       if (!validAdmin) {
         return next(errorHandler(401, "Admin not found"));
@@ -50,8 +50,8 @@ export const adminLogin = async (req, res, next) => {
   //forgot password
 
   export const forgotPassword = async (req, res, next) => {
-    const { email, newPassword } = req.body;
     try {
+    const { email, newPassword } = req.body;
       const validAdmin = await Admin.findOne({ username:email });
       if (validAdmin) {
         if (newPassword) {
@@ -75,9 +75,9 @@ export const adminLogin = async (req, res, next) => {
 
 
 export const viewAdminProfile=async(req,res,next)=>{
+  try {
   const adminId = req.admin._id;
 
-  try {
     const admin = await Admin.findById(adminId);
     if (!admin) {
       return next(errorHandler(401, "Admin Login Failed"));
@@ -107,9 +107,9 @@ const countInPoolE=admin.poolE.length;
 //view all users by Admin---------------------------------------------------------------------------------------------------------------------
 
 export const viewAllUsers = async (req, res, next) => {
+  try {
   const adminId = req.admin._id;
 
-  try {
     const admin = await Admin.findById(adminId);
     if (admin) {
     const userData = await User.find().select(
@@ -990,9 +990,9 @@ export const viewParamsPanchayaths = async (req, res, next) => {
 // view Users to Approve
 
 export const getReadyToApproveUsers = async (req, res, next) => {
+  try {
   const userId = req.admin._id;
   const adminData = await Admin.findById(userId);
-  try {
     if (!adminData) {
       return next(errorHandler(401, "Admin Login Failed"));
     }
@@ -1039,6 +1039,8 @@ export const acceptUser = async (req, res, next) => {
         if (sponserId2)sponserUser2 = (await User.findById(sponserId2)) || (await Admin.findById(sponserId2));
         
         userData.userStatus = "approved";
+        userData.renewalStatus = true;
+        userData.renewalDate = new Date();;
         userData.packageAmount=userData.tempPackageAmount;
         const updatedUser = await userData.save();
         if (updatedUser) {
@@ -1051,8 +1053,10 @@ export const acceptUser = async (req, res, next) => {
             updatedSponser1=await sponserUser1.save();
           }
           if(updatedUser.state){
+            console.log(updatedUser.state);
             const statData=await State.findOne({name:updatedUser.state})
             if(statData){
+              console.log(statData);
               statData.users.push(updatedUser._id);
               await statData.save();
             }
@@ -1159,11 +1163,11 @@ export const rejectUser = async (req, res, next) => {
         };
             
               export const viewAllPageUsers = async (req, res, next) => {
+                try {
               const adminId = req.admin._id;
               const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
               const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
             
-              try {
                   const admin = await Admin.findById(adminId);
                   if (admin) {
                       const userData = await paginate(User, {}, page, pageSize);
@@ -1259,11 +1263,11 @@ export const rejectUser = async (req, res, next) => {
 };
     
       export const viewAllPageZonal = async (req, res, next) => {
+        try {
       const adminId = req.admin._id;
       const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
       const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
     
-      try {
           const admin = await Admin.findById(adminId);
           if (admin) {
               const zonalData = await zonalpaginate(Zonal, {}, page, pageSize);
@@ -1316,11 +1320,11 @@ export const rejectUser = async (req, res, next) => {
 };
     
       export const viewAllPagePanchayath = async (req, res, next) => {
+        try {
       const adminId = req.admin._id;
       const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
       const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
     
-      try {
           const admin = await Admin.findById(adminId);
           if (admin) {
               const panchayathData = await panchayathpaginate(Panchayath, {}, page, pageSize);
@@ -1354,9 +1358,9 @@ export const rejectUser = async (req, res, next) => {
     //View Profile by params userId
 
 export const viewUserDetails = async (req, res, next) => {
+  try {
   const { id } = req.params;
   const adminId = req.admin._id;
-  try {
     const adminData = await Admin.findById(adminId)
     if(!adminData){
       return next(errorHandler(401, "Admin not exist"));
@@ -1411,10 +1415,10 @@ export const viewUserDetails = async (req, res, next) => {
 // edit user profile by admin
 
 export const editProfileByAdmin = async (req, res, next) => {
+  try {
   const adminId = req.admin._id;
   const { id } = req.params;
   const adminData = await Admin.findById(adminId);
-  try {
     if (adminData) {
       const userData = await User.findById(id);
       if (userData) {
@@ -1489,11 +1493,11 @@ const pendingWithdrawPaginate = async (model, query, page = 1, pageSize = 10) =>
 
 // Paginated version of viewWithdrawPending
 export const viewWithdrawPendingPaginated = async (req, res, next) => {
+  try {
   const userId = req.admin._id;
   let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
   const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
 
-  try {
       const adminData = await Admin.findById(userId);
       if (adminData) {
           const withdrawPendingQuery = {

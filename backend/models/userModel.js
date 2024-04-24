@@ -274,7 +274,15 @@ const userSchema = new mongoose.Schema(
     withdrawable:{
       type: Boolean,
         default: false,
+    },   
+    renewalStatus:{
+      type: Boolean,
+        default: false,
     },
+    renewalDate:{
+      type: Date
+    },
+
     allTransactions: [allTransactionSchema],
     districtFranchise:{ type: mongoose.Schema.Types.ObjectId, ref: "User" },
     zonalFranchise:{ type: mongoose.Schema.Types.ObjectId, ref: "User" },

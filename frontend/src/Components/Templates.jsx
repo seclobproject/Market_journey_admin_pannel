@@ -29,7 +29,7 @@ function PdfTemplates({ invoiceData }) {
         <div className="col-md-8 col-sm-12 text-right bbc">
           <div className="d-flex align-items-center">
             <img
-              src="/dist/images/marketlogo.png"
+              src="/dist/images/Mjgreen.svg"
               alt=""
               width="15%"
               className="me-3"
@@ -123,7 +123,7 @@ function PdfTemplates({ invoiceData }) {
           <b>Email: {invoiceData?.email}</b>
         </h5>
         <h5>
-          <b>Email: {invoiceData?.ownSponserId}</b>
+          <b>User Id: {invoiceData?.ownSponserId}</b>
         </h5>
       </div>
     </div>

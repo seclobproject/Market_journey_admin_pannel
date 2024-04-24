@@ -5,7 +5,7 @@ const LoadingDot = {
   display: "block",
   width: "1rem",
   height: "1rem",
-  backgroundColor: "#F7AE15",
+  backgroundColor: "#0F1535",
   borderRadius: "50%",
 };
 
@@ -34,13 +34,13 @@ const DotVariants = {
     y: "0%",
   },
   animate: {
-    y: ["0%", "50%", "0%"],  // Use an array to create a bouncing effect
+    y: ["0%", "50%", "0%"],  
   },
 };
 
 const DotTransition = {
   duration: 0.5,
-  repeat: Infinity,  // Set repeat to Infinity for continuous bouncing
+  repeat: Infinity, 
   ease: "easeInOut",
 };
 

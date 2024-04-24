@@ -21,7 +21,8 @@ function Report() {
   const [selectedDistrictId, setSelectedDistrictId] = useState(null);
   const [selectedZonalId, setselectedZonalId] = useState(null);
   const [selectedPanId, setselectedPanId] = useState(null);
-
+  const [filteredData, setFilteredData] = useState([]);
+console.log(filteredData,"filteredData");
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [zonalList, setZonalList] = useState([]);
@@ -34,6 +35,7 @@ function Report() {
   });
   const [reportData, setReportData] = useState({});
   const [stateLabel, setStateLabel] = useState("");
+  console.log(reportData,"reportData");
 
 
   const [params, setParams] = useState({
@@ -41,11 +43,27 @@ function Report() {
     pageSize: 10,
   });
   const [totalPages, setTotalPages] = useState(1);
+  console.log(totalPages,"totalPages");
 
-
-
+  const [filter, setFilter] = useState();
+console.log(filter,"set");
   const startIndex = (params.page - 1) * params.pageSize;
-
+  const options = [
+    { value: "District Franchise", label: "District Franchise" },
+    { value: "Zonal Franchise", label: "Zonal Franchise" },
+    { value: "Mobile Franchise", label: "Mobile Franchise" },
+    { value: "Algo", label: "Algo Trade" },
+    { value: "Trading Cafe", label: "Trading Cafe" },
+    { value: "Loet 0.1", label: "Loet 0.1" },
+    { value: "Loet Pro", label: "Loet Pro" },
+    { value: "Loet Promax", label: "Loet Pro Max" },
+    { value: "Nifty", label: "Nifty" },
+    { value: "Nifty & Bank Nifty", label: "Nifty & Bank Nifty" },
+    { value: "Bank Nifty", label: "Bank Nifty" },
+    { value: "Bank Nifty & CrudeOil", label: "Bank Nifty & Crude Oil" },
+    { value: "Nifty & CrudeOil", label: "Nifty & Crude Oil" },
+    { value: "CrudeOil", label: "Crude Oil" },
+  ];
   //-----------list state in drop down--------
   const getStateList = async () => {
     try {
@@ -135,6 +153,7 @@ function Report() {
       if (response.status === 200) {
         setReportData(response?.data?.filteredUsers);
         setTotalPages(response?.data?.pagination);
+        setFilteredData(response?.data?.filteredUsers)
       }
     } catch (error) {
       // Handle errors here
@@ -182,6 +201,20 @@ function Report() {
     setSelectedDistrictId("");
     setselectedPanId("");
     setselectedZonalId('')
+    setFilter("")
+  };
+
+
+
+
+  const handleFilterAndSetFilter = (selectedOption) => {
+    const filter = selectedOption.value;
+
+    setFilter(filter);
+    const newFilteredData = reportData.filter((item) => {
+      return filter ? item.franchise === filter : true;
+    });
+    setFilteredData(newFilteredData);
   };
   return (
     <>
@@ -193,10 +226,21 @@ function Report() {
             <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
               <h5
                 className="card-title fw-semibold mb-0 lh-sm px-0 mt-4"
-                style={{ color: "#F7AE15" }}
+                style={{ color: "#0F1535" }}
               >
                 Reports
               </h5>
+              <div className="col-md-3 mt-3 sm-2">
+              <Select
+                // value={{ value: filter, label: filter }}
+                onChange={(selectedOption) =>
+                  handleFilterAndSetFilter(selectedOption)
+                }
+                options={options}
+                placeholder="Search by type..."
+                isSearchable={true}
+              />
+            </div>
             </div>
             <div className="row ms-2 me-2">
               <div className="col-md-2 mt-3 sm-2">
@@ -350,9 +394,9 @@ function Report() {
                       </tr>
                     </thead>
                     <tbody>
-                      {reportData?.length ? (
+                      {filteredData?.length ? (
                         <>
-                          {reportData.map((data, index) => (
+                          {filteredData.map((data, index) => (
                             <tr key={index}>
                               <td>{startIndex + index + 1}</td>
                               <td>
@@ -393,7 +437,7 @@ function Report() {
             <div className="me-2 mb-3 d-flex ms-auto">
               <Stack spacing={2}>
                 <Pagination
-                  count={totalPages}
+                  count={totalPages?.totalPages}
                   page={params.page}
                   onChange={handlePageChange}
                   color="primary"

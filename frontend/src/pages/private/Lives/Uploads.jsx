@@ -144,7 +144,7 @@ function Uploads() {
               <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
                 <h5
                   className="card-title fw-semibold mb-0 px-0 mt-3"
-                  style={{ color: "#F7AE15" }}
+                  style={{ color: "#0F1535" }}
                 >
                   Image Upload
                 </h5>
@@ -323,6 +323,8 @@ function Uploads() {
                   id="fileInput"
                   accept="image/*"
                   style={{ display: "none" }}
+                  onChange={handleImageChange}
+
                 />
               </div>
             </div>

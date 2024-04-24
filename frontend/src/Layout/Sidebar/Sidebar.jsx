@@ -40,17 +40,17 @@ function Sidebar() {
     
     { title: "Reports", icon: "fas fa-chart-line", route: "reports" },
 
-    // {
-    //   title: "Demat Account",
-    //   icon: "fas fa-chart-pie",
-    //   sub: [
-    //     { title: "All Demat Accounts", route: "demat-accounts" },
-    //     {
-    //       title: "Pending Account",
-    //       route: "pending/accounts",
-    //     },
-    //   ],
-    // },
+    {
+      title: "Demat Account",
+      icon: "fas fa-chart-pie",
+      sub: [
+        { title: "All Demat Accounts", route: "demat-accounts" },
+        {
+          title: "Pending Account",
+          route: "pending/accounts",
+        },
+      ],
+    },
     {
       title: "Bonus History",
       icon: "fas fa-clock",
@@ -108,7 +108,7 @@ function Sidebar() {
                   className="text-nowrap logo-img text-center d-block py-3 w-100"
                 >
                   <img
-                    src="/dist/images/marketlogo.png"
+                    src="/dist/images/Mjgreen.svg"
                     alt="Logo"
                     width="100"
                     height="50"

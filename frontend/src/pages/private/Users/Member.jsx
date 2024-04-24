@@ -363,8 +363,7 @@ console.log(addMember,"addMember");
           <div className="px-4 py-3 border-bottom d-flex  align-items-center justify-content-between">
             <h5
               className="card-title fw-semibold mb-0 lh-sm px-0 mt-3"
-              style={{ color: "#F7AE15" }}
-            >
+              style={{ color: "#0F1535" }}            >
               Members
             </h5>
 
@@ -386,12 +385,11 @@ console.log(addMember,"addMember");
           <div className="row ms-2 me-2">
             <div className="col-md-3 mt-3 sm-2">
               <Select
-                // value={{ value: filter, label: filter }}
                 onChange={(selectedOption) =>
                   handleFilterAndSetFilter(selectedOption)
                 }
                 options={options}
-                placeholder="Search by franchise type..."
+                placeholder="Search by type..."
                 isSearchable={true}
               />
             </div>

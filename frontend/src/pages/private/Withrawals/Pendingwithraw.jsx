@@ -90,7 +90,7 @@ function Pendingwithraw() {
               className="card-title fw-semibold mb-0 lh-sm px-0 mt-4"
               style={{ color: "#0F1535" }}
             >
-              Pending Withrawals
+              Pending Withdrawals
             </h5>
           </div>
           {isLoading ? (

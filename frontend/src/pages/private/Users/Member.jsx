@@ -850,7 +850,7 @@ console.log(addMember,"addMember");
                         }
                         setAddMember({
                           ...addMember,
-                          state: selectedOption?.value,
+                          state: selectedOption?.label,
                           franchiseName: "", 
                         });
                         // selectedState("")

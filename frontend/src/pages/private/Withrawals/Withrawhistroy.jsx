@@ -81,7 +81,7 @@ function Withrawhistroy() {
               className="card-title fw-semibold mb-0 lh-sm px-0 mt-4"
               style={{ color: "#0F1535" }}
             >
-              Withraw History
+              Withdrawals History
             </h5>
           </div>
           <div className="row ms-2 me-2">

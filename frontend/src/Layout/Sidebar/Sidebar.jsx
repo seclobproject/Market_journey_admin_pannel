@@ -80,8 +80,8 @@ function Sidebar() {
       title: "Withdrawals",
       icon: "fas fa-money-bill",
       sub: [
-        { title: "Pending withrawals", route: "pending/withraw" },
-        { title: "Withdraw History", route: "withraw/history" },
+        { title: "Pending Withdrawals", route: "pending/withraw" },
+        { title: "Withdrawals History", route: "withraw/history" },
       ],
     },
     { title: "Awards & Rewards", icon: "fas fa-trophy", route: "user/awards" },

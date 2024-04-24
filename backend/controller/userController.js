@@ -190,7 +190,7 @@ export const generateRandomString = () => {
 export const addUser = async (req, res, next) => {
   try {
     let { name, email, phone, packageAmount, packageType, franchise, franchiseName, address, dateOfBirth, state, district, zonal, panchayath, password } = req.body;
-
+console.log(state);
     // console.log(`name:${name}, email:${email}, phone:${phone}, packageAmount:${packageAmount}, packageType:${packageType},
     //  franchise:${franchise}, franchiseName:${franchiseName}, address:${address}, dateOfBirth:${dateOfBirth}, 
     //  state:${state}, district:${district}, zonal:${zonal}, panchayath:${panchayath}, password:${password}` );
@@ -1072,7 +1072,7 @@ export const viewAddOn=async(req,res,next)=>{
       return next(errorHandler(401, "User not found. Please login first."))
     }
     if(userData.renewalStatus){
-      
+
     }
 
 

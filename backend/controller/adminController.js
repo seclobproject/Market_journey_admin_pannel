@@ -1053,8 +1053,8 @@ export const acceptUser = async (req, res, next) => {
             updatedSponser1=await sponserUser1.save();
           }
           if(updatedUser.state){
+            console.log(updatedUser.state);
             const statData=await State.findOne({name:updatedUser.state})
-          console.log("reached here");
             if(statData){
               console.log(statData);
               statData.users.push(updatedUser._id);

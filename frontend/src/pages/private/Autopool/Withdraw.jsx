@@ -108,8 +108,7 @@ function Withdraw() {
                                   <td>
                                     {history?.createdAt
                                       ? moment(history.createdAt).format(
-                                          "DD/MM/YYYY"
-                                        )
+                                        "DD/MM/YYYY, HH:mm A"                                        )
                                       : "--"}
                                   </td>
 
@@ -123,7 +122,7 @@ function Withdraw() {
 
                                   
                                   <td>{history?.reportName||"--"}</td>
-                                  <td>{history?.amountCredited || "00"}</td>
+                                  <td style={{ color: "green" }}>₹{history?.amountCredited || "00"}</td>
                                   <td>{history?.percentageCredited || "0%"}</td>
 
                               

@@ -193,7 +193,7 @@ const navigate=useNavigate()
                           <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                         </th>
                         <th>
-                          <h6 className="fs-4 fw-semibold mb-0">Date</h6>
+                          <h6 className="fs-4 fw-semibold mb-0">Date & Time</h6>
                         </th>
                         <th>
                           <h6 className="fs-4 fw-semibold mb-0">User ID</h6>
@@ -217,11 +217,11 @@ const navigate=useNavigate()
                              Type
                           </h6>
                         </th>
-                        <th>
+                        {/* <th>
                           <h6 className="fs-4 fw-semibold mb-0">
                             Franchise Name
                           </h6>
-                        </th>
+                        </th> */}
                         <th>
                           <h6 className="fs-4 fw-semibold mb-0">Status</h6>
                         </th>
@@ -241,7 +241,7 @@ const navigate=useNavigate()
                               <td>{startIndex + index + 1}</td>
                               <td>
                                 {users?.createdAt
-                                  ? moment(users.createdAt).format("DD/MM/YYYY")
+                                  ? moment(users.createdAt).format("DD/MM/YYYY, HH:mm A")
                                   : "--"}
                               </td>
                               <td>{users?.ownSponserId || "--"}</td>
@@ -260,7 +260,7 @@ const navigate=useNavigate()
                              
                               <td>{users?.packageAmount}</td>
                               <td>{users?.franchise || "--"}</td>
-                              <td>{users?.franchiseName || "--"}</td>
+                              {/* <td>{users?.franchiseName || "--"}</td> */}
                               <td>
                                 {users?.userStatus === "readyToApprove" ? (
                                   <span className="badge bg-danger rounded-3 fw-semibold">

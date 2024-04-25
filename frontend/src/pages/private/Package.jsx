@@ -158,7 +158,7 @@ function Package() {
                                 packages.packageName.toUpperCase()) ||
                                 "--"}
                             </td>
-                            <td>{packages?.packageAmount}</td>
+                            <td>₹ {packages?.packageAmount}</td>
                             <td>
                               {" "}
                               <a

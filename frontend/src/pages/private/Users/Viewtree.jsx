@@ -92,11 +92,7 @@ function Viewtree() {
                           Franchise Type
                         </h6>
                       </th>
-                      <th>
-                        <h6 className="fs-4 fw-semibold mb-0">
-                          Franchise Name
-                        </h6>
-                      </th>
+                     
                     <th>
                       <h6 className="fs-4 fw-semibold mb-0">Package Amount</h6>
                     </th>
@@ -134,7 +130,6 @@ function Viewtree() {
                               <td>{downlines?.email || "--"}</td>
                               <td>{downlines?.phone || "--"}</td>
                               <td>{downlines?.franchise || "--"}</td>
-                            <td>{downlines?.franchiseName || "--"}</td>
                               <td>{downlines?.packageAmount || "0"}</td>
                               <td>
                               {downlines?.userStatus === "readyToApprove" ? (

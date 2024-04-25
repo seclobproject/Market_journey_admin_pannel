@@ -232,6 +232,9 @@ function Viewdetails() {
 
       const response = await ApiCall("post", `${addBonnusUrl}/${userId}`, {
         bonusAmount: bonusAmountNumber,
+        description: addBonnus?.description,
+        transactionId: addBonnus?.transactionId,
+
       });
 
       if (response.status === 200) {
@@ -454,9 +457,10 @@ function Viewdetails() {
                                 </h5>
                               </div>
                               <div className="d-flex justify-content-end flex-wrap mt-3">
-                                {details.packageType === "Franchise" && (
+                                {/* {details.name==="PROMOTER1"||details.name==="PROMOTER2"||!details.name==="PROMOTER3"&&(
                                   <>
                                     <Button
+                                    disabled
                                       className="btn btn-custom"
                                       onClick={() => {
                                         setBonusModal({
@@ -470,7 +474,69 @@ function Viewdetails() {
                                       Add Bonus
                                     </Button>
                                   </>
-                                )}
+                                )} */}
+                                {/* {details.packageType === "Franchise" &&(
+                                  <>
+                                       <Button
+      className="btn btn-custom"
+      onClick={() => {
+        setBonusModal({
+          show: true,
+          id: details?.id,
+        });
+        setValidated(false);
+      }}
+    >
+      <i className="fas fa-plus"></i>
+      Add Bonus
+    </Button>
+                                  </>
+                                )} */}
+{/* {details.packageType === "Franchise" && 
+(
+    <>
+      <Button
+        className="btn btn-custom"
+        onClick={() => {
+          setBonusModal({
+            show: true,
+            id: details?.id,
+          });
+          setValidated(false);
+        }}
+      >
+        <i className="fas fa-plus"></i>
+        Add Bonus
+      </Button>
+    </>
+  )
+} */}
+{details.packageType === "Franchise" && 
+  !(details.name === "PROMOTER1" || details.name === "PROMOTER2" || details.name === "PROMOTER3") && (
+    <>
+      <Button
+        className="btn btn-custom"
+        onClick={() => {
+          setBonusModal({
+            show: true,
+            id: details?.id,
+          });
+          setValidated(false);
+        }}
+      >
+        <i className="fas fa-plus"></i>
+        Add Bonus
+      </Button>
+    </>
+  )
+}
+
+
+
+
+
+
+
                                 {details.userStatus === "approved" && (
                                   <Dropdown
                                     overlay={menu}
@@ -708,7 +774,7 @@ function Viewdetails() {
                                   </li>
                                 </>
                                 )}
-                                {details?.packageType == "Courses" && (
+                                {details?.packageType == "Courses" || details?.packageType =="Signals" &&(
                                   <>
                                      <li className="d-flex align-items-center gap-3 mb-4">
                                       <i className="fas fa-user text-dark fs-6" />
@@ -756,6 +822,7 @@ function Viewdetails() {
                                     </li>
                                   </>
                                 )}
+                                
 
                                 <li className="d-flex align-items-center gap-3 mb-4">
                                   <i className="fas fa-store text-dark fs-6" />
@@ -780,9 +847,23 @@ function Viewdetails() {
                                     </span>
                                   </h6>
                                 </li>
-                                {details?.packageType !== "Courses" && (
+
+
+                                <li className="d-flex align-items-center gap-3 mb-4">
+                                  <i className="fas fa-money-bill-alt text-dark fs-6" />
+                                  <h6 className="fs-4 fw-semibold mb-0">
+                                    Package Amount:{" "}
+                                    <span
+                                      style={{ color: "rgb(247, 174, 21)" }}
+                                    >
+                                      ₹ {details?.packageAmount || "--"}
+                                    </span>
+                                  </h6>
+                                </li>
+                         
+                                {!(details?.franchise === "Mobile Franchise" || details?.packageType === "Courses"||details?.packageType==="Signals") && (
   <li className="d-flex align-items-center gap-3 mb-4">
-    <i className="fas fa-store text-dark fs-6" />
+    <i className="fas fa-building text-dark fs-6" />
     <h6 className="fs-4 fw-semibold mb-0">
       Franchise Name:{" "}
       <span style={{ color: "rgb(247, 174, 21)" }}>
@@ -792,32 +873,6 @@ function Viewdetails() {
   </li>
 )}
 
-                                <li className="d-flex align-items-center gap-3 mb-4">
-                                  <i className="fas fa-money-bill-alt text-dark fs-6" />
-                                  <h6 className="fs-4 fw-semibold mb-0">
-                                    Package Amount:{" "}
-                                    <span
-                                      style={{ color: "rgb(247, 174, 21)" }}
-                                    >
-                                      {details?.packageAmount || "--"}
-                                    </span>
-                                  </h6>
-                                </li>
-                                {}
-                                {details?.franchise !== "Mobile Franchise" &&
-                                  !details?.packageType == "course" && (
-                                    <li className="d-flex align-items-center gap-3 mb-4">
-                                      <i className="fas fa-building text-dark fs-6" />
-                                      <h6 className="fs-4 fw-semibold mb-0">
-                                        Franchise Name:{" "}
-                                        <span
-                                          style={{ color: "rgb(247, 174, 21)" }}
-                                        >
-                                          {details?.franchiseName || "--"}
-                                        </span>
-                                      </h6>
-                                    </li>
-                                  )}
 
                                 {details?.screenshot && (
                                   <Image

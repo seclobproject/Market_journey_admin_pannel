@@ -102,7 +102,7 @@ function Pendingaccounts() {
                         <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                       </th>
                       <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Date</h6>
+                        <h6 className="fs-4 fw-semibold mb-0">Date & Time</h6>
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Name</h6>
@@ -140,7 +140,7 @@ function Pendingaccounts() {
                             <td>{startIndex + index + 1}</td>
                             <td>
                               {acounts?.createdAt
-                                ? moment(acounts.createdAt).format("DD/MM/YYYY")
+                                ? moment(acounts.createdAt).format("DD/MM/YYYY, HH:mm A")
                                 : "--"}
                             </td>
 

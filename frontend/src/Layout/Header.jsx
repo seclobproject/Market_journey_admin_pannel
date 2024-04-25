@@ -11,7 +11,6 @@ function Header() {
   const { setHamburgClicked, hamburgClicked, logout, user } =
     useContext(ContextData);
 
-  console.log(user, "user from headre");
   const handleLogout = () => {
     localStorage.removeItem("User");
     navigate("/");

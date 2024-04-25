@@ -109,7 +109,6 @@ function Panchayath() {
       setIsLoading(true);
 
       const response = await ApiCall("get", paginatedPanchayathUrl, {}, params);
-      console.log(response,"res");
       if (response.status === 200) {
         setPanchayathList(response?.data?.panchayaths);
         setTotalPages(response?.data?.totalPages);

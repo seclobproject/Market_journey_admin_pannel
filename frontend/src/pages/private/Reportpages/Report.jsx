@@ -13,8 +13,10 @@ import {
 } from "../../../utils/Constants";
 import { Button } from "antd";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 function Report() {
+  const navigate =useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedState, setSelectedState] = useState(null);
   const [selectedStateId, setSelectedStateId] = useState(null);
@@ -22,7 +24,6 @@ function Report() {
   const [selectedZonalId, setselectedZonalId] = useState(null);
   const [selectedPanId, setselectedPanId] = useState(null);
   const [filteredData, setFilteredData] = useState([]);
-console.log(filteredData,"filteredData");
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [zonalList, setZonalList] = useState([]);
@@ -35,7 +36,7 @@ console.log(filteredData,"filteredData");
   });
   const [reportData, setReportData] = useState({});
   const [stateLabel, setStateLabel] = useState("");
-  console.log(reportData,"reportData");
+  const [selectKey, setSelectKey] = useState(0); // Add selectKey state
 
 
   const [params, setParams] = useState({
@@ -43,10 +44,8 @@ console.log(filteredData,"filteredData");
     pageSize: 10,
   });
   const [totalPages, setTotalPages] = useState(1);
-  console.log(totalPages,"totalPages");
 
   const [filter, setFilter] = useState();
-console.log(filter,"set");
   const startIndex = (params.page - 1) * params.pageSize;
   const options = [
     { value: "District Franchise", label: "District Franchise" },
@@ -187,23 +186,29 @@ console.log(filter,"set");
     }
   }, [selectedStateId, selectedDistrictId, selectedZonalId]);
   
+
+
+
   const handleReset = () => {
     setSelectedStateId("");
-    setStateLabel("")
+    setStateLabel(""); // Ensure stateLabel is set to an empty string or null
     setFilterReport({
       state: "",
       district: "",
       zonal: "",
       panchayath: "",
-    })
-    setSelectedState("")
-    setReportData({})
+    });
+    setFilteredData([]);
+    setSelectedState("");
+    setReportData({});
     setSelectedDistrictId("");
     setselectedPanId("");
-    setselectedZonalId('')
-    setFilter("")
+    setselectedZonalId("");
+    setFilter("");
+  
+    // Increment selectKey to force re-render
+    setSelectKey(selectKey + 1);
   };
-
 
 
 
@@ -216,6 +221,9 @@ console.log(filter,"set");
     });
     setFilteredData(newFilteredData);
   };
+
+
+
   return (
     <>
       <SlideMotion>
@@ -232,7 +240,8 @@ console.log(filter,"set");
               </h5>
               <div className="col-md-3 mt-3 sm-2">
               <Select
-                // value={{ value: filter, label: filter }}
+                                key={selectKey}
+
                 onChange={(selectedOption) =>
                   handleFilterAndSetFilter(selectedOption)
                 }
@@ -246,12 +255,12 @@ console.log(filter,"set");
               <div className="col-md-2 mt-3 sm-2">
                 <Select
                   required
+                  key={selectKey}
                   options={stateList?.map((states) => ({
                     value: states?.id,
                     label: states?.stateName,
                   }))}
                   onChange={(selectedOption) => {
-                    setStateLabel(selectedOption?.label)
                     setSelectedStateId(selectedOption?.value);
                     if (selectedStateId) {
                       getAllDistrictList();
@@ -361,7 +370,7 @@ console.log(filter,"set");
                           <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                         </th>
                         <th>
-                          <h6 className="fs-4 fw-semibold mb-0">Date</h6>
+                          <h6 className="fs-4 fw-semibold mb-0">Date & Time</h6>
                         </th>
                         <th>
                           <h6 className="fs-4 fw-semibold mb-0">User ID</h6>
@@ -386,7 +395,7 @@ console.log(filter,"set");
                         </th>
                         <th>
                           <h6 className="fs-4 fw-semibold mb-0">
-                            Franchise Name
+                          View Details
                           </h6>
                         </th>
 
@@ -401,7 +410,7 @@ console.log(filter,"set");
                               <td>{startIndex + index + 1}</td>
                               <td>
                                 {data?.createdAt
-                                  ? moment(data.createdAt).format("DD/MM/YYYY")
+                                  ? moment(data.createdAt).format("DD/MM/YYYY, HH:mm A")
                                   : "--"}
                               </td>
                               <td>{data?.ownSponserId || "--"}</td>
@@ -418,8 +427,16 @@ console.log(filter,"set");
 
                               <td>{data?.packageAmount}</td>
                               <td>{data?.franchise || "--"}</td>
-                              <td>{data?.franchiseName || "--"}</td>
-                            </tr>
+                              <td>
+                              <i
+                                className="fas fa-eye"
+                                onClick={() =>
+                                  navigate("/user/details", {
+                                    state: { data: data?._id },
+                                  })
+                                }
+                              ></i>
+                            </td>                            </tr>
                           ))}
                         </>
                       ) : (

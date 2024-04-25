@@ -24,23 +24,25 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../../../Components/Loader";
 import moment from "moment";
 
-function Member() {
+function Member() { 
+  const [selectKey, setSelectKey] = useState(0); 
+  const [secondselectKey, setSecondSelectKey] = useState(0); 
+console.log(selectKey,"setSelectKey");
+console.log(secondselectKey,"secondselectKey");
+
   const [memberModal, setMemberModal] = useState({ show: false, id: null });
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
   const [addMember, setAddMember] = useState({});
-console.log(addMember,"addMember");
   const [stateList, setStateList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [zonalList, setZonalList] = useState([]);
   const [notTakenZonal, setNotTakenZonal] = useState([]);
   const [panchayathList, setPanchayathList] = useState([]);
-
   const [packageList, setPackageList] = useState([]);
   const [notTakenDistrict, setnotTakenDistrict] = useState([]);
   const [packageAmount, setPackageAmount] = useState({});
   const [packageType, setpackageType] = useState();
-  console.log(packageType,"packageType");
   const [totalgstAmount, setTotalGstAmount] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showTransPassword, setShowTransPassword] = useState(false);
@@ -48,16 +50,14 @@ console.log(addMember,"addMember");
   const [selectedDistrictId, setSelectedDistrictId] = useState(null);
   const [selectedZonalId, setSelectedZonalId] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
-  console.log(selectedState," testing selected");
   const [allUser, setAllUser] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [params, setParams] = useState({
     page: 1,
-    pageSize: 10,
+    pageSize: 25,
   });
   const [totalPages, setTotalPages] = useState(1);
   const [filteredData, setFilteredData] = useState([]);
-
   const [filteredDataStatus, setFilteredDataStatus] = useState([]);
   const [filter, setFilter] = useState();
   const [statusfilter, setStatusFilter] = useState();
@@ -278,6 +278,50 @@ console.log(addMember,"addMember");
       page: newPage,
     }));
   };
+ 
+  const handleFilterAndSetFilter = (selectedOption) => {
+    const filter = selectedOption.value;
+
+    setFilter(filter);
+    const newFilteredData = allUser.filter((item) => {
+      return filter ? item.franchise === filter : true;
+    });
+    setFilteredData(newFilteredData);
+  };
+
+  const handleFilterAndSetFilterStatus = (e) => {
+    const filterStatus = e.target.value;
+
+    setFilter(filterStatus);
+    const newFilteredData = allUser.filter((item) => {
+      return filterStatus ? item.userStatus === filterStatus : true;
+    });
+    setFilteredData(newFilteredData);
+  };
+  const handleFilterId = (selectedOption) => {
+    const filterById = selectedOption.value;
+
+    setFilter(filterById);
+    const newFilteredData = allUser.filter((item) => {
+      return filterById ? item.ownSponserId === filterById : true;
+    });
+    setFilteredData(newFilteredData);
+  };
+
+  const packageOptions = packageList.map((pack) => ({
+    value: pack?.packageName,
+    label: pack?.packageName || pack?.franchiseName,
+    packageAmount: pack?.packageAmount,
+  }));
+
+  const calculateTotalGstAmount = () => {
+    if (addMember?.packageAmount) {
+      const partAmount = Number(addMember?.packageAmount);
+      const percentage = partAmount * 0.18;
+      const sum = partAmount + percentage;
+      setTotalGstAmount(sum);
+    }
+  };
   useEffect(() => {
     getallUsers();
   }, [params]);
@@ -318,40 +362,6 @@ console.log(addMember,"addMember");
     addMember?.franchise,
   ]);
 
-  const handleFilterAndSetFilter = (selectedOption) => {
-    const filter = selectedOption.value;
-
-    setFilter(filter);
-    const newFilteredData = allUser.filter((item) => {
-      return filter ? item.franchise === filter : true;
-    });
-    setFilteredData(newFilteredData);
-  };
-
-  const handleFilterAndSetFilterStatus = (e) => {
-    const filterStatus = e.target.value;
-
-    setFilter(filterStatus);
-    const newFilteredData = allUser.filter((item) => {
-      return filterStatus ? item.userStatus === filterStatus : true;
-    });
-    setFilteredData(newFilteredData);
-  };
-
-  const packageOptions = packageList.map((pack) => ({
-    value: pack?.packageName,
-    label: pack?.packageName || pack?.franchiseName,
-    packageAmount: pack?.packageAmount,
-  }));
-
-  const calculateTotalGstAmount = () => {
-    if (addMember?.packageAmount) {
-      const partAmount = Number(addMember?.packageAmount);
-      const percentage = partAmount * 0.18;
-      const sum = partAmount + percentage;
-      setTotalGstAmount(sum);
-    }
-  };
 
   useEffect(() => {
     calculateTotalGstAmount();
@@ -411,6 +421,23 @@ console.log(addMember,"addMember");
                 {/* Add more filter options as needed */}
               </select>
             </div>
+            <div className="col-md-3 mt-3">
+            <Select
+                      required
+                      options={[
+                        { value: 'View all', label: 'View All' }, 
+                        ...allUser?.map((userid) => ({
+                          value: userid?.ownSponserId,
+                          label: userid?.ownSponserId,
+                        })),
+                      ]}
+                      onChange={(selectedOption) =>
+                        handleFilterId(selectedOption)
+                      }
+                      placeholder="Search by user id...."
+                      isSearchable={true}
+                    />
+                    </div>
           </div>
           {isLoading ? (
             <Loader />
@@ -424,7 +451,7 @@ console.log(addMember,"addMember");
                         <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                       </th>
                       <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Date</h6>
+                        <h6 className="fs-4 fw-semibold mb-0">Date & Time</h6>
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">User ID</h6>
@@ -445,11 +472,11 @@ console.log(addMember,"addMember");
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Type</h6>
                       </th>
-                      <th>
+                      {/* <th>
                         <h6 className="fs-4 fw-semibold mb-0">
                           Franchise Name
                         </h6>
-                      </th>
+                      </th> */}
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Status</h6>
                       </th>
@@ -472,7 +499,7 @@ console.log(addMember,"addMember");
                             <td>{startIndex + index + 1}</td>
                             <td>
                               {users?.createdAt
-                                ? moment(users.createdAt).format("DD/MM/YYYY")
+                                ? moment(users.createdAt).format("DD/MM/YYYY , HH:mm A")
                                 : "--"}
                             </td>
                             <td>{users?.ownSponserId || "--"}</td>
@@ -487,9 +514,8 @@ console.log(addMember,"addMember");
                                 "--"}
                             </td>
 
-                            <td>{users?.packageAmount}</td>
+                            <td>₹ {users?.packageAmount}</td>
                             <td>{users?.franchise || "--"}</td>
-                            <td>{users?.franchiseName || "--"}</td>
                             <td>
                               {users?.userStatus === "readyToApprove" ? (
                                 <span className="badge bg-danger rounded-3 fw-semibold">
@@ -846,6 +872,7 @@ console.log(addMember,"addMember");
                       value={selectedState?.state}
                       onChange={(selectedOption) => {
                         setSelectedStateId(selectedOption?.value);
+                        setSelectKey(selectKey + 1);
                         if (selectedStateId) {
                           getDistrictList();
                         }
@@ -854,7 +881,6 @@ console.log(addMember,"addMember");
                           state: selectedOption?.label,
                           franchiseName: "", 
                         });
-                        // selectedState("")
                         
                       }}
                       placeholder="Select a state"
@@ -870,6 +896,7 @@ console.log(addMember,"addMember");
                       District Franchise Name
                     </label>
                     <Select
+                    key={selectKey}
                       required
                       options={notTakenDistrict?.map((districts) => ({
                         value: districts?.id,
@@ -908,6 +935,7 @@ console.log(addMember,"addMember");
                     value={selectedState?.state}
                     onChange={(selectedOption) => {
                       setSelectedStateId(selectedOption?.value);
+                      setSelectKey(selectKey + 1);
 
                       setAddMember({
                         ...addMember,
@@ -928,6 +956,7 @@ console.log(addMember,"addMember");
                   </label>
                   <Select
                     required
+                    key={selectKey}
                     options={districtList?.map((districts) => ({
                       value: districts?.id,
                       label: districts?.name,
@@ -935,7 +964,7 @@ console.log(addMember,"addMember");
                     value={selectedState?.district}
                     onChange={(selectedOption) => {
                       setSelectedDistrictId(selectedOption?.value);
-
+                      setSecondSelectKey(secondselectKey + 1)
                       setAddMember({
                         ...addMember,
                         district: selectedOption?.label,
@@ -955,6 +984,8 @@ console.log(addMember,"addMember");
                   </label>
                   <Select
                     required
+                    key={selectKey||secondselectKey}
+
                     options={notTakenZonal?.map((zonal) => ({
                       value: zonal?.id,
                       label: zonal?.name,
@@ -994,7 +1025,7 @@ console.log(addMember,"addMember");
                     value={selectedState?.state}
                     onChange={(selectedOption) => {
                       setSelectedStateId(selectedOption?.value);
-
+                      setSelectKey(selectKey + 1);
                       setAddMember({
                         ...addMember,
                         state: selectedOption?.label,
@@ -1014,6 +1045,8 @@ console.log(addMember,"addMember");
                   </label>
                   <Select
                     required
+                    key={selectKey}
+
                     options={districtList?.map((districts) => ({
                       value: districts?.id,
                       label: districts?.name,
@@ -1041,6 +1074,8 @@ console.log(addMember,"addMember");
                   </label>
                   <Select
                     required
+                    key={selectKey}
+
                     options={zonalList?.map((zonal) => ({
                       value: zonal?.id,
                       label: zonal?.name,
@@ -1067,6 +1102,8 @@ console.log(addMember,"addMember");
                   </label>
                   <Select
                     required
+                    key={selectKey}
+
                     options={panchayathList?.map((panchayath) => ({
                       value: panchayath?.id,
                       label: panchayath?.name,

@@ -26,7 +26,6 @@ function Withrawhistroy() {
     try {
       setIsLoading(true);
       const response = await ApiCall("get", viewhistoryUrl,{},params);
-      console.log(response, "get");
       if (response.status === 200) {
         setViewHistory(response?.data?.allAddFundHistory);
         setFilteredData(response?.data?.allAddFundHistory)
@@ -50,23 +49,7 @@ function Withrawhistroy() {
       page: newPage,
     }));
   };
-  const handleFilterAndSetFilterStatus = (e) => {
-    const filterStatus = e.target.value;
 
-    setFilter(filterStatus);
-    console.log(filterStatus,"==")
-    const newFilteredData = viewHistory.filter((item) => {
-      console.log(item, "iteamssssss///");
-      return filterStatus ? item.status === filterStatus : true;
-    });
-    console.log(newFilteredData, "fgdffdfdasasdsadasdasdsadasdasdasdsadsadas");
-    setFilteredData(newFilteredData);
-  };
-  useEffect(() => {
-    if (filter === "View_all") {
-    getHistory();
-  }
-  }, [params,filter]);
   useEffect(() => {
     getHistory();
   }, [params]);
@@ -85,19 +68,7 @@ function Withrawhistroy() {
             </h5>
           </div>
           <div className="row ms-2 me-2">
-          
-            {/* <div className="col-md-3 mt-3">
-              <select
-                value={statusfilter}
-                onChange={(e) => handleFilterAndSetFilterStatus(e)}
-                className="form-control"
-              >
-           
-                <option value="View_all" selected>View All</option>
-                <option value="Approved">Approved</option>
-                <option value="Rejected">Rejected</option>
-              </select>
-            </div> */}
+        
           </div>
           {isLoading ? (
             <Loader />
@@ -112,7 +83,7 @@ function Withrawhistroy() {
                       </th>
                            
                       <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Date</h6>
+                        <h6 className="fs-4 fw-semibold mb-0">Date & Time</h6>
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Name</h6>
@@ -156,7 +127,7 @@ function Withrawhistroy() {
                           (
                             <tr key={index}>
                             <td>{startIndex + index + 1}</td>
-                              <td>{history?.createdAt ? moment(history.createdAt).format('DD/MM/YYYY') : "--"}</td>
+                              <td>{history?.createdAt ? moment(history.createdAt).format("DD/MM/YYYY, HH:mm A") : "--"}</td>
 
                               <td>
                                 {(history?.name &&

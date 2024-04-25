@@ -30,7 +30,6 @@ function Distribute() {
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [details, setDetails] = useState({});
-  console.log(details,"resport");
   const [count, setCount] = useState({});
   const [distributionHistory, setDistributionHistory] = useState({});
   const [poolPercentage, setPoolPercentage] = useState({
@@ -568,7 +567,7 @@ function Distribute() {
                         <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                       </th>
                       <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Date</h6>
+                        <h6 className="fs-4 fw-semibold mb-0">Date & Time</h6>
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">
@@ -636,19 +635,19 @@ function Distribute() {
                             <td>{index + 1}</td>
                             <td>
                               {history?.createdAt
-                                ? moment(history.createdAt).format("DD/MM/YYYY")
+                                ? moment(history.createdAt).format("DD/MM/YYYY, HH:mm A")
                                 : "--"}
                             </td>
-                            <td>{history?.distributedAmount}</td>
-                            <td>{history?.amountpoolA}</td>
+                            <td style={{color:"red"}}>₹ {history?.distributedAmount}</td>
+                            <td>₹ {history?.amountpoolA}</td>
                             <td>{history?.countInPoolA}</td>
-                            <td>{history?.amountpoolB}</td>
+                            <td>₹ {history?.amountpoolB}</td>
                             <td>{history?.countInPoolB}</td>
-                            <td>{history?.amountpoolC}</td>
+                            <td>₹ {history?.amountpoolC}</td>
                             <td>{history?.countInPoolC}</td>
-                            <td>{history?.amountpoolD}</td>
+                            <td>₹ {history?.amountpoolD}</td>
                             <td>{history?.countInPoolD}</td>
-                            <td>{history?.amountpoolE}</td>
+                            <td>₹ {history?.amountpoolE}</td>
                             <td>{history?.countInPoolE}</td>
                           </tr>
                         ))}

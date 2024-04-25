@@ -155,7 +155,7 @@ function Pendingusers() {
                             <td>{index + 1}</td>
                             <td>
                               {members?.createdAt
-                                ? moment(members.createdAt).format("DD/MM/YYYY")
+                                ? moment(members.createdAt).format("DD/MM/YYYY, HH:mm A")
                                 : "--"}
                             </td>
 
@@ -171,7 +171,7 @@ function Pendingusers() {
                             {/* <td>{zonals?.stateName && zonals.stateName.toUpperCase()||"--"}</td> */}
                             <td>{members?.email || "--"}</td>
                             <td>{members?.phone || "--"}</td>
-                            <td>{members?.tempPackageAmount || "0"}</td>
+                            <td>₹ {members?.tempPackageAmount || "0"}</td>
 
                             <td>
                               {members?.screenshot && (

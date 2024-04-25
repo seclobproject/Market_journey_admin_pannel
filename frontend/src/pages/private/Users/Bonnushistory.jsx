@@ -10,7 +10,6 @@ import ModalComponent from "../../../Components/ModalComponet";
 function Bonnushistory() {
   const [isLoading, setIsLoading] = useState(false);
   const [bonnusHistory, setbonnusHistory] = useState([]);
-  console.log(bonnusHistory, "bonnush");
   const [totalPages, setTotalPages] = useState(1);
   const [params, setParams] = useState({
     page: 1,
@@ -24,7 +23,6 @@ function Bonnushistory() {
       setIsLoading(true);
 
       const response = await ApiCall("get", viewBonnusURL, {}, params);
-      console.log(response, "response...");
       if (response.status === 200) {
         setbonnusHistory(response?.data?.paidBonusHistory);
         setTotalPages(response?.data?.pagination?.totalPages);
@@ -39,8 +37,6 @@ function Bonnushistory() {
       console.error("Error fetching user request:", error);
     }
   };
-
-
 
   const handlePageChange = (event, newPage) => {
     setParams((prevParams) => ({
@@ -77,77 +73,83 @@ function Bonnushistory() {
                         <h6 className="fs-4 fw-semibold mb-0">SL.NO</h6>
                       </th>
                       <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Date</h6>
+                        <h6 className="fs-4 fw-semibold mb-0">Date & Time</h6>
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">User ID</h6>
                       </th>
                       <th>
+                        <h6 className="fs-4 fw-semibold mb-0">
+                          Transaction Id
+                        </h6>
+                      </th>
+                      <th>
                         <h6 className="fs-4 fw-semibold mb-0">Name</h6>
                       </th>
 
-                 
-                      
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Phone</h6>
                       </th>
                       <th>
-                        <h6 className="fs-4 fw-semibold mb-0">
-                          Bonnus Amount
-                        </h6>
+                        <h6 className="fs-4 fw-semibold mb-0">Bonnus Amount</h6>
                       </th>
                       <th>
-                        <h6 className="fs-4 fw-semibold mb-0">
-                        Description
-                        </h6>
+                        <h6 className="fs-4 fw-semibold mb-0">Description</h6>
                       </th>
-                     
 
                       <th />
                     </tr>
                   </thead>
                   <tbody>
-                  {bonnusHistory?.length ? (
-                    <>
-                      {bonnusHistory.map(
-                        (histoty, index) => (
-                          console.log(histoty, "45678"),
-                          (
-                            <tr key={index}>
-                            <td>{startIndex + index + 1}</td>
-                              <td>{histoty?.createdAt ? moment(histoty.createdAt).format('DD/MM/YYYY') : "--"}</td>
-                              <td>{histoty?.userID || "--"}</td>
+                    {bonnusHistory?.length ? (
+                      <>
+                        {bonnusHistory.map(
+                          (histoty, index) => (
+                            (
+                              <tr key={index}>
+                                <td>{startIndex + index + 1}</td>
+                                <td>
+                                  {histoty?.createdAt
+                                    ? moment(histoty.createdAt).format(
+                                      "DD/MM/YYYY , HH:mm A"
+                                      )
+                                    : "--"}
+                                </td>
+                                <td>{histoty?.userID || "--"}</td>
 
-                              <td>
-                                {(histoty?.name &&
-                                  histoty.name.toUpperCase()) ||
-                                  "--"}
-                              </td>
-                           
-                              <td>{histoty?.phone || "--"}</td>
-                              <td>{histoty?.bonusAmount || "--"}</td>
-                              <td>{histoty?.description || "--"}</td>
+                                <td>{histoty?.transactionId || "--"}</td>
 
-  
-                            </tr>
+                                <td>
+                                  {(histoty?.name &&
+                                    histoty.name.toUpperCase()) ||
+                                    "--"}
+                                </td>
+
+                                <td>{histoty?.phone || "--"}</td>
+
+                                <td style={{ color: "red" }}>
+                                  ₹{histoty?.bonusAmount || "--"}
+                                </td>
+                                <td>{histoty?.description || "--"}</td>
+                              </tr>
+                            )
                           )
-                        )
-                      )}
-                    </>
-                  ) : (
-                    <tr>
-                      <td colSpan={20} style={{ textAlign: "center" }}>
-                        <b>No History Found</b>{" "}
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
+                        )}
+                      </>
+                    ) : (
+                      <tr>
+                        <td colSpan={20} style={{ textAlign: "center" }}>
+                          <b>No History Found</b>{" "}
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
                 </table>
               </div>
             </div>
           )}
-           {/* -------------------------pagination--------------------- */}
-           <div className="me-2 mb-3 d-flex ms-auto">
+          {/* -------------------------pagination--------------------- */}
+          <div className="me-2 mb-3 d-flex ms-auto">
             <Stack spacing={2}>
               <Pagination
                 count={totalPages}
@@ -159,9 +161,6 @@ function Bonnushistory() {
           </div>
         </div>
       </SlideMotion>
-
-
-
     </>
   );
 }

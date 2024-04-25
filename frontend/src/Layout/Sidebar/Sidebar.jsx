@@ -8,7 +8,6 @@ function Sidebar() {
 
   const menus = [
     { title: "Dashboard", icon: "fas fa-chart-line", route: "dashboard" },
-    { title: "Package", icon: "fas fa-box", route: "packages" },
     {
       title: "Locations",
       icon: "fas fa-map-marker-alt",
@@ -26,6 +25,8 @@ function Sidebar() {
         },
       ],
     },
+    { title: "Package", icon: "fas fa-box", route: "packages" },
+   
     {
       title: "Users",
       icon: "fas fa-users",
@@ -38,7 +39,6 @@ function Sidebar() {
       ],
     },
     
-    { title: "Reports", icon: "fas fa-chart-line", route: "reports" },
 
     {
       title: "Demat Account",
@@ -56,6 +56,27 @@ function Sidebar() {
       icon: "fas fa-clock",
       route: "user/bonnushistory",
     },
+
+  
+
+    {
+      title: "Withdrawals",
+      icon: "fas fa-money-bill",
+      sub: [
+        { title: "Pending Withdrawals", route: "pending/withraw" },
+        { title: "Withdrawals History", route: "withraw/history" },
+      ],
+    },
+    {
+      title: "Autopool Wallet",
+      icon: "fas fa-user",
+      sub: [
+        { title: "Distribute History", route: "autopool-wallet/distribute" },
+
+        { title: "Credit History", route: "autopool-wallet/history" },
+      ],
+    },
+    { title: "Reports", icon: "fas fa-file-alt", route: "reports" },
 
     {
       title: "Uploads",
@@ -75,25 +96,7 @@ function Sidebar() {
 
     { title: "Alerts", icon: "fas fa-bell", route: "user/alerts" },
     { title: "Live News", icon: "fas fa-newspaper", route: "user/news" },
-
-    {
-      title: "Withdrawals",
-      icon: "fas fa-money-bill",
-      sub: [
-        { title: "Pending Withdrawals", route: "pending/withraw" },
-        { title: "Withdrawals History", route: "withraw/history" },
-      ],
-    },
     { title: "Awards & Rewards", icon: "fas fa-trophy", route: "user/awards" },
-    {
-      title: "Autopool Wallet",
-      icon: "fas fa-user",
-      sub: [
-        { title: "Distribute History", route: "autopool-wallet/distribute" },
-
-        { title: "Credit History", route: "autopool-wallet/history" },
-      ],
-    },
   ];
 
   return (

@@ -87,7 +87,6 @@ function Zonal() {
       setIsLoading(true);
 
       const response = await ApiCall("get", paginatedZonals, {}, params);
-      console.log(response,"....")
       if (response.status === 200) {
         setZonalList(response?.data?.zonals);
         setTotalPages(response?.data?.totalPages);

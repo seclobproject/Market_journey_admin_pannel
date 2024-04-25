@@ -31,7 +31,6 @@ function Pendingwithraw() {
         {},
         params
       );
-      console.log(response, "response...");
       if (response?.status === 200) {
         setViewRequest(response?.data?.userData);
         setTotalPages(response?.data?.pagination?.totalPages);
@@ -155,7 +154,7 @@ function Pendingwithraw() {
                           (
                             <tr key={index}>
                               <td>{index + 1}</td>
-                              <td>{request?.updatedAt ? moment(request.updatedAt).format('DD/MM/YYYY') : "--"}</td>
+                              <td>{request?.updatedAt ? moment(request.updatedAt).format("DD/MM/YYYY, HH:mm A") : "--"}</td>
 
                               <td>
                                 {(request?.name &&
@@ -169,9 +168,9 @@ function Pendingwithraw() {
                               </td> */}
                               <td>{request?.email || "--"}</td>
                               <td>{request?.phone || "--"}</td>
-                              <td>{request?.walletWithdrawAmount || "0"}</td>
-                              <td>{calculateTenPercent(request?.walletWithdrawAmount )}</td>
-                              <td>{request?.tdsAmount || "0"}</td>
+                              <td>₹ {request?.walletWithdrawAmount || "0"}</td>
+                              <td style={{color:"red"}}>₹ {calculateTenPercent(request?.walletWithdrawAmount )}</td>
+                              <td style={{color:"green"}}>₹ {request?.tdsAmount || "0"}</td>
 
                               <td>
       {request?.walletWithdrawStatus === "pending" && (

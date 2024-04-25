@@ -1040,7 +1040,7 @@ export const acceptUser = async (req, res, next) => {
         
         userData.userStatus = "approved";
         userData.renewalStatus = true;
-        userData.renewalDate = new Date();;
+        userData.renewalDate = new Date();
         userData.packageAmount=userData.tempPackageAmount;
         const updatedUser = await userData.save();
         if (updatedUser) {
@@ -1108,6 +1108,7 @@ export const acceptUser = async (req, res, next) => {
     next(error);
   }
 };
+
 
 //reject Userverification
 
@@ -1388,6 +1389,8 @@ export const viewUserDetails = async (req, res, next) => {
         district:userData.district,
         packageType:userData.packageType,
         zonal:userData.zonal,
+        state:userData.state,
+        panchayath:userData.panchayath,
         screenshot:userData.screenshot,
         aadhaar: userData.aadhaar,
         aadhaar2: userData.aadhaar2,
@@ -1763,9 +1766,8 @@ export const addBonus=async(req,res,next)=>{
       })
     }
     const updatedAdmin=  await admin.save();
-    if(updatedUser.isMobileFranchise){
+    if(updatedUser.packageType==="Franchise"){
       await franchiseIncomeGenerator(updatedUser,bonusAmount,"bonus",0.12,0.20)
-      await levelIncomeGenerator(updatedUser,bonusAmount)
       await generatePromotersIncome(bonusAmount,updatedUser, 0.04)
     }
     res

@@ -1,7 +1,7 @@
 import express from "express";
 import {
   addReferalUser,
-  addUser, changePassword, editProfile, userLogin, verifyUser, viewLevel1User, viewLevel2User, viewUserProfile, walletWithdrawRequest,
+  addUser, changePassword, editProfile, renewalRequest, userLogin, verifyUser, viewAddOn, viewConvertPackages, viewLevel1User, viewLevel2User, viewRenewalPackages, viewUserProfile, walletWithdrawRequest,
 } from "../controller/userController.js";
 import { protectUser } from "../middleware/authMiddleware.js";
 import { addDemateAccount, addNomineeDetails, addUserBankAccount, getAlertsForUser } from "../controller/uploadController.js";
@@ -23,6 +23,10 @@ router.post("/add-referal-user",addReferalUser);
 //withdraw request
 
 router.post("/withdraw-wallet",protectUser,walletWithdrawRequest);
+
+//renewal request
+
+router.post("/user-renewal-request",protectUser,renewalRequest);
 
 
 
@@ -54,9 +58,18 @@ router.get("/view-user-alerts",protectUser,getAlertsForUser  );
 
 //view filtered users
 
-router.get("/view-district-Users",protectUser,filteredUsers );
+router.post("/view-district-Users",protectUser,filteredUsers );
 
+//view AddOn signals
 
+router.get("/view-addon-signals",protectUser,viewAddOn );
 
+//view AddOn signals
+
+router.get("/view-convert-packages",protectUser,viewConvertPackages );
+
+//view renewal packages
+
+router.get("/view-renewal-packages",protectUser,viewRenewalPackages );
 
 export default router;

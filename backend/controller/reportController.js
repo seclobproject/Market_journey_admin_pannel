@@ -637,7 +637,7 @@ export const bonusPaidReportPaginated = async (req, res, next) => {
         const userData = await Admin.findById(userId).populate({
             path: "addBounusHistory",
             options: {
-                sort: { createdAt: 1 } // Sort by createdAt in descending order
+                sort: { createdAt:1 } // Sort by createdAt in descending order
             }
         });
 
@@ -711,7 +711,6 @@ export const bonusCreditedReport = async (req, res, next) => {
 export const filteredUsers = async (req, res, next) => {
     try {
     const userId = req.admin ? req.admin._id : (req.user ? req.user._id : null);
-
     let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
     const {state}=req.body
@@ -719,7 +718,6 @@ export const filteredUsers = async (req, res, next) => {
     const {zonal}=req.body
     const {panchayath}=req.body
     let userData;
-console.log(state,district,zonal,panchayath);
         if(state){
             userData = await State.findOne({name:state}).populate({
                 path: "users",

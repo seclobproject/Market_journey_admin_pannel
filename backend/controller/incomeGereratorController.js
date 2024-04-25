@@ -78,11 +78,11 @@ export const generateReferalIncome = async (
   export const levelIncomeGenerator=async (userData,amount)=>{
   console.log("-----------------------------------------------------------------------------------------------------------");
 
-    console.log(`enter to level income function---${userData.name}--Amount is-----${amount}-----------------`);
-    while(amount>=10){
+  console.log(`enter to level income function---${userData.name}--Amount is-----${amount}-----------------`);
+  while(amount>=10){
     console.log("enter while loop--------------------------------------");
-      const sponser=await User.findById(userData.sponser)
-      if (sponser.isDistrictFranchise||sponser.isZonalFranchise){
+    const sponser=await User.findById(userData.sponser)
+      if (!sponser||sponser.isDistrictFranchise||sponser.isZonalFranchise){
         break;
       };
       const levelIncome=amount*0.25;
@@ -553,9 +553,16 @@ export const addToAutoPoolWallet=async(user)=>{
 
   export const generatePromotersIncome = async (amount,userData,promoterPercentage) => {
     const promoterIncome = amount * promoterPercentage;
-
+    console.log(promoterPercentage);
+    let promoterData;
+    let percentage="2.5 %";
+    if(promoterPercentage===0.04){
+      percentage="4%"
+       promoterData = await User.find({ isPromoter: true }).limit(2);
+    }else{
+      promoterData = await User.find({ isPromoter: true })
+    }
     // Find all promoters
-    const promoterData = await User.find({ isPromoter: true });
 
     // Loop through each promoter and update data
     for (const promoter of promoterData) {
@@ -565,7 +572,7 @@ export const addToAutoPoolWallet=async(user)=>{
             reportName: "Promoter Income",
             userID: userData.ownSponserId,
             name: userData.name,
-            percentageCredited: promoterPercentage,
+            percentageCredited:percentage,
             amountCredited: promoterIncome,
             status: "Approved",
         });

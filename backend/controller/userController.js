@@ -8,6 +8,7 @@ import District from "../models/districtModel.js";
 import Zonal from "../models/zonalModel.js";
 import Panchayath from "../models/panchayathModel.js";
 import { sendMail, withdrawMail } from "../config/mailer.js";
+import Package from "../models/packageModel.js";
 
 
 
@@ -214,9 +215,9 @@ console.log(state);
     let isCourseFranchise = false;
     let districtFranchise = null;
     let zonalFranchise = null;
-    let nifty = true;
-    let bankNifty = true;
-    let crudeOil = true;
+    let nifty = false;
+    let bankNifty = false;
+    let crudeOil = false;
 
     if (franchise === "District Franchise") {
       const districtData = await User.findOne({ franchiseName });
@@ -357,12 +358,16 @@ console.log(state);
       districtTakeData.taken = true;
       districtTakeData.editable = false;
       await districtTakeData.save();
+      user.districtFranchise=districtTakeData._id;
+      await user.save();
     }
     if (isZonalFranchise) {
       const zonalTakeData = await Zonal.findOne({ name: franchiseName });
       zonalTakeData.taken = true;
       zonalTakeData.editable = false;
       await zonalTakeData.save();
+      user.zonalFranchise=zonalTakeData._id;
+      await user.save();
     }
     if (isMobileFranchise) {
       const panchayathData = await Panchayath.findOne({ name: panchayath });
@@ -503,13 +508,32 @@ export const viewUserProfile = async (req, res, next) => {
     if (!userData) {
       return next(errorHandler("User not found"));
     }
+     
+    const dateOfRenew = new Date(userData.renewalDate);
+    const today = new Date();
+
+    // Calculate the difference in milliseconds between today and the renewal date
+    const differenceInMs = today-dateOfRenew;
+    // Convert milliseconds to days
+    let differenceInDays = Math.ceil(differenceInMs / (1000 * 60 * 60 * 24));
+    console.log("difference days",differenceInDays);
+
+    // If the difference is greater than or equal to 30 days, set renewal status to false
+    if (differenceInDays >= 30) {
+      userData.renewalStatus = false;
+    }
+
+    // Calculate the countdown from 30 to 1
+    differenceInDays = 30 - differenceInDays;
+    console.log("count down",differenceInDays);
+    console.log(userData.name);
 
     const { 
       _id, userStatus, ownSponserId, franchise, franchiseName, name, email, 
       phone, address, dateOfBirth, aadhaar, screenshot, packageAmount, 
-      tempPackageAmount, bankDetails, nomineeDetails, autoPoolStatus, 
+      tempPackageAmount, bankDetails, nomineeDetails, autoPoolStatus,renewalStatus,
       isDistrictFranchise, isZonalFranchise, isMobileFranchise, 
-      isSignalFranchise, isCourseFranchise ,packageType
+      isSignalFranchise, isCourseFranchise ,packageType,panchayath,district,zonal,state,districtFranchise,zonalFranchise
     } = userData;
 
     const directIncome = userData.directReferalIncome.toFixed(2);
@@ -529,11 +553,16 @@ export const viewUserProfile = async (req, res, next) => {
       name,
       email,
       phone,
+      state,
+      district,
+      panchayath,
+      zonal,
       address,
       dateOfBirth,
       aadhaar,
       screenshot,
       packageAmount,
+      renewalStatus,
       tempPackageAmount,
       myDownline: countFirstChild,
       directIncome,
@@ -544,10 +573,13 @@ export const viewUserProfile = async (req, res, next) => {
       nomineeDetails,
       pool: autoPoolStatus,
       isDistrictFranchise,
+      districtFranchise,
+      zonalFranchise,
       isZonalFranchise,
       isMobileFranchise,
       isSignalFranchise,
       isCourseFranchise,
+      daysUntilRenewal: differenceInDays, // Add the days until renewal
       sts: "01",
       msg: "get user profile Success",
     });
@@ -1064,22 +1096,166 @@ const calculateWeeksDifference = (startDate, endDate) => {
 
 // view add on packages
 
-export const viewAddOn=async(req,res,next)=>{
+export const viewAddOn = async (req, res, next) => {
   try {
-    const userId=req.user._id;
-    const userData=await User.findById(userId)
-    if(userData){
-      return next(errorHandler(401, "User not found. Please login first."))
+    const userId = req.user._id;
+    const userData = await User.findById(userId);
+
+    if (!userData) {
+      return next(errorHandler(401, "User not found. Please login first."));
     }
     if(userData.renewalStatus){
 
+      const { nifty, bankNifty, crudeOil } = userData;
+  
+      const addOns = [];
+  
+      if (!nifty) {
+        const niftyPackage = await Package.findOne({ packageName: "Nifty" });
+        if (niftyPackage) {
+          addOns.push(niftyPackage);
+        }
+      }
+  
+      if (!bankNifty) {
+        const bankNiftyPackage = await Package.findOne({ packageName: "Bank Nifty" });
+        if (bankNiftyPackage) {
+          addOns.push(bankNiftyPackage);
+        }
+      }
+  
+      if (!crudeOil) {
+        const crudeOilPackage = await Package.findOne({ packageName: "CrudeOil" });
+        if (crudeOilPackage) {
+          addOns.push(crudeOilPackage);
+        }
+      }
+  
+      res.status(200).json({
+        addOns,
+        msg: "get addons successfully",
+      });
+    }else{
+      res.status(200).json({
+        msg: "your package is expired",
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+
+//view convert packages
+
+export const viewConvertPackages = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const userData = await User.findById(userId);
+
+    if (userData.packageType === "Franchise") {
+      return res.status(200).json({
+        msg: "Can't convert this franchise",
+      });
     }
 
+    const currentPackage = userData.franchise;
 
+    const anotherPackages = await Package.find({
+      packageName: { $nin: [currentPackage, "District Franchise", "Zonal Franchise"] }
+    });
 
+    res.status(200).json({
+      anotherPackages,
+      msg: "Got addons successfully",
+    });
 
-    
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
+
+
+//view Renewal packages
+
+export const viewRenewalPackages = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const userData = await User.findById(userId);
+    if (!userData) {
+      return next(errorHandler(401, "User not found. Please login first."));
+    }
+    if (userData.packageType === "Franchise") {
+      const signalPackages = await Package.find({
+        franchiseName: "Signals",
+        packageName: {$nin: ["Trading Cafe", "Algo"]}
+      });
+      return res.status(200).json({
+        signalPackages,
+        msg: "get renewal signals",
+      });
+    }
+
+    const renewPackages = await Package.findOne({
+      packageName: userData.franchise
+    });
+
+    res.status(200).json({
+      renewPackages,
+      msg: "Got addons successfully",
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+//request for renewal
+
+
+export const renewalRequest = async (req, res, next) => {
+  try {
+    upload(req, res, async function (err) {
+      if (err) {
+        return next(errorHandler(401, "File upload error"));
+      }
+      const { action, reqPackage, amount, transactionNumber } = req.body;
+      
+      if (!req.files.screenshot) {
+        return next(errorHandler(401, "Image not found"));
+      }
+      const screenshotImage = req.files.screenshot[0].filename;
+      const userId = req.user._id;
+      
+      // Use findOne instead of find to get a single document
+      const userData = await User.findOne({ _id: userId });
+      console.log(userData);
+      
+      if (!userData) {
+        return next(errorHandler(401, "User not found. Please login first."));
+      }
+
+      userData.screenshot = screenshotImage;
+      userData.subscriptionStatus = "pending";
+      userData.action = action;
+      userData.pendingPackage = reqPackage;
+      userData.tempPackageAmount = amount;
+      userData.transactionNumber = transactionNumber;
+
+      const updatedUser = await userData.save();
+
+      if (updatedUser) {
+        res.status(200).json({
+          sts: "01",
+          msg: "Request posted for renewal",
+        });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};

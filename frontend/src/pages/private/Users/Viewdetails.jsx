@@ -492,7 +492,7 @@ function Viewdetails() {
     </Button>
                                   </>
                                 )} */}
-{details.packageType === "Franchise" && 
+{/* {details.packageType === "Franchise" && 
 (
     <>
       <Button
@@ -510,7 +510,27 @@ function Viewdetails() {
       </Button>
     </>
   )
+} */}
+{details.packageType === "Franchise" && 
+  !(details.name === "PROMOTER1" || details.name === "PROMOTER2" || details.name === "PROMOTER3") && (
+    <>
+      <Button
+        className="btn btn-custom"
+        onClick={() => {
+          setBonusModal({
+            show: true,
+            id: details?.id,
+          });
+          setValidated(false);
+        }}
+      >
+        <i className="fas fa-plus"></i>
+        Add Bonus
+      </Button>
+    </>
+  )
 }
+
 
 
 

@@ -83,6 +83,14 @@ autoPoolWallet:{
   type: Number,
   default: 0,
 },
+shareFromPool:{
+  type:Number,
+  default:0
+},
+totalShareFromPool:{
+  type:Number,
+  default:0
+},
 totalPaidBonusAmount:{
   type:Number,
   default:0

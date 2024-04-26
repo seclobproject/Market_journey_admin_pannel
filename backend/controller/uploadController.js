@@ -12,224 +12,201 @@ import LiveNews from "../models/liveNewsModel.js";
 import User from "../models/userModel.js";
 import { paginate } from "./reportController.js";
 
+//upload Home image
 
-
-//upload Home image 
-
-
-export const uploadHomeImages=async(req,res,next)=>{
-    try {
-      const adminId = req.admin._id;
-      const adminData = await Admin.findById(adminId)
-      if(!adminData){
-        return next(errorHandler(401, "Admin not exist"));
-      }
-      upload(req, res, async function (err) {
-        if (err) {
-          return next(errorHandler(401, "File upload error"));
-        }
-        
-        const {description } = req.body;
-        if(!req.files.homeImage){
-          return next(errorHandler(401, " Image not found"));
-        }
-  
-          const homeImage = req.files.homeImage[0].filename;
-  
-       
-          const newImage = await HomeImage.create({
-            description,
-            homeImage
-          });
-          if(newImage){
-            return res.status(201).json({
-              sts: "01",
-              msg: "image Added Successfully",
-            });
-          }
-          
-        });
-  
-    } catch (error) {
-      next(error)
+export const uploadHomeImages = async (req, res, next) => {
+  try {
+    const adminId = req.admin._id;
+    const adminData = await Admin.findById(adminId);
+    if (!adminData) {
+      return next(errorHandler(401, "Admin not exist"));
     }
-  }
+    upload(req, res, async function (err) {
+      if (err) {
+        return next(errorHandler(401, "File upload error"));
+      }
 
+      const { description } = req.body;
+      if (!req.files.homeImage) {
+        return next(errorHandler(401, " Image not found"));
+      }
 
-  //view Home Images
+      const homeImage = req.files.homeImage[0].filename;
 
-
-  export const viewHomeImages=async(req,res,next)=>{
-    try {
-      const homeImageData=await HomeImage.find()
-      if(homeImageData){
-        const ImageCount=homeImageData.length;
-        res.status(200).json({
-            homeImageData,
-            ImageCount,
-          sts: "Image data get Success",
+      const newImage = await HomeImage.create({
+        description,
+        homeImage,
+      });
+      if (newImage) {
+        return res.status(201).json({
+          sts: "01",
+          msg: "image Added Successfully",
         });
-      }else {
-      next(errorHandler(401,"Blogs not found"));
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+//view Home Images
+
+export const viewHomeImages = async (req, res, next) => {
+  try {
+    const homeImageData = await HomeImage.find();
+    if (homeImageData) {
+      const ImageCount = homeImageData.length;
+      res.status(200).json({
+        homeImageData,
+        ImageCount,
+        sts: "Image data get Success",
+      });
+    } else {
+      next(errorHandler(401, "Blogs not found"));
     }
   } catch (error) {
     next(error);
   }
+};
 
-  }
-
-
-
-    // delete single image
+// delete single image
 export const deleteSingleImage = async (req, res, next) => {
-    try {
-      const { id } = req.params;
-      const adminId = req.admin._id;
-      const admin = await Admin.findById(adminId);
-  
-      if (admin) {
-        const deletedImage = await HomeImage.findByIdAndDelete(id);
-  
-        if (deletedImage) {
-          res.status(200).json({
-            deletedImage,
-            sts: "01",
-            msg: "Image deleted successfully",
-          });
-        } else {
-          next(errorHandler(404,"ImageData not found"));
-        }
+  try {
+    const { id } = req.params;
+    const adminId = req.admin._id;
+    const admin = await Admin.findById(adminId);
+
+    if (admin) {
+      const deletedImage = await HomeImage.findByIdAndDelete(id);
+
+      if (deletedImage) {
+        res.status(200).json({
+          deletedImage,
+          sts: "01",
+          msg: "Image deleted successfully",
+        });
       } else {
-        next(errorHandler(401, "Admin not found"));
+        next(errorHandler(404, "ImageData not found"));
       }
-    } catch (error) {
-      next(error);
+    } else {
+      next(errorHandler(401, "Admin not found"));
     }
-  };
-
-
-
-
+  } catch (error) {
+    next(error);
+  }
+};
 
 //upload Home videos
 
-
-export const uploadHomeVideos=async(req,res,next)=>{
-    try {
-      const adminId = req.admin._id;
-      const adminData = await Admin.findById(adminId)
-      if(!adminData){
-        return next(errorHandler(401, "Admin not exist"));
-      }
-      upload(req, res, async function (err) {
-        if (err) {
-          return next(errorHandler(401, "File upload error"));
-        }
-        
-        const {videoTitle,videoLink } = req.body;
-        if(!req.files.videoThambnail){
-          return next(errorHandler(401, " video not found"));
-        }
-  
-          const videoThambnail = req.files.videoThambnail[0].filename;
-  
-       
-          const newVideo = await homeVideo.create({
-            videoTitle,
-            videoLink,
-            videoThambnail
-          });
-          if(newVideo){
-            return res.status(201).json({
-              sts: "01",
-              msg: "video Added Successfully",
-            });
-          }
-          
-        });
-  
-    } catch (error) {
-      next(error)
+export const uploadHomeVideos = async (req, res, next) => {
+  try {
+    const adminId = req.admin._id;
+    const adminData = await Admin.findById(adminId);
+    if (!adminData) {
+      return next(errorHandler(401, "Admin not exist"));
     }
+    upload(req, res, async function (err) {
+      if (err) {
+        return next(errorHandler(401, "File upload error"));
+      }
+
+      const { videoTitle, videoLink } = req.body;
+      if (!req.files.videoThambnail) {
+        return next(errorHandler(401, " video not found"));
+      }
+
+      const videoThambnail = req.files.videoThambnail[0].filename;
+
+      const newVideo = await homeVideo.create({
+        videoTitle,
+        videoLink,
+        videoThambnail,
+      });
+      if (newVideo) {
+        return res.status(201).json({
+          sts: "01",
+          msg: "video Added Successfully",
+        });
+      }
+    });
+  } catch (error) {
+    next(error);
   }
-
-
-
+};
 
 // view all video data
 
-  export const viewHomeVideos=async(req,res,next)=>{
-    try {
-      const homeVideoData=await homeVideo.find()
-      if(homeVideoData){
-        const videoCount=homeVideoData.length;
-        res.status(200).json({
-            homeVideoData,
-            videoCount,
-          sts: "Video data get Success",
-        });
-      }else {
-      next(errorHandler(401,"Video not found"));
+export const viewHomeVideos = async (req, res, next) => {
+  try {
+    const homeVideoData = await homeVideo.find();
+    if (homeVideoData) {
+      const videoCount = homeVideoData.length;
+      res.status(200).json({
+        homeVideoData,
+        videoCount,
+        sts: "Video data get Success",
+      });
+    } else {
+      next(errorHandler(401, "Video not found"));
     }
   } catch (error) {
     next(error);
   }
+};
 
-  }
-
-
-  // edit video details
+// edit video details
 // Function to update existing home video
 export const updateHomeVideo = async (req, res, next) => {
-    try {
-      const adminId = req.admin._id;
-      const adminData = await Admin.findById(adminId);
-      if (!adminData) {
-        return next(errorHandler(401, "Admin not exist"));
-      }
-  
-      upload(req, res, async function (err) {
-        if (err) {
-          return next(errorHandler(401, "File upload error"));
-        }
-  
-        const {id} = req.params; // Extracting videoId from params
-        const { videoTitle, videoLink } = req.body;
-        const thambnailFile = req.files && req.files.thambnail && req.files.thambnail[0];
-        const videoData=await homeVideo.findById(id)
-        // If a thumbnail file is provided, update the video thumbnail
-        const videoThambnail = thambnailFile ? thambnailFile.filename : videoData.videoThambnail;
-
-        const updatedVideo = await homeVideo.findByIdAndUpdate(
-            id,
-          {
-            $set: {
-              videoTitle,
-              videoLink,
-              videoThambnail,
-            },
-          },
-          { new: true }
-        );
-  
-        if (updatedVideo) {
-          return res.status(200).json({
-            status: "success",
-            message: "Video updated successfully",
-            updatedVideo,
-          });
-        } else {
-          return next(errorHandler(404, "Video not found"));
-        }
-      });
-    } catch (error) {
-      next(error);
+  try {
+    const adminId = req.admin._id;
+    const adminData = await Admin.findById(adminId);
+    if (!adminData) {
+      return next(errorHandler(401, "Admin not exist"));
     }
-  };
-  
 
+    upload(req, res, async function (err) {
+      if (err) {
+        return next(errorHandler(401, "File upload error"));
+      }
 
-      // delete single Video
+      const { id } = req.params; // Extracting videoId from params
+      const { videoTitle, videoLink } = req.body;
+      const thambnailFile =
+        req.files && req.files.thambnail && req.files.thambnail[0];
+      const videoData = await homeVideo.findById(id);
+      // If a thumbnail file is provided, update the video thumbnail
+      const videoThambnail = thambnailFile
+        ? thambnailFile.filename
+        : videoData.videoThambnail;
+
+      const updatedVideo = await homeVideo.findByIdAndUpdate(
+        id,
+        {
+          $set: {
+            videoTitle,
+            videoLink,
+            videoThambnail,
+          },
+        },
+        { new: true }
+      );
+
+      if (updatedVideo) {
+        return res.status(200).json({
+          status: "success",
+          message: "Video updated successfully",
+          updatedVideo,
+        });
+      } else {
+        return next(errorHandler(404, "Video not found"));
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// delete single Video
 export const deleteSingleVideo = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -246,7 +223,7 @@ export const deleteSingleVideo = async (req, res, next) => {
           msg: "video deleted successfully",
         });
       } else {
-        next(errorHandler(404,"Video Data not found"));
+        next(errorHandler(404, "Video Data not found"));
       }
     } else {
       next(errorHandler(401, "Admin not found"));
@@ -258,74 +235,63 @@ export const deleteSingleVideo = async (req, res, next) => {
 
 //-------------------------------------Awards and rewards------------------------------------------------------------------
 
-
-
 //upload Award Details
 
-
-export const uploadAwardDetails=async(req,res,next)=>{
+export const uploadAwardDetails = async (req, res, next) => {
   try {
     const adminId = req.admin._id;
-    const adminData = await Admin.findById(adminId)
-    if(!adminData){
+    const adminData = await Admin.findById(adminId);
+    if (!adminData) {
       return next(errorHandler(401, "Admin not exist"));
     }
     upload(req, res, async function (err) {
       if (err) {
         return next(errorHandler(401, "File upload error"));
       }
-      
-      const {memberName,achivedDetails } = req.body;
-      if(!req.files.memberImage){
+
+      const { memberName, achivedDetails } = req.body;
+      if (!req.files.memberImage) {
         return next(errorHandler(401, " Image not found"));
       }
 
-        const memberImage = req.files.memberImage[0].filename;
+      const memberImage = req.files.memberImage[0].filename;
 
-     
-        const newAward = await Award.create({
-          memberName,
-          achivedDetails,
-          memberImage
-        });
-        if(newAward){
-          return res.status(201).json({
-            sts: "01",
-            msg: "Award and reward Added Successfully",
-          });
-        }
-        
+      const newAward = await Award.create({
+        memberName,
+        achivedDetails,
+        memberImage,
       });
-
+      if (newAward) {
+        return res.status(201).json({
+          sts: "01",
+          msg: "Award and reward Added Successfully",
+        });
+      }
+    });
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
-
-
-
+};
 
 // view all award data
 
-export const viewAwardDetails=async(req,res,next)=>{
+export const viewAwardDetails = async (req, res, next) => {
   try {
-    const awardData=await Award.find()
-    if(awardData){
-      const awardCount=awardData.length;
+    const awardData = await Award.find();
+    if (awardData) {
+      const awardCount = awardData.length;
       res.status(200).json({
         awardData,
         awardCount,
         sts: "Award data get Success",
       });
-    }else {
-    next(errorHandler(401,"Awards not found"));
+    } else {
+      next(errorHandler(401, "Awards not found"));
+    }
+  } catch (error) {
+    next(error);
   }
-} catch (error) {
-  next(error);
-}
-
-}
-
+};
 
 // edit video details
 // Function to update existing award data
@@ -342,15 +308,18 @@ export const updateAwardData = async (req, res, next) => {
         return next(errorHandler(401, "File upload error"));
       }
 
-      const {id} = req.params; // Extracting videoId from params
+      const { id } = req.params; // Extracting videoId from params
       const { memberName, achivedDetails } = req.body;
-      const imageFile = req.files && req.files.memberImage && req.files.memberImage[0];
-      const awardData=await Award.findById(id)
+      const imageFile =
+        req.files && req.files.memberImage && req.files.memberImage[0];
+      const awardData = await Award.findById(id);
       // If a thumbnail file is provided, update the video thumbnail
-      const memberImage = imageFile ? imageFile.filename : awardData.memberImage;
+      const memberImage = imageFile
+        ? imageFile.filename
+        : awardData.memberImage;
 
       const updatedAward = await Award.findByIdAndUpdate(
-          id,
+        id,
         {
           $set: {
             memberName,
@@ -376,168 +345,155 @@ export const updateAwardData = async (req, res, next) => {
   }
 };
 
-
-
-    // delete single Video
+// delete single Video
 export const deleteSingleAward = async (req, res, next) => {
-try {
-  const { id } = req.params;
-  const adminId = req.admin._id;
-  const admin = await Admin.findById(adminId);
+  try {
+    const { id } = req.params;
+    const adminId = req.admin._id;
+    const admin = await Admin.findById(adminId);
 
-  if (admin) {
-    const deletedAward = await Award.findByIdAndDelete(id);
+    if (admin) {
+      const deletedAward = await Award.findByIdAndDelete(id);
 
-    if (deletedAward) {
-      res.status(200).json({
-        deletedAward,
-        sts: "01",
-        msg: "Award deleted successfully",
-      });
+      if (deletedAward) {
+        res.status(200).json({
+          deletedAward,
+          sts: "01",
+          msg: "Award deleted successfully",
+        });
+      } else {
+        next(errorHandler(404, "Award Data not found"));
+      }
     } else {
-      next(errorHandler(404,"Award Data not found"));
+      next(errorHandler(401, "Admin not found"));
     }
-  } else {
-    next(errorHandler(401, "Admin not found"));
+  } catch (error) {
+    next(error);
   }
-} catch (error) {
-  next(error);
-}
 };
-
 
 //---------------------------------------------live news updates--------------------------------------------------------------
 
 // add Alert
 export const addNews = async (req, res, next) => {
   try {
-      
-      const {news,title } = req.body;
-        const adminId = req.admin._id;
-        const admin = await Admin.findById(adminId);
+    const { news, title } = req.body;
+    const adminId = req.admin._id;
+    const admin = await Admin.findById(adminId);
 
-      if (!admin) {
-        return next(errorHandler(401, "Admin not found"));
-      }
+    if (!admin) {
+      return next(errorHandler(401, "Admin not found"));
+    }
 
-      const newNews = await LiveNews.create({
-        news,
-        title
+    const newNews = await LiveNews.create({
+      news,
+      title,
+    });
+
+    if (newNews) {
+      return res.status(201).json({
+        newNews,
+        sts: "01",
+        msg: "News Added Successfully",
       });
-
-if(newNews){
-  return res.status(201).json({
-    newNews,
-    sts: "01",
-    msg: "News Added Successfully",
-  });
-}
-      
-    
+    }
   } catch (error) {
     next(error);
   }
 };
 
+//edit alert
 
-  //edit alert
+export const editNews = async (req, res, next) => {
+  try {
+    const adminId = req.admin._id;
+    const { id } = req.params;
+    const { news, title } = req.body;
 
-  export const editNews = async (req, res, next) => {
-    try {
-      const adminId = req.admin._id;
-      const { id } = req.params;
-      const { news,title} = req.body;
-
-      // Find the admin
-      const admin = await Admin.findById(adminId);
-      if (!admin) {
-        return next(errorHandler(401, "Admin not found"));
-      }
-
-      // Find the Alert data to edit
-      let newsData = await LiveNews.findById(id);
-      if (!newsData) {
-        return next(errorHandler(404, "Alert data not found"));
-      }
-
-      // Update the Alert data with the new values if they are provided
-      newsData.news = news || newsData.news;
-      newsData.title = title || newsData.title;
-
-      // Save the updated SEO data
-      const updatedNews = await newsData.save();
-
-      // Respond with the updated SEO data
-      if(updatedNews){
-        return res.status(200).json({
-          updatedNews,
-            sts: "01",
-            msg: "News data updated successfully",
-          });
-      }
-
-
-    } catch (error) {
-      next(error);
+    // Find the admin
+    const admin = await Admin.findById(adminId);
+    if (!admin) {
+      return next(errorHandler(401, "Admin not found"));
     }
-  };
 
-    // delete single Video
-    export const deleteSingleNews = async (req, res, next) => {
-      try {
-        const { id } = req.params;
-        const adminId = req.admin._id;
-        const admin = await Admin.findById(adminId);
-      
-        if (admin) {
-          const deletedNews = await LiveNews.findByIdAndDelete(id);
-      
-          if (deletedNews) {
-            res.status(200).json({
-              deletedNews,
-              sts: "01",
-              msg: "News deleted successfully",
-            });
-          } else {
-            next(errorHandler(404,"News Data not found"));
-          }
-        } else {
-          next(errorHandler(401, "Admin not found"));
-        }
-      } catch (error) {
-        next(error);
+    // Find the Alert data to edit
+    let newsData = await LiveNews.findById(id);
+    if (!newsData) {
+      return next(errorHandler(404, "Alert data not found"));
+    }
+
+    // Update the Alert data with the new values if they are provided
+    newsData.news = news || newsData.news;
+    newsData.title = title || newsData.title;
+
+    // Save the updated SEO data
+    const updatedNews = await newsData.save();
+
+    // Respond with the updated SEO data
+    if (updatedNews) {
+      return res.status(200).json({
+        updatedNews,
+        sts: "01",
+        msg: "News data updated successfully",
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+// delete single Video
+export const deleteSingleNews = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const adminId = req.admin._id;
+    const admin = await Admin.findById(adminId);
+
+    if (admin) {
+      const deletedNews = await LiveNews.findByIdAndDelete(id);
+
+      if (deletedNews) {
+        res.status(200).json({
+          deletedNews,
+          sts: "01",
+          msg: "News deleted successfully",
+        });
+      } else {
+        next(errorHandler(404, "News Data not found"));
       }
-      };
-      
+    } else {
+      next(errorHandler(401, "Admin not found"));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 //view alert data
 
-  export const viewNews=async(req,res,next)=>{
-    try {
-      const newsData=await LiveNews.find()
-      if(newsData){
-        res.status(200).json({
-          newsData,
-          sts: "01",
-          msg: "news data get Success",
-        });
-      }else {
+export const viewNews = async (req, res, next) => {
+  try {
+    const newsData = await LiveNews.find();
+    if (newsData) {
+      res.status(200).json({
+        newsData,
+        sts: "01",
+        msg: "news data get Success",
+      });
+    } else {
       next(errorHandler("news not found"));
     }
   } catch (error) {
     next(error);
   }
-
-  }
-
-
-
+};
 
 //--------------------------------------------------Alert---------------------------------------------------------------------
 
 // // add Alert
 // export const addAlert = async (req, res, next) => {
 //   try {
-      
+
 //       const { title, description } = req.body;
 //         const adminId = req.admin._id;
 //         const admin = await Admin.findById(adminId);
@@ -558,8 +514,7 @@ if(newNews){
 //     msg: "Alert Added Successfully",
 //   });
 // }
-      
-    
+
 //   } catch (error) {
 //     next(error);
 //   }
@@ -568,7 +523,6 @@ if(newNews){
 export const addAlert = async (req, res, next) => {
   try {
     const { title, description } = req.body;
-    console.log("signals",title, description);
     const adminId = req.admin._id;
     let users;
     // Find the admin
@@ -576,22 +530,22 @@ export const addAlert = async (req, res, next) => {
     if (!admin) {
       return next(errorHandler(401, "Admin not found"));
     }
-    
+
     const newAlert = await Alert.create({
       title,
-      description
-    })
+      description,
+    });
 
-    if (newAlert){
+    if (newAlert) {
       switch (newAlert.title) {
         case "nifty":
-          users=await User.find({nifty:true})
+          users = await User.find({ nifty: true });
           break;
         case "bankNifty":
-          users=await User.find({bankNifty:true})
+          users = await User.find({ bankNifty: true });
           break;
         case "crudeOil":
-          users=await User.find({crudeOil:true})
+          users = await User.find({ crudeOil: true });
           break;
         default:
           return res.status(400).json({
@@ -599,21 +553,18 @@ export const addAlert = async (req, res, next) => {
             msg: "Invalid signal type",
           });
       }
-     
     }
 
-    for(const user of users){
-      console.log(user.userStatus);
-      if(user.userStatus==="approved"){
-console.log("approved",user.name);
-        user.signals.push(newAlert._id)
+    for (const user of users) {
+      if (user.userStatus === "approved") {
+        user.signals.push(newAlert._id);
         try {
           await user.save();
-      } catch (error) {
+        } catch (error) {
           console.error("Error saving user data:", error);
+        }
       }
-      }
-    }    
+    }
 
     return res.status(201).json({
       newAlert,
@@ -622,122 +573,113 @@ console.log("approved",user.name);
     });
   } catch (err) {
     // Handle errors
-    console.error("Error adding alert:", err);
     return next(err);
   }
 };
 
+//edit alert
 
+export const editAlert = async (req, res, next) => {
+  try {
+    const adminId = req.admin._id;
+    const { id } = req.params;
+    const { description } = req.body;
 
-
-  //edit alert
-
-  export const editAlert = async (req, res, next) => {
-    try {
-      const adminId = req.admin._id;
-      const { id } = req.params;
-      const { description} = req.body;
-
-      // Find the admin
-      const admin = await Admin.findById(adminId);
-      if (!admin) {
-        return next(errorHandler(401, "Admin not found"));
-      }
-
-      // Find the Alert data to edit
-      let alertData = await Alert.findById(id);
-      if (!alertData) {
-        return next(errorHandler(404, "Alert data not found"));
-      }
-
-      // Update the Alert data with the new values if they are provided
-      alertData.description = description || alertData.description;
-
-      // Save the updated SEO data
-      const updatedAlert = await alertData.save();
-
-      // Respond with the updated SEO data
-      if(updatedAlert){
-        return res.status(200).json({
-          updatedAlert,
-            sts: "01",
-            msg: "Alert data updated successfully",
-          });
-      }
-
-
-    } catch (error) {
-      next(error);
+    // Find the admin
+    const admin = await Admin.findById(adminId);
+    if (!admin) {
+      return next(errorHandler(401, "Admin not found"));
     }
-  };
 
-    // delete single Video
-    export const deleteSingleAlert = async (req, res, next) => {
-      try {
-        const { id } = req.params;
-        const adminId = req.admin._id;
-        const admin = await Admin.findById(adminId);
-      
-        if (admin) {
-          const deletedAlert = await Alert.findByIdAndDelete(id);
-      
-          if (deletedAlert) {
-            res.status(200).json({
-              deletedAlert,
-              sts: "01",
-              msg: "Alert deleted successfully",
-            });
-          } else {
-            next(errorHandler(404,"Alert Data not found"));
-          }
-        } else {
-          next(errorHandler(401, "Admin not found"));
-        }
-      } catch (error) {
-        next(error);
+    // Find the Alert data to edit
+    let alertData = await Alert.findById(id);
+    if (!alertData) {
+      return next(errorHandler(404, "Alert data not found"));
+    }
+
+    // Update the Alert data with the new values if they are provided
+    alertData.description = description || alertData.description;
+
+    // Save the updated SEO data
+    const updatedAlert = await alertData.save();
+
+    // Respond with the updated SEO data
+    if (updatedAlert) {
+      return res.status(200).json({
+        updatedAlert,
+        sts: "01",
+        msg: "Alert data updated successfully",
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+// delete single Video
+export const deleteSingleAlert = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const adminId = req.admin._id;
+    const admin = await Admin.findById(adminId);
+
+    if (admin) {
+      const deletedAlert = await Alert.findByIdAndDelete(id);
+
+      if (deletedAlert) {
+        res.status(200).json({
+          deletedAlert,
+          sts: "01",
+          msg: "Alert deleted successfully",
+        });
+      } else {
+        next(errorHandler(404, "Alert Data not found"));
       }
-      };
-      
+    } else {
+      next(errorHandler(401, "Admin not found"));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 //view alert data
 
-  export const viewAlert=async(req,res,next)=>{
-    try {
+export const viewAlert = async (req, res, next) => {
+  try {
     let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
-    const pageSize = parseInt(req.query.pageSize) || 10; 
-      const alertData=await Alert.find().sort({createdAt: 1})
+    const pageSize = parseInt(req.query.pageSize) || 10;
+    const alertData = await Alert.find().sort({ createdAt: 1 });
     const paginatedSignals = await paginate(alertData, page, pageSize);
     res.status(200).json({
-        signals: paginatedSignals.results,
-        pagination: {
-            page: paginatedSignals.page,
-            pageSize: paginatedSignals.pageSize,
-            totalPages: paginatedSignals.totalPages,
-            totalDocs: paginatedSignals.totalDocs
-        },
-        sts: "01",
-        msg: "Get admin signals Success",
+      signals: paginatedSignals.results,
+      pagination: {
+        page: paginatedSignals.page,
+        pageSize: paginatedSignals.pageSize,
+        totalPages: paginatedSignals.totalPages,
+        totalDocs: paginatedSignals.totalDocs,
+      },
+      sts: "01",
+      msg: "Get admin signals Success",
     });
   } catch (error) {
     next(error);
   }
-
-  }
-
-
+};
 
 // Function to fetch alerts based on user preferences
 export const getAlertsForUser = async (req, res, next) => {
   try {
-  const userId = req.user._id;
+    const userId = req.user._id;
     let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
-    const pageSize = parseInt(req.query.pageSize) || 10; 
+    const pageSize = parseInt(req.query.pageSize) || 10;
     const userData = await User.findById(userId).populate({
       path: "signals",
       options: {
-        sort: { createdAt: 1 } // Sort by createdAt in descending order
-      }
+        sort: { createdAt: 1 }, // Sort by createdAt in descending order
+      },
     });
-    
+
     if (!userData) {
       return res.status(404).json({ msg: "User not found" });
     }
@@ -746,147 +688,161 @@ export const getAlertsForUser = async (req, res, next) => {
     const signals = userData.signals;
     const paginatedSignals = await paginate(signals, page, pageSize);
     res.status(200).json({
-        signals: paginatedSignals.results,
-        userStatus,
-        pagination: {
-            page: paginatedSignals.page,
-            pageSize: paginatedSignals.pageSize,
-            totalPages: paginatedSignals.totalPages,
-            totalDocs: paginatedSignals.totalDocs
-        },
-        sts: "01",
-        msg: "Get users signals Success",
+      signals: paginatedSignals.results,
+      userStatus,
+      pagination: {
+        page: paginatedSignals.page,
+        pageSize: paginatedSignals.pageSize,
+        totalPages: paginatedSignals.totalPages,
+        totalDocs: paginatedSignals.totalDocs,
+      },
+      sts: "01",
+      msg: "Get users signals Success",
     });
-
   } catch (err) {
     console.error("Error fetching alerts for user:", err);
     return next(err);
   }
 };
 
+//----------------------------Add Bank account-------------------------
 
+export const addUserBankAccount = async (req, res, next) => {
+  try {
+    const id = req.query.id || req.user._id;
+    const { holderName, accountNum, ifscCode, bankName } = req.body;
 
-
-
-  //----------------------------Add Bank account-------------------------
-
-
-   export const addUserBankAccount = async (req, res, next) => {
-    try {
-      const id = req.query.id||req.user._id;
-      const {holderName,accountNum,ifscCode,bankName} = req.body;
-
-      const userData = await User.findById(id);
-      if (!userData) {
-        return next(errorHandler(401, "User not found"));
-      }
-        userData.bankDetails.bankName = bankName|| userData.bankDetails.bankName;
-        userData.bankDetails.holderName = holderName|| userData.bankDetails.holderName;
-        userData.bankDetails.accountNum = accountNum|| userData.bankDetails.accountNum;
-        userData.bankDetails.ifscCode = ifscCode|| userData.bankDetails.ifscCode;
-      
-
-      const updatedUser = await userData.save();
-
-      if(updatedUser){
-        return res.status(200).json({
-          updatedUser,
-            sts: "01",
-            msg: "Bank data updated successfully",
-          });
-      }
-
-
-    } catch (error) {
-      next(error);
+    const userData = await User.findById(id);
+    if (!userData) {
+      return next(errorHandler(401, "User not found"));
     }
-  };
+    userData.bankDetails.bankName = bankName || userData.bankDetails.bankName;
+    userData.bankDetails.holderName =
+      holderName || userData.bankDetails.holderName;
+    userData.bankDetails.accountNum =
+      accountNum || userData.bankDetails.accountNum;
+    userData.bankDetails.ifscCode = ifscCode || userData.bankDetails.ifscCode;
 
+    const updatedUser = await userData.save();
 
-
-
-   //----------------------------Add and Edit Nominee details-------------------------
-
-
-   export const addNomineeDetails = async (req, res, next) => {
-    try {
-      const id = req.query.id||req.user._id;
-      // const {id}=req.query||userId
-      const {name,phone,address,bankName,accountNum,ifscCode,aadhaarNum,pancardNum} = req.body;
-console.log(accountNum);
-      const userData = await User.findById(id);
-      if (!userData) {
-        return next(errorHandler(401, "User not found"));
-      }
-        userData.nomineeDetails.bankName = bankName|| userData.nomineeDetails.bankName;
-        userData.nomineeDetails.name = name|| userData.nomineeDetails.name;
-        userData.nomineeDetails.accountNum = accountNum|| userData.nomineeDetails.accountNum;
-        userData.nomineeDetails.ifscCode = ifscCode|| userData.nomineeDetails.ifscCode;
-        userData.nomineeDetails.phone = phone|| userData.nomineeDetails.phone;
-        userData.nomineeDetails.address = address|| userData.nomineeDetails.address;
-        userData.nomineeDetails.aadhaarNum = aadhaarNum|| userData.nomineeDetails.aadhaarNum;
-        userData.nomineeDetails.pancardNum = pancardNum|| userData.nomineeDetails.pancardNum;
-      
-
-      const updatedUser = await userData.save();
-
-      if(updatedUser){
-        return res.status(200).json({
-          updatedUser,
-            sts: "01",
-            msg: "nominee data updated successfully",
-          });
-      }
-
-
-    } catch (error) {
-      next(error);
+    if (updatedUser) {
+      return res.status(200).json({
+        updatedUser,
+        sts: "01",
+        msg: "Bank data updated successfully",
+      });
     }
-  };
+  } catch (error) {
+    next(error);
+  }
+};
 
+//----------------------------Add and Edit Nominee details-------------------------
+
+export const addNomineeDetails = async (req, res, next) => {
+  try {
+    const id = req.query.id || req.user._id;
+    // const {id}=req.query||userId
+    const {
+      name,
+      phone,
+      address,
+      bankName,
+      accountNum,
+      ifscCode,
+      aadhaarNum,
+      pancardNum,
+    } = req.body;
+    const userData = await User.findById(id);
+    if (!userData) {
+      return next(errorHandler(401, "User not found"));
+    }
+    userData.nomineeDetails.bankName =
+      bankName || userData.nomineeDetails.bankName;
+    userData.nomineeDetails.name = name || userData.nomineeDetails.name;
+    userData.nomineeDetails.accountNum =
+      accountNum || userData.nomineeDetails.accountNum;
+    userData.nomineeDetails.ifscCode =
+      ifscCode || userData.nomineeDetails.ifscCode;
+    userData.nomineeDetails.phone = phone || userData.nomineeDetails.phone;
+    userData.nomineeDetails.address =
+      address || userData.nomineeDetails.address;
+    userData.nomineeDetails.aadhaarNum =
+      aadhaarNum || userData.nomineeDetails.aadhaarNum;
+    userData.nomineeDetails.pancardNum =
+      pancardNum || userData.nomineeDetails.pancardNum;
+
+    const updatedUser = await userData.save();
+
+    if (updatedUser) {
+      return res.status(200).json({
+        updatedUser,
+        sts: "01",
+        msg: "nominee data updated successfully",
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
 
 //---------------------------------------------add and edit demate account-----------------------------------------
 
-
 export const addDemateAccount = async (req, res, next) => {
   try {
-    const id =req.query.id||req.user._id;
-    const {name,phone,address,email,demateUserName} = req.body;
+    const id = req.query.id || req.user._id;
+    const {
+      name,
+      phone,
+      address,
+      email,
+      demateUserName,
+      state,
+      district,
+      zonal,
+      panchayath,
+    } = req.body;
 
     const userData = await User.findById(id);
     let demateUser = await Demate.findById(id);
 
     if (demateUser) {
       // If the demate account exists, update its details
-      demateUser.name = name||demateUser.name;
-      demateUser.phone = phone|| demateUser.phone ;
-      demateUser.address = address|| demateUser.address;
-      demateUser.email = email||demateUser.email;
-      demateUser.demateUserName = demateUserName||demateUser.demateUserName;
+      demateUser.name = name || demateUser.name;
+      demateUser.phone = phone || demateUser.phone;
+      demateUser.address = address || demateUser.address;
+      demateUser.email = email || demateUser.email;
+      demateUser.state = state || demateUser.state;
+      demateUser.district = district || demateUser.district;
+      demateUser.zonal = zonal || demateUser.zonal;
+      demateUser.panchayath = panchayath || demateUser.panchayath;
+      demateUser.demateUserName = demateUserName || demateUser.demateUserName;
       demateUser = await demateUser.save();
     } else {
       // If the demate account doesn't exist, create a new one
       demateUser = await Demate.create({
-        sponserName:userData.name,
+        sponserName: userData.name,
         sponser: id,
         name,
         phone,
         address,
         email,
+        state,
+        district,
+        zonal,
+        panchayath,
         demateUserName,
         status: "pending",
       });
     }
 
-    if(demateUser){
+    if (demateUser) {
       return res.status(200).json({
         demateUser,
-          sts: "01",
-          msg: "demate accoun data updated successfully",
-        });
+        sts: "01",
+        msg: "demate accoun data updated successfully",
+      });
     }
-
-
   } catch (error) {
     next(error);
   }
@@ -897,13 +853,13 @@ export const addDemateAccount = async (req, res, next) => {
 export const uploadPdf = async (req, res, next) => {
   try {
     // const adminId = req.admin._id;
-    const {id}=req.params
+    const { id } = req.params;
     const adminData = await Admin.find();
 
     if (!adminData) {
       return next(errorHandler(401, "Admin not exist"));
     }
-    const userData=await User.findById(id);
+    const userData = await User.findById(id);
     if (!userData) {
       return next(errorHandler(401, "User not exist"));
     }
@@ -918,22 +874,26 @@ export const uploadPdf = async (req, res, next) => {
       }
 
       const pdfFileName = req.files.pdfFile[0].filename;
-      console.log(pdfFileName);
-      userData.invoicePdf=pdfFileName
+      userData.invoicePdf = pdfFileName;
 
-      const newPdf=userData.save();
-      console.log((await newPdf).invoicePdf);
+      const newPdf = userData.save();
       // Send email with PDF attachment
       if (newPdf) {
         const recipientEmail = userData.email; // Use the recipient's email address
         const pdfFilePath = `http://localhost:6003/uploads/${pdfFileName}`; // Adjust path to PDF
 
-        const emailSent = await sendMailWithAttachment(userData,recipientEmail, pdfFilePath);
-        
+        const emailSent = await sendMailWithAttachment(
+          userData,
+          recipientEmail,
+          pdfFilePath
+        );
+
         return res.status(201).json({
           sts: "01",
           msg: "PDF Added Successfully",
-          emailSent: emailSent ? "Email Sent Successfully" : "Email Sending Failed",
+          emailSent: emailSent
+            ? "Email Sent Successfully"
+            : "Email Sending Failed",
         });
       }
     });
@@ -941,4 +901,3 @@ export const uploadPdf = async (req, res, next) => {
     next(error);
   }
 };
-

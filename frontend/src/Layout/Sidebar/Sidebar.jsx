@@ -36,6 +36,10 @@ function Sidebar() {
           title: "Pending Users",
           route: "user/pending",
         },
+        {
+          title: "Pending Renewals",
+          route: "user/pending-renewals",
+        },
       ],
     },
     

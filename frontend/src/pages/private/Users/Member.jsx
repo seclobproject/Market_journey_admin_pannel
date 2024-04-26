@@ -27,9 +27,6 @@ import moment from "moment";
 function Member() { 
   const [selectKey, setSelectKey] = useState(0); 
   const [secondselectKey, setSecondSelectKey] = useState(0); 
-console.log(selectKey,"setSelectKey");
-console.log(secondselectKey,"secondselectKey");
-
   const [memberModal, setMemberModal] = useState({ show: false, id: null });
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
@@ -51,6 +48,7 @@ console.log(secondselectKey,"secondselectKey");
   const [selectedZonalId, setSelectedZonalId] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
   const [allUser, setAllUser] = useState([]);
+
   const [isLoading, setIsLoading] = useState(false);
   const [params, setParams] = useState({
     page: 1,
@@ -472,11 +470,12 @@ console.log(secondselectKey,"secondselectKey");
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Type</h6>
                       </th>
-                      {/* <th>
+                      <th>
                         <h6 className="fs-4 fw-semibold mb-0">
-                          Franchise Name
+                        Renewal Status
+
                         </h6>
-                      </th> */}
+                      </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Status</h6>
                       </th>
@@ -516,6 +515,18 @@ console.log(secondselectKey,"secondselectKey");
 
                             <td>₹ {users?.packageAmount}</td>
                             <td>{users?.franchise || "--"}</td>
+                            <td>
+  {users?.renewalStatus ? (
+    <span className="badge bg-success rounded-3 fw-semibold">
+      Active Plan
+    </span>
+  ) : (
+    <span className="badge bg-danger rounded-3 fw-semibold">
+      Non active Plan
+    </span>
+  )}
+</td>
+
                             <td>
                               {users?.userStatus === "readyToApprove" ? (
                                 <span className="badge bg-danger rounded-3 fw-semibold">

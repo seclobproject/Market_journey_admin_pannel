@@ -1,8 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SlideMotion } from "../../libs/FramerMotion";
-import QRCode from "react-qr-code";
 import { RiseOutlined } from '@ant-design/icons';
+import { ApiCall } from "../../Services/Api";
+import { dashboardUrl } from "../../utils/Constants";
+
 function Home() {
+  const [dashboardData,setDashboard]=useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const getdashBoardData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await ApiCall("get", dashboardUrl);
+      if (response.status === 200) {
+        setDashboard(response?.data);
+
+        setIsLoading(false);
+      } else {
+        console.error(
+          "Error fetching pending renewals list. Unexpected status:",
+          response.status
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching state list:", error);
+    }
+  };
+
+useEffect(()=>{
+getdashBoardData();
+},[]);
   return (
     <>
     <SlideMotion>
@@ -13,13 +40,13 @@ function Home() {
   <div className="col-md-6 col-lg-3 mb-4">
       <div className="card" style={{ background: "#0F1535" }}>
         <div className="row align-items-center p-4">
-          <div className="col-8">
+          <div className="">
             <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
-              Total package
+              Total Wallet 
             </h5>
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h4 className="fw-semibold mb-0" style={{ color: "rgb(247, 174, 21)" }}>
-                36,358
+              <span style={{ color: 'green' }}>₹ </span>{dashboardData?.totalWalletAmount}
               </h4>
               <RiseOutlined style={{ color: "#89BE1D", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
             </div>
@@ -32,11 +59,28 @@ function Home() {
         <div className="row align-items-center p-4">
           <div className="col-8">
             <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
-              Total package
+              Total Withdraw 
             </h5>
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h4 className="fw-semibold mb-0" style={{ color: "rgb(247, 174, 21)" }}>
-                36,358
+              <span style={{ color: 'green' }}>₹ </span>{dashboardData?.totalWithdrawAmount}
+              </h4>
+              <RiseOutlined style={{ color: "#89BE1D", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <div className="col-md-6 col-lg-3 mb-4">
+      <div className="card" style={{ background: "#0F1535" }}>
+        <div className="row align-items-center p-4">
+          <div className="col-8">
+            <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
+              Total Credited 
+            </h5>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h4 className="fw-semibold mb-0" style={{ color: "rgb(247, 174, 21)" }}>
+              <span style={{ color: 'green' }}>₹ </span>{dashboardData?.totalPaidForCompany}
               </h4>
               <RiseOutlined style={{ color: "#89BE1D", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
             </div>
@@ -49,11 +93,31 @@ function Home() {
         <div className="row align-items-center p-4">
           <div className="col-8">
             <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
-              Total package
+              Total Users
             </h5>
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h4 className="fw-semibold mb-0" style={{ color: "rgb(247, 174, 21)" }}>
-                36,358
+              {dashboardData?.totalUsersCount}
+              </h4>
+              <RiseOutlined style={{ color: "#89BE1D", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+   
+  </div>
+  <div class="row">
+  <div className="col-md-6 col-lg-3 mb-4">
+      <div className="card" style={{ background: "#0F1535" }}>
+        <div className="row align-items-center p-4">
+          <div className="col-8">
+            <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
+              Total Waiting Users
+            </h5>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h4 className="fw-semibold mb-0" style={{ color: "rgb(247, 174, 21)" }}>
+              {dashboardData?.readyToApproveCount}
               </h4>
               <RiseOutlined style={{ color: "#89BE1D", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
             </div>
@@ -66,11 +130,11 @@ function Home() {
         <div className="row align-items-center p-4">
           <div className="col-8">
             <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
-              Total package
+              Total Packages
             </h5>
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h4 className="fw-semibold mb-0" style={{ color: "rgb(247, 174, 21)" }}>
-                36,358
+              {dashboardData?.totalPackages}
               </h4>
               <RiseOutlined style={{ color: "#89BE1D", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
             </div>
@@ -78,6 +142,80 @@ function Home() {
         </div>
       </div>
     </div>
+  <div className="col-md-6 col-lg-3 mb-4">
+      <div className="card" style={{ background: "#0F1535" }}>
+        <div className="row align-items-center p-4">
+          <div className="col-8">
+            <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
+              Total approved users
+            </h5>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h4 className="fw-semibold mb-0" style={{ color: "rgb(247, 174, 21)" }}>
+               {dashboardData?.approvedUsersCount
+}
+              </h4>
+              <RiseOutlined style={{ color: "#89BE1D", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className="col-md-6 col-lg-3 mb-4">
+      <div className="card" style={{ background: "#0F1535" }}>
+        <div className="row align-items-center p-4">
+          <div className="col-8">
+            <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
+              Total pending users
+            </h5>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h4 className="fw-semibold mb-0" style={{ color: "rgb(247, 174, 21)" }}>
+              {dashboardData?.pendingUsersCount}
+              </h4>
+              <RiseOutlined style={{ color: "#89BE1D", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+   
+  </div>
+  <div class="row">
+  <div className="col-md-6 col-lg-3 mb-4">
+      <div className="card" style={{ background: "#0F1535" }}>
+        <div className="row align-items-center p-4">
+          <div className="col-8">
+            <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
+              Latest Pool Share
+            </h5>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h4 className="fw-semibold mb-0" style={{ color: "rgb(247, 174, 21)" }}>
+              {dashboardData?.latestPoolShare}
+              </h4>
+              <RiseOutlined style={{ color: "#89BE1D", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className="col-md-6 col-lg-3 mb-4">
+      <div className="card" style={{ background: "#0F1535" }}>
+        <div className="row align-items-center p-4">
+          <div className="col-8">
+            <h5 className="card-title mb-9 fw-semibold" style={{ color: "white" }}>
+               Total Pool Share
+            </h5>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h4 className="fw-semibold mb-0" style={{ color: "rgb(247, 174, 21)" }}>
+              {dashboardData?.totalPoolShare}
+              </h4>
+              <RiseOutlined style={{ color: "#89BE1D", fontSize: "25px",alignItems:"flex-end",width:'50%',height:"100pxS" }} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+   
   </div>
 
 

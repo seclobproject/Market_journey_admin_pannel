@@ -25,7 +25,6 @@ function Viewdetails() {
   const [password, setPassword] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [details, setDetails] = useState({});
-  console.log(details,"pp");
   const [showPassword, setShowPassword] = useState(false);
   const [editUser, setEditUser] = useState({});
   const [editBankDetails, setEditBankDetails] = useState({});
@@ -457,60 +456,7 @@ function Viewdetails() {
                                 </h5>
                               </div>
                               <div className="d-flex justify-content-end flex-wrap mt-3">
-                                {/* {details.name==="PROMOTER1"||details.name==="PROMOTER2"||!details.name==="PROMOTER3"&&(
-                                  <>
-                                    <Button
-                                    disabled
-                                      className="btn btn-custom"
-                                      onClick={() => {
-                                        setBonusModal({
-                                          show: true,
-                                          id: details?.id,
-                                        });
-                                        setValidated(false);
-                                      }}
-                                    >
-                                      <i className="fas fa-plus"></i>
-                                      Add Bonus
-                                    </Button>
-                                  </>
-                                )} */}
-                                {/* {details.packageType === "Franchise" &&(
-                                  <>
-                                       <Button
-      className="btn btn-custom"
-      onClick={() => {
-        setBonusModal({
-          show: true,
-          id: details?.id,
-        });
-        setValidated(false);
-      }}
-    >
-      <i className="fas fa-plus"></i>
-      Add Bonus
-    </Button>
-                                  </>
-                                )} */}
-{/* {details.packageType === "Franchise" && 
-(
-    <>
-      <Button
-        className="btn btn-custom"
-        onClick={() => {
-          setBonusModal({
-            show: true,
-            id: details?.id,
-          });
-          setValidated(false);
-        }}
-      >
-        <i className="fas fa-plus"></i>
-        Add Bonus
-      </Button>
-    </>
-  )
-} */}
+
 {details.packageType === "Franchise" && 
   !(details.name === "PROMOTER1" || details.name === "PROMOTER2" || details.name === "PROMOTER3") && (
     <>
@@ -580,6 +526,19 @@ function Viewdetails() {
                                     </span>
                                   )}
                                 </div>
+                                <div className="col-3">
+                  
+  {details?.renewalStatus ? (
+    <span className="badge bg-success rounded-3 fw-semibold">
+      Active Plan
+    </span>
+  ) : (
+    <span className="badge bg-danger rounded-3 fw-semibold">
+      Non active Plan
+    </span>
+  )}
+
+</div>
                               </div>
 
                               <div className="mt-2">

@@ -3,7 +3,6 @@ import Barcode from "react-barcode";
 import "./Templatestyle.css";
 
 function PdfTemplates({ invoiceData }) {
-  console.log(invoiceData?.ownSponserId);
   const calculateGSTAmount = (amount) => {
     const gstRate = 18;
     const gstAmount = (amount * gstRate) / 100;
@@ -35,8 +34,8 @@ function PdfTemplates({ invoiceData }) {
               className="me-3"
             />
           </div>
-          <p><b>(+91) 1234567890</b></p>
-          <p><b>sample@gmail.com</b></p>
+          <p><b>(+91) 8089530707</b></p>
+          <p><b>marketjourney.super@gmail.com</b></p>
         </div>
       </div>
       <div className="row">

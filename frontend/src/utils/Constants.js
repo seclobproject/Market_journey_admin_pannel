@@ -87,3 +87,12 @@ export const viewBonnusURL="/api/admin/view-bonus-paid-report"
 export const attachMailUrl="/api/admin/upload-pdf"
 //report
 export const reportuserUrl="/api/admin/view-filtered-users"
+//pendding renewal
+export const pendingrenewalUrl="/api/admin/view-pending-renewals"
+//approve pending renewals
+export const approvedRenewalUrl="/api/admin/approve-renewal"
+export const rejectedRenewalUrl="/api/admin/reject-renewal"
+//dashboard
+export const dashboardUrl="/api/admin/view-dashboard-data"
+//filter demate
+export const filterdemateUrl="/api/admin/view-filtered-demates"

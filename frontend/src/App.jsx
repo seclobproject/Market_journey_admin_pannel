@@ -32,6 +32,7 @@ import Automembers from "./pages/private/Autopool/Automembers";
 import Invoice from "./pages/private/Users/Invoice";
 import Certificate from "./pages/private/Users/Certificate";
 import Report from "./pages/private/Reportpages/Report";
+import Pendingrenewal from "./pages/private/Users/Pendingrenewal";
 
 
 function App() {
@@ -69,6 +70,7 @@ function App() {
           <Route path="/invoice" element={<Invoice />}/>
           <Route path="/certificate" element={<Certificate />}/>
           <Route path="/reports" element={<Report />}/>
+          <Route path="/user/pending-renewals" element={<Pendingrenewal />}/>
 
 
 

@@ -24,6 +24,8 @@ const panchayathSchema = new mongoose.Schema(
       default:true
     },
     users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    demates: [{ type: mongoose.Schema.Types.ObjectId, ref: "Demate" }],
+
   },
   {
     timestamps: true,

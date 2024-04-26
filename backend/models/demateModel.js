@@ -33,6 +33,15 @@ const demateSchema = new mongoose.Schema({
   },
   district:{
     type:String
+  },
+  state:{
+    type:String
+  },
+  zonal:{
+    type:String
+  },
+  panchayath:{
+    type:String
   }
   
   

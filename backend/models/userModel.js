@@ -148,10 +148,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    aadhaar: {
-      type: String,
-      default: null,
-    },
     aadhaar2: {
       type: String,
       default: null,
@@ -164,15 +160,15 @@ const userSchema = new mongoose.Schema(
     },
     nifty:{
       type: Boolean,
-      default: true,
+      default: false,
     },
     bankNifty:{
       type: Boolean,
-      default: true,
+      default: false,
     },
     crudeOil:{
       type: Boolean,
-      default: true,
+      default: false,
     },
     walletWithdrawHistory: [withdrawSchema],
     directReferalIncome: {
@@ -242,6 +238,10 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    paidForCompany: {
+      type: Number,
+      default: 0,
+    },
     tempPackageAmount: {
       type: Number,
       default: 0,
@@ -276,8 +276,16 @@ const userSchema = new mongoose.Schema(
         default: false,
     },   
     renewalStatus:{
-      type: Boolean,
-        default: false,
+      type: Boolean
+    },
+    subscriptionStatus:{
+      type: String,
+    },
+    pendingPackage:{
+      type: String,
+    },
+    action:{
+      type: String,
     },
     renewalDate:{
       type: Date

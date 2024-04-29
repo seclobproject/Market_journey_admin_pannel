@@ -1369,6 +1369,7 @@ export const viewUserDetails = async (req, res, next) => {
         userStatus: userData.userStatus,
         ownSponserId: userData.ownSponserId,
         franchise: userData.franchise,
+        packageType: userData.packageType,
         franchiseName: userData.franchiseName,
         sponserName: userData.sponserName,
         name: userData.name,
@@ -1891,6 +1892,18 @@ export const acceptRenewalRequest = async (req, res, next) => {
           renewalStatus,
           tempPackageAmount,
         } = userData;
+
+        userData.subscriptionHistory.push({
+          reportName: "subscriptionHistory",
+          name:userData.name,
+          pendingPackage: pendingPackage,
+          action: action,
+          amount: tempPackageAmount,
+          status: "Approved",
+        });
+
+
+
         if (action === "addOn") {
           switch (pendingPackage) {
             case "Nifty":
@@ -1923,6 +1936,9 @@ export const acceptRenewalRequest = async (req, res, next) => {
             userData.isMobileFranchise = true;
             userData.isSignalFranchise = false;
             userData.isCourseFranchise = false;
+            userData.nifty=false;
+            userData.bankNifty=false;
+            userData.crudeOil=false;
           }
           if (packageData.franchiseName == "Signals") {
             userData.isMobileFranchise = false;
@@ -1972,8 +1988,10 @@ export const acceptRenewalRequest = async (req, res, next) => {
             userData.isMobileFranchise = false;
             userData.isSignalFranchise = false;
             userData.isCourseFranchise = true;
+            userData.nifty=false;
+            userData.bankNifty=false;
+            userData.crudeOil=false;
           }
-          userData.nifty = true;
           userData.renewalStatus = true;
           userData.renewalDate = new Date();
           userData.subscriptionStatus = "";
@@ -2102,6 +2120,15 @@ export const rejectRenewalRequest = async (req, res, next) => {
         userData.pendingPackage = "";
         userData.action = "";
         userData.tempPackageAmount = "";
+        userData.subscriptionHistory.push({
+          reportName: "subscriptionHistory",
+          name:userData.name,
+          pendingPackage: userData.pendingPackage,
+          action: userData.action,
+          amount: userData.tempPackageAmount,
+          status: "Rejected",
+        });
+
         const updatedUser = await userData.save();
 
         if (updatedUser) {

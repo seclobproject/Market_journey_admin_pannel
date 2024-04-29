@@ -78,6 +78,7 @@ import {
   filteredUsers,
   getApprovedDematesPaginated,
   getPendingDematesPaginated,
+  totalSubscriptionHistory,
   totalWalletWithdrawHistory,
   viewPendingRenewalsPaginated,
   viewPoolUsers,
@@ -205,6 +206,14 @@ adminRouter.get(
   "/all-withdraw-history",
   protectAdmin,
   totalWalletWithdrawHistory
+);
+
+//get all subscription history
+
+adminRouter.get(
+  "/all-subscription-history",
+  protectAdmin,
+  totalSubscriptionHistory
 );
 
 adminRouter.get("/autopool-credit-history", protectAdmin, autoPoolHistory);

@@ -473,7 +473,7 @@ export const deleteSingleNews = async (req, res, next) => {
 
 export const viewNews = async (req, res, next) => {
   try {
-    const newsData = await LiveNews.find();
+    const newsData = await LiveNews.find().sort({ createdAt: -1 });
     if (newsData) {
       res.status(200).json({
         newsData,

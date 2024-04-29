@@ -73,8 +73,9 @@ function Pendingwithraw() {
     }));
   };
   function calculateTenPercent(value) {
-    return (value * 0.1).toFixed(2); // Returns 10% of the value with two decimal places
+    return (value * 0.05).toFixed(2); 
   }
+
   useEffect(() => {
     getRequest();
   }, [params]);
@@ -111,9 +112,7 @@ function Pendingwithraw() {
                       </th>
 
                   
-                      <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Email</h6>
-                      </th>
+                     
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Phone</h6>
                       </th>
@@ -125,6 +124,9 @@ function Pendingwithraw() {
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">TDS Amount</h6>
+                      </th>
+                      <th>
+                        <h6 className="fs-4 fw-semibold mb-0">Service Charge</h6>
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Released Amount</h6>
@@ -166,10 +168,11 @@ function Pendingwithraw() {
                                   members.sponserName.toUpperCase()) ||
                                   "--"}
                               </td> */}
-                              <td>{request?.email || "--"}</td>
                               <td>{request?.phone || "--"}</td>
                               <td>₹ {request?.walletWithdrawAmount || "0"}</td>
                               <td style={{color:"red"}}>₹ {calculateTenPercent(request?.walletWithdrawAmount )}</td>
+                              <td style={{color:"red"}}>₹ {calculateTenPercent(request?.walletWithdrawAmount )}</td>
+
                               <td style={{color:"green"}}>₹ {request?.tdsAmount || "0"}</td>
 
                               <td>

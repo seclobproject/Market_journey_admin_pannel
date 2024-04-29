@@ -21,14 +21,12 @@ function Pendingrenewal() {
       const [totalPages, setTotalPages] = useState(1);
       const startIndex = (params.page - 1) * params.pageSize;
 
-      console.log(totalPages,"setTotalPages")
 
 //------------pendingRenewalList------------
     const getpendingRenewals = async () => {
         setIsLoading(true);
         try {
           const response = await ApiCall("get", pendingrenewalUrl,{},params);
-          console.log(response,"res");
           if (response.status === 200) {
             setPendingRenewalList(response?.data?.pendingRenews
             );
@@ -53,7 +51,6 @@ function Pendingrenewal() {
         "post",
         `${approvedRenewalUrl}/${approveModal.id}`
       );
-      console.log(resposne,"res")
       if (resposne?.status === 200) {
         Show_Toast("pending renewal approved successfully", true);
         setApproveModal(false);
@@ -100,7 +97,7 @@ getpendingRenewals();
               className="card-title fw-semibold mb-0 lh-sm px-0 mt-4"
               style={{ color: "#0F1535" }}
             >
-              Pending Renewals
+             Pending Subscription
             </h5>
           </div>
           {isLoading ? (

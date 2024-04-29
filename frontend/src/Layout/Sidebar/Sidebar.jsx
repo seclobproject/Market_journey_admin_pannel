@@ -37,8 +37,12 @@ function Sidebar() {
           route: "user/pending",
         },
         {
-          title: "Pending Renewals",
+          title: "Pending Subscription",
           route: "user/pending-renewals",
+        },
+        {
+          title: "Subscription HIstory",
+          route: "user/subscription-history",
         },
       ],
     },

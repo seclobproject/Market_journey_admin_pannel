@@ -334,14 +334,15 @@ function Alldemate() {
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Sponser Name</h6>
                       </th>
-                      <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Email</h6>
-                      </th>
+                     
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Phone</h6>
                       </th>
                       <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Address</h6>
+                        <h6 className="fs-4 fw-semibold mb-0">District</h6>
+                      </th>
+                      <th>
+                        <h6 className="fs-4 fw-semibold mb-0">Zonal</h6>
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Status</h6>
@@ -374,9 +375,9 @@ function Alldemate() {
                                 acounts.sponserName.toUpperCase()) ||
                                 "--"}
                             </td>
-                            <td>{acounts?.email || "--"}</td>
                             <td>{acounts?.phone || "--"}</td>
-                            <td>{acounts?.address || "--"}</td>
+                            <td>{acounts?.district || "--"}</td>
+                            <td>{acounts?.zonal || "--"}</td>
 
                             <td>
                               {acounts?.status === "approved" && (

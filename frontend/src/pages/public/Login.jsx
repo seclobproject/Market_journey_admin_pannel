@@ -39,6 +39,7 @@ function Login() {
         Show_Toast("Login Successfull", true);
       } else {
         console.log("invalid user");
+        setIsLoading(false);
       }
     } catch (error) {
       Show_Toast(error, false);

@@ -526,20 +526,24 @@ function Viewdetails() {
                                     </span>
                                   )}
                                 </div>
-                                <div className="col-3">
-                  
-  {details?.renewalStatus ? (
-    <span className="badge bg-success rounded-3 fw-semibold">
-      Active Plan
-    </span>
-  ) : (
-    <span className="badge bg-danger rounded-3 fw-semibold">
-      Non active Plan
-    </span>
-  )}
-
-</div>
+ 
                               </div>
+                              <div className="row mt-3">
+                              <div className="col-3">
+                  
+                  {details?.renewalStatus ? (
+                    <span className="badge bg-success rounded-3 fw-semibold">
+                      Active Plan
+                    </span>
+                  ) : (
+                    <span className="badge bg-danger rounded-3 fw-semibold">
+                      Non active Plan
+                    </span>
+                  )}
+                
+                </div>
+                              </div>
+                      
 
                               <div className="mt-2">
                                 <h5

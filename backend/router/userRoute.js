@@ -26,9 +26,11 @@ import {
   bonusCreditedReport,
   directIncomeReportPaginated,
   filteredUsers,
+  getAutoPoolAmount,
   getAutoPoolCountAmount,
   inDirectIncomeReportPaginated,
   levelIncomeReportPaginated,
+  subscriptionHistoryUser,
   userAutoPoolIncomeHistory,
   userDemateAccounts,
   walletWithdrawReportUser,
@@ -69,11 +71,14 @@ router.get(
 );
 router.get("/level-income-report", protectUser, levelIncomeReportPaginated);
 router.get("/wallet-withdraw-report", protectUser, walletWithdrawReportUser);
+router.get("/user-subscription-report", protectUser, subscriptionHistoryUser);
 router.get("/autopool-credit-report", protectUser, userAutoPoolIncomeHistory);
 
 //get autopool count and amount
 router.get("/get-pool-count-amount", protectUser, getAutoPoolCountAmount);
 
+//get autopool count and amount
+router.get("/get-pool-amount", protectUser, getAutoPoolAmount);
 //get credit bonus history
 
 router.get("/view-credit-bonus-report", protectUser, bonusCreditedReport);

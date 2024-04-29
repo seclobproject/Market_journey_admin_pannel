@@ -203,6 +203,49 @@ export const walletWithdrawReportUser = async (req, res, next) => {
   }
 };
 
+
+//Subscription History report
+
+export const subscriptionHistoryUser = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    // Fetch user data with populated walletWithdrawHistory
+    const userData = await User.findById(userId)
+      .populate("subscriptionHistory")
+      .sort({ createdAt: 1 });
+
+    if (!userData) {
+      return next(errorHandler(401, "User login failed."));
+    }
+
+    const subscriptionHistory = userData.subscriptionHistory || [];
+    let response = {
+      subscriptionHistory,
+      sts: "01",
+      msg: "Get Subscription report users success",
+    };
+
+    // If the withdrawal status is pending, add the pending withdrawal to the response
+    if (userData.subscriptionStatus === "pending") {
+      const pendingSubscription = {
+        reportName: "subscriptionHistory",
+          name:userData.name,
+          pendingPackage: userData.pendingPackage,
+          action: userData.action,
+          amount: userData.tempPackageAmount,
+          status: "Pending",
+        createdAt: userData.createdAt,
+      };
+      response.subscriptionHistory.unshift(pendingSubscription);
+    }
+
+    // Send response
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+};
+
 //admin reports
 
 //all withdraW HISTORY
@@ -338,6 +381,61 @@ export const totalWalletWithdrawHistory = async (req, res, next) => {
           totalDocs: paginatedResult.totalDocs,
         },
         msg: "Successfully get users fund history!",
+      });
+    } else {
+      return next(errorHandler(401, "Admin Login Failed"));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Paginated version of All Subscription History
+export const totalSubscriptionHistory = async (req, res, next) => {
+  try {
+    const userId = req.admin._id;
+    let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+    const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+
+    const adminData = await Admin.findById(userId);
+    if (adminData) {
+      const aggregateQuery = [
+        {
+          $unwind: "$subscriptionHistory",
+        },
+        {
+          $sort: {
+            "subscriptionHistory.createdAt": -1,
+          },
+        },
+        {
+          $project: {
+            name: "$subscriptionHistory.name",
+            pendingPackage: "$subscriptionHistory.pendingPackage",
+            action: "$subscriptionHistory.action",
+            amount: "$subscriptionHistory.amount",
+            status: "$subscriptionHistory.status",
+            createdAt: "$subscriptionHistory.createdAt",
+          },
+        },
+      ];
+
+      const paginatedResult = await paginateAggregate(
+        User,
+        aggregateQuery,
+        page,
+        pageSize
+      );
+
+      res.status(200).json({
+        allSubscriptionHistory: paginatedResult.results,
+        pagination: {
+          page: paginatedResult.page,
+          pageSize: paginatedResult.pageSize,
+          totalPages: paginatedResult.totalPages,
+          totalDocs: paginatedResult.totalDocs,
+        },
+        msg: "Successfully get Subscription history!",
       });
     } else {
       return next(errorHandler(401, "Admin Login Failed"));
@@ -623,17 +721,74 @@ export const getAutoPoolCountAmount = async (req, res, next) => {
 
     // Prepare pool data
     const pool = [
-      { amount: amountpoolA, count: countInPoolA },
-      { amount: amountpoolB, count: countInPoolB },
-      { amount: amountpoolC, count: countInPoolC },
-      { amount: amountpoolD, count: countInPoolD },
-      { amount: amountpoolE, count: countInPoolE },
+      { amount: amountpoolA, count: countInPoolA+1 },
+      { amount: amountpoolB, count: countInPoolB+1 },
+      { amount: amountpoolC, count: countInPoolC+1 },
+      { amount: amountpoolD, count: countInPoolD+1 },
+      { amount: amountpoolE, count: countInPoolE+1 },
     ];
 
     // Send response
     res.status(200).json({
       pool,
       distributedAmount,
+      sts: "01",
+      msg: "Get Autopool amounts and AutoPool Counts Success",
+    });
+  } catch (error) {
+    // Pass error to error handling middleware
+    next(error);
+  }
+};
+
+
+// Function to get autopool count and distributed amount
+export const getAutoPoolAmount = async (req, res, next) => {
+  try {
+    // Extract user ID from request
+    const userId = req.user._id;
+
+    // Fetch user data
+    const userData = await User.findById(userId);
+    if (!userData) {
+      throw errorHandler(401, "User Login Failed");
+    }
+
+    // Fetch admin data
+    const admin = await Admin.findOne();
+    if (!admin) {
+      throw errorHandler(401, "Autopool data can't be fetched");
+    }
+
+    // Extract auto pool distribution history
+    const { autoPoolWallet,autoPoolPercentageA,autoPoolPercentageB,autoPoolPercentageC,autoPoolPercentageD,autoPoolPercentageE,
+    poolA,poolB,poolC,poolD,poolE } = admin;
+    console.log(autoPoolWallet,autoPoolPercentageA);
+
+    const amountpoolA=autoPoolWallet*autoPoolPercentageA/100;
+    const amountpoolB=autoPoolWallet*autoPoolPercentageB/100;
+    const amountpoolC=autoPoolWallet*autoPoolPercentageC/100;
+    const amountpoolD=autoPoolWallet*autoPoolPercentageD/100;
+    const amountpoolE=autoPoolWallet*autoPoolPercentageE/100;
+
+    const countInPoolA=(poolA.length)+1;
+    const countInPoolB=(poolB.length)+1;
+    const countInPoolC=(poolC.length)+1;
+    const countInPoolD=(poolD.length)+1;
+    const countInPoolE=(poolE.length)+1;
+
+  
+    // Prepare pool data
+    const pool = [
+      { amount: amountpoolA, count: countInPoolA },
+      { amount: amountpoolB, count: countInPoolB },
+      { amount: amountpoolC, count: countInPoolC },
+      { amount: amountpoolD, count: countInPoolD },
+      { amount: amountpoolE, count: countInPoolE },
+    ];
+    // Send response
+    res.status(200).json({
+      pool,
       sts: "01",
       msg: "Get Autopool amounts and AutoPool Counts Success",
     });

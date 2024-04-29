@@ -142,7 +142,7 @@ export const addUser = async (req, res, next) => {
             nifty = false;
             crudeOil = false;
             break;
-          case "Crude Oil":
+          case "CrudeOil":
             crudeOil = true;
             nifty = false;
             bankNifty = false;

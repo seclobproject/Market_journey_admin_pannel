@@ -96,3 +96,4 @@ export const rejectedRenewalUrl="/api/admin/reject-renewal"
 export const dashboardUrl="/api/admin/view-dashboard-data"
 //filter demate
 export const filterdemateUrl="/api/admin/view-filtered-demates"
+export const renewalhistoryUrl="/api/admin/all-subscription-history"

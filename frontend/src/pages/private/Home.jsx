@@ -37,7 +37,7 @@ getdashBoardData();
       
 
   <div class="row">
-  <div className="col-md-6 col-lg-3 mb-4">
+  <div className="col-md-6 col-lg-4 mb-4">
       <div className="card" style={{ background: "#0F1535" }}>
         <div className="row align-items-center p-4">
           <div className="">
@@ -54,7 +54,7 @@ getdashBoardData();
         </div>
       </div>
     </div>
-    <div className="col-md-6 col-lg-3 mb-4">
+    <div className="col-md-6 col-lg-4 mb-4">
       <div className="card" style={{ background: "#0F1535" }}>
         <div className="row align-items-center p-4">
           <div className="col-8">
@@ -71,7 +71,7 @@ getdashBoardData();
         </div>
       </div>
     </div>
-  <div className="col-md-6 col-lg-3 mb-4">
+  <div className="col-md-6 col-lg-4 mb-4">
       <div className="card" style={{ background: "#0F1535" }}>
         <div className="row align-items-center p-4">
           <div className="col-8">
@@ -88,7 +88,11 @@ getdashBoardData();
         </div>
       </div>
     </div>
-    <div className="col-md-6 col-lg-3 mb-4">
+   
+   
+  </div>
+  <div class="row">
+  <div className="col-md-6 col-lg-4 mb-4">
       <div className="card" style={{ background: "#0F1535" }}>
         <div className="row align-items-center p-4">
           <div className="col-8">
@@ -105,10 +109,7 @@ getdashBoardData();
         </div>
       </div>
     </div>
-   
-  </div>
-  <div class="row">
-  <div className="col-md-6 col-lg-3 mb-4">
+  <div className="col-md-6 col-lg-4 mb-4">
       <div className="card" style={{ background: "#0F1535" }}>
         <div className="row align-items-center p-4">
           <div className="col-8">
@@ -125,7 +126,7 @@ getdashBoardData();
         </div>
       </div>
     </div>
-    <div className="col-md-6 col-lg-3 mb-4">
+    <div className="col-md-6 col-lg-4 mb-4">
       <div className="card" style={{ background: "#0F1535" }}>
         <div className="row align-items-center p-4">
           <div className="col-8">
@@ -142,7 +143,12 @@ getdashBoardData();
         </div>
       </div>
     </div>
-  <div className="col-md-6 col-lg-3 mb-4">
+ 
+   
+   
+  </div>
+  <div class="row">
+  <div className="col-md-6 col-lg-4 mb-4">
       <div className="card" style={{ background: "#0F1535" }}>
         <div className="row align-items-center p-4">
           <div className="col-8">
@@ -160,7 +166,7 @@ getdashBoardData();
         </div>
       </div>
     </div>
-    <div className="col-md-6 col-lg-3 mb-4">
+  <div className="col-md-6 col-lg-4 mb-4">
       <div className="card" style={{ background: "#0F1535" }}>
         <div className="row align-items-center p-4">
           <div className="col-8">
@@ -177,10 +183,7 @@ getdashBoardData();
         </div>
       </div>
     </div>
-   
-  </div>
-  <div class="row">
-  <div className="col-md-6 col-lg-3 mb-4">
+  <div className="col-md-6 col-lg-4 mb-4">
       <div className="card" style={{ background: "#0F1535" }}>
         <div className="row align-items-center p-4">
           <div className="col-8">
@@ -197,7 +200,12 @@ getdashBoardData();
         </div>
       </div>
     </div>
-    <div className="col-md-6 col-lg-3 mb-4">
+   
+  
+   
+  </div>
+  <div className="row">
+  <div className="col-md-6 col-lg-4 mb-4">
       <div className="card" style={{ background: "#0F1535" }}>
         <div className="row align-items-center p-4">
           <div className="col-8">
@@ -214,10 +222,7 @@ getdashBoardData();
         </div>
       </div>
     </div>
-  
-   
   </div>
-
 
 
     

@@ -174,6 +174,17 @@ function Distribute() {
                           Distribute
                         </button>
                       </div>
+                      <div className="col-6">
+                            <button
+                              type="submit"
+                              className="btn btn"
+                              style={{ backgroundColor:"#89BE1D",color:"#fff"}}
+
+                              onClick={() => navigate("/autopool/members", {})}
+                            >
+                              View Members
+                            </button>
+                          </div>
                     </div>
                   </div>
                 </div>
@@ -215,7 +226,7 @@ function Distribute() {
                       </button>
                     </div>
                     <div className="col d-flex align-items-center">
-                      <div className="row mb-3">
+                      <div className="row mb-3 align-items-center">
                         <div className="col-2 mb-2" style={{ width: "150px" }}>
                           <div className="me-2">
                             <div
@@ -523,19 +534,7 @@ function Distribute() {
                             </div>
                           </div>
                         </div>
-                        <div className="col-4  mb-2" style={{ width: "150px" }}>
-                          <div className="col-6">
-                            <button
-                              type="submit"
-                              className="btn btn"
-                              style={{ backgroundColor:"#89BE1D",color:"#fff"}}
-
-                              onClick={() => navigate("/autopool/members", {})}
-                            >
-                              View Members
-                            </button>
-                          </div>
-                        </div>
+                       
                       </div>
                     </div>
                   </div>

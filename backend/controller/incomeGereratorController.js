@@ -160,10 +160,12 @@ export const franchiseIncomeGenerator = async (
 
   console.log("Reached in Franchise Income generator");
   console.log(`Reached user ${userData.name} amd Amount ${amount}`);
-  console.log(distPercentage, zonalPercentage);
+  console.log(amount,distPercentage, zonalPercentage);
 
   const districtIncome = amount * distPercentage;
   const zonalIncome = amount * zonalPercentage;
+  console.log("zonal and district income",districtIncome,zonalIncome);
+
   const distpers = distPercentage * 100;
   const zonalpers = zonalPercentage * 100;
   const districtId = userData.districtFranchise;
@@ -171,7 +173,7 @@ export const franchiseIncomeGenerator = async (
 
   const districtData = await User.findById(districtId);
   const zonalData = await User.findById(zonalId);
-
+    console.log(districtData);
   districtData.totalLevelIncome += districtIncome;
   districtData.walletAmount += districtIncome;
   districtData.levelIncomeHistory.push({

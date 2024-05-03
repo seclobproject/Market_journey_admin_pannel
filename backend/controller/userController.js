@@ -1067,7 +1067,7 @@ export const viewRenewalPackages = async (req, res, next) => {
     if (userData.packageType === "Franchise") {
      const renewPackages = await Package.find({
         franchiseName: "Signals",
-        packageName: { $nin: ["Trading Cafe", "Algo"] },
+        packageName: { $nin: ["Morning Cafe","Night Cafe", "Algo"] },
       });
       return res.status(200).json({
         renewPackages,

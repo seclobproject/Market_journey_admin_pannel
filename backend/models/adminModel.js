@@ -61,6 +61,7 @@ const autoPoolSchema = new mongoose.Schema(
 const adminSchema = new mongoose.Schema({
     name:String,
 username: String,
+address:String,
 password: String,
 isAdmin:{
     type: Boolean,

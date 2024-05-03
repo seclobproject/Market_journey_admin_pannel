@@ -1957,7 +1957,6 @@ export const acceptRenewalRequest = async (req, res, next) => {
                 userData.crudeOil = false;
                 break;
               case "CrudeOil":
-                console.log("i am in crudeOil");
                 userData.crudeOil = true;
                 userData.nifty = false;
                 userData.bankNifty = false;
@@ -1983,7 +1982,6 @@ export const acceptRenewalRequest = async (req, res, next) => {
                 userData.crudeOil = true;
                 break;
               default:
-                console.log("i am in Another signal");
               console.log(packageData.name);
 
                 userData.nifty = false;
@@ -1993,7 +1991,6 @@ export const acceptRenewalRequest = async (req, res, next) => {
             }
           }
           if (packageData.franchiseName == "Courses") {
-            console.log("i am in Course",packageData.packageName);
             userData.isMobileFranchise = false;
             userData.isSignalFranchise = false;
             userData.isCourseFranchise = true;

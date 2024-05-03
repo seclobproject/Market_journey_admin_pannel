@@ -131,7 +131,7 @@ function Renewalhistory() {
                             <td>
                               {history?.status === "Rejected" ? (
                                 <span className="badge bg-danger rounded-3 fw-semibold">
-                                  Ready to Approve
+                                Rejected
                                 </span>
                               ) : history?.status === "Approved" ? (
                                 <span className="badge bg-success rounded-3 fw-semibold">

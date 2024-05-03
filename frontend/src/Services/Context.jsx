@@ -12,12 +12,12 @@ export const ContextDataProvider = ({ children }) => {
 
 
 
-  const storedAuthState=localStorage.getItem('isAuthenticated');
+  const storedAuthState=sessionStorage.getItem('isAuthenticated');
   const initialAuthState=storedAuthState?JSON.parse(storedAuthState):false
   const [loggedIn, setLoggedIn] = useState(initialAuthState);
 
 useEffect(()=>{
-localStorage.setItem('isAuthenticated',JSON.stringify(loggedIn))
+sessionStorage.setItem('isAuthenticated',JSON.stringify(loggedIn))
 },[loggedIn]);
 
 const loginFun =()=>{

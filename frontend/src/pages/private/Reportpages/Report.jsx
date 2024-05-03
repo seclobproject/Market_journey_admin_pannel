@@ -186,7 +186,9 @@ function Report() {
     }
   }, [selectedStateId, selectedDistrictId, selectedZonalId]);
   
-
+useEffect(()=>{
+  getFilterData();
+},[params]);
 
 
   const handleReset = () => {
@@ -198,7 +200,7 @@ function Report() {
       zonal: "",
       panchayath: "",
     });
-    setFilteredData([]);
+    // setFilteredData([]);
     setSelectedState("");
     setReportData({});
     setSelectedDistrictId("");
@@ -208,6 +210,13 @@ function Report() {
   
     // Increment selectKey to force re-render
     setSelectKey(selectKey + 1);
+    getFilterData();
+  };
+  const viewAll = () => {
+    useEffect(()=>{
+      getFilterData();
+
+    },[params]);
   };
 
 
@@ -356,6 +365,7 @@ function Report() {
 
               <div className="col-md-2 mt-3 sm-2">
                 <Button className="btn btn-custom" onClick={handleReset}>Reset</Button>
+
               </div>
             </div>
             {isLoading ? (

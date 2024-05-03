@@ -468,7 +468,7 @@ function Member() {
                         </h6>
                       </th>
                       <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Type</h6>
+                        <h6 className="fs-4 fw-semibold mb-0">Package Name</h6>
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">

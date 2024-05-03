@@ -41,7 +41,7 @@ function Sidebar() {
           route: "user/pending-renewals",
         },
         {
-          title: "Subscription HIstory",
+          title: "Subscription History",
           route: "user/subscription-history",
         },
       ],
@@ -119,7 +119,7 @@ function Sidebar() {
                   className="text-nowrap logo-img text-center d-block py-3 w-100"
                 >
                   <img
-                    src="/dist/images/Mjgreen.svg"
+                    src="/dist/images/Remj.png"
                     alt="Logo"
                     width="100"
                     height="50"

@@ -23,7 +23,10 @@ function Alldemate() {
   const [selectedZonalId, setselectedZonalId] = useState(null);
   const [selectedPanId, setselectedPanId] = useState(null);
   const [filteredData, setFilteredData] = useState([]);
+  console.log(filteredData,"filteredData");
   const [stateList, setStateList] = useState([]);
+  console.log(stateList,"stateList");
+
   const [districtList, setDistrictList] = useState([]);
   const [zonalList, setZonalList] = useState([]);
   const [panchayathList, setPanchayathList] = useState([]);
@@ -129,8 +132,9 @@ function Alldemate() {
         filterReport,
         params
       );
+      console.log(response,"respones");
       if (response.status === 200) {
-        setTotalPages(response?.data?.pagination);
+        setTotalPages(response?.data?.pagination?.totalPages);
         setFilteredData(response?.data?.filteredDemates);
       }
     } catch (error) {
@@ -140,6 +144,8 @@ function Alldemate() {
   };
 
   const handleReset = () => {
+    getFilterData();
+
     setSelectedStateId("");
     setFilterReport({
       state: "",
@@ -147,15 +153,16 @@ function Alldemate() {
       zonal: "",
       panchayath: "",
     });
-    setFilteredData([]);
+    // setFilteredData([]);
     setSelectedState("");
     setSelectedDistrictId("");
     setselectedPanId("");
     setselectedZonalId("");
     setBadkey(badkey + 1);
-
     setSelectKey(selectKey + 1);
+
   };
+  
   const handlePageChange = (event, newPage) => {
     setParams((prevParams) => ({
       ...prevParams,
@@ -187,6 +194,10 @@ function Alldemate() {
     }
   }, [selectedStateId, selectedDistrictId, selectedZonalId]);
 
+useEffect(()=>{
+  getFilterData();
+},[params])
+ 
   return (
     <>
       <SlideMotion>
@@ -309,6 +320,7 @@ function Alldemate() {
               <Button className="btn btn-custom" onClick={handleReset}>
                 Reset
               </Button>
+              
             </div>
           </div>
           {isLoading ? (

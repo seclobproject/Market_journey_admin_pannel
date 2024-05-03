@@ -457,25 +457,25 @@ function Viewdetails() {
                               </div>
                               <div className="d-flex justify-content-end flex-wrap mt-3">
 
-{details.packageType === "Franchise" && 
-  !(details.name === "PROMOTER1" || details.name === "PROMOTER2" || details.name === "PROMOTER3") && (
-    <>
-      <Button
-        className="btn btn-custom"
-        onClick={() => {
-          setBonusModal({
-            show: true,
-            id: details?.id,
-          });
-          setValidated(false);
-        }}
-      >
-        <i className="fas fa-plus"></i>
-        Add Bonus
-      </Button>
-    </>
-  )
+                              {details.packageType === "Franchise" && details.userStatus==="approved"&&!details.isPromoter&&
+  <Button
+    className="btn btn-custom"
+    onClick={() => {
+      setBonusModal({
+        show: true,
+        id: details?.id,
+      });
+      setValidated(false);
+    }}
+  >
+    <i className="fas fa-plus"></i>
+    Add Bonus
+  </Button>
 }
+
+
+
+
 
 
 
@@ -1538,24 +1538,24 @@ function Viewdetails() {
           <h1 style={{ color: "#00335B" }}>₹{addBonnus?.bonusAmount}</h1>
           <div className="mb-4">
             <label htmlFor="exampleInputEmail1" className="form-label">
-              TransactionId
+              Bonnus Amount
             </label>
             <input
               required
               className="form-control form-control-lg"
-              type="text"
-              placeholder="Enter an Transaction Id"
-              value={addBonnus?.transactionId}
+              type="number"
+              placeholder="Enter an amount"
+              value={addBonnus?.bonusAmount}
               onChange={(e) =>
                 setAddBonnus({
                   ...addBonnus,
-                  transactionId: e.target.value,
+                  bonusAmount: e.target.value,
                 })
               }
             />
 
             <Form.Control.Feedback type="invalid">
-              Please provide a transaction Id.
+              Please provide a bonus amount.
             </Form.Control.Feedback>
           </div>
           <div className="mb-4">
@@ -1580,28 +1580,7 @@ function Viewdetails() {
               Please provide a description.
             </Form.Control.Feedback>
           </div>
-          <div className="mb-4">
-            <label htmlFor="exampleInputEmail1" className="form-label">
-              Bonnus Amount
-            </label>
-            <input
-              required
-              className="form-control form-control-lg"
-              type="number"
-              placeholder="Enter an amount"
-              value={addBonnus?.bonusAmount}
-              onChange={(e) =>
-                setAddBonnus({
-                  ...addBonnus,
-                  bonusAmount: e.target.value,
-                })
-              }
-            />
-
-            <Form.Control.Feedback type="invalid">
-              Please provide a bonus amount.
-            </Form.Control.Feedback>
-          </div>
+    
 
           <div className="col-12 mt-5">
             <button type="submit" className="btn btn-custom float-end">

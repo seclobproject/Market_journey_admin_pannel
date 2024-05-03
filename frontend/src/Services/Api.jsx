@@ -12,7 +12,7 @@ export const ApiCall = async (
 ) => {
 
   try {
-    let token = localStorage.getItem("User");
+    let token = sessionStorage.getItem("User");
 
     const res = await axios({
       method: method,

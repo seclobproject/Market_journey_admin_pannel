@@ -85,7 +85,7 @@ function Forgotpassword() {
                   <div className="card mb-0">
                     <div className="card-body">
                     <a href={undefined} className="text-nowrap logo-img text-center d-block py-3 w-100">
-                    <img src="/dist/images/marketlogo.png" alt="Logo" width="130" height="90" />
+                    <img src="/dist/images/Remj.png" alt="Logo" width="130" height="90" />
 </a>
 
                       <Form

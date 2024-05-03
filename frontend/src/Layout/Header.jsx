@@ -12,7 +12,7 @@ function Header() {
     useContext(ContextData);
 
   const handleLogout = () => {
-    localStorage.removeItem("User");
+    sessionStorage.removeItem("User");
     navigate("/");
     logout();
   };

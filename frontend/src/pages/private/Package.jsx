@@ -126,7 +126,7 @@ function Package() {
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">
-                          Franchise Name
+                         Type
                         </h6>
                       </th>
                       <th>

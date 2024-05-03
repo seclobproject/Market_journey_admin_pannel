@@ -78,11 +78,7 @@ function Bonnushistory() {
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">User ID</h6>
                       </th>
-                      <th>
-                        <h6 className="fs-4 fw-semibold mb-0">
-                          Transaction Id
-                        </h6>
-                      </th>
+                  
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Name</h6>
                       </th>
@@ -117,7 +113,6 @@ function Bonnushistory() {
                                 </td>
                                 <td>{histoty?.userID || "--"}</td>
 
-                                <td>{histoty?.transactionId || "--"}</td>
 
                                 <td>
                                   {(histoty?.name &&

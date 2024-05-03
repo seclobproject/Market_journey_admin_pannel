@@ -31,7 +31,7 @@ function Login() {
         setIsLoggedIn(false);
         setUser(res?.data);
 
-        localStorage.setItem("User", res?.data?.access_token);
+        sessionStorage.setItem("User", res?.data?.access_token);
 
         navigate("/dashboard");
         loginFun();
@@ -42,6 +42,7 @@ function Login() {
         setIsLoading(false);
       }
     } catch (error) {
+      alert("errr")
       Show_Toast(error, false);
     }
   };
@@ -77,7 +78,7 @@ function Login() {
                         className="text-nowrap logo-img text-center d-block py-3 w-100"
                       >
                         <img
-                          src="/dist/images/Mjgreen.svg"
+                          src="/dist/images/Remj.png"
                           alt="Logo"
                           width="130"
                           height="90"

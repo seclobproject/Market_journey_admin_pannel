@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
 import Package from "./packageModel.js";
 
-const allTransactionSchema = new mongoose.Schema(
+const subscriptionSchema = new mongoose.Schema(
   {
-    userID: String,
-    name: String,
+    reportName: String,
+    name:String,
+    pendingPackage:String,
+    action: String,
     amount: Number,
-    transactionCode: String,
     status: String,
   },
   {
@@ -291,7 +292,7 @@ const userSchema = new mongoose.Schema(
       type: Date
     },
 
-    allTransactions: [allTransactionSchema],
+    subscriptionHistory: [subscriptionSchema],
     districtFranchise:{ type: mongoose.Schema.Types.ObjectId, ref: "User" },
     zonalFranchise:{ type: mongoose.Schema.Types.ObjectId, ref: "User" },
     demateAccounts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Demate" }],

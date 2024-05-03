@@ -46,7 +46,6 @@ const autoPoolSchema = new mongoose.Schema(
         userID: String,
         name: String,
         bonusAmount:Number,
-        transactionId:String,
         description:String,
         phone:Number,
         status: String,

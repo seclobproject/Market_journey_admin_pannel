@@ -1381,6 +1381,7 @@ export const viewUserDetails = async (req, res, next) => {
         packageType: userData.packageType,
         zonal: userData.zonal,
         state: userData.state,
+        isPromoter:userData.isPromoter,
         panchayath: userData.panchayath,
         screenshot: userData.screenshot,
         aadhaar2: userData.aadhaar2,
@@ -1726,7 +1727,7 @@ export const addBonus = async (req, res, next) => {
     const adminId = req.admin.id;
     const { id } = req.params;
 
-    const { bonusAmount, transactionId, description } = req.body;
+    const { bonusAmount, description } = req.body;
     // Fetch admin data
     const admin = await Admin.findById(adminId);
     if (!admin) {
@@ -1744,7 +1745,6 @@ export const addBonus = async (req, res, next) => {
     user.bonusHistory.push({
       reportName: "userBonusHistory",
       bonusAmount: bonusAmount,
-      transactionId: transactionId,
       description: description,
       status: "Approved",
     });
@@ -1756,7 +1756,6 @@ export const addBonus = async (req, res, next) => {
         userID: updatedUser.ownSponserId,
         name: updatedUser.name,
         bonusAmount: bonusAmount,
-        transactionId: transactionId,
         description: description,
         phone: updatedUser.phone,
         status: "Approved",
@@ -1764,15 +1763,17 @@ export const addBonus = async (req, res, next) => {
     }
     const updatedAdmin = await admin.save();
     if (updatedUser.packageType === "Franchise") {
-      await franchiseIncomeGenerator(
-        updatedUser,
-        bonusAmount,
-        "bonus",
-        0.12,
-        0.2
-      );
-      updatedUser = await User.findById(id);
-      await levelIncomeGenerator(updatedUser, bonusAmount);
+      if(updatedUser.franchise==="Mobile Franchise"){
+        await franchiseIncomeGenerator(
+          updatedUser,
+          bonusAmount,
+          "bonus",
+          0.12,
+          0.2
+        );
+        updatedUser = await User.findById(id);
+        await levelIncomeGenerator(updatedUser, bonusAmount);
+      }
       updatedUser = await User.findById(id);
       await generatePromotersIncome(bonusAmount, updatedUser, 0.07);
     }
@@ -1912,7 +1913,7 @@ export const acceptRenewalRequest = async (req, res, next) => {
             case "Bank Nifty":
               userData.bankNifty = true;
               break;
-            case "Crude Oil":
+            case "CrudeOil":
               userData.crudeOil = true;
               break;
             default:
@@ -1944,7 +1945,7 @@ export const acceptRenewalRequest = async (req, res, next) => {
             userData.isMobileFranchise = false;
             userData.isSignalFranchise = true;
             userData.isCourseFranchise = false;
-            switch (packageData.name) {
+            switch (packageData.packageName) {
               case "Nifty":
                 userData.nifty = true;
                 userData.bankNifty = false;
@@ -1955,7 +1956,8 @@ export const acceptRenewalRequest = async (req, res, next) => {
                 userData.nifty = false;
                 userData.crudeOil = false;
                 break;
-              case "Crude Oil":
+              case "CrudeOil":
+                console.log("i am in crudeOil");
                 userData.crudeOil = true;
                 userData.nifty = false;
                 userData.bankNifty = false;
@@ -1981,10 +1983,17 @@ export const acceptRenewalRequest = async (req, res, next) => {
                 userData.crudeOil = true;
                 break;
               default:
+                console.log("i am in Another signal");
+              console.log(packageData.name);
+
+                userData.nifty = false;
+                userData.bankNifty = false;
+                userData.crudeOil = false;
                 break;
             }
           }
           if (packageData.franchiseName == "Courses") {
+            console.log("i am in Course",packageData.packageName);
             userData.isMobileFranchise = false;
             userData.isSignalFranchise = false;
             userData.isCourseFranchise = true;
@@ -2007,7 +2016,7 @@ export const acceptRenewalRequest = async (req, res, next) => {
             userData.packageType === "Franchise" ||
             userData.packageType === "Signals"
           ) {
-            switch (packageData.name) {
+            switch (packageData.packageName) {
               case "Nifty":
                 userData.nifty = true;
                 userData.bankNifty = false;
@@ -2018,7 +2027,7 @@ export const acceptRenewalRequest = async (req, res, next) => {
                 userData.nifty = false;
                 userData.crudeOil = false;
                 break;
-              case "Crude Oil":
+              case "CrudeOil":
                 userData.crudeOil = true;
                 userData.nifty = false;
                 userData.bankNifty = false;
@@ -2116,10 +2125,6 @@ export const rejectRenewalRequest = async (req, res, next) => {
     if (adminData) {
       const userData = await User.findById(id);
       if (userData) {
-        userData.subscriptionStatus = "";
-        userData.pendingPackage = "";
-        userData.action = "";
-        userData.tempPackageAmount = "";
         userData.subscriptionHistory.push({
           reportName: "subscriptionHistory",
           name:userData.name,
@@ -2128,6 +2133,10 @@ export const rejectRenewalRequest = async (req, res, next) => {
           amount: userData.tempPackageAmount,
           status: "Rejected",
         });
+        userData.subscriptionStatus = "";
+        userData.pendingPackage = "";
+        userData.action = "";
+        userData.tempPackageAmount = "";
 
         const updatedUser = await userData.save();
 
@@ -2207,6 +2216,11 @@ export const dashboardDatas = async (req, res, next) => {
         },
       },
     ]);
+    const totalProfit=(totalPaidForCompany.length > 0
+      ? totalPaidForCompany[0].totalPaidForCompany
+      : 0)-(totalWalletAmount.length > 0
+        ? totalWalletAmount[0].totalWalletAmount
+        : 0);
 
     // Respond with dashboard data
     res.status(200).json({
@@ -2217,6 +2231,7 @@ export const dashboardDatas = async (req, res, next) => {
       readyToApproveCount,
       latestPoolShare,
       totalPoolShare,
+      totalProfit,
       totalWalletAmount:
         totalWalletAmount.length > 0
           ? totalWalletAmount[0].totalWalletAmount

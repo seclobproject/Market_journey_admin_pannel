@@ -409,6 +409,7 @@ export const viewUserProfile = async (req, res, next) => {
       state,
       districtFranchise,
       zonalFranchise,
+      isPromoter
     } = userData;
 
     const directIncome = userData.directReferalIncome.toFixed(2);
@@ -454,6 +455,7 @@ export const viewUserProfile = async (req, res, next) => {
       isMobileFranchise,
       isSignalFranchise,
       isCourseFranchise,
+      isPromoter,
       daysUntilRenewal: differenceInDays, // Add the days until renewal
       sts: "01",
       msg: "get user profile Success",
@@ -1063,7 +1065,7 @@ export const viewRenewalPackages = async (req, res, next) => {
       return next(errorHandler(401, "User not found. Please login first."));
     }
     if (userData.packageType === "Franchise") {
-      const renewPackages = await Package.find({
+     const renewPackages = await Package.find({
         franchiseName: "Signals",
         packageName: { $nin: ["Trading Cafe", "Algo"] },
       });
@@ -1073,10 +1075,10 @@ export const viewRenewalPackages = async (req, res, next) => {
       });
     }
     let renewPackages = [];
-    renewPackages = await Package.findOne({
+    const renewPackage = await Package.findOne({
       packageName: userData.franchise,
     });
-
+    renewPackages.push(renewPackage);
     res.status(200).json({
       renewPackages,
       msg: "Got addons successfully",
@@ -1094,8 +1096,8 @@ export const renewalRequest = async (req, res, next) => {
       if (err) {
         return next(errorHandler(401, "File upload error"));
       }
-      const { action, reqPackage, amount, transactionNumber } = req.body;
-
+      const { action, reqPackage, amount } = req.body;
+console.log(reqPackage);
       if (!req.files.screenshot) {
         return next(errorHandler(401, "Image not found"));
       }
@@ -1114,7 +1116,6 @@ export const renewalRequest = async (req, res, next) => {
       userData.action = action;
       userData.pendingPackage = reqPackage;
       userData.tempPackageAmount = amount;
-      userData.transactionNumber = transactionNumber;
 
       const updatedUser = await userData.save();
 

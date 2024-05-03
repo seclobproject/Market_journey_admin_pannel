@@ -36,6 +36,10 @@ function PdfTemplates({ invoiceData }) {
           </div>
           <p><b>(+91) 8089530707</b></p>
           <p><b>marketjourney.super@gmail.com</b></p>
+          <p><b>1st floor Hibon plaza Mavoor road, Calicut 673004</b></p>
+
+
+
         </div>
       </div>
       <div className="row">

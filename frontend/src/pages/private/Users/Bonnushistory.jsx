@@ -87,7 +87,7 @@ function Bonnushistory() {
                         <h6 className="fs-4 fw-semibold mb-0">Phone</h6>
                       </th>
                       <th>
-                        <h6 className="fs-4 fw-semibold mb-0">Bonnus Amount</h6>
+                        <h6 className="fs-4 fw-semibold mb-0">Bonus Amount</h6>
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">Description</h6>

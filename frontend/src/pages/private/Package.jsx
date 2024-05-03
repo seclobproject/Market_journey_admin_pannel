@@ -324,7 +324,9 @@ function Package() {
                         Select a signal
                       </option>
                       <option value="Algo">Algo Trade</option>
-                      <option value="Trading Cafe">Trading Cafe</option>
+                      <option value="Morning Cafe">Morning Cafe</option>
+                      <option value="Night Cafe">Night Cafe</option>
+
                       <option value="Nifty">Nifty</option>
                       <option value="Nifty & Bank Nifty">
                         Nifty & Bank Nifty

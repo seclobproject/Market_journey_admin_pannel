@@ -48,12 +48,14 @@ function Report() {
   const [filter, setFilter] = useState();
   const startIndex = (params.page - 1) * params.pageSize;
   const options = [
+    { value: "view_all", label: "View all" },
+
     { value: "District Franchise", label: "District Franchise" },
     { value: "Zonal Franchise", label: "Zonal Franchise" },
     { value: "Mobile Franchise", label: "Mobile Franchise" },
     { value: "Algo", label: "Algo Trade" },
-    { value: "Trading Cafe", label: "Trading Cafe" },
-    { value: "Loet 0.1", label: "Loet 0.1" },
+    { value: "Morning Cafe", label: "Morning Cafe" },
+    { value: "Night Cafe", label: "Night Cafe" },    { value: "Loet 0.1", label: "Loet 0.1" },
     { value: "Loet Pro", label: "Loet Pro" },
     { value: "Loet Promax", label: "Loet Pro Max" },
     { value: "Nifty", label: "Nifty" },
@@ -189,6 +191,11 @@ function Report() {
 useEffect(()=>{
   getFilterData();
 },[params]);
+
+useEffect(()=>{
+  if(filter==="view_all")
+getFilterData();
+},[filter]);
 
 
   const handleReset = () => {

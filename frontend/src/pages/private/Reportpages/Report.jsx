@@ -371,8 +371,9 @@ getFilterData();
               )}
 
               <div className="col-md-2 mt-3 sm-2">
-                <Button className="btn btn-custom" onClick={handleReset}>Reset</Button>
-
+              <Button className="btn btn-custom" onClick={handleReset}>
+                Reset
+              </Button>
               </div>
             </div>
             {isLoading ? (

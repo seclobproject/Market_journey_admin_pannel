@@ -892,6 +892,8 @@ export const filteredUsers = async (req, res, next) => {
     const { panchayath } = req.body;
     let userData;
     let users;
+    const userDetails=await User.findById(userId);
+
     if (state) {
       userData = await State.findOne({ name: state }).populate({
         path: "users",
@@ -924,7 +926,28 @@ export const filteredUsers = async (req, res, next) => {
         },
       });
       users = userData.users;
-    } else {
+    } else if (userDetails) {
+      if (userDetails.isDistrictFranchise) {
+        const dist = userDetails.franchiseName;
+        userData = await District.findOne({ name: dist }).populate({
+          path: "users",
+          options: {
+            sort: { createdAt: 1 }, // Sort by createdAt in descending order
+          },
+        });
+      }
+      if (userDetails.isZonalFranchise) {
+        const zon = userDetails.franchiseName;
+        userData = await Zonal.findOne({ name: zon }).populate({
+          path: "users",
+          options: {
+            sort: { createdAt: 1 }, // Sort by createdAt in descending order
+          },
+        });
+      }
+      users = userData.users;
+    }
+    else {
       userData=await User.find().sort({createdAt:-1})
       users=userData;
     }

@@ -1916,6 +1916,23 @@ export const acceptRenewalRequest = async (req, res, next) => {
             case "CrudeOil":
               userData.crudeOil = true;
               break;
+            case "Nifty & Bank Nifty":
+              userData.nifty = true;
+              userData.bankNifty = true;
+              break;
+            case "Nifty & CrudeOil":
+              userData.nifty = true;
+              userData.crudeOil = true;
+              break;
+            case "Bank Nifty & CrudeOil":
+              userData.crudeOil = true;
+              userData.bankNifty = true;
+              break;
+            case "All":
+              userData.crudeOil = true;
+              userData.bankNifty = true;
+              userData.nifty = true;
+              break;
             default:
               break;
           }

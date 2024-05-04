@@ -1011,6 +1011,32 @@ export const viewAddOn = async (req, res, next) => {
         }
       }
 
+      if (!nifty && !bankNifty) {
+        const niftyAndBankPackage = await Package.findOne({ packageName: "Nifty & Bank Nifty" });
+        if (niftyAndBankPackage) {
+          addOns.push(niftyAndBankPackage);
+        }
+      }
+      if (!nifty && !crudeOil) {
+        const niftyAndCrudePackage = await Package.findOne({ packageName: "Nifty & CrudeOil" });
+        if (niftyAndCrudePackage) {
+          addOns.push(niftyAndCrudePackage);
+        }
+      }
+      if (!bankNifty && !crudeOil) {
+        const bankAndCrudePackage = await Package.findOne({ packageName: "Bank Nifty & CrudeOil" });
+        if (bankAndCrudePackage) {
+          addOns.push(bankAndCrudePackage);
+        }
+      }
+
+      if (!bankNifty && !crudeOil && !nifty) {
+        const allPackage = await Package.findOne({ packageName: "All" });
+        if (allPackage) {
+          addOns.push(allPackage);
+        }
+      }
+
       res.status(200).json({
         addOns,
         msg: "get addons successfully",

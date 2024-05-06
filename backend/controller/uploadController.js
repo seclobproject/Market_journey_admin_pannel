@@ -649,7 +649,7 @@ export const viewAlert = async (req, res, next) => {
   try {
     let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const pageSize = parseInt(req.query.pageSize) || 10;
-    const alertData = await Alert.find().sort({ createdAt: 1 });
+    const alertData = await Alert.find().sort({ createdAt: -1 });
     const paginatedSignals = await paginate(alertData, page, pageSize);
     res.status(200).json({
       signals: paginatedSignals.results,

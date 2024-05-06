@@ -31,6 +31,7 @@ import {
   inDirectIncomeReportPaginated,
   levelIncomeReportPaginated,
   subscriptionHistoryUser,
+  totalTransactionsHistory,
   userAutoPoolIncomeHistory,
   userDemateAccounts,
   walletWithdrawReportUser,
@@ -82,6 +83,10 @@ router.get("/get-pool-amount", protectUser, getAutoPoolAmount);
 //get credit bonus history
 
 router.get("/view-credit-bonus-report", protectUser, bonusCreditedReport);
+
+//get all transactions
+
+router.get("/view-all-credits", protectUser, totalTransactionsHistory);
 
 //view user alert
 

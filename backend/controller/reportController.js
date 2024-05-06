@@ -1080,3 +1080,51 @@ export const viewPendingRenewalsPaginated = async (req, res, next) => {
     next(error);
   }
 };
+
+export const totalTransactionsHistory = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+    const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+
+    const userData = await User.findById(userId).populate([
+      { path: "directReferalHistory", options: { sort: { createdAt: 1 } } },
+      { path: "inDirectReferalHistory", options: { sort: { createdAt: 1 } } },
+      { path: "levelIncomeHistory", options: { sort: { createdAt: 1 } } },
+      { path: "autoPoolIncomeHistory", options: { sort: { createdAt: 1 } } },
+      { path: "bonusHistory", options: { sort: { createdAt: 1 } } }
+    ]);
+
+    if (userData) {
+      let allTransactions = [];
+      allTransactions = allTransactions.concat(userData.directReferalHistory);
+      allTransactions = allTransactions.concat(userData.inDirectReferalHistory);
+      allTransactions = allTransactions.concat(userData.levelIncomeHistory);
+      allTransactions = allTransactions.concat(userData.autoPoolIncomeHistory);
+      allTransactions = allTransactions.concat(userData.bonusHistory);
+
+      // Sort all transactions by createdAt
+      allTransactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      const paginatedTransactions = await paginate(allTransactions, page, pageSize);
+      res.status(200).json({
+        transactions: paginatedTransactions.results,
+        pagination: {
+          page: paginatedTransactions.page,
+          pageSize: paginatedTransactions.pageSize,
+          totalPages: paginatedTransactions.totalPages,
+          totalDocs: paginatedTransactions.totalDocs,
+        },
+        sts: "01",
+        msg: "Get all transactions report by admin Success",
+      });
+    } else {
+      return next(errorHandler(401, "User Login Failed"));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+

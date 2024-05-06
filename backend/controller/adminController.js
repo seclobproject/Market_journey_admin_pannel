@@ -1138,6 +1138,7 @@ const paginate = async (model, query, page = 1, pageSize = 10) => {
 
     const results = await model
       .find(query)
+      .select("createdAt ownSponserId name sponserName packageAmount franchise renewalStatus userStatus email")
       .sort({ createdAt: -1 })
       .skip(offset)
       .limit(pageSize);
@@ -1159,10 +1160,23 @@ export const viewAllPageUsers = async (req, res, next) => {
     const adminId = req.admin._id;
     const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+    const searchText = req.query.searchText; // Text to search for in name, sponserName, and phone fields
 
     const admin = await Admin.findById(adminId);
     if (admin) {
-      const userData = await paginate(User, {}, page, pageSize);
+      let query = {};
+      if (searchText) {
+        // If search text is provided, create a regex to match any part of the string
+        const searchRegex = new RegExp(searchText, "i");
+        query = {
+          $or: [
+            { name: { $regex: searchRegex } },
+            { sponserName: { $regex: searchRegex } },
+          ],
+        };
+      }
+
+      const userData = await paginate(User, query, page, pageSize);
 
       return res.status(200).json({
         userData,
@@ -1176,6 +1190,7 @@ export const viewAllPageUsers = async (req, res, next) => {
     next(error);
   }
 };
+
 
 //   const paginate = async (model, query, page = 1, pageSize = 10, searchQuery = {}) => {
 //     try {

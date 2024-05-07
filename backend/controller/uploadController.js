@@ -880,7 +880,8 @@ export const uploadPdf = async (req, res, next) => {
       // Send email with PDF attachment
       if (newPdf) {
         const recipientEmail = userData.email; // Use the recipient's email address
-        const pdfFilePath = `https://admin.marketjourney.in/uploads/${pdfFileName}`; // Adjust path to PDF
+        // const pdfFilePath = `https://admin.marketjourney.in/uploads/${pdfFileName}`; // Adjust path to PDF
+        const pdfFilePath = `http://localhost:6003/uploads/${pdfFileName}`; // Adjust path to PDF
 
         const emailSent = await sendMailWithAttachment(
           userData,

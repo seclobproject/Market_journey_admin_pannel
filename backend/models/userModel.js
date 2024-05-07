@@ -219,6 +219,10 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    tokenWallet: {
+      type: Number,
+      default: 0,
+    },
     tdsAmount: {
       type: Number,
       default: 0,

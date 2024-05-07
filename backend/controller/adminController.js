@@ -1172,6 +1172,7 @@ export const viewAllPageUsers = async (req, res, next) => {
           $or: [
             { name: { $regex: searchRegex } },
             { sponserName: { $regex: searchRegex } },
+            { email: { $regex: searchRegex } }
           ],
         };
       }

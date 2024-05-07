@@ -757,6 +757,9 @@ const paginateArray = (array, page = 1, pageSize = 10) => {
 export const viewLevel1User = async (req, res, next) => {
   try {
     const userId = req.query.id || req.user._id;
+    const searchText = req.query.searchText;
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
 
     // Fetch the user document by its ID and populate its child documents
     const user = await User.findById(userId)
@@ -777,10 +780,17 @@ export const viewLevel1User = async (req, res, next) => {
     // Destructure relevant fields from the user document
     const { childLevel1, ownSponserId, userStatus } = user;
 
-    // Paginate childLevel1 array
-    const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
-    const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
-    const paginatedChildLevel1 = paginateArray(childLevel1, page, pageSize);
+    // Filter childLevel1 array based on search text
+    let filteredChildLevel1 = childLevel1;
+    if (searchText) {
+      const searchRegex = new RegExp(searchText, "i");
+      filteredChildLevel1 = childLevel1.filter(doc =>
+        searchRegex.test(doc.name) || searchRegex.test(doc.sponserName) || searchRegex.test(doc.email)
+      );
+    }
+
+    // Paginate filtered childLevel1 array
+    const paginatedChildLevel1 = paginateArray(filteredChildLevel1, page, pageSize);
 
     // Send the response with paginated child documents and other relevant information
     res.status(200).json({
@@ -801,46 +811,12 @@ export const viewLevel1User = async (req, res, next) => {
   }
 };
 
-// export const viewLevel2User=async(req,res,next)=>{
-//   try {
-//     const userId = req.query.id || req.user._id;
-
-//     // Fetch the user document by its ID and populate its child documents
-//     const user = await User.findById(userId)
-//       .select("childLevel2 ownSponserId userStatus")
-//       .populate([
-//         {
-//           path: "childLevel2",
-//           select:
-//             "name ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName",
-//         },
-//       ]);
-
-//     // If user document is not found, return an error
-//     if (!user) {
-//       return next(errorHandler("User not found"));
-//     }
-
-//     // Destructure relevant fields from the user document
-//     const { childLevel2, ownSponserId, userStatus } =
-//       user;
-
-//     // Send the response with child documents and other relevant information
-//     res.status(200).json({
-//       child2: childLevel2,
-//       ownSponserId,
-//       userStatus,
-//       sts: "01",
-//       msg: "Success",
-//     });
-//   } catch (error) {
-//     next(error)
-//   }
-// }
-
 export const viewLevel2User = async (req, res, next) => {
   try {
     const userId = req.query.id || req.user._id;
+    const searchText = req.query.searchText;
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
 
     // Fetch the user document by its ID and populate its child documents
     const user = await User.findById(userId)
@@ -861,10 +837,17 @@ export const viewLevel2User = async (req, res, next) => {
     // Destructure relevant fields from the user document
     const { childLevel2, ownSponserId, userStatus } = user;
 
-    // Paginate childLevel1 array
-    const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
-    const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
-    const paginatedChildLevel2 = paginateArray(childLevel2, page, pageSize);
+    // Filter childLevel2 array based on search text
+    let filteredChildLevel2 = childLevel2;
+    if (searchText) {
+      const searchRegex = new RegExp(searchText, "i");
+      filteredChildLevel2 = childLevel2.filter(doc =>
+        searchRegex.test(doc.name) || searchRegex.test(doc.sponserName) || searchRegex.test(doc.email)
+      );
+    }
+
+    // Paginate filtered childLevel2 array
+    const paginatedChildLevel2 = paginateArray(filteredChildLevel2, page, pageSize);
 
     // Send the response with paginated child documents and other relevant information
     res.status(200).json({
@@ -885,7 +868,11 @@ export const viewLevel2User = async (req, res, next) => {
   }
 };
 
+
+
 //request for wallet withdrawal
+
+
 
 export const walletWithdrawRequest = async (req, res, next) => {
   try {

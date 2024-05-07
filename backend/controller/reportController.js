@@ -44,6 +44,7 @@ export const directIncomeReportPaginated = async (req, res, next) => {
 
     if (userData) {
       const userStatus = userData.userStatus;
+      const directReferalIncome=userData.directReferalIncome; 
       const directReferalHistory = userData.directReferalHistory;
       const paginatedReferalHistory = await paginate(
         directReferalHistory,
@@ -53,6 +54,7 @@ export const directIncomeReportPaginated = async (req, res, next) => {
       res.status(200).json({
         directIncome: paginatedReferalHistory.results,
         userStatus,
+        totalIncome:directReferalIncome,
         pagination: {
           page: paginatedReferalHistory.page,
           pageSize: paginatedReferalHistory.pageSize,
@@ -86,6 +88,8 @@ export const inDirectIncomeReportPaginated = async (req, res, next) => {
 
     if (userData) {
       const userStatus = userData.userStatus;
+      const inDirectReferalIncome=userData.inDirectReferalIncome;
+
       const inDirectReferalHistory = userData.inDirectReferalHistory;
       const paginatedReferalHistory = await paginate(
         inDirectReferalHistory,
@@ -95,6 +99,7 @@ export const inDirectIncomeReportPaginated = async (req, res, next) => {
       res.status(200).json({
         inDirectIncome: paginatedReferalHistory.results,
         userStatus,
+        totalIncome:inDirectReferalIncome,
         pagination: {
           page: paginatedReferalHistory.page,
           pageSize: paginatedReferalHistory.pageSize,
@@ -128,6 +133,7 @@ export const levelIncomeReportPaginated = async (req, res, next) => {
 
     if (userData) {
       const userStatus = userData.userStatus;
+      const totalLevelIncome=userData.totalLevelIncome;
       const levelIncomeHistory = userData.levelIncomeHistory;
       const paginatedReferalHistory = await paginate(
         levelIncomeHistory,
@@ -137,6 +143,7 @@ export const levelIncomeReportPaginated = async (req, res, next) => {
       res.status(200).json({
         levelIncome: paginatedReferalHistory.results,
         userStatus,
+        totalIncome:totalLevelIncome,
         pagination: {
           page: paginatedReferalHistory.page,
           pageSize: paginatedReferalHistory.pageSize,
@@ -646,6 +653,7 @@ export const userAutoPoolIncomeHistory = async (req, res, next) => {
     });
     if (userData) {
       const userStatus = userData.userStatus;
+      const totalAutoPoolIncome=userData.totalAutoPoolIncome;
       const userCreditHistory = userData.autoPoolIncomeHistory;
       const paginateduserCreditHistory = await paginate(
         userCreditHistory,
@@ -655,6 +663,7 @@ export const userAutoPoolIncomeHistory = async (req, res, next) => {
       res.status(200).json({
         autoPoolCreditHistory: paginateduserCreditHistory.results,
         userStatus,
+        totalIncome:totalAutoPoolIncome,
         pagination: {
           page: paginateduserCreditHistory.page,
           pageSize: paginateduserCreditHistory.pageSize,
@@ -854,6 +863,7 @@ export const bonusCreditedReport = async (req, res, next) => {
     });
 
     if (userData) {
+      const totalBonusAmount=userData.totalBonusAmount;
       const creditBounusHistory = userData.bonusHistory;
       const paginatedcreditBounusHistory = await paginate(
         creditBounusHistory,
@@ -862,6 +872,7 @@ export const bonusCreditedReport = async (req, res, next) => {
       );
       res.status(200).json({
         creditBonusHistory: paginatedcreditBounusHistory.results,
+        totalIncome:totalBonusAmount,
         pagination: {
           page: paginatedcreditBounusHistory.page,
           pageSize: paginatedcreditBounusHistory.pageSize,
@@ -886,6 +897,7 @@ export const filteredUsers = async (req, res, next) => {
     const userId = req.admin ? req.admin._id : req.user ? req.user._id : null;
     let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+    const searchText = req.query.searchText;
     const { state } = req.body;
     const { district } = req.body;
     const { zonal } = req.body;
@@ -951,10 +963,18 @@ export const filteredUsers = async (req, res, next) => {
       userData=await User.find().sort({createdAt:-1})
       users=userData;
     }
+    let filterUsers = users;
+    if (searchText) {
+      const searchRegex = new RegExp(searchText, "i");
+      filterUsers = users.filter(doc =>
+        searchRegex.test(doc.name) || searchRegex.test(doc.sponserName) || searchRegex.test(doc.email)
+      );
+    }
+
 
 
     if (users) {
-      const paginatedUsers = await paginate(users, page, pageSize);
+      const paginatedUsers = await paginate(filterUsers, page, pageSize);
       res.status(200).json({
         filteredUsers: paginatedUsers.results,
         pagination: {

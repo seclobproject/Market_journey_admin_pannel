@@ -1022,6 +1022,7 @@ export const acceptUser = async (req, res, next) => {
             updatedSponser2 = await sponserUser2.save();
           }
           if (sponserUser1) {
+            sponserUser1.pendingMembers.pull(updatedUser._id);
             sponserUser1.childLevel1.push(updatedUser._id);
             updatedSponser1 = await sponserUser1.save();
           }

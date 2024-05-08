@@ -233,6 +233,8 @@ export const addUser = async (req, res, next) => {
       panchayathData.editable = false;
       await panchayathData.save();
     }
+    sponserData.pendingMembers.push(user._id);
+    await sponserData.save();
 
     // Respond with success message
     res.status(200).json({
@@ -763,10 +765,15 @@ export const viewLevel1User = async (req, res, next) => {
 
     // Fetch the user document by its ID and populate its child documents
     const user = await User.findById(userId)
-      .select("childLevel1 ownSponserId userStatus")
+      .select("childLevel1 pendingMembers ownSponserId userStatus")
       .populate([
         {
           path: "childLevel1",
+          select:
+            "name ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName packageType",
+        },
+        {
+          path: "pendingMembers",
           select:
             "name ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName packageType",
         },
@@ -778,30 +785,42 @@ export const viewLevel1User = async (req, res, next) => {
     }
 
     // Destructure relevant fields from the user document
-    const { childLevel1, ownSponserId, userStatus } = user;
+    const { childLevel1, pendingMembers, ownSponserId, userStatus } = user;
 
-    // Filter childLevel1 array based on search text
-    let filteredChildLevel1 = childLevel1;
+    let combinedArray = [];
+    
+    // If there are pending members, include them in the combined array
+    if (pendingMembers.length > 0) {
+      combinedArray = [...pendingMembers];
+    }
+
+    // If there are level1 users, include them in the combined array
+    if (childLevel1.length > 0) {
+      combinedArray = [...combinedArray, ...childLevel1];
+    }
+
+    // Filter combined array based on search text
+    let filteredCombinedArray = combinedArray;
     if (searchText) {
       const searchRegex = new RegExp(searchText, "i");
-      filteredChildLevel1 = childLevel1.filter(doc =>
+      filteredCombinedArray = combinedArray.filter(doc =>
         searchRegex.test(doc.name) || searchRegex.test(doc.sponserName) || searchRegex.test(doc.email)
       );
     }
 
-    // Paginate filtered childLevel1 array
-    const paginatedChildLevel1 = paginateArray(filteredChildLevel1, page, pageSize);
+    // Paginate the combined array
+    const paginatedCombinedArray = paginateArray(filteredCombinedArray, page, pageSize);
 
-    // Send the response with paginated child documents and other relevant information
+    // Send the response with paginated users and other relevant information
     res.status(200).json({
-      child1: paginatedChildLevel1.results,
+      child1: paginatedCombinedArray.results,
       ownSponserId,
       userStatus,
       pagination: {
-        page: paginatedChildLevel1.page,
-        pageSize: paginatedChildLevel1.pageSize,
-        totalPages: paginatedChildLevel1.totalPages,
-        totalDocs: paginatedChildLevel1.totalDocs,
+        page: paginatedCombinedArray.page,
+        pageSize: paginatedCombinedArray.pageSize,
+        totalPages: paginatedCombinedArray.totalPages,
+        totalDocs: paginatedCombinedArray.totalDocs,
       },
       sts: "01",
       msg: "Success",
@@ -810,6 +829,7 @@ export const viewLevel1User = async (req, res, next) => {
     next(error);
   }
 };
+
 
 export const viewLevel2User = async (req, res, next) => {
   try {

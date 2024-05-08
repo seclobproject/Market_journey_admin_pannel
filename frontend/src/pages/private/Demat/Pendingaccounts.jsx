@@ -203,7 +203,7 @@ function Pendingaccounts() {
                     ) : (
                       <tr>
                         <td colSpan={20} style={{ textAlign: "center" }}>
-                          <b>No Accounts Found</b>{" "}
+                          <b>No Pending Accounts Found</b>{" "}
                         </td>
                       </tr>
                     )}

@@ -23,9 +23,7 @@ function Alldemate() {
   const [selectedZonalId, setselectedZonalId] = useState(null);
   const [selectedPanId, setselectedPanId] = useState(null);
   const [filteredData, setFilteredData] = useState([]);
-  console.log(filteredData,"filteredData");
   const [stateList, setStateList] = useState([]);
-  console.log(stateList,"stateList");
 
   const [districtList, setDistrictList] = useState([]);
   const [zonalList, setZonalList] = useState([]);
@@ -144,7 +142,6 @@ function Alldemate() {
   };
 
   const handleReset = () => {
-    getFilterData();
 
     setSelectedStateId("");
     setFilterReport({
@@ -153,7 +150,6 @@ function Alldemate() {
       zonal: "",
       panchayath: "",
     });
-    // setFilteredData([]);
     setSelectedState("");
     setSelectedDistrictId("");
     setselectedPanId("");
@@ -162,6 +158,10 @@ function Alldemate() {
     setSelectKey(selectKey + 1);
 
   };
+
+  useEffect(()=>{
+getFilterData();
+  },[filterReport]);
   
   const handlePageChange = (event, newPage) => {
     setParams((prevParams) => ({
@@ -201,7 +201,7 @@ useEffect(()=>{
   return (
     <>
       <SlideMotion>
-        <div className="card w-100 position-relative overflow-hidden">
+        <div className="card w-100 position-relative">
           {" "}
           <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
             <h5

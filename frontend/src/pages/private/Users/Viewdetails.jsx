@@ -36,6 +36,7 @@ function Viewdetails() {
   const [bonusModal, setBonusModal] = useState({ show: false, id: null });
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
+  const [loadingButton, setLoadingButton] = useState(false);
 
   const [addBonnus, setAddBonnus] = useState({
     bonusAmount: 0,
@@ -55,6 +56,7 @@ function Viewdetails() {
     setIsLoading(true);
     try {
       const response = await ApiCall("get", `${viewsingleuserUrl}/${id}`);
+    console.log(response,"respone");
       if (response?.status === 200) {
         const detailsArray = [
           {
@@ -212,7 +214,6 @@ function Viewdetails() {
         getUserDetails();
         Show_Toast("Nominee details added successfully", true);
       } else {
-        console.log(createResponse.error, "error");
         Show_Toast(createResponse.error, false);
       }
     } catch (error) {
@@ -228,15 +229,15 @@ function Viewdetails() {
         Show_Toast("Please add a valid amount.");
         return;
       }
-
+      setLoadingButton(true);
       const response = await ApiCall("post", `${addBonnusUrl}/${userId}`, {
         bonusAmount: bonusAmountNumber,
         description: addBonnus?.description,
         transactionId: addBonnus?.transactionId,
-
       });
 
       if (response.status === 200) {
+        setLoadingButton(false);
         Show_Toast("Bonus added successfully.", true);
         setValidated(false);
         setBonusModal(false);
@@ -456,32 +457,23 @@ function Viewdetails() {
                                 </h5>
                               </div>
                               <div className="d-flex justify-content-end flex-wrap mt-3">
-
-                              {details.packageType === "Franchise" && details.userStatus==="approved"&&!details.isPromoter&&
-  <Button
-    className="btn btn-custom"
-    onClick={() => {
-      setBonusModal({
-        show: true,
-        id: details?.id,
-      });
-      setValidated(false);
-    }}
-  >
-    <i className="fas fa-plus"></i>
-    Add Bonus
-  </Button>
-}
-
-
-
-
-
-
-
-
-
-
+                                {details.packageType === "Franchise" &&
+                                  details.userStatus === "approved" &&
+                                  !details.isPromoter && (
+                                    <Button
+                                      className="btn btn-custom"
+                                      onClick={() => {
+                                        setBonusModal({
+                                          show: true,
+                                          id: details?.id,
+                                        });
+                                        setValidated(false);
+                                      }}
+                                    >
+                                      <i className="fas fa-plus"></i>
+                                      Add Bonus
+                                    </Button>
+                                  )}
 
                                 {details.userStatus === "approved" && (
                                   <Dropdown
@@ -526,24 +518,20 @@ function Viewdetails() {
                                     </span>
                                   )}
                                 </div>
- 
                               </div>
                               <div className="row mt-3">
-                              <div className="col-3">
-                  
-                  {details?.renewalStatus ? (
-                    <span className="badge bg-success rounded-3 fw-semibold">
-                      Active Plan
-                    </span>
-                  ) : (
-                    <span className="badge bg-danger rounded-3 fw-semibold">
-                      Non active Plan
-                    </span>
-                  )}
-                
-                </div>
+                                <div className="col-3">
+                                  {details?.renewalStatus ? (
+                                    <span className="badge bg-success rounded-3 fw-semibold">
+                                      Active Plan
+                                    </span>
+                                  ) : (
+                                    <span className="badge bg-danger rounded-3 fw-semibold">
+                                      Non active Plan
+                                    </span>
+                                  )}
+                                </div>
                               </div>
-                      
 
                               <div className="mt-2">
                                 <h5
@@ -647,7 +635,7 @@ function Viewdetails() {
                                 </li>
                                 {details?.franchise == "District Franchise" && (
                                   <>
-                                     <li className="d-flex align-items-center gap-3 mb-4">
+                                    <li className="d-flex align-items-center gap-3 mb-4">
                                       <i className="fas fa-user text-dark fs-6" />
                                       <h6 className="fs-4 fw-semibold mb-0">
                                         State :{" "}
@@ -658,12 +646,11 @@ function Viewdetails() {
                                         </span>
                                       </h6>
                                     </li>
-                                  
                                   </>
                                 )}
                                 {details?.franchise == "Zonal Franchise" && (
                                   <>
-                                     <li className="d-flex align-items-center gap-3 mb-4">
+                                    <li className="d-flex align-items-center gap-3 mb-4">
                                       <i className="fas fa-user text-dark fs-6" />
                                       <h6 className="fs-4 fw-semibold mb-0">
                                         State :{" "}
@@ -685,61 +672,11 @@ function Viewdetails() {
                                         </span>
                                       </h6>
                                     </li>
-                                  
-                                 
                                   </>
                                 )}
-                                  {details?.franchise == "Mobile Franchise" && (
-                                   <>
-                                   <li className="d-flex align-items-center gap-3 mb-4">
-                                    <i className="fas fa-user text-dark fs-6" />
-                                    <h6 className="fs-4 fw-semibold mb-0">
-                                      State :{" "}
-                                      <span
-                                        style={{ color: "rgb(247, 174, 21)" }}
-                                      >
-                                        {details?.state || "--"}
-                                      </span>
-                                    </h6>
-                                  </li>
-                                  <li className="d-flex align-items-center gap-3 mb-4">
-                                    <i className="fas fa-user text-dark fs-6" />
-                                    <h6 className="fs-4 fw-semibold mb-0">
-                                      District :{" "}
-                                      <span
-                                        style={{ color: "rgb(247, 174, 21)" }}
-                                      >
-                                        {details?.district || "--"}
-                                      </span>
-                                    </h6>
-                                  </li>
-                                  <li className="d-flex align-items-center gap-3 mb-4">
-                                    <i className="fas fa-user text-dark fs-6" />
-                                    <h6 className="fs-4 fw-semibold mb-0">
-                                      Zonal :{" "}
-                                      <span
-                                        style={{ color: "rgb(247, 174, 21)" }}
-                                      >
-                                        {details?.zonal || "--"}
-                                      </span>
-                                    </h6>
-                                  </li>
-                                  <li className="d-flex align-items-center gap-3 mb-4">
-                                    <i className="fas fa-user text-dark fs-6" />
-                                    <h6 className="fs-4 fw-semibold mb-0">
-                                      Panchayath :{" "}
-                                      <span
-                                        style={{ color: "rgb(247, 174, 21)" }}
-                                      >
-                                        {details?.panchayath || "--"}
-                                      </span>
-                                    </h6>
-                                  </li>
-                                </>
-                                )}
-                                {details?.packageType == "Courses" || details?.packageType =="Signals" &&(
+                                {details?.franchise == "Mobile Franchise" && (
                                   <>
-                                     <li className="d-flex align-items-center gap-3 mb-4">
+                                    <li className="d-flex align-items-center gap-3 mb-4">
                                       <i className="fas fa-user text-dark fs-6" />
                                       <h6 className="fs-4 fw-semibold mb-0">
                                         State :{" "}
@@ -785,7 +722,63 @@ function Viewdetails() {
                                     </li>
                                   </>
                                 )}
-                                
+                                {details?.packageType == "Courses" ||
+                                  (details?.packageType == "Signals" && (
+                                    <>
+                                      <li className="d-flex align-items-center gap-3 mb-4">
+                                        <i className="fas fa-user text-dark fs-6" />
+                                        <h6 className="fs-4 fw-semibold mb-0">
+                                          State :{" "}
+                                          <span
+                                            style={{
+                                              color: "rgb(247, 174, 21)",
+                                            }}
+                                          >
+                                            {details?.state || "--"}
+                                          </span>
+                                        </h6>
+                                      </li>
+                                      <li className="d-flex align-items-center gap-3 mb-4">
+                                        <i className="fas fa-user text-dark fs-6" />
+                                        <h6 className="fs-4 fw-semibold mb-0">
+                                          District :{" "}
+                                          <span
+                                            style={{
+                                              color: "rgb(247, 174, 21)",
+                                            }}
+                                          >
+                                            {details?.district || "--"}
+                                          </span>
+                                        </h6>
+                                      </li>
+                                      <li className="d-flex align-items-center gap-3 mb-4">
+                                        <i className="fas fa-user text-dark fs-6" />
+                                        <h6 className="fs-4 fw-semibold mb-0">
+                                          Zonal :{" "}
+                                          <span
+                                            style={{
+                                              color: "rgb(247, 174, 21)",
+                                            }}
+                                          >
+                                            {details?.zonal || "--"}
+                                          </span>
+                                        </h6>
+                                      </li>
+                                      <li className="d-flex align-items-center gap-3 mb-4">
+                                        <i className="fas fa-user text-dark fs-6" />
+                                        <h6 className="fs-4 fw-semibold mb-0">
+                                          Panchayath :{" "}
+                                          <span
+                                            style={{
+                                              color: "rgb(247, 174, 21)",
+                                            }}
+                                          >
+                                            {details?.panchayath || "--"}
+                                          </span>
+                                        </h6>
+                                      </li>
+                                    </>
+                                  ))}
 
                                 <li className="d-flex align-items-center gap-3 mb-4">
                                   <i className="fas fa-store text-dark fs-6" />
@@ -798,7 +791,7 @@ function Viewdetails() {
                                     </span>
                                   </h6>
                                 </li>
-                                
+
                                 <li className="d-flex align-items-center gap-3 mb-4">
                                   <i className="fas fa-store text-dark fs-6" />
                                   <h6 className="fs-4 fw-semibold mb-0">
@@ -810,7 +803,17 @@ function Viewdetails() {
                                     </span>
                                   </h6>
                                 </li>
-
+                                <li className="d-flex align-items-center gap-3 mb-4">
+                                  <i className="fas fa-money-bill-alt text-dark fs-6" />
+                                  <h6 className="fs-4 fw-semibold mb-0">
+                                    Points:{" "}
+                                    <span
+                                      style={{ color: "rgb(247, 174, 21)" }}
+                                    >
+                                       {details?.points || "--"}
+                                    </span>
+                                  </h6>
+                                </li>
 
                                 <li className="d-flex align-items-center gap-3 mb-4">
                                   <i className="fas fa-money-bill-alt text-dark fs-6" />
@@ -823,26 +826,31 @@ function Viewdetails() {
                                     </span>
                                   </h6>
                                 </li>
-                         
-                                {!(details?.franchise === "Mobile Franchise" || details?.packageType === "Courses"||details?.packageType==="Signals") && (
-  <li className="d-flex align-items-center gap-3 mb-4">
-    <i className="fas fa-building text-dark fs-6" />
-    <h6 className="fs-4 fw-semibold mb-0">
-      Franchise Name:{" "}
-      <span style={{ color: "rgb(247, 174, 21)" }}>
-        {details?.franchiseName || "--"}
-      </span>
-    </h6>
-  </li>
-)}
+                                
 
+                                {!(
+                                  details?.franchise === "Mobile Franchise" ||
+                                  details?.packageType === "Courses" ||
+                                  details?.packageType === "Signals"
+                                ) && (
+                                  <li className="d-flex align-items-center gap-3 mb-4">
+                                    <i className="fas fa-building text-dark fs-6" />
+                                    <h6 className="fs-4 fw-semibold mb-0">
+                                      Franchise Name:{" "}
+                                      <span
+                                        style={{ color: "rgb(247, 174, 21)" }}
+                                      >
+                                        {details?.franchiseName || "--"}
+                                      </span>
+                                    </h6>
+                                  </li>
+                                )}
 
                                 {details?.screenshot && (
                                   <Image
                                     width={200}
                                     // src={`http://192.168.29.152:6003/uploads/${details?.screenshot}`}
                                     src={`https://admin.marketjourney.in/uploads/${details?.screenshot}`}
-
                                   />
                                 )}
                               </ul>
@@ -1580,11 +1588,10 @@ function Viewdetails() {
               Please provide a description.
             </Form.Control.Feedback>
           </div>
-    
 
           <div className="col-12 mt-5">
             <button type="submit" className="btn btn-custom float-end">
-              {/* {addLocation?._id ? 'Update' : 'Save'}  */}Send
+              {loadingButton ? "Sending..." : "Send"}
             </button>
           </div>
         </Form>

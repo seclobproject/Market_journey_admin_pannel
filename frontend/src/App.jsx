@@ -34,6 +34,7 @@ import Certificate from "./pages/private/Users/Certificate";
 import Report from "./pages/private/Reportpages/Report";
 import Pendingrenewal from "./pages/private/Users/Pendingrenewal";
 import Renewalhistory from "./pages/private/Users/Renewalhistory";
+import Trendingusers from "./pages/private/Trending/Trendingusers";
 
 
 function App() {
@@ -73,6 +74,8 @@ function App() {
           <Route path="/reports" element={<Report />}/>
           <Route path="/user/pending-renewals" element={<Pendingrenewal />}/>
           <Route path="/user/subscription-history" element={<Renewalhistory />}/>
+          <Route path="/trendingusers" element={<Trendingusers />}/>
+
 
 
 

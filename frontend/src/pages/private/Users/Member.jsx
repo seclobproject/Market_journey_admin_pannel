@@ -24,9 +24,9 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../../../Components/Loader";
 import moment from "moment";
 
-function Member() { 
-  const [selectKey, setSelectKey] = useState(0); 
-  const [secondselectKey, setSecondSelectKey] = useState(0); 
+function Member() {
+  const [selectKey, setSelectKey] = useState(0);
+  const [secondselectKey, setSecondSelectKey] = useState(0);
   const [memberModal, setMemberModal] = useState({ show: false, id: null });
   const { Check_Validation } = useContext(ContextData);
   const [validated, setValidated] = useState(false);
@@ -59,9 +59,11 @@ function Member() {
   const [filteredDataStatus, setFilteredDataStatus] = useState([]);
   const [filter, setFilter] = useState();
   const [statusfilter, setStatusFilter] = useState();
-
+  const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
   const startIndex = (params.page - 1) * params.pageSize;
+  const [searchKey, setSearchKey] = useState(0); 
+
   const options = [
     { value: "View all", label: "View all" },
     { value: "District Franchise", label: "District Franchise" },
@@ -155,7 +157,7 @@ function Member() {
       console.error("Error fetching state list:", error);
     }
   };
-  
+
   //-----------list Zonal in drop down--------
   const getAllZonallist = async () => {
     try {
@@ -248,7 +250,12 @@ function Member() {
   const getallUsers = async () => {
     setIsLoading(true);
     try {
-      const response = await ApiCall("get", viewalluserUrl, {}, params);
+      const response = await ApiCall(
+        "get",
+        viewalluserUrl,
+        {},
+        { ...params, searchText }
+      );
       if (response.status === 200) {
         setAllUser(response?.data?.userData?.results);
         setFilteredData(response?.data?.userData?.results);
@@ -277,7 +284,7 @@ function Member() {
       page: newPage,
     }));
   };
- 
+
   const handleFilterAndSetFilter = (selectedOption) => {
     const filter = selectedOption.value;
 
@@ -321,6 +328,13 @@ function Member() {
       setTotalGstAmount(sum);
     }
   };
+
+  const handleReset = () => {
+    setSearchText("");
+    setSearchKey(searchKey + 1);
+    setFilter("View all");
+  };
+
   useEffect(() => {
     getallUsers();
   }, [params]);
@@ -361,10 +375,16 @@ function Member() {
     addMember?.franchise,
   ]);
 
-
   useEffect(() => {
     calculateTotalGstAmount();
   }, [addMember?.packageAmount]);
+
+  useEffect(() => {
+    if (searchText) {
+      getallUsers();
+    }
+  }, [searchText]);
+
   return (
     <>
       <SlideMotion>
@@ -373,7 +393,8 @@ function Member() {
           <div className="px-4 py-3 border-bottom d-flex  align-items-center justify-content-between">
             <h5
               className="card-title fw-semibold mb-0 lh-sm px-0 mt-3"
-              style={{ color: "#0F1535" }}            >
+              style={{ color: "#0F1535" }}
+            >
               Members
             </h5>
 
@@ -394,7 +415,20 @@ function Member() {
           </div>
           <div className="row ms-2 me-2">
             <div className="col-md-3 mt-3 sm-2">
+              <input
+                type="text"
+                value={searchText}
+                onChange={(e) => {
+                  setSearchText(e.target.value);
+                  setFilter("");
+                }}
+                placeholder="Search...."
+                className="form-control"
+              />
+            </div>
+            <div className="col-md-3 mt-3 sm-2">
               <Select
+                key={searchKey}
                 onChange={(selectedOption) =>
                   handleFilterAndSetFilter(selectedOption)
                 }
@@ -405,6 +439,7 @@ function Member() {
             </div>
             <div className="col-md-3 mt-3">
               <select
+                key={searchKey}
                 value={statusfilter}
                 onChange={(e) => handleFilterAndSetFilterStatus(e)}
                 className="form-control"
@@ -420,7 +455,7 @@ function Member() {
                 {/* Add more filter options as needed */}
               </select>
             </div>
-            <div className="col-md-3 mt-3">
+            {/* <div className="col-md-3 mt-3">
             <Select
                       required
                       options={[
@@ -436,7 +471,12 @@ function Member() {
                       placeholder="Search by user id...."
                       isSearchable={true}
                     />
-                    </div>
+                    </div> */}
+            <div className="col-md-3 mt-3">
+              <button className="btn btn-custom" onClick={handleReset}>
+                Reset
+              </button>
+            </div>
           </div>
           {isLoading ? (
             <Loader />
@@ -473,8 +513,7 @@ function Member() {
                       </th>
                       <th>
                         <h6 className="fs-4 fw-semibold mb-0">
-                        Renewal Status
-
+                          Renewal Status
                         </h6>
                       </th>
                       <th>
@@ -499,7 +538,9 @@ function Member() {
                             <td>{startIndex + index + 1}</td>
                             <td>
                               {users?.createdAt
-                                ? moment(users.createdAt).format("DD/MM/YYYY , HH:mm A")
+                                ? moment(users.createdAt).format(
+                                    "DD/MM/YYYY , HH:mm A"
+                                  )
                                 : "--"}
                             </td>
                             <td>{users?.ownSponserId || "--"}</td>
@@ -517,16 +558,16 @@ function Member() {
                             <td>₹ {users?.packageAmount}</td>
                             <td>{users?.franchise || "--"}</td>
                             <td>
-  {users?.renewalStatus ? (
-    <span className="badge bg-success rounded-3 fw-semibold">
-      Active Plan
-    </span>
-  ) : (
-    <span className="badge bg-danger rounded-3 fw-semibold">
-      Non active Plan
-    </span>
-  )}
-</td>
+                              {users?.renewalStatus ? (
+                                <span className="badge bg-success rounded-3 fw-semibold">
+                                  Active Plan
+                                </span>
+                              ) : (
+                                <span className="badge bg-danger rounded-3 fw-semibold">
+                                  Non active Plan
+                                </span>
+                              )}
+                            </td>
 
                             <td>
                               {users?.userStatus === "readyToApprove" ? (
@@ -891,9 +932,8 @@ function Member() {
                         setAddMember({
                           ...addMember,
                           state: selectedOption?.label,
-                          franchiseName: "", 
+                          franchiseName: "",
                         });
-                        
                       }}
                       placeholder="Select a state"
                       isSearchable={true}
@@ -908,7 +948,7 @@ function Member() {
                       District Franchise Name
                     </label>
                     <Select
-                    key={selectKey}
+                      key={selectKey}
                       required
                       options={notTakenDistrict?.map((districts) => ({
                         value: districts?.id,
@@ -976,7 +1016,7 @@ function Member() {
                     value={selectedState?.district}
                     onChange={(selectedOption) => {
                       setSelectedDistrictId(selectedOption?.value);
-                      setSecondSelectKey(secondselectKey + 1)
+                      setSecondSelectKey(secondselectKey + 1);
                       setAddMember({
                         ...addMember,
                         district: selectedOption?.label,
@@ -996,8 +1036,7 @@ function Member() {
                   </label>
                   <Select
                     required
-                    key={selectKey||secondselectKey}
-
+                    key={selectKey || secondselectKey}
                     options={notTakenZonal?.map((zonal) => ({
                       value: zonal?.id,
                       label: zonal?.name,
@@ -1022,7 +1061,8 @@ function Member() {
 
             {(addMember?.franchise === "Mobile Franchise" ||
               packageType === "Courses" ||
-              addMember?.packageType === "Courses"||addMember?.packageType === "Signals") && (
+              addMember?.packageType === "Courses" ||
+              addMember?.packageType === "Signals") && (
               <div className="row">
                 <div className="col-md-3 mb-4">
                   <label htmlFor="stateDropdown1" className="form-label">
@@ -1058,7 +1098,6 @@ function Member() {
                   <Select
                     required
                     key={selectKey}
-
                     options={districtList?.map((districts) => ({
                       value: districts?.id,
                       label: districts?.name,
@@ -1087,7 +1126,6 @@ function Member() {
                   <Select
                     required
                     key={selectKey}
-
                     options={zonalList?.map((zonal) => ({
                       value: zonal?.id,
                       label: zonal?.name,
@@ -1115,7 +1153,6 @@ function Member() {
                   <Select
                     required
                     key={selectKey}
-
                     options={panchayathList?.map((panchayath) => ({
                       value: panchayath?.id,
                       label: panchayath?.name,

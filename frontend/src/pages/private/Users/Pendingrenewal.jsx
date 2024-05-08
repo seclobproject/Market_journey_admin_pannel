@@ -205,26 +205,9 @@ getpendingRenewals();
                               )}
                             </td>
 
-                            {/* <td>
-                              {renewals?.userStatus === "readyToApprove" && (
-                                <span className="badge bg-danger rounded-3 fw-semibold">
-                                  Ready to approve
-                                </span>
-                              )}
-                            </td> */}
-                            {/* <td>
-                              <i
-                                className="fas fa-eye"
-                                onClick={() =>
-                                  navigate("/user/details", {
-                                    state: { data: members?._id },
-                                  })
-                                }
-                              ></i>
-                            </td> */}
+                           
 
                             <td>
-                              {/* {members?.userStatus === "readyToApprove" && ( */}
                                 <button
                                   className="btn btn-success"
                                   onClick={() =>
@@ -237,10 +220,8 @@ getpendingRenewals();
                                 >
                                   Approve
                                 </button>
-                              {/* )} */}
                             </td>
                             <td>
-                              {/* {members?.userStatus === "readyToApprove" && ( */}
                                 <button
                                   className="btn btn-cancel"
                                   onClick={() =>
@@ -254,7 +235,6 @@ getpendingRenewals();
                                 >
                                   Reject
                                 </button>
-                              {/* )} */}
                             </td>
                           </tr>
                         ))}
@@ -262,7 +242,7 @@ getpendingRenewals();
                     ) : (
                       <tr>
                         <td colSpan={20} style={{ textAlign: "center" }}>
-                          <b>No Pending renewal Found</b>{" "}
+                          <b>No Pending  Found</b>{" "}
                         </td>
                       </tr>
                     )}

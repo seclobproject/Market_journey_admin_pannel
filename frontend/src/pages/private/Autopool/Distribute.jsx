@@ -31,7 +31,7 @@ function Distribute() {
   const [isLoading, setIsLoading] = useState(false);
   const [details, setDetails] = useState({});
   const [count, setCount] = useState({});
-  const [distributionHistory, setDistributionHistory] = useState({});
+  const [distributionHistory, setDistributionHistory] = useState([]);
   const [poolPercentage, setPoolPercentage] = useState({
     autoPoolPercentageA: "",
     autoPoolPercentageB: "",
@@ -44,6 +44,7 @@ function Distribute() {
     setIsLoading(true);
     try {
       const response = await ApiCall("get", adminProfileUrl);
+      console.log(response,"response");
       if (response?.status === 200 || 201) {
         setDetails(response?.data?.admin);
         setCount(response?.data);
@@ -124,6 +125,11 @@ function Distribute() {
         Show_Toast(error, false);
     }
 };
+
+
+const sortedHistory = distributionHistory?.slice().sort((a, b) => {
+  return new Date(b.createdAt) - new Date(a.createdAt);
+});
 
   useEffect(() => {
     getAdminprofile();
@@ -627,9 +633,9 @@ function Distribute() {
                     </tr>
                   </thead>
                   <tbody>
-                    {distributionHistory?.length ? (
+                    {sortedHistory?.length ? (
                       <>
-                        {distributionHistory.map((history, index) => (
+                        {sortedHistory.map((history, index) => (
                           <tr key={index}>
                             <td>{index + 1}</td>
                             <td>

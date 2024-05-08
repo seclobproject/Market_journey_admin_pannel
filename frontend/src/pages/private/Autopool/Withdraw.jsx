@@ -21,6 +21,7 @@ function Withdraw() {
     setIsLoading(true);
     try {
       const response = await ApiCall("get", viewautopoolhistoryUrl, {}, params);
+      console.log(response,"respo");
       if (response?.status === 200) {
         setGetHistory(response?.data?.levelIncome);
         setTotalPages(response?.data?.pagination?.totalPages);

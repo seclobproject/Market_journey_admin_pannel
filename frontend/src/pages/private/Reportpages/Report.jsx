@@ -16,7 +16,7 @@ import moment from "moment";
 import { useNavigate } from "react-router-dom";
 
 function Report() {
-  const navigate =useNavigate();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedState, setSelectedState] = useState(null);
   const [selectedStateId, setSelectedStateId] = useState(null);
@@ -33,11 +33,12 @@ function Report() {
     district: "",
     zonal: "",
     panchayath: "",
+    packageName: "",
   });
   const [reportData, setReportData] = useState({});
   const [stateLabel, setStateLabel] = useState("");
-  const [selectKey, setSelectKey] = useState(0); // Add selectKey state
-
+  const [selectKey, setSelectKey] = useState(0); 
+  const [selectKey2, setSelectKey2] = useState(0); 
 
   const [params, setParams] = useState({
     page: 1,
@@ -48,14 +49,13 @@ function Report() {
   const [filter, setFilter] = useState();
   const startIndex = (params.page - 1) * params.pageSize;
   const options = [
-    { value: "view_all", label: "View all" },
-
     { value: "District Franchise", label: "District Franchise" },
     { value: "Zonal Franchise", label: "Zonal Franchise" },
     { value: "Mobile Franchise", label: "Mobile Franchise" },
     { value: "Algo", label: "Algo Trade" },
     { value: "Morning Cafe", label: "Morning Cafe" },
-    { value: "Night Cafe", label: "Night Cafe" },    { value: "Loet 0.1", label: "Loet 0.1" },
+    { value: "Night Cafe", label: "Night Cafe" },
+    { value: "Loet 0.1", label: "Loet 0.1" },
     { value: "Loet Pro", label: "Loet Pro" },
     { value: "Loet Promax", label: "Loet Pro Max" },
     { value: "Nifty", label: "Nifty" },
@@ -154,7 +154,7 @@ function Report() {
       if (response.status === 200) {
         setReportData(response?.data?.filteredUsers);
         setTotalPages(response?.data?.pagination);
-        setFilteredData(response?.data?.filteredUsers)
+        setFilteredData(response?.data?.filteredUsers);
       }
     } catch (error) {
       // Handle errors here
@@ -169,9 +169,13 @@ function Report() {
   };
 
   useEffect(() => {
-    if (filterReport?.state != "" || filterReport?.district != "" || filterReport?.zonal != "" || filterReport?.panchayath != ""){
+    if (
+      filterReport?.state != "" ||
+      filterReport?.district != "" ||
+      filterReport?.zonal != "" ||
+      filterReport?.panchayath != ""
+    ) {
       getFilterData();
-
     }
   }, [filterReport, params]);
 
@@ -187,65 +191,67 @@ function Report() {
       getPanchayathList();
     }
   }, [selectedStateId, selectedDistrictId, selectedZonalId]);
-  
-useEffect(()=>{
-  getFilterData();
-},[params]);
 
-useEffect(()=>{
-  if(filter==="view_all")
-getFilterData();
-},[filter]);
+  useEffect(() => {
+    getFilterData();
+  }, [params]);
 
+  useEffect(() => {
+    if (filter === "view_all") getFilterData();
+  }, [filter]);
 
   const handleReset = () => {
     setSelectedStateId("");
-    setStateLabel(""); // Ensure stateLabel is set to an empty string or null
+    setStateLabel("");
     setFilterReport({
       state: "",
       district: "",
       zonal: "",
       panchayath: "",
+      packageName: "",
+      
     });
-    // setFilteredData([]);
     setSelectedState("");
-    setReportData({});
     setSelectedDistrictId("");
     setselectedPanId("");
     setselectedZonalId("");
     setFilter("");
-  
-    // Increment selectKey to force re-render
+    setSelectKey2(selectKey2 + 1);
+
     setSelectKey(selectKey + 1);
+  };
+
+  const handleResetFunction = () => {
+ 
+    setSelectedStateId("");
+    setStateLabel("")
+    setSelectedState("");
+    setSelectedDistrictId("");
+    setselectedPanId("");
+    setselectedZonalId("");
+
+    setSelectKey(selectKey + 1);
+  };
+
+  useEffect(() => {
     getFilterData();
-  };
-  const viewAll = () => {
-    useEffect(()=>{
-      getFilterData();
+  }, [filterReport]);
 
-    },[params]);
-  };
+  // const handleFilterAndSetFilter = (selectedOption) => {
+  //   const filter = selectedOption.value;
 
-
-
-  const handleFilterAndSetFilter = (selectedOption) => {
-    const filter = selectedOption.value;
-
-    setFilter(filter);
-    const newFilteredData = reportData.filter((item) => {
-      return filter ? item.franchise === filter : true;
-    });
-    setFilteredData(newFilteredData);
-  };
-
-
+  //   setFilter(filter);
+  //   const newFilteredData = reportData.filter((item) => {
+  //     return filter ? item.franchise === filter : true;
+  //   });
+  //   setFilteredData(newFilteredData);
+  // };
 
   return (
     <>
       <SlideMotion>
-        <div className="container-fluid"></div>
         <div className="container-fluid">
-          <div className="card w-100 position-relative overflow-hidden">
+          <div className="card w-100 position-relative ">
             {" "}
             <div className="px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
               <h5
@@ -256,16 +262,31 @@ getFilterData();
               </h5>
               <div className="col-md-3 mt-3 sm-2">
               <Select
-                                key={selectKey}
+              key={selectKey2}
+  onChange={(selectedOption) => {
+    setFilterReport({
+      ...filterReport,
+      packageName: selectedOption.value,
+      state: "",
+      district: "",
+      zonal: "",
+      panchayath: "",
+    });
+    setSelectedStateId("");
+    setSelectedState("");
+    setSelectedDistrictId("");
+    setselectedPanId("");
+    setselectedZonalId("");
 
-                onChange={(selectedOption) =>
-                  handleFilterAndSetFilter(selectedOption)
-                }
-                options={options}
-                placeholder="Search by type..."
-                isSearchable={true}
-              />
-            </div>
+    setSelectKey(selectKey + 1);
+  }}
+  options={options}
+  placeholder="Search by type..."
+  isSearchable={true}
+/>
+
+
+              </div>
             </div>
             <div className="row ms-2 me-2">
               <div className="col-md-2 mt-3 sm-2">
@@ -312,7 +333,7 @@ getFilterData();
                         setFilterReport({
                           ...filterReport,
                           district: selectedOption?.label,
-                          state: "", // Reset state if needed
+                          state: "",
                         });
                       }
                     }}
@@ -371,9 +392,9 @@ getFilterData();
               )}
 
               <div className="col-md-2 mt-3 sm-2">
-              <Button className="btn btn-custom" onClick={handleReset}>
-                Reset
-              </Button>
+                <button className="btn btn-custom  ms-3 " onClick={handleReset}>
+                  Reset{" "}
+                </button>
               </div>
             </div>
             {isLoading ? (
@@ -413,7 +434,7 @@ getFilterData();
                         </th>
                         <th>
                           <h6 className="fs-4 fw-semibold mb-0">
-                          View Details
+                            View Details
                           </h6>
                         </th>
 
@@ -428,11 +449,12 @@ getFilterData();
                               <td>{startIndex + index + 1}</td>
                               <td>
                                 {data?.createdAt
-                                  ? moment(data.createdAt).format("DD/MM/YYYY, HH:mm A")
+                                  ? moment(data.createdAt).format(
+                                      "DD/MM/YYYY, HH:mm A"
+                                    )
                                   : "--"}
                               </td>
                               <td>{data?.ownSponserId || "--"}</td>
-
                               <td>
                                 {(data?.name && data.name.toUpperCase()) ||
                                   "--"}
@@ -442,19 +464,19 @@ getFilterData();
                                   data.sponserName.toUpperCase()) ||
                                   "--"}
                               </td>
-
                               <td>{data?.packageAmount}</td>
                               <td>{data?.franchise || "--"}</td>
                               <td>
-                              <i
-                                className="fas fa-eye"
-                                onClick={() =>
-                                  navigate("/user/details", {
-                                    state: { data: data?._id },
-                                  })
-                                }
-                              ></i>
-                            </td>                            </tr>
+                                <i
+                                  className="fas fa-eye"
+                                  onClick={() =>
+                                    navigate("/user/details", {
+                                      state: { data: data?._id },
+                                    })
+                                  }
+                                ></i>
+                              </td>{" "}
+                            </tr>
                           ))}
                         </>
                       ) : (

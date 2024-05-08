@@ -44,6 +44,7 @@ export const directIncomeReportPaginated = async (req, res, next) => {
 
     if (userData) {
       const userStatus = userData.userStatus;
+      const directReferalIncome=userData.directReferalIncome; 
       const directReferalHistory = userData.directReferalHistory;
       const paginatedReferalHistory = await paginate(
         directReferalHistory,
@@ -53,6 +54,7 @@ export const directIncomeReportPaginated = async (req, res, next) => {
       res.status(200).json({
         directIncome: paginatedReferalHistory.results,
         userStatus,
+        totalIncome:directReferalIncome,
         pagination: {
           page: paginatedReferalHistory.page,
           pageSize: paginatedReferalHistory.pageSize,
@@ -86,6 +88,8 @@ export const inDirectIncomeReportPaginated = async (req, res, next) => {
 
     if (userData) {
       const userStatus = userData.userStatus;
+      const inDirectReferalIncome=userData.inDirectReferalIncome;
+
       const inDirectReferalHistory = userData.inDirectReferalHistory;
       const paginatedReferalHistory = await paginate(
         inDirectReferalHistory,
@@ -95,6 +99,7 @@ export const inDirectIncomeReportPaginated = async (req, res, next) => {
       res.status(200).json({
         inDirectIncome: paginatedReferalHistory.results,
         userStatus,
+        totalIncome:inDirectReferalIncome,
         pagination: {
           page: paginatedReferalHistory.page,
           pageSize: paginatedReferalHistory.pageSize,
@@ -128,6 +133,7 @@ export const levelIncomeReportPaginated = async (req, res, next) => {
 
     if (userData) {
       const userStatus = userData.userStatus;
+      const totalLevelIncome=userData.totalLevelIncome;
       const levelIncomeHistory = userData.levelIncomeHistory;
       const paginatedReferalHistory = await paginate(
         levelIncomeHistory,
@@ -137,6 +143,7 @@ export const levelIncomeReportPaginated = async (req, res, next) => {
       res.status(200).json({
         levelIncome: paginatedReferalHistory.results,
         userStatus,
+        totalIncome:totalLevelIncome,
         pagination: {
           page: paginatedReferalHistory.page,
           pageSize: paginatedReferalHistory.pageSize,
@@ -521,9 +528,9 @@ export const autoPoolHistory = async (req, res, next) => {
     const adminData = await Admin.findById(userId).populate({
       path: "autoPoolHistory",
       options: {
-        sort: { createdAt: 1 }, // Sort by createdAt in descending order
+        sort: { createdAt: -1 }, // Sort by createdAt in descending order
       },
-    });
+    }).exec();
     if (!adminData) {
       return next(errorHandler(401, "Admin Login Failed"));
     }
@@ -641,11 +648,12 @@ export const userAutoPoolIncomeHistory = async (req, res, next) => {
     const userData = await User.findById(userId).populate({
       path: "autoPoolIncomeHistory",
       options: {
-        sort: { createdAt: 1 }, // Sort by createdAt in descending order
+        sort: { createdAt:-1 }, // Sort by createdAt in descending order
       },
     });
     if (userData) {
       const userStatus = userData.userStatus;
+      const totalAutoPoolIncome=userData.totalAutoPoolIncome;
       const userCreditHistory = userData.autoPoolIncomeHistory;
       const paginateduserCreditHistory = await paginate(
         userCreditHistory,
@@ -655,6 +663,7 @@ export const userAutoPoolIncomeHistory = async (req, res, next) => {
       res.status(200).json({
         autoPoolCreditHistory: paginateduserCreditHistory.results,
         userStatus,
+        totalIncome:totalAutoPoolIncome,
         pagination: {
           page: paginateduserCreditHistory.page,
           pageSize: paginateduserCreditHistory.pageSize,
@@ -854,6 +863,7 @@ export const bonusCreditedReport = async (req, res, next) => {
     });
 
     if (userData) {
+      const totalBonusAmount=userData.totalBonusAmount;
       const creditBounusHistory = userData.bonusHistory;
       const paginatedcreditBounusHistory = await paginate(
         creditBounusHistory,
@@ -862,6 +872,7 @@ export const bonusCreditedReport = async (req, res, next) => {
       );
       res.status(200).json({
         creditBonusHistory: paginatedcreditBounusHistory.results,
+        totalIncome:totalBonusAmount,
         pagination: {
           page: paginatedcreditBounusHistory.page,
           pageSize: paginatedcreditBounusHistory.pageSize,
@@ -886,10 +897,13 @@ export const filteredUsers = async (req, res, next) => {
     const userId = req.admin ? req.admin._id : req.user ? req.user._id : null;
     let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+    const searchText = req.query.searchText;
     const { state } = req.body;
     const { district } = req.body;
     const { zonal } = req.body;
     const { panchayath } = req.body;
+    const { packageName } = req.body;
+
     let userData;
     let users;
     const userDetails=await User.findById(userId);
@@ -927,7 +941,28 @@ export const filteredUsers = async (req, res, next) => {
       });
       users = userData.users;
     } else if (userDetails) {
-      if (userDetails.isDistrictFranchise) {
+      if(packageName){
+        if(userDetails.isDistrictFranchise){
+          const dist = userDetails.franchiseName;
+          userData = await District.findOne({ name: dist }).populate({
+            path: "users",
+            match: { franchise: packageName }, // Filter users by franchise
+            options: {
+          sort: { createdAt: 1 }, // Sort by createdAt in ascending order
+        },
+          });
+        }
+        if(userDetails.isZonalFranchise){
+          const zon = userDetails.franchiseName;
+          userData = await Zonal.findOne({ name: zon }).populate({
+            path: "users",
+            match: { franchise: packageName }, // Filter users by franchise
+            options: {
+          sort: { createdAt: 1 }, // Sort by createdAt in ascending order
+        },
+          });
+        }
+      }else if (userDetails.isDistrictFranchise) {
         const dist = userDetails.franchiseName;
         userData = await District.findOne({ name: dist }).populate({
           path: "users",
@@ -935,8 +970,7 @@ export const filteredUsers = async (req, res, next) => {
             sort: { createdAt: 1 }, // Sort by createdAt in descending order
           },
         });
-      }
-      if (userDetails.isZonalFranchise) {
+      }else if (userDetails.isZonalFranchise) {
         const zon = userDetails.franchiseName;
         userData = await Zonal.findOne({ name: zon }).populate({
           path: "users",
@@ -946,15 +980,25 @@ export const filteredUsers = async (req, res, next) => {
         });
       }
       users = userData.users;
-    }
-    else {
+    }else if (packageName) {
+      userData = await User.find({ franchise: packageName }).sort({createdAt:-1})
+      users=userData;
+    }else {
       userData=await User.find().sort({createdAt:-1})
       users=userData;
     }
+    let filterUsers = users;
+    if (searchText) {
+      const searchRegex = new RegExp(searchText, "i");
+      filterUsers = users.filter(doc =>
+        searchRegex.test(doc.name) || searchRegex.test(doc.sponserName) || searchRegex.test(doc.email)  || searchRegex.test(doc.franchise)
+      );
+    }
+
 
 
     if (users) {
-      const paginatedUsers = await paginate(users, page, pageSize);
+      const paginatedUsers = await paginate(filterUsers, page, pageSize);
       res.status(200).json({
         filteredUsers: paginatedUsers.results,
         pagination: {
@@ -1080,3 +1124,51 @@ export const viewPendingRenewalsPaginated = async (req, res, next) => {
     next(error);
   }
 };
+
+export const totalTransactionsHistory = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    let page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+    const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+
+    const userData = await User.findById(userId).populate([
+      { path: "directReferalHistory", options: { sort: { createdAt: 1 } } },
+      { path: "inDirectReferalHistory", options: { sort: { createdAt: 1 } } },
+      { path: "levelIncomeHistory", options: { sort: { createdAt: 1 } } },
+      { path: "autoPoolIncomeHistory", options: { sort: { createdAt: 1 } } },
+      { path: "bonusHistory", options: { sort: { createdAt: 1 } } }
+    ]);
+
+    if (userData) {
+      let allTransactions = [];
+      allTransactions = allTransactions.concat(userData.directReferalHistory);
+      allTransactions = allTransactions.concat(userData.inDirectReferalHistory);
+      allTransactions = allTransactions.concat(userData.levelIncomeHistory);
+      allTransactions = allTransactions.concat(userData.autoPoolIncomeHistory);
+      allTransactions = allTransactions.concat(userData.bonusHistory);
+
+      // Sort all transactions by createdAt
+      allTransactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      const paginatedTransactions = await paginate(allTransactions, page, pageSize);
+      res.status(200).json({
+        transactions: paginatedTransactions.results,
+        pagination: {
+          page: paginatedTransactions.page,
+          pageSize: paginatedTransactions.pageSize,
+          totalPages: paginatedTransactions.totalPages,
+          totalDocs: paginatedTransactions.totalDocs,
+        },
+        sts: "01",
+        msg: "Get all transactions report by admin Success",
+      });
+    } else {
+      return next(errorHandler(401, "User Login Failed"));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+

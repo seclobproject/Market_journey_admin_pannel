@@ -219,6 +219,14 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    points: {
+      type: Number,
+      default: 0,
+    },
+    tokenWallet: {
+      type: Number,
+      default: 0,
+    },
     tdsAmount: {
       type: Number,
       default: 0,
@@ -298,6 +306,8 @@ const userSchema = new mongoose.Schema(
     signals: [{ type: mongoose.Schema.Types.ObjectId, ref: "Alert" }],
     childLevel1: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     childLevel2: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    pendingMembers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+
   },
   { timestamps: true }
 );

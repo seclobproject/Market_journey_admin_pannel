@@ -71,6 +71,7 @@ export const addUser = async (req, res, next) => {
           errorHandler(401, "This District franchise is already taken!")
         );
       }
+      nifty=true;
       isDistrictFranchise = true;
       zonal = null;
       panchayath = null;
@@ -88,10 +89,12 @@ export const addUser = async (req, res, next) => {
           errorHandler(401, "This Zonal franchise is already taken!")
         );
       }
+      nifty=true;
       isZonalFranchise = true;
       panchayath = null;
     } else if (franchise === "Mobile Franchise") {
       isMobileFranchise = true;
+      nifty=true;
       const districtData = await User.findOne({ franchiseName: district });
       if (!districtData) {
         return next(
@@ -207,10 +210,10 @@ export const addUser = async (req, res, next) => {
       districtFranchise,
       zonalFranchise,
     });
-
+    
     // Send confirmation email
     await sendMail(user.email, user.name, user.ownSponserId, password);
-
+    
     // Update franchise status
     if (isDistrictFranchise) {
       const districtTakeData = await District.findOne({ name: franchiseName });
@@ -233,7 +236,11 @@ export const addUser = async (req, res, next) => {
       panchayathData.editable = false;
       await panchayathData.save();
     }
-
+    
+    if(sponserData.isAdmin===false){
+      sponserData.pendingMembers.push(user._id);
+      await sponserData.save();
+    }
     // Respond with success message
     res.status(200).json({
       user,
@@ -397,6 +404,7 @@ export const viewUserProfile = async (req, res, next) => {
       nomineeDetails,
       autoPoolStatus,
       renewalStatus,
+      points,
       isDistrictFranchise,
       isZonalFranchise,
       isMobileFranchise,
@@ -436,6 +444,7 @@ export const viewUserProfile = async (req, res, next) => {
       address,
       dateOfBirth,
       aadhaar,
+      points,
       screenshot,
       packageAmount,
       renewalStatus,
@@ -550,9 +559,9 @@ export const addReferalUser = async (req, res, next) => {
     let isCourseFranchise = false;
     let districtFranchise = null;
     let zonalFranchise = null;
-    let nifty = true;
-    let bankNifty = true;
-    let crudeOil = true;
+    let nifty = false;
+    let bankNifty = false;
+    let crudeOil = false;
 
     if (franchise === "District Franchise") {
       const districtData = await User.findOne({ franchiseName });
@@ -632,7 +641,7 @@ export const addReferalUser = async (req, res, next) => {
             nifty = false;
             crudeOil = false;
             break;
-          case "Crude Oil":
+          case "CrudeOil":
             crudeOil = true;
             nifty = false;
             bankNifty = false;
@@ -697,39 +706,45 @@ export const addReferalUser = async (req, res, next) => {
       districtFranchise,
       zonalFranchise,
     });
-
-    if (user) {
-      await sendMail(user.email, user.name, user.ownSponserId, password);
-
-      // Update franchise status
-      if (isDistrictFranchise) {
-        const districtTakeData = await District.findOne({
-          name: franchiseName,
-        });
-        districtTakeData.taken = true;
-        districtTakeData.editable = false;
-        await districtTakeData.save();
-      }
-      if (isZonalFranchise) {
-        const zonalTakeData = await Zonal.findOne({ name: franchiseName });
-        zonalTakeData.taken = true;
-        zonalTakeData.editable = false;
-        await zonalTakeData.save();
-      }
-      if (isMobileFranchise) {
-        const panchayathData = await Panchayath.findOne({ name: panchayath });
-        panchayathData.editable = false;
-        await panchayathData.save();
-      }
-      res.status(200).json({
-        user,
-        sts: "01",
-        msg: "Add user Success",
-      });
-    } else {
-      return next(errorHandler(400, "Registration failed. Please try again!"));
+    
+    // Send confirmation email
+    await sendMail(user.email, user.name, user.ownSponserId, password);
+    
+    // Update franchise status
+    if (isDistrictFranchise) {
+      const districtTakeData = await District.findOne({ name: franchiseName });
+      districtTakeData.taken = true;
+      districtTakeData.editable = false;
+      await districtTakeData.save();
+      user.districtFranchise = districtTakeData._id;
+      await user.save();
     }
+    if (isZonalFranchise) {
+      const zonalTakeData = await Zonal.findOne({ name: franchiseName });
+      zonalTakeData.taken = true;
+      zonalTakeData.editable = false;
+      await zonalTakeData.save();
+      user.zonalFranchise = zonalTakeData._id;
+      await user.save();
+    }
+    if (isMobileFranchise) {
+      const panchayathData = await Panchayath.findOne({ name: panchayath });
+      panchayathData.editable = false;
+      await panchayathData.save();
+    }
+    
+    if(sponserData.isAdmin===false){
+      sponserData.pendingMembers.push(user._id);
+      await sponserData.save();
+    }
+    // Respond with success message
+    res.status(200).json({
+      user,
+      sts: "01",
+      msg: "User successfully added",
+    });
   } catch (error) {
+    console.error(error);
     next(error);
   }
 };
@@ -757,13 +772,21 @@ const paginateArray = (array, page = 1, pageSize = 10) => {
 export const viewLevel1User = async (req, res, next) => {
   try {
     const userId = req.query.id || req.user._id;
+    const searchText = req.query.searchText;
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
 
     // Fetch the user document by its ID and populate its child documents
     const user = await User.findById(userId)
-      .select("childLevel1 ownSponserId userStatus")
+      .select("childLevel1 pendingMembers ownSponserId userStatus")
       .populate([
         {
           path: "childLevel1",
+          select:
+            "name ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName packageType",
+        },
+        {
+          path: "pendingMembers",
           select:
             "name ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName packageType",
         },
@@ -775,23 +798,42 @@ export const viewLevel1User = async (req, res, next) => {
     }
 
     // Destructure relevant fields from the user document
-    const { childLevel1, ownSponserId, userStatus } = user;
+    const { childLevel1, pendingMembers, ownSponserId, userStatus } = user;
 
-    // Paginate childLevel1 array
-    const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
-    const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
-    const paginatedChildLevel1 = paginateArray(childLevel1, page, pageSize);
+    let combinedArray = [];
+    
+    // If there are pending members, include them in the combined array
+    if (pendingMembers.length > 0) {
+      combinedArray = [...pendingMembers];
+    }
 
-    // Send the response with paginated child documents and other relevant information
+    // If there are level1 users, include them in the combined array
+    if (childLevel1.length > 0) {
+      combinedArray = [...combinedArray, ...childLevel1];
+    }
+
+    // Filter combined array based on search text
+    let filteredCombinedArray = combinedArray;
+    if (searchText) {
+      const searchRegex = new RegExp(searchText, "i");
+      filteredCombinedArray = combinedArray.filter(doc =>
+        searchRegex.test(doc.name) || searchRegex.test(doc.sponserName) || searchRegex.test(doc.email) || searchRegex.test(doc.franchise)
+      );
+    }
+
+    // Paginate the combined array
+    const paginatedCombinedArray = paginateArray(filteredCombinedArray, page, pageSize);
+
+    // Send the response with paginated users and other relevant information
     res.status(200).json({
-      child1: paginatedChildLevel1.results,
+      child1: paginatedCombinedArray.results,
       ownSponserId,
       userStatus,
       pagination: {
-        page: paginatedChildLevel1.page,
-        pageSize: paginatedChildLevel1.pageSize,
-        totalPages: paginatedChildLevel1.totalPages,
-        totalDocs: paginatedChildLevel1.totalDocs,
+        page: paginatedCombinedArray.page,
+        pageSize: paginatedCombinedArray.pageSize,
+        totalPages: paginatedCombinedArray.totalPages,
+        totalDocs: paginatedCombinedArray.totalDocs,
       },
       sts: "01",
       msg: "Success",
@@ -801,46 +843,13 @@ export const viewLevel1User = async (req, res, next) => {
   }
 };
 
-// export const viewLevel2User=async(req,res,next)=>{
-//   try {
-//     const userId = req.query.id || req.user._id;
-
-//     // Fetch the user document by its ID and populate its child documents
-//     const user = await User.findById(userId)
-//       .select("childLevel2 ownSponserId userStatus")
-//       .populate([
-//         {
-//           path: "childLevel2",
-//           select:
-//             "name ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName",
-//         },
-//       ]);
-
-//     // If user document is not found, return an error
-//     if (!user) {
-//       return next(errorHandler("User not found"));
-//     }
-
-//     // Destructure relevant fields from the user document
-//     const { childLevel2, ownSponserId, userStatus } =
-//       user;
-
-//     // Send the response with child documents and other relevant information
-//     res.status(200).json({
-//       child2: childLevel2,
-//       ownSponserId,
-//       userStatus,
-//       sts: "01",
-//       msg: "Success",
-//     });
-//   } catch (error) {
-//     next(error)
-//   }
-// }
 
 export const viewLevel2User = async (req, res, next) => {
   try {
     const userId = req.query.id || req.user._id;
+    const searchText = req.query.searchText;
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
 
     // Fetch the user document by its ID and populate its child documents
     const user = await User.findById(userId)
@@ -861,10 +870,17 @@ export const viewLevel2User = async (req, res, next) => {
     // Destructure relevant fields from the user document
     const { childLevel2, ownSponserId, userStatus } = user;
 
-    // Paginate childLevel1 array
-    const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
-    const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
-    const paginatedChildLevel2 = paginateArray(childLevel2, page, pageSize);
+    // Filter childLevel2 array based on search text
+    let filteredChildLevel2 = childLevel2;
+    if (searchText) {
+      const searchRegex = new RegExp(searchText, "i");
+      filteredChildLevel2 = childLevel2.filter(doc =>
+        searchRegex.test(doc.name) || searchRegex.test(doc.sponserName) || searchRegex.test(doc.email) || searchRegex.test(doc.franchise)
+      );
+    }
+
+    // Paginate filtered childLevel2 array
+    const paginatedChildLevel2 = paginateArray(filteredChildLevel2, page, pageSize);
 
     // Send the response with paginated child documents and other relevant information
     res.status(200).json({
@@ -885,7 +901,11 @@ export const viewLevel2User = async (req, res, next) => {
   }
 };
 
+
+
 //request for wallet withdrawal
+
+
 
 export const walletWithdrawRequest = async (req, res, next) => {
   try {

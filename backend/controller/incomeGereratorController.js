@@ -14,16 +14,19 @@ export const generateReferalIncome = async (
   console.log("(2)sponser1---", sponser1.name);
   console.log("(4)New user----", updatedUser.name);
   const directReferalIncome = updatedUser.packageAmount * 0.1;
+  const directPoint = directReferalIncome * 0.01;
+  const inDirectPoint = directReferalIncome * 0.005;
   const inDirectReferalIncome = updatedUser.packageAmount * 0.05;
   if (sponser1.isAdmin == false) {
     sponser1.directReferalIncome += directReferalIncome;
     sponser1.walletAmount += directReferalIncome;
+    sponser1.points += directPoint;
     sponser1.directReferalHistory.push({
       reportName: "DirectIncome for Franchise",
       userID: updatedUser.ownSponserId,
       franchise: updatedUser.franchise,
       name: updatedUser.name,
-      percentageCredited: "10%",
+      percentageCredited: "10",
       amountCredited: directReferalIncome,
       status: "Approved",
     });
@@ -58,6 +61,7 @@ export const generateReferalIncome = async (
     sponser2.inDirectReferalIncome += inDirectReferalIncome;
     console.log("in direct:", inDirectReferalIncome);
     console.log("total in direct:", sponser2.inDirectReferalIncome);
+    sponser2.points += inDirectPoint;
 
     sponser2.walletAmount += inDirectReferalIncome;
     console.log("before adding in direct:", sponser2.walletAmount);
@@ -67,7 +71,7 @@ export const generateReferalIncome = async (
       userID: updatedUser.ownSponserId,
       franchise: updatedUser.franchise,
       name: updatedUser.name,
-      percentageCredited: "5%",
+      percentageCredited: "5",
       amountCredited: inDirectReferalIncome,
       status: "Approved",
     });
@@ -120,7 +124,7 @@ export const levelIncomeGenerator = async (userData, amount) => {
     sponser.levelIncomeHistory.push({
       reportName: "Level Income ",
       name: userData.name,
-      percentageCredited: "25%",
+      percentageCredited: "25",
       Amount: amount,
       amountCredited: levelIncome,
       status: "Approved",
@@ -293,7 +297,7 @@ export const addToAutoPoolWallet = async (user) => {
     franchise: user.franchise,
     franchiseName: user.franchiseName,
     name: user.name,
-    percentageCredited: "10%",
+    percentageCredited: "10",
     amountCredited: poolAmount,
     status: "Approved",
   });

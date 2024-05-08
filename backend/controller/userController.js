@@ -71,6 +71,7 @@ export const addUser = async (req, res, next) => {
           errorHandler(401, "This District franchise is already taken!")
         );
       }
+      nifty=true;
       isDistrictFranchise = true;
       zonal = null;
       panchayath = null;
@@ -88,10 +89,12 @@ export const addUser = async (req, res, next) => {
           errorHandler(401, "This Zonal franchise is already taken!")
         );
       }
+      nifty=true;
       isZonalFranchise = true;
       panchayath = null;
     } else if (franchise === "Mobile Franchise") {
       isMobileFranchise = true;
+      nifty=true;
       const districtData = await User.findOne({ franchiseName: district });
       if (!districtData) {
         return next(
@@ -207,10 +210,10 @@ export const addUser = async (req, res, next) => {
       districtFranchise,
       zonalFranchise,
     });
-
+    
     // Send confirmation email
     await sendMail(user.email, user.name, user.ownSponserId, password);
-
+    
     // Update franchise status
     if (isDistrictFranchise) {
       const districtTakeData = await District.findOne({ name: franchiseName });
@@ -233,9 +236,11 @@ export const addUser = async (req, res, next) => {
       panchayathData.editable = false;
       await panchayathData.save();
     }
-    sponserData.pendingMembers.push(user._id);
-    await sponserData.save();
-
+    
+    if(sponserData.isAdmin===false){
+      sponserData.pendingMembers.push(user._id);
+      await sponserData.save();
+    }
     // Respond with success message
     res.status(200).json({
       user,
@@ -399,6 +404,7 @@ export const viewUserProfile = async (req, res, next) => {
       nomineeDetails,
       autoPoolStatus,
       renewalStatus,
+      points,
       isDistrictFranchise,
       isZonalFranchise,
       isMobileFranchise,
@@ -438,6 +444,7 @@ export const viewUserProfile = async (req, res, next) => {
       address,
       dateOfBirth,
       aadhaar,
+      points,
       screenshot,
       packageAmount,
       renewalStatus,
@@ -552,9 +559,9 @@ export const addReferalUser = async (req, res, next) => {
     let isCourseFranchise = false;
     let districtFranchise = null;
     let zonalFranchise = null;
-    let nifty = true;
-    let bankNifty = true;
-    let crudeOil = true;
+    let nifty = false;
+    let bankNifty = false;
+    let crudeOil = false;
 
     if (franchise === "District Franchise") {
       const districtData = await User.findOne({ franchiseName });
@@ -634,7 +641,7 @@ export const addReferalUser = async (req, res, next) => {
             nifty = false;
             crudeOil = false;
             break;
-          case "Crude Oil":
+          case "CrudeOil":
             crudeOil = true;
             nifty = false;
             bankNifty = false;
@@ -699,39 +706,45 @@ export const addReferalUser = async (req, res, next) => {
       districtFranchise,
       zonalFranchise,
     });
-
-    if (user) {
-      await sendMail(user.email, user.name, user.ownSponserId, password);
-
-      // Update franchise status
-      if (isDistrictFranchise) {
-        const districtTakeData = await District.findOne({
-          name: franchiseName,
-        });
-        districtTakeData.taken = true;
-        districtTakeData.editable = false;
-        await districtTakeData.save();
-      }
-      if (isZonalFranchise) {
-        const zonalTakeData = await Zonal.findOne({ name: franchiseName });
-        zonalTakeData.taken = true;
-        zonalTakeData.editable = false;
-        await zonalTakeData.save();
-      }
-      if (isMobileFranchise) {
-        const panchayathData = await Panchayath.findOne({ name: panchayath });
-        panchayathData.editable = false;
-        await panchayathData.save();
-      }
-      res.status(200).json({
-        user,
-        sts: "01",
-        msg: "Add user Success",
-      });
-    } else {
-      return next(errorHandler(400, "Registration failed. Please try again!"));
+    
+    // Send confirmation email
+    await sendMail(user.email, user.name, user.ownSponserId, password);
+    
+    // Update franchise status
+    if (isDistrictFranchise) {
+      const districtTakeData = await District.findOne({ name: franchiseName });
+      districtTakeData.taken = true;
+      districtTakeData.editable = false;
+      await districtTakeData.save();
+      user.districtFranchise = districtTakeData._id;
+      await user.save();
     }
+    if (isZonalFranchise) {
+      const zonalTakeData = await Zonal.findOne({ name: franchiseName });
+      zonalTakeData.taken = true;
+      zonalTakeData.editable = false;
+      await zonalTakeData.save();
+      user.zonalFranchise = zonalTakeData._id;
+      await user.save();
+    }
+    if (isMobileFranchise) {
+      const panchayathData = await Panchayath.findOne({ name: panchayath });
+      panchayathData.editable = false;
+      await panchayathData.save();
+    }
+    
+    if(sponserData.isAdmin===false){
+      sponserData.pendingMembers.push(user._id);
+      await sponserData.save();
+    }
+    // Respond with success message
+    res.status(200).json({
+      user,
+      sts: "01",
+      msg: "User successfully added",
+    });
   } catch (error) {
+    console.error(error);
     next(error);
   }
 };
@@ -804,7 +817,7 @@ export const viewLevel1User = async (req, res, next) => {
     if (searchText) {
       const searchRegex = new RegExp(searchText, "i");
       filteredCombinedArray = combinedArray.filter(doc =>
-        searchRegex.test(doc.name) || searchRegex.test(doc.sponserName) || searchRegex.test(doc.email)
+        searchRegex.test(doc.name) || searchRegex.test(doc.sponserName) || searchRegex.test(doc.email) || searchRegex.test(doc.franchise)
       );
     }
 
@@ -862,7 +875,7 @@ export const viewLevel2User = async (req, res, next) => {
     if (searchText) {
       const searchRegex = new RegExp(searchText, "i");
       filteredChildLevel2 = childLevel2.filter(doc =>
-        searchRegex.test(doc.name) || searchRegex.test(doc.sponserName) || searchRegex.test(doc.email)
+        searchRegex.test(doc.name) || searchRegex.test(doc.sponserName) || searchRegex.test(doc.email) || searchRegex.test(doc.franchise)
       );
     }
 

@@ -528,9 +528,9 @@ export const autoPoolHistory = async (req, res, next) => {
     const adminData = await Admin.findById(userId).populate({
       path: "autoPoolHistory",
       options: {
-        sort: { createdAt: 1 }, // Sort by createdAt in descending order
+        sort: { createdAt: -1 }, // Sort by createdAt in descending order
       },
-    });
+    }).exec();
     if (!adminData) {
       return next(errorHandler(401, "Admin Login Failed"));
     }
@@ -648,7 +648,7 @@ export const userAutoPoolIncomeHistory = async (req, res, next) => {
     const userData = await User.findById(userId).populate({
       path: "autoPoolIncomeHistory",
       options: {
-        sort: { createdAt: 1 }, // Sort by createdAt in descending order
+        sort: { createdAt:-1 }, // Sort by createdAt in descending order
       },
     });
     if (userData) {
@@ -902,6 +902,8 @@ export const filteredUsers = async (req, res, next) => {
     const { district } = req.body;
     const { zonal } = req.body;
     const { panchayath } = req.body;
+    const { packageName } = req.body;
+
     let userData;
     let users;
     const userDetails=await User.findById(userId);
@@ -939,7 +941,28 @@ export const filteredUsers = async (req, res, next) => {
       });
       users = userData.users;
     } else if (userDetails) {
-      if (userDetails.isDistrictFranchise) {
+      if(packageName){
+        if(userDetails.isDistrictFranchise){
+          const dist = userDetails.franchiseName;
+          userData = await District.findOne({ name: dist }).populate({
+            path: "users",
+            match: { franchise: packageName }, // Filter users by franchise
+            options: {
+          sort: { createdAt: 1 }, // Sort by createdAt in ascending order
+        },
+          });
+        }
+        if(userDetails.isZonalFranchise){
+          const zon = userDetails.franchiseName;
+          userData = await Zonal.findOne({ name: zon }).populate({
+            path: "users",
+            match: { franchise: packageName }, // Filter users by franchise
+            options: {
+          sort: { createdAt: 1 }, // Sort by createdAt in ascending order
+        },
+          });
+        }
+      }else if (userDetails.isDistrictFranchise) {
         const dist = userDetails.franchiseName;
         userData = await District.findOne({ name: dist }).populate({
           path: "users",
@@ -947,8 +970,7 @@ export const filteredUsers = async (req, res, next) => {
             sort: { createdAt: 1 }, // Sort by createdAt in descending order
           },
         });
-      }
-      if (userDetails.isZonalFranchise) {
+      }else if (userDetails.isZonalFranchise) {
         const zon = userDetails.franchiseName;
         userData = await Zonal.findOne({ name: zon }).populate({
           path: "users",
@@ -958,8 +980,10 @@ export const filteredUsers = async (req, res, next) => {
         });
       }
       users = userData.users;
-    }
-    else {
+    }else if (packageName) {
+      userData = await User.find({ franchise: packageName }).sort({createdAt:-1})
+      users=userData;
+    }else {
       userData=await User.find().sort({createdAt:-1})
       users=userData;
     }
@@ -967,7 +991,7 @@ export const filteredUsers = async (req, res, next) => {
     if (searchText) {
       const searchRegex = new RegExp(searchText, "i");
       filterUsers = users.filter(doc =>
-        searchRegex.test(doc.name) || searchRegex.test(doc.sponserName) || searchRegex.test(doc.email)
+        searchRegex.test(doc.name) || searchRegex.test(doc.sponserName) || searchRegex.test(doc.email)  || searchRegex.test(doc.franchise)
       );
     }
 

@@ -66,6 +66,7 @@ function Member() {
 
   const options = [
     { value: "View all", label: "View all" },
+    { value: "All", label: "All" },
     { value: "District Franchise", label: "District Franchise" },
     { value: "Zonal Franchise", label: "Zonal Franchise" },
     { value: "Mobile Franchise", label: "Mobile Franchise" },

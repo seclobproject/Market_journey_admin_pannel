@@ -49,6 +49,7 @@ function Report() {
   const [filter, setFilter] = useState();
   const startIndex = (params.page - 1) * params.pageSize;
   const options = [
+    { value: "All", label: "All" },
     { value: "District Franchise", label: "District Franchise" },
     { value: "Zonal Franchise", label: "Zonal Franchise" },
     { value: "Mobile Franchise", label: "Mobile Franchise" },

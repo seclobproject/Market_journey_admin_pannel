@@ -67,6 +67,7 @@ export const withdrawMail = (recipient, receiver, sender, requested, released, w
 
 
 export const sendMailWithAttachment=async(user,recipient, pdfFilePath)=> {
+  console.log("hi");
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,

@@ -763,7 +763,6 @@ export const getAutoPoolAmount = async (req, res, next) => {
     // Extract auto pool distribution history
     const { autoPoolWallet,autoPoolPercentageA,autoPoolPercentageB,autoPoolPercentageC,autoPoolPercentageD,autoPoolPercentageE,
     poolA,poolB,poolC,poolD,poolE } = admin;
-    console.log(autoPoolWallet,autoPoolPercentageA);
 
     const amountpoolA=autoPoolWallet*autoPoolPercentageA/100;
     const amountpoolB=autoPoolWallet*autoPoolPercentageB/100;
@@ -892,6 +891,9 @@ export const filteredUsers = async (req, res, next) => {
     const { zonal } = req.body;
     const { panchayath } = req.body;
     let userData;
+    let users;
+    const userDetails=await User.findById(userId);
+
     if (state) {
       userData = await State.findOne({ name: state }).populate({
         path: "users",
@@ -899,6 +901,7 @@ export const filteredUsers = async (req, res, next) => {
           sort: { createdAt: 1 }, // Sort by createdAt in descending order
         },
       });
+      users = userData.users;
     } else if (district) {
       userData = await District.findOne({ name: district }).populate({
         path: "users",
@@ -906,6 +909,7 @@ export const filteredUsers = async (req, res, next) => {
           sort: { createdAt: 1 }, // Sort by createdAt in descending order
         },
       });
+      users = userData.users;
     } else if (zonal) {
       userData = await Zonal.findOne({ name: zonal }).populate({
         path: "users",
@@ -913,6 +917,7 @@ export const filteredUsers = async (req, res, next) => {
           sort: { createdAt: 1 }, // Sort by createdAt in descending order
         },
       });
+      users = userData.users;
     } else if (panchayath) {
       userData = await Panchayath.findOne({ name: panchayath }).populate({
         path: "users",
@@ -920,10 +925,10 @@ export const filteredUsers = async (req, res, next) => {
           sort: { createdAt: 1 }, // Sort by createdAt in descending order
         },
       });
-    } else if (userId) {
-      const data = await User.findById(userId);
-      if (data.isDistrictFranchise) {
-        const dist = data.franchiseName;
+      users = userData.users;
+    } else if (userDetails) {
+      if (userDetails.isDistrictFranchise) {
+        const dist = userDetails.franchiseName;
         userData = await District.findOne({ name: dist }).populate({
           path: "users",
           options: {
@@ -931,8 +936,8 @@ export const filteredUsers = async (req, res, next) => {
           },
         });
       }
-      if (data.isZonalFranchise) {
-        const zon = data.franchiseName;
+      if (userDetails.isZonalFranchise) {
+        const zon = userDetails.franchiseName;
         userData = await Zonal.findOne({ name: zon }).populate({
           path: "users",
           options: {
@@ -940,10 +945,15 @@ export const filteredUsers = async (req, res, next) => {
           },
         });
       }
+      users = userData.users;
+    }
+    else {
+      userData=await User.find().sort({createdAt:-1})
+      users=userData;
     }
 
-    if (userData) {
-      const users = userData.users;
+
+    if (users) {
       const paginatedUsers = await paginate(users, page, pageSize);
       res.status(200).json({
         filteredUsers: paginatedUsers.results,
@@ -976,6 +986,8 @@ export const filteredDemates = async (req, res, next) => {
     const { zonal } = req.body;
     const { panchayath } = req.body;
     let demateData;
+    let demates;
+
     if (state) {
       demateData = await State.findOne({ name: state }).populate({
         path: "demates",
@@ -983,6 +995,7 @@ export const filteredDemates = async (req, res, next) => {
           sort: { createdAt: 1 }, // Sort by createdAt in descending order
         },
       });
+      demates = demateData.demates;
     } else if (district) {
       demateData = await District.findOne({ name: district }).populate({
         path: "demates",
@@ -990,6 +1003,7 @@ export const filteredDemates = async (req, res, next) => {
           sort: { createdAt: 1 }, // Sort by createdAt in descending order
         },
       });
+      demates = demateData.demates;
     } else if (zonal) {
       demateData = await Zonal.findOne({ name: zonal }).populate({
         path: "demates",
@@ -997,6 +1011,7 @@ export const filteredDemates = async (req, res, next) => {
           sort: { createdAt: 1 }, // Sort by createdAt in descending order
         },
       });
+      demates = demateData.demates;
     } else if (panchayath) {
       demateData = await Panchayath.findOne({ name: panchayath }).populate({
         path: "demates",
@@ -1004,30 +1019,13 @@ export const filteredDemates = async (req, res, next) => {
           sort: { createdAt: 1 }, // Sort by createdAt in descending order
         },
       });
+      demates = demateData.demates;
     } else if (userId) {
-      const data = await User.findById(userId);
-      if (data.isDistrictFranchise) {
-        const dist = data.franchiseName;
-        demateData = await District.findOne({ name: dist }).populate({
-          path: "demates",
-          options: {
-            sort: { createdAt: 1 }, // Sort by createdAt in descending order
-          },
-        });
-      }
-      if (data.isZonalFranchise) {
-        const zon = data.franchiseName;
-        demateData = await Zonal.findOne({ name: zon }).populate({
-          path: "demates",
-          options: {
-            sort: { createdAt: 1 }, // Sort by createdAt in descending order
-          },
-        });
-      }
+        demateData = await Demate.find().sort({createdAt:-1})
+        demates = demateData
     }
 
-    if (demateData) {
-      const demates = demateData.demates;
+    if (demates) {
       const paginatedDemates = await paginate(demates, page, pageSize);
       res.status(200).json({
         filteredDemates: paginatedDemates.results,

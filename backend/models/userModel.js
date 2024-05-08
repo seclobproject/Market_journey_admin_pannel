@@ -19,7 +19,6 @@ const creditBounusSchema = new mongoose.Schema(
   {
     reportName: String,
     bonusAmount:Number,
-    transactionId:String,
     description:String,
     status: String,
   },

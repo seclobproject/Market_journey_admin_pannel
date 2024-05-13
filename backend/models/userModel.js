@@ -246,6 +246,10 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    actualPackageAmount: {
+      type: Number,
+      default: 0,
+    },
     paidForCompany: {
       type: Number,
       default: 0,

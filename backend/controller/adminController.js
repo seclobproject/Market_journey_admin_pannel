@@ -272,14 +272,19 @@ export const addDistrict = async (req, res, next) => {
 
         const district = await newDistrict.save();
         if (district) {
-          stateData.districts.push(district._id);
-          stateData.editable = false;
-          await stateData.save();
-          res.status(200).json({
-            district,
-            sts: "01",
-            msg: "District added Successfull",
-          });
+          if(!stateData.districts.includes(district._id)){
+            stateData.districts.push(district._id);
+            stateData.editable = false;
+            await stateData.save();
+            res.status(200).json({
+              district,
+              sts: "01",
+              msg: "District added Successfull",
+            });
+
+          }else{
+          next(errorHandler(401, "This District already exist in this State"));
+          }
         } else {
           next(errorHandler(401, "District add Not success"));
         }
@@ -427,14 +432,19 @@ export const addZonal = async (req, res, next) => {
 
       const zonal = await newZonal.save();
       if (zonal) {
-        districtData.zonals.push(zonal._id);
-        districtData.editable = false;
-        await districtData.save();
-        res.status(200).json({
-          zonal,
-          sts: "01",
-          msg: "Zonal added Successfull",
-        });
+        if(!districtData.zonals.includes(zonal._id)){
+          districtData.zonals.push(zonal._id);
+          districtData.editable = false;
+          await districtData.save();
+          res.status(200).json({
+            zonal,
+            sts: "01",
+            msg: "Zonal added Successfull",
+          });
+
+        }else{
+        next(errorHandler(401, "This District already exist in this State"));
+        }
       } else {
         next(errorHandler(401, "Zonal add Not success"));
       }
@@ -568,6 +578,7 @@ export const addPanchayath = async (req, res, next) => {
 
       const panchayath = await newPanchayath.save();
       if (panchayath) {
+        
         zonalData.panchayaths.push(panchayath._id);
         zonalData.editable = false;
         await zonalData.save();
@@ -1014,6 +1025,7 @@ export const acceptUser = async (req, res, next) => {
         userData.renewalStatus = true;
         userData.renewalDate = new Date();
         userData.packageAmount = userData.tempPackageAmount;
+        userData.actualPackageAmount = userData.tempPackageAmount;
         userData.paidForCompany = userData.tempPackageAmount;
         const updatedUser = await userData.save();
         if (updatedUser) {
@@ -1970,6 +1982,7 @@ export const acceptRenewalRequest = async (req, res, next) => {
           userData.franchise = packageData.packageName;
           userData.packageType = packageData.franchiseName;
           userData.packageAmount = tempPackageAmount;
+          userData.actualPackageAmount = tempPackageAmount;
           userData.paidForCompany += tempPackageAmount;
           if (packageData.franchiseName == "Franchise") {
             userData.isMobileFranchise = true;

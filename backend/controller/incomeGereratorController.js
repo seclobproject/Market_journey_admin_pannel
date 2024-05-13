@@ -14,8 +14,8 @@ export const generateReferalIncome = async (
   console.log("(2)sponser1---", sponser1.name);
   console.log("(4)New user----", updatedUser.name);
   const directReferalIncome = updatedUser.packageAmount * 0.1;
-  const directPoint = directReferalIncome * 0.01;
-  const inDirectPoint = directReferalIncome * 0.005;
+  const directPoint = directReferalIncome * 0.1;
+  const inDirectPoint = directReferalIncome * 0.05;
   const inDirectReferalIncome = updatedUser.packageAmount * 0.05;
   if (sponser1.isAdmin == false) {
     sponser1.directReferalIncome += directReferalIncome;

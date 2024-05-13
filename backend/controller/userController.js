@@ -275,6 +275,7 @@ export const userLogin = async (req, res, next) => {
       firstName: validUser.name,
       status: validUser.userStatus,
       email: validUser.email,
+      packageType: validUser.packageType,
       token_type: "Bearer",
       access_token: token,
       sts: "01",

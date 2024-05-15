@@ -58,7 +58,7 @@ router.post("/withdraw-wallet", protectUser, walletWithdrawRequest);
 router.post("/user-renewal-request", protectUser, renewalRequest);
 
 router.get("/view-user-profile", protectUser, viewUserProfile);
-router.get("/view-level1-user", protectUser, viewLevel1User);
+router.post("/view-level1-user", protectUser, viewLevel1User);
 router.get("/view-level2-user", protectUser, viewLevel2User);
 router.get("/view-demate-accounts", protectUser, userDemateAccounts);
 

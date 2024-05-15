@@ -822,7 +822,7 @@ function Viewdetails() {
                                     <span
                                       style={{ color: "rgb(247, 174, 21)" }}
                                     >
-                                      ₹ {details?.packageAmount || "--"}
+                                      ₹ {details?.actualPackageAmount || "--"}
                                     </span>
                                   </h6>
                                 </li>

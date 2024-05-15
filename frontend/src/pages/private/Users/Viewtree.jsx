@@ -4,6 +4,7 @@ import Loader from '../../../Components/Loader';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { viewuserdownlineUrl } from '../../../utils/Constants';
 import { ApiCall } from '../../../Services/Api';
+import { Pagination, Stack } from '@mui/material';
 
 function Viewtree() {
     const location = useLocation();
@@ -14,16 +15,22 @@ function Viewtree() {
     const [isLoading, setIsLoading] = useState(false);
     const [userID,setUserID]=useState();
     const [userLevelID,setUserLevelID]=useState();
-
+    const [params, setParams] = useState({
+      page: 1,
+      pageSize: 10,
+    });
+    const [totalPages, setTotalPages] = useState(1);
+    const startIndex = (params.page - 1) * params.pageSize;
 
     //view downline
     const getUserdownline = async () => {
         setIsLoading(true);
         try {
-            const response = await ApiCall("get", `${viewuserdownlineUrl}?id=${userLevelID||userID}`);
+            const response = await ApiCall("get", `${viewuserdownlineUrl}?id=${userLevelID||userID}`,{},params);
             console.log(response,"respones")
             if (response?.status === 200) {
                 setGetuserDetails(response?.data?.child1);
+                setTotalPages(response?.data?.pagination?.totalPages)
             setIsLoading(false);
           } else {
             console.error("Failed to fetch user details");
@@ -35,7 +42,12 @@ function Viewtree() {
    
   
 
-
+      const handlePageChange = (event, newPage) => {
+        setParams((prevParams) => ({
+          ...prevParams,
+          page: newPage,
+        }));
+      };
 
       useEffect(() => {
         if (id) {
@@ -44,7 +56,7 @@ function Viewtree() {
         if (userID||userLevelID) {
             getUserdownline();
         }
-    }, [id, userID,userLevelID]);
+    }, [id, userID,userLevelID,params]);
     
   return (
     <>
@@ -114,7 +126,7 @@ function Viewtree() {
                           console.log(downlines, "45678"),
                           (
                             <tr key={index}>
-                              <td>{index + 1}</td>
+                            <td>{startIndex + index + 1}</td>
                               <td>
                                 {(downlines?.name &&
                                   downlines.name.toUpperCase()) ||
@@ -180,6 +192,16 @@ function Viewtree() {
             </div>
           </div>
             )}
+              <div className="me-2 mb-3 d-flex ms-auto">
+            <Stack spacing={2}>
+              <Pagination
+                count={totalPages}
+                page={params.page}
+                onChange={handlePageChange}
+                color="primary"
+              />
+            </Stack>
+          </div>
         <div className="ms-2 mb-3" style={{ marginTop: "5px" }}>
     <button
         className=""

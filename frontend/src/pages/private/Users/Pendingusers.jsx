@@ -46,20 +46,31 @@ function Pendingusers() {
   };
   //------------approve user--------------
   const approveUser = async () => {
+    setIsLoading(true);
+
     try {
+    
       const resposne = await ApiCall(
         "post",
         `${approvependingsUrl}/${approveModal.id}`
       );
       if (resposne?.status === 200) {
+        console.log(resposne,"res");
         Show_Toast("User Approved successfully", true);
         setApproveModal(false);
         getpendingMenbers();
       }
     } catch (error) {
       Show_Toast(error, false);
+      setIsLoading(false);
+
+
+    }
+    finally{
+      setIsLoading(false);
     }
   };
+
 
   //-------------Reject user----------------
   const rejectUser = async () => {
@@ -296,6 +307,7 @@ function Pendingusers() {
               onClick={() => {
                 approveUser();
               }}
+              disabled={isLoading}
             >
               Yes, Approve it
             </button>

@@ -465,7 +465,7 @@ function Report() {
                                   data.sponserName.toUpperCase()) ||
                                   "--"}
                               </td>
-                              <td>{data?.packageAmount}</td>
+                              <td>{data?.actualPackageAmount}</td>
                               <td>{data?.franchise || "--"}</td>
                               <td>
                                 <i

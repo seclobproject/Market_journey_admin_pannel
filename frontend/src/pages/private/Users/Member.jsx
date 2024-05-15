@@ -556,7 +556,7 @@ function Member() {
                                 "--"}
                             </td>
 
-                            <td>₹ {users?.packageAmount}</td>
+                            <td>₹ {users?.actualPackageAmount}</td>
                             <td>{users?.franchise || "--"}</td>
                             <td>
                               {users?.renewalStatus ? (

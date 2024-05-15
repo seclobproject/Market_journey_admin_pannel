@@ -779,6 +779,9 @@ export const viewLevel1User = async (req, res, next) => {
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 10;
 
+    const { packageName } = req.body;
+
+
     // Fetch the user document by its ID and populate its child documents
     const user = await User.findById(userId)
       .select("childLevel1 pendingMembers ownSponserId userStatus")
@@ -786,12 +789,12 @@ export const viewLevel1User = async (req, res, next) => {
         {
           path: "childLevel1",
           select:
-            "name ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName packageType",
+            "name ownSponserId phone address email sponserName userStatus actualPackageAmount franchise franchiseName packageType",
         },
         {
           path: "pendingMembers",
           select:
-            "name ownSponserId phone address email sponserName userStatus packageAmount franchise franchiseName packageType",
+            "name ownSponserId phone address email sponserName userStatus tempPackageAmount franchise franchiseName packageType",
         },
       ]);
 
@@ -824,6 +827,10 @@ export const viewLevel1User = async (req, res, next) => {
       );
     }
 
+   // Filter combined array based on package name
+   if (packageName) {
+    filteredCombinedArray = filteredCombinedArray.filter(doc => doc.franchise === packageName);
+  }
     // Paginate the combined array
     const paginatedCombinedArray = paginateArray(filteredCombinedArray, page, pageSize);
 

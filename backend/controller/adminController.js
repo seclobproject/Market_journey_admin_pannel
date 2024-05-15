@@ -1027,19 +1027,29 @@ export const acceptUser = async (req, res, next) => {
         userData.packageAmount = userData.tempPackageAmount;
         userData.actualPackageAmount = userData.tempPackageAmount;
         userData.paidForCompany = userData.tempPackageAmount;
+        if (sponserUser2) {
+          if(!sponserUser2.childLevel2.includes(userData._id)){
+
+            sponserUser2.childLevel2.push(userData._id);
+            updatedSponser2 = await sponserUser2.save();
+          }else{
+          next(errorHandler(401, "This Child already exist in this User "));
+          }
+        }
+        if (sponserUser1) {
+          if(!sponserUser1.childLevel1.includes(userData._id)){
+          if(sponserUser1.isAdmin===false){
+            sponserUser1.pendingMembers.pull(userData._id);
+          }
+          sponserUser1.childLevel1.push(userData._id);
+          updatedSponser1 = await sponserUser1.save();
+        }else{
+          next(errorHandler(401, "This Child already exist in this User "));
+          }
+        }
+        
         const updatedUser = await userData.save();
         if (updatedUser) {
-          if (sponserUser2) {
-            sponserUser2.childLevel2.push(updatedUser._id);
-            updatedSponser2 = await sponserUser2.save();
-          }
-          if (sponserUser1) {
-            if(sponserUser1.isAdmin===false){
-              sponserUser1.pendingMembers.pull(updatedUser._id);
-            }
-            sponserUser1.childLevel1.push(updatedUser._id);
-            updatedSponser1 = await sponserUser1.save();
-          }
           if (updatedUser.state) {
             const statData = await State.findOne({ name: updatedUser.state });
             if (statData) {
@@ -1153,7 +1163,7 @@ const paginate = async (model, query, page = 1, pageSize = 10) => {
 
     const results = await model
       .find(query)
-      .select("createdAt ownSponserId name sponserName packageAmount franchise renewalStatus userStatus email")
+      .select("createdAt ownSponserId name sponserName packageAmount actualPackageAmount franchise renewalStatus userStatus email")
       .sort({ createdAt: -1 })
       .skip(offset)
       .limit(pageSize);

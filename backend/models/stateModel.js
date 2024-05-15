@@ -11,14 +11,12 @@ const stateSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "District",
       }],
-      editable:{
-        type:Boolean,
-        default:true
-      },
+    editable:{
+    type:Boolean,
+    default:true
+    },
     users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     demates: [{ type: mongoose.Schema.Types.ObjectId, ref: "Demate" }],
-
-
   },
   {
     timestamps: true,

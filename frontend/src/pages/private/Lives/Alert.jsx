@@ -56,6 +56,7 @@ function Alert() {
 
   //-------alret add and edit ----------
   const addAlertsFun = async (e) => {
+    setIsLoading(true);
     try {
       if (addAlerts?._id) {
         const response = await ApiCall(
@@ -87,6 +88,10 @@ function Alert() {
     } catch (error) {
       console.error("alert uploading failed:", error);
       Show_Toast("alert upload failed", false);
+    }
+    finally{
+      setIsLoading(true);
+
     }
   };
   //----------delete image----------
@@ -265,6 +270,7 @@ function Alert() {
           noValidate
           validated={validated}
           onSubmit={(e) => Check_Validation(e, addAlertsFun, setValidated)}
+        
         >
           {!alertModal?.id && (
             <div className="mb-4">
@@ -320,7 +326,10 @@ function Alert() {
           </div>
 
           <div className="col-12 mt-4">
-            <button type="submit" className="btn btn-custom float-end ms-1">
+            <button type="submit" className="btn btn-custom float-end ms-1"
+            disabled={isLoading}
+            >
+              
               {addAlerts?._id ? "Update" : "Send"}
             </button>
           </div>

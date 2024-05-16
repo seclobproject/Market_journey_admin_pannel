@@ -79,6 +79,7 @@ function Uploadvideos() {
 
   //-------Image upload----------
   const addVideoFun = async (e) => {
+    setIsLoading(true);
     try {
       if (!filename?.name) {
         setErrorMessage("Please select an Video Thumbnail");
@@ -143,6 +144,9 @@ function Uploadvideos() {
     } catch (error) {
       console.error("Error uploading Video:", error);
       Show_Toast("Video upload failed", false);
+    }
+    finally{
+      setIsLoading(false);
     }
   };
 
@@ -450,7 +454,9 @@ function Uploadvideos() {
           </div>
 
           <div className="col-12 mt-4">
-            <button type="submit" className="btn btn-custom float-end ms-1">
+            <button type="submit" className="btn btn-custom float-end ms-1"
+            disabled={isLoading}
+            >
               {addVideo?._id ? "Update" : "Save"}
             </button>
           </div>

@@ -45,6 +45,7 @@ function Livenew() {
 
   //-------alret add and edit ----------
   const addnewsFun = async (e) => {
+    setIsLoading(true);
     try {
       if (addNews?._id) {
         const response = await ApiCall(
@@ -74,6 +75,10 @@ function Livenew() {
     } catch (error) {
       console.error("Error uploading News:", error);
       Show_Toast("News upload failed", false);
+      setIsLoading(false)
+    }
+    finally{
+      setIsLoading(false);
     }
   };
   //----------delete image----------
@@ -263,7 +268,8 @@ function Livenew() {
           </div>
 
           <div className="col-12 mt-4">
-            <button type="submit" className="btn btn-custom float-end ms-1">
+            <button type="submit" className="btn btn-custom float-end ms-1"
+            disabled={isLoading}>
               {addNews?._id ? "Update" : "Save"}
             </button>
           </div>

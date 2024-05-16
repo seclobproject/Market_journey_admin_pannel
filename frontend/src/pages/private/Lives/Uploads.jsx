@@ -80,6 +80,7 @@ function Uploads() {
   };
   //-------Image upload----------
   const addImageFun = async (e) => {
+    setIsLoading(true);
     if (!filename?.name) {
       setErrorMessage("Please select an Image");
     }
@@ -109,6 +110,10 @@ function Uploads() {
     } catch (error) {
       console.error("Error uploading image:", error);
       Show_Toast("Image upload failed", false);
+      
+    }
+    finally{
+      setIsLoading(false);
     }
   };
   //----------delete image----------
@@ -360,7 +365,9 @@ function Uploads() {
           </div>
 
           <div className="col-12 mt-4">
-            <button type="submit" className="btn btn-custom float-end ms-1">
+            <button type="submit" className="btn btn-custom float-end ms-1"
+            disabled={isLoading}
+            >
               {addImage?._id ? "Update" : "Save"}
             </button>
           </div>

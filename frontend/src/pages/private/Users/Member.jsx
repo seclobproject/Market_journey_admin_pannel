@@ -58,6 +58,7 @@ function Member() {
   const [filteredData, setFilteredData] = useState([]);
   const [filteredDataStatus, setFilteredDataStatus] = useState([]);
   const [filter, setFilter] = useState();
+  console.log(filter,"''''''");
   const [statusfilter, setStatusFilter] = useState();
   const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
@@ -333,7 +334,13 @@ function Member() {
   const handleReset = () => {
     setSearchText("");
     setSearchKey(searchKey + 1);
-    setFilter("View all");
+    setParams(
+      {
+        page: 1,
+        pageSize: 25,
+      }
+    )
+    
   };
 
   useEffect(() => {

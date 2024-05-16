@@ -222,6 +222,7 @@ function Viewdetails() {
   };
   //---add bonnus-----
   const addBonnusToUser = async () => {
+    setIsLoading(true);
     try {
       const userId = bonusModal?.id;
       const bonusAmountNumber = Number(addBonnus?.bonusAmount);
@@ -249,6 +250,9 @@ function Viewdetails() {
       }
     } catch (error) {
       Show_Toast(error.message, false);
+    }
+    finally{
+      setIsLoading(false);
     }
   };
 
@@ -651,7 +655,7 @@ function Viewdetails() {
                                 {details?.franchise == "Zonal Franchise" && (
                                   <>
                                     <li className="d-flex align-items-center gap-3 mb-4">
-                                      <i className="fas fa-user text-dark fs-6" />
+                                      <i className="fas fa-map-marker-alt text-dark fs-6" />
                                       <h6 className="fs-4 fw-semibold mb-0">
                                         State :{" "}
                                         <span
@@ -662,7 +666,7 @@ function Viewdetails() {
                                       </h6>
                                     </li>
                                     <li className="d-flex align-items-center gap-3 mb-4">
-                                      <i className="fas fa-user text-dark fs-6" />
+                                      <i className="fas fa-map-marker-alt text-dark fs-6" />
                                       <h6 className="fs-4 fw-semibold mb-0">
                                         District :{" "}
                                         <span
@@ -677,7 +681,7 @@ function Viewdetails() {
                                 {details?.franchise == "Mobile Franchise" && (
                                   <>
                                     <li className="d-flex align-items-center gap-3 mb-4">
-                                      <i className="fas fa-user text-dark fs-6" />
+                                      <i className="fas fa-map-marker-alt text-dark fs-6" />
                                       <h6 className="fs-4 fw-semibold mb-0">
                                         State :{" "}
                                         <span
@@ -688,7 +692,7 @@ function Viewdetails() {
                                       </h6>
                                     </li>
                                     <li className="d-flex align-items-center gap-3 mb-4">
-                                      <i className="fas fa-user text-dark fs-6" />
+                                      <i className="fas fa-map-marker-alt text-dark fs-6" />
                                       <h6 className="fs-4 fw-semibold mb-0">
                                         District :{" "}
                                         <span
@@ -699,7 +703,7 @@ function Viewdetails() {
                                       </h6>
                                     </li>
                                     <li className="d-flex align-items-center gap-3 mb-4">
-                                      <i className="fas fa-user text-dark fs-6" />
+                                      <i className="fas fa-map-marker-alt text-dark fs-6" />
                                       <h6 className="fs-4 fw-semibold mb-0">
                                         Zonal :{" "}
                                         <span
@@ -710,7 +714,7 @@ function Viewdetails() {
                                       </h6>
                                     </li>
                                     <li className="d-flex align-items-center gap-3 mb-4">
-                                      <i className="fas fa-user text-dark fs-6" />
+                                      <i className="fas fa-map-marker-alt text-dark fs-6" />
                                       <h6 className="fs-4 fw-semibold mb-0">
                                         Panchayath :{" "}
                                         <span
@@ -726,7 +730,7 @@ function Viewdetails() {
                                   (details?.packageType == "Signals" && (
                                     <>
                                       <li className="d-flex align-items-center gap-3 mb-4">
-                                        <i className="fas fa-user text-dark fs-6" />
+                                        <i className="fas fa-map-marker-alt text-dark fs-6" />
                                         <h6 className="fs-4 fw-semibold mb-0">
                                           State :{" "}
                                           <span
@@ -739,7 +743,7 @@ function Viewdetails() {
                                         </h6>
                                       </li>
                                       <li className="d-flex align-items-center gap-3 mb-4">
-                                        <i className="fas fa-user text-dark fs-6" />
+                                        <i className="fas fa-map-marker-alt text-dark fs-6" />
                                         <h6 className="fs-4 fw-semibold mb-0">
                                           District :{" "}
                                           <span
@@ -752,7 +756,7 @@ function Viewdetails() {
                                         </h6>
                                       </li>
                                       <li className="d-flex align-items-center gap-3 mb-4">
-                                        <i className="fas fa-user text-dark fs-6" />
+                                        <i className="fas fa-map-marker-alt text-dark fs-6" />
                                         <h6 className="fs-4 fw-semibold mb-0">
                                           Zonal :{" "}
                                           <span
@@ -765,7 +769,7 @@ function Viewdetails() {
                                         </h6>
                                       </li>
                                       <li className="d-flex align-items-center gap-3 mb-4">
-                                        <i className="fas fa-user text-dark fs-6" />
+                                        <i className="fas fa-map-marker-alt text-dark fs-6" />
                                         <h6 className="fs-4 fw-semibold mb-0">
                                           Panchayath :{" "}
                                           <span
@@ -1590,7 +1594,9 @@ function Viewdetails() {
           </div>
 
           <div className="col-12 mt-5">
-            <button type="submit" className="btn btn-custom float-end">
+            <button type="submit" className="btn btn-custom float-end"
+            disabled={isLoading}
+            >
               {loadingButton ? "Sending..." : "Send"}
             </button>
           </div>

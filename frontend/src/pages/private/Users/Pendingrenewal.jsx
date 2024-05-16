@@ -46,6 +46,7 @@ function Pendingrenewal() {
 
        //------------approve user--------------
   const approveUser = async () => {
+    setIsLoading(true);
     try {
       const resposne = await ApiCall(
         "post",
@@ -57,7 +58,11 @@ function Pendingrenewal() {
         getpendingRenewals();
       }
     } catch (error) {
-      Show_Toast(error, false);
+      // Show_Toast(error, false);
+      console.log(error)
+    }
+    finally{
+      setIsLoading(false);
     }
   };
 
@@ -311,6 +316,7 @@ getpendingRenewals();
               onClick={() => {
                 approveUser();
               }}
+              disabled={isLoading}
             >
               Yes, Approve it
             </button>

@@ -77,6 +77,7 @@ function Awards() {
   };
   //-------Image upload----------
   const addAwardFun = async (e) => {
+    setIsLoading(true);
     try {
       if (!filename?.name) {
         setErrorMessage("Please select an Image");
@@ -134,6 +135,10 @@ function Awards() {
     } catch (error) {
       console.error("Error uploading Video:", error);
       Show_Toast("Details upload failed", false);
+      setIsLoading(false);
+    }
+    finally{
+      setIsLoading(false);
     }
   };
 
@@ -436,7 +441,9 @@ function Awards() {
             </div>
 
             <div className="col-12 mt-4">
-              <button type="submit" className="btn btn-custom float-end ms-1">
+              <button type="submit" className="btn btn-custom float-end ms-1"
+              disabled={isLoading}
+              >
                 {addDetails?._id ? "Update" : "Save"}
               </button>
             </div>

@@ -106,6 +106,7 @@ function Distribute() {
   };
 
   const distributeWalet = async () => {
+    setIsLoading(true);
     try {
         if (details?.autoPoolWallet > 0) {
             const response = await ApiCall("post", distributeWalletUrl);
@@ -123,6 +124,10 @@ function Distribute() {
     } catch (error) {
         console.error("Failed:", error);
         Show_Toast(error, false);
+    }
+    finally{
+      setIsLoading(false);
+
     }
 };
 
@@ -845,6 +850,7 @@ const sortedHistory = distributionHistory?.slice().sort((a, b) => {
               onClick={() => {
                 distributeWalet();
               }}
+              disabled={isLoading}
             >
               Yes, Distribute it
             </button>
